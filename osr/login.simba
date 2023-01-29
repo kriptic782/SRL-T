@@ -328,13 +328,15 @@ Example
   WriteLn Login.SwitchToWorld(303);
 *)
 function TRSLogin.SwitchToWorld(World: Int32): Boolean;
+var
+  i: Int32;
 begin
   if Self.GetCurrentWorld() = World then
     Exit(True);
 
   if Self.OpenWorldSwitcher() then
   begin
-    for 1 to 3 do // Three pages of worlds
+    for i := 1 to 3 do // Three pages of worlds
     begin
       if Self.ClickWorld(World) then
       begin

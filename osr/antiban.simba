@@ -570,26 +570,26 @@ begin
   end;
 end;
 
-procedure TAntiban.AdjustZoom;
+procedure TAntiban.AdjustZoom();
 var
-  Zoom, NewZoom: Int32;
-  Attempts: Int32;
+  zoom, newZoom: Int32;
+  attempts: Int32;
 begin
-  if (Self.MaxZoom = 0) then
+  if Self.MaxZoom = 0 then
     Self.MaxZoom := 100;
 
-  Zoom := Options.GetZoomLevel();
+  zoom := MM2MS.GetZoomLevel(); //use mm2ms zoom so we don't have to color search. if it's not setup it will be setup.
+  zoom := Min(Self.MaxZoom, Max(Self.MinZoom, Options.GetZoomLevel())); //ensure the zoom is within range.
 
   repeat
-    Inc(Attempts);
-    if Attempts > 100 then
+    Inc(attempts);
+    if attempts > 100 then
       Exit;
 
-    NewZoom := SRL.SkewedRand(Zoom, Self.MinZoom - 10, Self.MaxZoom + 10);
-  until (NewZoom >= Self.MinZoom) and (NewZoom <= Self.MaxZoom) and (Abs(Zoom - NewZoom) > 15);
+    newZoom := SRL.SkewedRand(zoom, Self.MinZoom, Self.MaxZoom);
+  until Abs(zoom - newZoom) > 15;
 
-  Self.DebugLn('Adjust zoom: ' + ToString(NewZoom));
-
+  Self.DebugLn('Adjust zoom: ' + ToString(newZoom));
   Options.SetZoomLevel(NewZoom);
 end;
 

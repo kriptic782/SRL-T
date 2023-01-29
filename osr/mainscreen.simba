@@ -322,11 +322,13 @@ Example
   MainScreen.SetHighestPitch();
 *)
 procedure TRSMainScreen.SetHighestPitch;
+var
+  i: Int32;
 begin
   Keyboard.KeyDown(VK_UP);
 
   try
-    for 1 to 10 do // 2500ms timeout
+    for i := 1 to 10 do // 2500ms timeout
       if (SRL.GetPixelShift(Self.Bounds(), 250) / Self.Bounds.Area() * 100) < 10 then // less than 10% of the screen changed in 250ms
         Break;
   finally

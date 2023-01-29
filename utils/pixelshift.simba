@@ -42,10 +42,10 @@ if ``AcceptLength`` is none-zero, it will return when / if this many pixels has 
 function TSRL.GetPixelShiftTPA(Area: TBox; WaitTime: UInt32; Count: Int32=1; AcceptLength:Int32=0): TPointArray;
 var
   Before, After: PtrInt;
-  x,y,c: Int32;
+  x,y,c,i: Int32;
 begin
   SetLength(Result, 64);
-  for 1 to Count do
+  for i := 1 to Count do
   begin
     Before := BitmapFromClient(Area);
     Wait(WaitTime);

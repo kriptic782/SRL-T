@@ -112,11 +112,13 @@ begin
 end;
 
 function TRSGameTabs.Open(Tab: ERSGameTab): Boolean;
+var
+  i: Int32;
 begin
-  if GetCurrentTab() = Tab then
+  if Self.GetCurrentTab() = Tab then
     Exit(True);
 
-  for 1 to 3 do
+  for i := 1 to 3 do
   begin
     Mouse.Click(GetTabBox(Tab), MOUSE_LEFT, SRL.Dice(50));
 
