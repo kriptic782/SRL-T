@@ -462,37 +462,36 @@ begin
     Result := ScrollBar.Position;
 end;
 
-procedure TRSInterface.SetScrollPosition(Value: Int32);
+procedure TRSInterface.SetScrollPosition(value: Int32);
 var
-  ScrollBar: TRSScrollBar;
+  scrollBar: TRSScrollBar;
 begin
-  if (Value < 0) then
-    Value := 0;
-  if (Value > 100) then
-    Value := 100;
+  value := EnsureRange(value, 0, 100);
 
-  ScrollBar := Self.GetScrollBar();
+  scrollBar := Self.GetScrollBar();
   
-  if ScrollBar.IsVisible() then
+  if not scrollBar.IsVisible() or not Self.CanScroll() then
+    Exit;
+
+  if scrollBar.Position = value then
+    Exit;
+
+  if (scrollBar.Position < value) then
   begin
-    if (ScrollBar.Position < Value) then 
-    begin 
-      while ScrollBar.IsVisible() and (ScrollBar.Position < Value) do
-      begin
-        Mouse.Scroll(ScrollBar.SliderRegion, Random(1, 3), True);
-        
-        ScrollBar := Self.GetScrollBar();
-      end;
-    end else
-    if (ScrollBar.Position > Value) then 
+    while scrollBar.IsVisible() and (scrollBar.Position < value) do
     begin
-      while ScrollBar.IsVisible() and (ScrollBar.Position > Value) do
-      begin
-        Mouse.Scroll(ScrollBar.SliderRegion, Random(1, 3), False);
-        
-        ScrollBar := Self.GetScrollBar();
-      end;
+      Mouse.Scroll(scrollBar.SliderRegion, Random(1, 3), True);
+
+      scrollBar := Self.GetScrollBar();
     end;
+    Exit;
+  end;
+
+  while scrollBar.IsVisible() and (scrollBar.Position > value) do
+  begin
+    Mouse.Scroll(scrollBar.SliderRegion, Random(1, 3), False);
+
+    scrollBar := Self.GetScrollBar();
   end;
 end;
 
