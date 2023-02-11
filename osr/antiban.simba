@@ -415,18 +415,19 @@ end;
 (*
 Built in Antiban Tasks
 ~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: procedure TAntiban.SmallRandomMouse;
-.. pascal:: procedure TAntiban.RandomMouse;
-.. pascal:: procedure TAntiban.RandomRotate;
-.. pascal:: procedure TAntiban.HoverSkill(Skill: ERSSkill; HoverTime: Int32; ReturnToCurrentTab: Boolean);
-.. pascal:: procedure TAntiban.HoverSkills;
-.. pascal:: procedure TAntiban.LoseFocus;
-.. pascal:: procedure TAntiban.LoseFocus(Idle: Int32); overload;
-.. pascal:: procedure TAntiban.RandomTab;
-.. pascal:: procedure TAntiban.RandomRightClick;
-.. pascal:: procedure TAntiban.AdjustZoom;
-.. pascal:: procedure TAntiban.SwivelNear(start: TBox; radius: Int32; Iterations: Int32=1); overload;
-.. pascal:: procedure TAntiban.Swivel;
+.. pascal::
+  procedure TAntiban.SmallRandomMouse;
+  procedure TAntiban.RandomMouse;
+  procedure TAntiban.RandomRotate;
+  procedure TAntiban.HoverSkill(Skill: ERSSkill; HoverTime: Int32; ReturnToCurrentTab: Boolean);
+  procedure TAntiban.HoverSkills;
+  procedure TAntiban.LoseFocus;
+  procedure TAntiban.LoseFocus(Idle: Int32); overload;
+  procedure TAntiban.RandomTab;
+  procedure TAntiban.RandomRightClick;
+  procedure TAntiban.AdjustZoom;
+  procedure TAntiban.SwivelNear(start: TBox; radius: Int32; Iterations: Int32=1); overload;
+  procedure TAntiban.Swivel;
 
 SRL built in Antiban Tasks that can be added with **TAntiban.AddTask**.
 

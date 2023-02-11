@@ -1264,8 +1264,9 @@ end;
 (*
 TRSWalker.MSToWorld
 ~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSWalker.MSToWorldEx(Me, Loc: TPoint; Height: Int32 = 0; Accuracy: Double = 0.2): TPoint;
-.. pascal:: function TRSWalker.MSToWorld(Loc: TPoint; Height: Int32=0; Accuracy:Double=0.2): TPoint;
+.. pascal::
+  function TRSWalker.MSToWorldEx(Me, Loc: TPoint; Height: Int32 = 0; Accuracy: Double = 0.2): TPoint;
+  function TRSWalker.MSToWorld(Loc: TPoint; Height: Int32=0; Accuracy:Double=0.2): TPoint;
 
 Converts a point on the mainscreen to a walker point.
 *)

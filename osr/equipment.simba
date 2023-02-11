@@ -93,8 +93,7 @@ begin
   Result := Self.FindItem(Item, B);
 end;
 
-//DEPRECATED! AVOID USING THIS
-function TRSEquipment.FindItem(Item: TRSItem): Boolean; overload;
+function TRSEquipment.FindItem(Item: TRSItem): Boolean; overload; deprecated 'Use TRSEquipment.ContainsItem()';
 var
   B: TBox;
 begin
@@ -109,6 +108,16 @@ begin
   for item in items do
     if Self.ContainsItem(item) then
       Exit(True);
+end;
+
+function TRSEquipment.ContainsAll(items: TRSItemArray): Boolean;
+var
+  item: TRSItem;
+begin
+  Result := True;
+  for item in items do
+    if not Self.ContainsItem(item) then
+      Exit(False);
 end;
 
 

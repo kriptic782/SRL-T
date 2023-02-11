@@ -27,11 +27,6 @@ type
 (*
 type TRSLoginPlayer
 ~~~~~~~~~~~~~~~~~~~
-Type responsible for managing player data.
-You usually don't use this directly but instead use TRSLogin methods to interact with TRSLoginPlayers stored in TRSLogin.Players array.
-The **Active** variable decides wether the player is inteded to be skipped or not by TRSLogin.
-
-This is the structure of TRSLoginPlayer:
 .. pascal::
   TRSLoginPlayer = record
     User: String;
@@ -41,6 +36,10 @@ This is the structure of TRSLoginPlayer:
     Active: Boolean;
     BioHash: Double;
   end;
+
+Type responsible for managing player data.
+You usually don't use this directly but instead use TRSLogin methods to interact with TRSLoginPlayers stored in TRSLogin.Players array.
+The **Active** variable decides wether the player is inteded to be skipped or not by TRSLogin.
 *)
   TRSLoginPlayer = record
     User: String;
@@ -54,16 +53,14 @@ This is the structure of TRSLoginPlayer:
 (*
 type TRSLogin
 ~~~~~~~~~~~~~
-Type responsible for handling login and managing cached TRSLoginPlayers.
-
-This is the structure of TRSLogin:
 .. pascal::
   TRSLogin = record(TRSInterface)
     Players: array of TRSLoginPlayer;
     PlayerIndex: Int32;
-
     AllowDangerousWorlds: Boolean;
   end;
+
+Type responsible for handling login and managing cached TRSLoginPlayers.
 *)
   TRSLogin = record(TRSInterface)
     Players: array of TRSLoginPlayer;
@@ -76,10 +73,6 @@ const
 (*
 LOGIN_MESSAGES
 ~~~~~~~~~~~~~~
-Global constants for most if not all login messages.
-
-Each of this messages is stored in **LOGIN_MESSAGES** in the same order.
-
 .. pascal::
   LOGIN_MESSAGE_NONE = '';
   LOGIN_MESSAGE_CONNECTING = 'Connecting to server';
@@ -98,6 +91,10 @@ Each of this messages is stored in **LOGIN_MESSAGES** in the same order.
   LOGIN_MESSAGE_MEMBERS = 'You need a members account';
   LOGIN_MESSAGE_IN_MEMBERS_AREA = 'You are standing in a members-only area';
   LOGIN_MESSAGE_AUTHENTICATOR = 'Authenticator';
+
+Global constants for most if not all login messages.
+
+Each of this messages is stored in **LOGIN_MESSAGES** in the same order.
 *)
   LOGIN_MESSAGE_NONE = '';
   LOGIN_MESSAGE_CONNECTING = 'Connecting to server';
@@ -154,8 +151,9 @@ Each of this messages is stored in **LOGIN_MESSAGES** in the same order.
 (*
 Login.FindText
 ~~~~~~~~~~~~~~
-.. pascal:: function TRSLogin.FindText(Text: String; out B: TBox): Boolean;
-.. pascal:: function TRSLogin.FindText(Text: String): Boolean; overload;
+.. pascal::
+  function TRSLogin.FindText(Text: String; out B: TBox): Boolean;
+  function TRSLogin.FindText(Text: String): Boolean; overload;
 
 Internal TRSLogin method used to find a message on the TRSLogin interface.
 You probably will never to use this directly.

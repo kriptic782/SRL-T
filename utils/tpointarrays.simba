@@ -1379,18 +1379,28 @@ end;
 
 function T2DPointArray.Smallest(): TPointArray; constref;
 var
-  TPA: TPointArray;
+  tpa: TPointArray;
 begin
-  for TPA in Self do
-    if (Length(TPA) < Length(Result)) then
-      Result := TPA;
+  for tpa in Self do
+  begin
+    if Result = [] then
+      Result := tpa;
+
+    if (Length(tpa) < Length(Result)) then
+      Result := tpa;
+  end;
 end;
 
 function T2DPointArray.Biggest(): TPointArray; constref;
 var
-  TPA: TPointArray;
+  tpa: TPointArray;
 begin
-  for TPA in Self do
-    if (Length(TPA) > Length(Result)) then
-      Result := TPA;
+  for tpa in Self do
+  begin
+    if Result = [] then
+      Result := tpa;
+
+    if (Length(tpa) > Length(Result)) then
+      Result := tpa;
+  end;
 end;
