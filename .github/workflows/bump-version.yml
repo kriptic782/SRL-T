@@ -24,7 +24,7 @@ jobs:
         skip-version-file: 'true'
         skip-on-empty: 'true'
         skip-commit: 'false'
-        fallback-version: '1.0.3'
+        fallback-version: '1.0.8'
           
     - name: Create release
       uses: actions/create-release@v1
