@@ -1,4 +1,13 @@
-## 1.0.8 (2023-02-11)
+## [1.0.9](https://github.com/Torwent/SRL-T/compare/v1.0.8...v1.0.9) (2023-02-15)
+
+
+### Bug Fixes
+
+* **TPoint:** added new methods from 1500 ([b645324](https://github.com/Torwent/SRL-T/commit/b645324c2f4f74c8a02725ddbd1e3b9de966f9b0))
+
+
+
+## [1.0.8](https://github.com/Torwent/SRL-T/compare/f65bc17a9d9cfb93a5b76ffa3ff072c44e92c3cf...v1.0.8) (2023-02-11)
 
 
 ### Bug Fixes
