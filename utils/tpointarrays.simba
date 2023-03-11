@@ -5,10 +5,9 @@
 
 (*
 TPointArray
-=============
+===========
 TPointArray related methods
 *)
-
 procedure TPointArray.Append(const Value: TPoint);
 var top:Int32;
 begin
