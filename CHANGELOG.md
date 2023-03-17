@@ -1,3 +1,12 @@
+## [1.0.11](https://github.com/Torwent/SRL-T/compare/v1.0.10...v1.0.11) (2023-03-17)
+
+
+### Bug Fixes
+
+* attempt to fix SRL-T docs. You can ignore this, nothing changed ([4ec939b](https://github.com/Torwent/SRL-T/commit/4ec939b327dd4d20028bb2d7f78b582e8a4111c7))
+
+
+
 ## [1.0.10](https://github.com/Torwent/SRL-T/compare/v1.0.9...v1.0.10) (2023-03-16)
 
 
