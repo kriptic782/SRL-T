@@ -8,7 +8,7 @@
 import re
 import os, sys
 
-DOCNAME         = 'SRL'
+DOCNAME         = 'SRL-T'
 IGNORE_FOLDERS  = ['.git', 'docgen']
 FILE_EXTENSIONS = ['.simba'] 
 SHORT_RST       = [('.. code-block:: pascal\n\n', '.. pascal::'), 

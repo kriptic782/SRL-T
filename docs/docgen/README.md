@@ -1,4 +1,4 @@
-Generates the SRL documentation files from comments in the source files.
+Generates the SRL-T documentation files from comments in the source files.
 
 Example documentation comment:
 
