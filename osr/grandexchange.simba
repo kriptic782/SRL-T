@@ -55,6 +55,7 @@ type
 
   TRSGrandExchange = record(TRSTitledInteface)
     FINDER_BANKER: TRSObjectFinder;
+    FINDER_CLERK: TRSObjectFinder;
   end;
 
 function TRSGrandExchange.GetSetupOfferButtons: TRSButtonArray;
@@ -395,6 +396,7 @@ end;
 
 type
   TRSGEHistoryItem = record
+    OfferType: String;
     Item: String;
     Quantity: Int32;
     PricePerItem: Int32;
@@ -412,6 +414,7 @@ var
   Row: TBox;
   Rows, Columns: TBoxArray;
   Item: TRSGEHistoryItem;
+  tempOfferType : String;
 begin
   SRL.FindColors(RowDark, BG_DARK, Self.Bounds);
   SRL.FindColors(RowLight, BG_LIGHT, Self.Bounds);
@@ -425,18 +428,28 @@ begin
       Continue;
  
     Columns := Row.Partition(1, 4);
- 
+
     Item := [];
     Item.Bounds := Row;
+
     Item.Item := OCR.Recognize(Columns[1].Expand(25, 0), TOCRColorRule.Create([4176127, $FFFFFF]), RS_FONT_PLAIN_12);
     if (Item.Item = '') then
       Continue;
+
+    tempOfferType := replace(OCR.Recognize(Columns[0], TOCRColorRule.Create([2070783]), RS_FONT_PLAIN_11), ':', '', [rfReplaceAll]);
+
+    if stringMatch(trim(lowercase(tempOfferType)), 'sold') >= 0.75 then
+      Item.OfferType := 'Sell'
+    else if StringMatch(trim(lowercase(tempOfferType)), 'bought') > 0.75 then
+      Item.OfferType := 'Buy'
+    else
+      Item.OfferType := '';
 
     Item.Quantity := SRL.GetItemAmount(Columns[2]);
     if (Item.Quantity = 0) Then
       Item.Quantity := 1;
       
-    Item.TotalPrice := OCR.RecognizeNumber(Columns[3], TOCRColorRule.Create([2070783]), RS_FONT_PLAIN_11);
+    Item.TotalPrice := OCR.RecognizeNumber(Columns[3], TOCRColorRule.Create([4176127]), RS_FONT_PLAIN_11);
     Item.PricePerItem := Item.TotalPrice div Item.Quantity;
 
     Result := Result + Item;
@@ -465,6 +478,12 @@ begin
   Self.FINDER_BANKER.Grow := 3;
   Self.FINDER_BANKER.Erode := 3;
   Self.FINDER_BANKER.MinLongSide := 10;
+
+  Self.FINDER_CLERK.Colors += [CTS2(6176331, 11, 0.07, 0.51)]; // purple
+  Self.FINDER_CLERK.ClusterDistance := 3;
+  Self.FINDER_CLERK.Grow := 1;
+  Self.FINDER_CLERK.Erode := 1;
+  Self.FINDER_CLERK.MinLongSide := 10;
 end;
 
 procedure TRSGrandExchange.SetupAlignment(Mode: ERSClientMode); override;
