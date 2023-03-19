@@ -891,8 +891,7 @@ begin
   Result := Self.FindItem(Item, B);
 end;
 
-//DEPRECATED AVOID USING THIS!
-function TRSBank.FindItem(Item: TRSItem): Boolean; overload;
+function TRSBank.FindItem(Item: TRSItem): Boolean; overload; deprecated 'Use TRSBank.ContainsItem() instead.';
 var
   B: TBox;
 begin
