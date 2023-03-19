@@ -48,13 +48,19 @@ type
     OFFER_SETUP
   );
 
+  ERSGEOfferCreateButton = (
+    BUY,
+    SELL
+  );
+
   TRSGrandExchange = record(TRSTitledInteface)
     FINDER_BANKER: TRSObjectFinder;
+    FINDER_CLERK: TRSObjectFinder;
   end;
-  
+
 function TRSGrandExchange.GetSetupOfferButtons: TRSButtonArray;
 begin
-  Result := Self.FindButtons([[45,18], [35,25], [152,40],[160,18], [159,18], [210,18], [40,36]]);
+  Result := Self.FindButtons([[45,18], [35,25], [152,40],[160,18], [159,18], [210,18], [410,18], [40,36]]);
 end;
 
 function TRSGrandExchange.GetSetupOfferButton(Button: ERSGESetupOfferButton): TRSButton;
@@ -90,7 +96,7 @@ end;
 
 function TRSGrandExchange.GetOfferStatusButtons: TRSButtonArray;
 begin
-  Result := Self.FindButtons([[45,18], [36,32], [40,36],[292,15], [160,18], [159,18], [210,18]]);
+  Result := Self.FindButtons([[45,18], [36,32], [40,36],[292,15], [160,18], [159,18], [410,18], [210,18]]);
 end;
 
 function TRSGrandExchange.GetOfferStatusButton(Button: ERSGEOfferStatusButton): TRSButton;
@@ -98,6 +104,20 @@ var
   Buttons: TRSButtonArray := Self.GetOfferStatusButtons();
 begin
   if Length(Buttons) = Length(ERSGEOfferStatusButton) then
+    Result := Buttons[Button];
+end;
+
+// Finds the BUY and SELL buttons to create an offer within a given slot
+function TRSGrandExchange.GetOfferCreateButtons(slotNumber : Int32) : TRSButtonArray;
+begin
+  result := self.FindButtons([[46,45]], self.GetOfferSlots()[slotNumber]);
+end;
+
+function TRSGrandExchange.GetOfferCreateButton(Button : ERSGEOfferCreateButton; slotNumber : Int32) : TRSButton;
+var
+  Buttons: TRSButtonArray := Self.GetOfferCreateButtons(slotNumber);
+begin
+  if Length(Buttons) = Length(ERSGEOfferCreateButton) then
     Result := Buttons[Button];
 end;
 
@@ -376,6 +396,7 @@ end;
 
 type
   TRSGEHistoryItem = record
+    OfferType: String;
     Item: String;
     Quantity: Int32;
     PricePerItem: Int32;
@@ -393,6 +414,7 @@ var
   Row: TBox;
   Rows, Columns: TBoxArray;
   Item: TRSGEHistoryItem;
+  tempOfferType : String;
 begin
   SRL.FindColors(RowDark, BG_DARK, Self.Bounds);
   SRL.FindColors(RowLight, BG_LIGHT, Self.Bounds);
@@ -406,18 +428,28 @@ begin
       Continue;
  
     Columns := Row.Partition(1, 4);
- 
+
     Item := [];
     Item.Bounds := Row;
+
     Item.Item := OCR.Recognize(Columns[1].Expand(25, 0), TOCRColorRule.Create([4176127, $FFFFFF]), RS_FONT_PLAIN_12);
     if (Item.Item = '') then
       Continue;
+
+    tempOfferType := replace(OCR.Recognize(Columns[0], TOCRColorRule.Create([2070783]), RS_FONT_PLAIN_11), ':', '', [rfReplaceAll]);
+
+    if stringMatch(trim(lowercase(tempOfferType)), 'sold') >= 0.75 then
+      Item.OfferType := 'Sell'
+    else if StringMatch(trim(lowercase(tempOfferType)), 'bought') > 0.75 then
+      Item.OfferType := 'Buy'
+    else
+      Item.OfferType := '';
 
     Item.Quantity := SRL.GetItemAmount(Columns[2]);
     if (Item.Quantity = 0) Then
       Item.Quantity := 1;
       
-    Item.TotalPrice := OCR.RecognizeNumber(Columns[3], TOCRColorRule.Create([2070783]), RS_FONT_PLAIN_11);
+    Item.TotalPrice := OCR.RecognizeNumber(Columns[3], TOCRColorRule.Create([4176127]), RS_FONT_PLAIN_11);
     Item.PricePerItem := Item.TotalPrice div Item.Quantity;
 
     Result := Result + Item;
@@ -439,13 +471,19 @@ begin
   inherited;
 
   Self.Name := 'Grand Exchange';
-  Self.ButtonColors += [CTS1(2240055, 0), CTS1(2897729, 2), CTS1(2240055, 0), CTS1(2642530, 20), CTS1(3951189, 10)];
+  Self.ButtonColors += [CTS1(2240055, 0), CTS1(2897729, 2), CTS1(2240055, 0), CTS1(2642530, 20), CTS1(3951189, 10), CTS1(2306104, 0)];
 
   Self.FINDER_BANKER.ColorClusters += [CTS2(6710894, 12, 0.19, 0.07), CTS2(2110788, 11, 0.29, 0.84), 10]; // grey, brown
   Self.FINDER_BANKER.ClusterDistance := 3;
   Self.FINDER_BANKER.Grow := 3;
   Self.FINDER_BANKER.Erode := 3;
   Self.FINDER_BANKER.MinLongSide := 10;
+
+  Self.FINDER_CLERK.Colors += [CTS2(6176331, 11, 0.07, 0.51)]; // purple
+  Self.FINDER_CLERK.ClusterDistance := 3;
+  Self.FINDER_CLERK.Grow := 1;
+  Self.FINDER_CLERK.Erode := 1;
+  Self.FINDER_CLERK.MinLongSide := 10;
 end;
 
 procedure TRSGrandExchange.SetupAlignment(Mode: ERSClientMode); override;
