@@ -320,11 +320,14 @@ begin
 end;
 
 function TRSGrandExchange.FindSearch(Item: String; out B: TBox): Boolean;
+var
+  searchGrid : tBoxArray := grid(3,3, 160, 32, point(0,0), point(Chat.X1 + 7, Chat.Y1 + 29));
 begin
   if (Item <> '') then
     Item[1] := UpCase(Item[1]);
-    
-  Result := OCR.LocateText(Chat.Bounds, Item, RS_FONT_PLAIN_12,  TOCRColorRule.Create([$000000]), B) = 1;
+
+  for b in searchGrid do
+    if OCR.RecognizeMulti(b, TOCRColorRule.Create([$000000]), RS_FONT_PLAIN_12).Merge(' ') = Item then Exit(True);
 end;
 
 function TRSGrandExchange.ClickSearch(Item: String): Boolean;
