@@ -259,7 +259,7 @@ begin
   end;
   
   if Button.Visible() then
-    Result := OCR.RecognizeNumber(Button.Bounds,  TOCRColorRule.Create([$FFFFFF]), RS_FONT_PLAIN_11);
+    Result := OCR.RecognizeNumber(Button.Bounds,  TOCRColorRule.Create([$FFFFFF]), RS_FONT_PLAIN_12);
 end;
 
 function TRSGrandExchange.GetItemGuidePrice: Int32;
