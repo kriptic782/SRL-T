@@ -10,7 +10,7 @@ Methods to interact with the grand exchange.
 
 type
   ERSGEOverviewButton = (
-    HISTORY,
+    CHANGE_TAB,
     COLLECT
   );
   
@@ -44,6 +44,7 @@ type
   ERSGEInterface = (
     UNKNOWN,
     OVERVIEW,
+    HISTORY,
     OFFER_STATUS,
     OFFER_SETUP
   );
@@ -73,7 +74,7 @@ end;
 
 function TRSGrandExchange.GetOverviewButtons: TRSButtonArray;
 begin
-  Result := Self.FindButtons([[45,18], [81,18]]);
+  Result := Self.FindButtons([[45,18], [55,18], [81,18]]);
 end;
 
 function TRSGrandExchange.GetOverviewButton(Button: ERSGEOverviewButton): TRSButton;
@@ -89,7 +90,7 @@ begin
             Exit(Buttons[I]);
       end;
     else
-      if Length(Buttons) >= Length(ERSGEOverviewButton) - 1 then 
+      if Length(Buttons) >= Length(ERSGEOverviewButton) - 1 then
         Result := Buttons[Button];
   end;
 end;
@@ -183,6 +184,8 @@ begin
 end;
 
 function TRSGrandExchange.GetCurrentInterface: ERSGEInterface;
+var
+  tabText : String;
 begin
   if Self.GetSetupOfferButton(ERSGESetupOfferButton.HISTORY).Visible() then
     Result := ERSGEInterface.OFFER_SETUP
@@ -190,8 +193,14 @@ begin
   if Self.GetOfferStatusButton(ERSGEOfferStatusButton.HISTORY).Visible() then
     Result := ERSGEInterface.OFFER_STATUS
   else
-  if Self.GetOverviewButton(ERSGEOverviewButton.HISTORY).Visible() then
-    Result := ERSGEInterface.OVERVIEW;
+  if Self.GetOverviewButton(ERSGEOverviewButton.CHANGE_TAB).Visible() then
+  begin
+    tabText := OCR.Recognize(Self.GetOverviewButton(ERSGEOverviewButton.CHANGE_TAB).Bounds, TOCRColorRule.Create([2070783, $FFFFFF]), RS_FONT_PLAIN_11);
+    if lowercase(tabText) = 'history' then
+      Result := ERSGEInterface.OVERVIEW
+    else if lowercase(tabText) = 'exchange' then
+      Result := ERSGEInterface.HISTORY;
+  end;
 end;
 
 function TRSGrandExchange.IsOpen: Boolean;
@@ -259,7 +268,7 @@ begin
   end;
   
   if Button.Visible() then
-    Result := OCR.RecognizeNumber(Button.Bounds,  TOCRColorRule.Create([$FFFFFF]), RS_FONT_PLAIN_11);
+    Result := OCR.RecognizeNumber(Button.Bounds,  TOCRColorRule.Create([$FFFFFF]), RS_FONT_PLAIN_12);
 end;
 
 function TRSGrandExchange.GetItemGuidePrice: Int32;
@@ -311,11 +320,14 @@ begin
 end;
 
 function TRSGrandExchange.FindSearch(Item: String; out B: TBox): Boolean;
+var
+  searchGrid : tBoxArray := grid(3,3, 160, 32, point(0,0), point(Chat.X1 + 7, Chat.Y1 + 29));
 begin
   if (Item <> '') then
     Item[1] := UpCase(Item[1]);
-    
-  Result := OCR.LocateText(Chat.Bounds, Item, RS_FONT_PLAIN_12,  TOCRColorRule.Create([$000000]), B) = 1;
+
+  for b in searchGrid do
+    if OCR.RecognizeMulti(b, TOCRColorRule.Create([$000000]), RS_FONT_PLAIN_12).Merge(' ') = Item then Exit(True);
 end;
 
 function TRSGrandExchange.ClickSearch(Item: String): Boolean;
