@@ -1,12 +1,33 @@
+(*
+BankPin
+=======
+Methods to interact with the bank pin interface.
+*)
+
 {$DEFINE SRL_BANKPIN_INCLUDED}
 {$IFNDEF SRL_OSR}
   {$I SRL/osr.simba}
 {$ENDIF}
 
 type
+(*
+type TRSBankPin
+~~~~~~~~~~~~~~~
+.. pascal:: TRSBankPin = type TRSTitledInteface;
+
+Record responsible for the bank pin methods.
+*)
   TRSBankPin = type TRSTitledInteface;
 
-procedure TRSBankPin.Setup; override;
+
+(*
+BankPin.Setup
+~~~~~~~~~~~~~
+.. pascal:: procedure TRSBankPin.Setup(); override;
+
+Internal method called automatically by SRL.Setup().
+*)
+procedure TRSBankPin.Setup(); override;
 begin
   inherited;
   
@@ -14,6 +35,13 @@ begin
   Self.ButtonColors := [CTS1(988769, 30)];
 end;
 
+(*
+BankPin.SetupAlignment
+~~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: procedure TRSBankPin.SetupAlignment(Mode: ERSClientMode); override;
+
+Internal method called automatically TRSClient.ClientModeChanged().
+*)
 procedure TRSBankPin.SetupAlignment(Mode: ERSClientMode); override;
 begin
   inherited;
@@ -41,12 +69,36 @@ begin
   end;
 end;
 
-function TRSBankPin.GetButtons: TRSButtonArray;
+(*
+BankPin.GetButtons
+~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSBankPin.GetButtons(): TRSButtonArray;
+
+Internal method used to retrieve the buttons of the bank pin interface.
+
+Example
+-------
+
+  Debug(BankPin.GetButtons());
+*)
+function TRSBankPin.GetButtons(): TRSButtonArray;
 begin
   Result := FindButtons([[56,56]]);
 end;
 
-function TRSBankPin.ClickDigit(Digit: Char): Boolean; overload;
+(*
+BankPin.ClickDigit
+~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSBankPin.ClickDigit(digit: Char): Boolean;
+
+Method used to click the button with **digit**.
+
+Example
+-------
+
+  BankPin.ClickDigit('5');
+*)
+function TRSBankPin.ClickDigit(digit: Char): Boolean;
 var
   Buttons: TRSButtonArray;
   I: Int32;
@@ -58,7 +110,7 @@ begin
     Result := True;
     
     for I := 0 to High(Buttons) do
-      if Buttons[I].FindText(Digit, RS_FONT_BOLD_12) then
+      if Buttons[I].FindText(digit, RS_FONT_BOLD_12) then
       begin
         Mouse.Click(Buttons[I].Bounds, MOUSE_LEFT);
         
@@ -70,29 +122,41 @@ begin
   end;
 end;
 
-function TRSBankPin.Enter(Pin: String): Boolean;
+(*
+BankPin.Enter
+~~~~~~~~~~~~~
+.. pascal:: function TRSBankPin.Enter(pin: String): Boolean;
 
-  function GetDigitToEnter: Char;
+Method used to enter a full bank pin number.
+
+Example
+-------
+
+  BankPin.Enter('0123');
+*)
+function TRSBankPin.Enter(pin: String): Boolean;
+
+  function GetDigitToEnter(): Char;
   begin 
-    if OCR.LocateText(Self.Bounds, 'FIRST',  RS_FONT_BOLD_12, TOCRColorRule.Create([$FFFFFF]), 1) then Exit(Pin[1]);
-    if OCR.LocateText(Self.Bounds, 'SECOND', RS_FONT_BOLD_12, TOCRColorRule.Create([$FFFFFF]), 1) then Exit(Pin[2]);
-    if OCR.LocateText(Self.Bounds, 'THIRD',  RS_FONT_BOLD_12, TOCRColorRule.Create([$FFFFFF]), 1) then Exit(Pin[3]);
-    if OCR.LocateText(Self.Bounds, 'FOURTH', RS_FONT_BOLD_12, TOCRColorRule.Create([$FFFFFF]), 1) then Exit(Pin[4]);
+    if OCR.LocateText(Self.Bounds, 'FIRST',  RS_FONT_BOLD_12, TOCRColorRule.Create([$FFFFFF]), 1) then Exit(pin[1]);
+    if OCR.LocateText(Self.Bounds, 'SECOND', RS_FONT_BOLD_12, TOCRColorRule.Create([$FFFFFF]), 1) then Exit(pin[2]);
+    if OCR.LocateText(Self.Bounds, 'THIRD',  RS_FONT_BOLD_12, TOCRColorRule.Create([$FFFFFF]), 1) then Exit(pin[3]);
+    if OCR.LocateText(Self.Bounds, 'FOURTH', RS_FONT_BOLD_12, TOCRColorRule.Create([$FFFFFF]), 1) then Exit(pin[4]);
   end;
 
 var
-  I: Int32;
-  Digit: Char;
+  i: Int32;
+  digit: Char;
 begin
   for 1 to 3 do // 3 Attempts
   begin
-    for I := 1 to 4 do
+    for i := 1 to 4 do
     begin
-      Digit := GetDigitToEnter();
-      if Digit = '' then
+      digit := GetDigitToEnter();
+      if digit = '' then
         Break;
     
-      if not Self.ClickDigit(Digit) then
+      if not Self.ClickDigit(digit) then
         Break;
         
       Wait(1000, 2000, wdLeft);
@@ -105,19 +169,46 @@ begin
   Result := Bank.IsOpen(3000); // wait 3 extra seconds before failing.
 end;
 
-function TRSBankPin.IsOpen: Boolean;
+(*
+BankPin.IsOpen
+~~~~~~~~~~~~~~
+.. pascal::
+  function TRSBankPin.IsOpen(): Boolean;
+  function TRSBankPin.IsOpen(waitTime: Int32; interval: Int32 = -1): Boolean; overload;
+
+Returns true or false if the bank pin is open.
+
+Example
+-------
+
+  WriteLn BankPin.IsOpen();
+*)
+function TRSBankPin.IsOpen(): Boolean;
 begin
   Result := Length(Self.GetButtons()) = 10;
 end;
 
-function TRSBankPin.IsOpen(WaitTime: Int32; Interval: Int32 = -1): Boolean; overload;
+function TRSBankPin.IsOpen(waitTime: Int32; interval: Int32 = -1): Boolean; overload;
 begin
-  if (Interval = -1) then
-    Interval := SRL.TruncatedGauss(50, 1500);
+  if (interval = -1) then
+    interval := SRL.TruncatedGauss(50, 1500);
 
-  Result := WaitUntil(Self.IsOpen(), Interval, WaitTime);
+  Result := WaitUntil(Self.IsOpen(), Interval, waitTime);
 end;
 
+(*
+BankPin.Draw
+~~~~~~~~~~~~
+.. pascal:: procedure TRSBankPin.Draw(Bitmap: TMufasaBitmap); override;
+
+Draws the interface elements of the bank pin interface in a bitmap. Only used for debugging.
+Automatically called with **SRL.Debug()** if the bank pin is open.
+
+Example
+-------
+
+  SRL.Debug();
+*)
 procedure TRSBankPin.Draw(Bitmap: TMufasaBitmap); override;
 begin
   if (not Self.IsOpen()) then
@@ -128,6 +219,11 @@ begin
  // Bitmap.DrawBoxes(GetDigitBoxes(), False, $00FF00);
 end;
 
+(*
+var BankPin
+~~~~~~~~~~~
+Global BankPin variable.
+*)
 var
   BankPin: TRSBankPin;
 
