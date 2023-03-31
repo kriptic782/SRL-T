@@ -311,6 +311,15 @@ begin
   Result := OCR.Recognize(Chat.Bounds,  TOCRColorRule.Create([8388608]), RS_FONT_BOLD_12).StripR('*');
 end;
 
+function TRSGrandExchange.GetPreviousSearch: String;
+var
+  B : tBox;
+begin
+  // Offset from chat to find the result box
+  B := [chat.x1 + 254, chat.y1 + 28, chat.x2 - 138, chat.y2 - 80];
+  result := OCR.RecognizeMulti(B, TOCRColorRule.Create([$000000]), RS_FONT_PLAIN_12).Merge(' ');
+end;
+
 function TRSGrandExchange.ClearSearch: Boolean;
 begin
   while (Self.GetCurrentSearch() <> '') do
@@ -348,16 +357,25 @@ begin
   
   if Self.OpenSearch() and Self.ClearSearch() then
   begin
-    Keyboard.Send(Item);
-    
-    Result := WaitUntil(Self.FindSearch(Item, B), 500, 2500);
+    if self.GetPreviousSearch = Item then
+    begin
+      B := [chat.x1 + 124, chat.y1 + 28, chat.x2 - 138, chat.y2 - 80];
+
+      result := True;
+    end else
+    begin
+      Keyboard.Send(Item);
+
+      Result := WaitUntil(Self.FindSearch(Item, B), 500, 2500);
+    end;
+
     if Result and Click then
       Mouse.Click(B, MOUSE_LEFT);
   end;
 end;
 
 type
-  ERSGEOfferType = (EMPTY, BUY, SELL);
+  ERSGEOfferType = (EMPTY, BUY, SELL, UNKNOWN);
 
   TRSGEOfferStatus = record
     OfferType: ERSGEOfferType;
@@ -394,6 +412,7 @@ begin
     'Empty': Result.OfferType := ERSGEOfferType.EMPTY;
     'Buy':   Result.OfferType := ERSGEOfferType.BUY; 
     'Sell':  Result.OfferType := ERSGEOfferType.SELL;
+    else     Result.OfferType := ERSGEOfferType.UNKNOWN;
   end;
   
   if (Result.OfferType <> ERSGEOfferType.EMPTY) then
@@ -413,6 +432,7 @@ type
     Quantity: Int32;
     PricePerItem: Int32;
     TotalPrice: Int32;
+    PreTax: Int32;
     Bounds: TBox;
   end;
   TRSGEHistory = array of TRSGEHistoryItem;
@@ -462,6 +482,7 @@ begin
       Item.Quantity := 1;
       
     Item.TotalPrice := OCR.RecognizeNumber(Columns[3], TOCRColorRule.Create([4176127]), RS_FONT_PLAIN_11);
+    Item.PreTax     := StrToInt(ExtractFromStr('0' + OCR.Recognize(Columns[3], TOCRColorRule.Create([10461087]), RS_FONT_PLAIN_11).Before(' - '), Numbers));
     Item.PricePerItem := Item.TotalPrice div Item.Quantity;
 
     Result := Result + Item;
