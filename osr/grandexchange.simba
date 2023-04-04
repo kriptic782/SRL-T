@@ -461,6 +461,10 @@ begin
  
     Columns := Row.Partition(1, 4);
 
+    // The item icon column (2) is much smaller than 25% and the price information (3) is wider than 25%
+    Columns[3].X1 -= 25;
+    Columns[2].X2 := Columns[3].X1;
+
     Item := [];
     Item.Bounds := Row;
 
@@ -480,7 +484,7 @@ begin
     Item.Quantity := SRL.GetItemAmount(Columns[2]);
     if (Item.Quantity = 0) Then
       Item.Quantity := 1;
-      
+
     Item.TotalPrice := OCR.RecognizeNumber(Columns[3], TOCRColorRule.Create([4176127]), RS_FONT_PLAIN_11);
     Item.PreTax     := StrToInt(ExtractFromStr('0' + OCR.Recognize(Columns[3], TOCRColorRule.Create([10461087]), RS_FONT_PLAIN_11).Before(' - '), Numbers));
     Item.PricePerItem := Item.TotalPrice div Item.Quantity;
