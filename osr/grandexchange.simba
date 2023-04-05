@@ -183,14 +183,24 @@ begin
   end;
 end;
 
+function TRSGrandExchange.GetTitleText() : String;
+var
+  titleBox : tBox;
+begin
+  titleBox := [Self.X1, Self.Y1, Self.X2, Self.Y1+30];
+  result := OCR.Recognize(titleBox, TOCRColorRule.Create([2070783]), RS_FONT_BOLD_12);
+end;
+
 function TRSGrandExchange.GetCurrentInterface: ERSGEInterface;
 var
   tabText : String;
 begin
-  if Self.GetSetupOfferButton(ERSGESetupOfferButton.HISTORY).Visible() then
+  //if Self.GetSetupOfferButton(ERSGESetupOfferButton.HISTORY).Visible() then
+  if (Pos('Set up', self.GetTitleText()) > 0) then
     Result := ERSGEInterface.OFFER_SETUP
   else 
-  if Self.GetOfferStatusButton(ERSGEOfferStatusButton.HISTORY).Visible() then
+  //if Self.GetOfferStatusButton(ERSGEOfferStatusButton.HISTORY).Visible() then
+  if (Pos('status', self.GetTitleText()) > 0) then
     Result := ERSGEInterface.OFFER_STATUS
   else
   if Self.GetOverviewButton(ERSGEOverviewButton.CHANGE_TAB).Visible() then
