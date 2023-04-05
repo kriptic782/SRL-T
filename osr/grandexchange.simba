@@ -330,7 +330,7 @@ end;
 
 function TRSGrandExchange.FindSearch(Item: String; out B: TBox): Boolean;
 var
-  searchGrid : tBoxArray := grid(3,3, 160, 32, point(0,0), point(Chat.X1 + 7, Chat.Y1 + 29));
+  searchGrid : tBoxArray := grid(3,3, 162, 32, point(0,0), point(Chat.X1 + 7, Chat.Y1 + 29));
 begin
   if (Item <> '') then
     Item[1] := UpCase(Item[1]);
