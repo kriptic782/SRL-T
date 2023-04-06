@@ -1,3 +1,12 @@
+## [1.1.3](https://github.com/Torwent/SRL-T/compare/v1.1.2...v1.1.3) (2023-04-06)
+
+
+### Bug Fixes
+
+* force bump version  ([d8ddf44](https://github.com/Torwent/SRL-T/commit/d8ddf448988c1fa9c6d96f90d8894c68322a4577))
+
+
+
 ## [1.1.2](https://github.com/Torwent/SRL-T/compare/v1.1.1...v1.1.2) (2023-03-21)
 
 
@@ -33,15 +42,6 @@
 ### Bug Fixes
 
 * attempt to fix SRL-T docs. You can ignore this, nothing changed ([4ec939b](https://github.com/Torwent/SRL-T/commit/4ec939b327dd4d20028bb2d7f78b582e8a4111c7))
-
-
-
-## [1.0.10](https://github.com/Torwent/SRL-T/compare/v1.0.9...v1.0.10) (2023-03-16)
-
-
-### Bug Fixes
-
-* **TRSBank:** The bank interface in SRL-T now checks for and handles the item incinerator ([288bff7](https://github.com/Torwent/SRL-T/commit/288bff7579234d3f0c5c7614b6fe1a5c9fb61193))
 
 
 
