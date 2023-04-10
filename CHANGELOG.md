@@ -1,3 +1,12 @@
+## [1.1.4](https://github.com/Torwent/SRL-T/compare/v1.1.3...v1.1.4) (2023-04-10)
+
+
+### Bug Fixes
+
+* **bank:** bank tabs bounds fix ([4049d8e](https://github.com/Torwent/SRL-T/commit/4049d8ed0e9afa37b23fb95244b9624e75a6ffe9))
+
+
+
 ## [1.1.3](https://github.com/Torwent/SRL-T/compare/v1.1.2...v1.1.3) (2023-04-06)
 
 
@@ -33,15 +42,6 @@
 ### Bug Fixes
 
 * regenerate changelog and add deprecated warnign to TRSBank.FindItem(): Boolean ([4feabaf](https://github.com/Torwent/SRL-T/commit/4feabafe07f7585a6d944befa9d7d599e23b275d))
-
-
-
-## [1.0.11](https://github.com/Torwent/SRL-T/compare/v1.0.10...v1.0.11) (2023-03-17)
-
-
-### Bug Fixes
-
-* attempt to fix SRL-T docs. You can ignore this, nothing changed ([4ec939b](https://github.com/Torwent/SRL-T/commit/4ec939b327dd4d20028bb2d7f78b582e8a4111c7))
 
 
 
