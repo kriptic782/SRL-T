@@ -77,7 +77,9 @@ end;
 
 function TRSBank.GetTabBoxes(): TBoxArray;
 begin
-  Result := Grid(10, 1, 36, 30, [4, 0], [Self.X1 + 46, Self.Y1 + 42]);
+  Result := Grid(10, 1, 35, 28, [5, 0], [Self.X1 + 47, Self.Y1 + 42]);
+  Result[0].X1 += 1;
+  Result[0].X2 -= 2;
 end;
 
 function TRSBank.GetTabBox(Tab: Int32): TBox;
