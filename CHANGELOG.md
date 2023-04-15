@@ -1,3 +1,12 @@
+## [1.1.6](https://github.com/Torwent/SRL-T/compare/v1.1.5...v1.1.6) (2023-04-15)
+
+
+### Bug Fixes
+
+* force bump srl-t version ([d3f6338](https://github.com/Torwent/SRL-T/commit/d3f6338cc374764e88af988d60589525b05a8b67))
+
+
+
 ## [1.1.5](https://github.com/Torwent/SRL-T/compare/v1.1.4...v1.1.5) (2023-04-11)
 
 
@@ -31,17 +40,6 @@
 ### Bug Fixes
 
 * just bumping the version. also added docs to bankpin ([559de42](https://github.com/Torwent/SRL-T/commit/559de427356285ccec480c0f2ecad3a4505b523c))
-
-
-
-## [1.1.1](https://github.com/Torwent/SRL-T/compare/v1.1.0...v1.1.1) (2023-03-20)
-
-
-### Bug Fixes
-
-* **grandexchange:** Added HISTORY overview screen ([b21f8f6](https://github.com/Torwent/SRL-T/commit/b21f8f66eba7a81c8cdbf459139ea9830d55accb))
-* **grandexchange:** Corrected font for value reading ([9849c19](https://github.com/Torwent/SRL-T/commit/9849c198441a68c0d54a0d2baf379ec56ecca408))
-* **grandexchange:** Fixed search to work with multiline results ([e604c41](https://github.com/Torwent/SRL-T/commit/e604c41febef8283dd7888f5d0f044535cfa925b))
 
 
 
