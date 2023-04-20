@@ -817,7 +817,7 @@ end;
 (*
 Bank.GetCurrentTab
 ~~~~~~~~~~~
-.. pascal:: function TRSBank.GetCurrentTab: Int32;
+.. pascal:: function TRSBank.GetCurrentTab(): Int32;
 
 Get the current active bank tab.
 
@@ -826,16 +826,17 @@ Example
 
   WriteLn Bank.GetCurrentTab;
 *)
-function TRSBank.GetCurrentTab: Int32;
+function TRSBank.GetCurrentTab(): Int32;
 var
-  Tabs: TBoxArray := Self.GetTabBoxes;
-  Tab: TBox;
+  tabs: TBoxArray;
+  tab: TBox;
   i: Int32;
 begin
-  for i := 0 to High(Tabs) do
+  tabs := Self.GetTabBoxes();
+  for i := 0 to High(tabs) do
   begin
-    Tab := Tabs[i];
-    Tab.Y2 +=1;
+    tab := tabs[i];
+    tab.Y2 += 3;
     if SRL.CountColor(CTS1(5334129, 0), Tab) = 0 then
       Exit(i);
   end;
