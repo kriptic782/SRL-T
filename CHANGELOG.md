@@ -1,3 +1,12 @@
+# [1.2.0](https://github.com/Torwent/SRL-T/compare/v1.1.7...v1.2.0) (2023-04-27)
+
+
+### Features
+
+* **Login:** add launcher support ([73ba94b](https://github.com/Torwent/SRL-T/commit/73ba94b1d2653f4b58491d18b338e7953405628a))
+
+
+
 ## [1.1.7](https://github.com/Torwent/SRL-T/compare/v1.1.6...v1.1.7) (2023-04-20)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **bank:** bank tabs bounds fix ([4049d8e](https://github.com/Torwent/SRL-T/commit/4049d8ed0e9afa37b23fb95244b9624e75a6ffe9))
-
-
-
-## [1.1.3](https://github.com/Torwent/SRL-T/compare/v1.1.2...v1.1.3) (2023-04-06)
-
-
-### Bug Fixes
-
-* force bump version  ([d8ddf44](https://github.com/Torwent/SRL-T/commit/d8ddf448988c1fa9c6d96f90d8894c68322a4577))
 
 
 
