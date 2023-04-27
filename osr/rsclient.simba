@@ -71,7 +71,14 @@ function TRSClient.DetectClientMode(Update: Boolean = False): ERSClientMode;
 var
   W, H: Int32;
 begin
-  GetClientDimensions(W, H);
+  try
+    GetClientDimensions(W, H);
+  except
+    WriteLn('TargetPID: ', GetSimbaTargetPID());
+    WriteLn('TargetWin: ', GetSimbaTargetWindow());
+    WriteLn('Please refocus the client!');
+    TerminateScript(GetExceptionMessage());
+  end;
 
   // Music tab in each mode there are different colors at W-4, H-21
   // Two colors each because tab can be active(red) or not(grey)
