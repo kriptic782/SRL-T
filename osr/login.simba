@@ -652,14 +652,12 @@ function TRSLogin.LoginPlayer(): Boolean;
 var
   attempts, world: Int32;
   player: TRSLoginPlayer;
-  launcher: Boolean;
 begin
   Self.DebugLn('Logging in player');
 
   player := Self.GetPlayer();
 
-  launcher := Self.UsingLauncher();
-  if ((player.User = '') or (player.Password = '')) and not launcher then
+  if ((player.User = '') or (player.Password = '')) and not Self.UsingLauncher() then
     Self.Fatal('Player has no username or password');
 
   while Self.IsOpen() and (attempts < 10) do
@@ -679,7 +677,7 @@ begin
     if Self.HandleDialogs() then
       Wait(500);
 
-    if Self.DoLogin(player, launcher) and not Self.WaitLoginMessage() then
+    if Self.DoLogin(player, Self.UsingLauncher()) and not Self.WaitLoginMessage() then
       Exit;
     
     Inc(attempts);
