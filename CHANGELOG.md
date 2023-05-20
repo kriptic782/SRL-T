@@ -1,3 +1,12 @@
+## [1.2.1](https://github.com/Torwent/SRL-T/compare/v1.2.0...v1.2.1) (2023-05-20)
+
+
+### Bug Fixes
+
+* **login:** launcher should relog properly now after disconnecting ([2239dc2](https://github.com/Torwent/SRL-T/commit/2239dc2797bc7d05c6298f6f22bd77c721aaf3ce))
+
+
+
 # [1.2.0](https://github.com/Torwent/SRL-T/compare/v1.1.7...v1.2.0) (2023-04-27)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **itemfinder:** update items ([0422b50](https://github.com/Torwent/SRL-T/commit/0422b501be87078c19c374571432b4b531b2449e))
-
-
-
-## [1.1.4](https://github.com/Torwent/SRL-T/compare/v1.1.3...v1.1.4) (2023-04-10)
-
-
-### Bug Fixes
-
-* **bank:** bank tabs bounds fix ([4049d8e](https://github.com/Torwent/SRL-T/commit/4049d8ed0e9afa37b23fb95244b9624e75a6ffe9))
 
 
 
