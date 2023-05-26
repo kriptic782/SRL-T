@@ -1,3 +1,12 @@
+## [1.2.2](https://github.com/Torwent/SRL-T/compare/v1.2.1...v1.2.2) (2023-05-26)
+
+
+### Bug Fixes
+
+* **login:** jagex launcher improvements ([51238ff](https://github.com/Torwent/SRL-T/commit/51238ff19d46fc7f08d22d661400d3211746d6d7))
+
+
+
 ## [1.2.1](https://github.com/Torwent/SRL-T/compare/v1.2.0...v1.2.1) (2023-05-20)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * force bump srl-t version ([d3f6338](https://github.com/Torwent/SRL-T/commit/d3f6338cc374764e88af988d60589525b05a8b67))
-
-
-
-## [1.1.5](https://github.com/Torwent/SRL-T/compare/v1.1.4...v1.1.5) (2023-04-11)
-
-
-### Bug Fixes
-
-* **itemfinder:** update items ([0422b50](https://github.com/Torwent/SRL-T/commit/0422b501be87078c19c374571432b4b531b2449e))
 
 
 
