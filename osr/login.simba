@@ -594,6 +594,8 @@ begin
       Exit;
 
     b := tpa.Bounds();
+    b.Y2 -= 18;
+
     Mouse.Click(b, MOUSE_LEFT, True);
     Exit(WaitUntil(not Self.UsingLauncher(), 600, 3000));
   end;
