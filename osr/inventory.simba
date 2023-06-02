@@ -411,7 +411,7 @@ Example
 function TRSInventory.ShiftDrop(Slots: TIntegerArray): Boolean;
 var
   Boxes: TBoxArray;
-  I, Attempts: Int32;
+  i, j, Attempts: Int32;
   Selected: Int32;
   Circle: TCircle;
 begin
@@ -425,9 +425,9 @@ begin
   try
     for Attempts := 1 to 5 do
     begin
-      I := 0;
+      i := 0;
 
-      while (I < Length(Slots)) do
+      while (i < Length(Slots)) do
       begin
         Selected := Self.GetSelectedSlot();
         if (Selected > -1) then
@@ -437,7 +437,7 @@ begin
           Break;
         end;
 
-        if Self.IsSlotUsed(Slots[I]) then
+        if Self.IsSlotUsed(Slots[i]) then
         begin
           if not IsKeyDown(VK_SHIFT) then
           begin
@@ -445,10 +445,10 @@ begin
             Wait(95,170,wdLeft); //Wait for SHIFT to be registered before the click (important).
           end; 
 
-          Mouse.Click(Self.GetSlotBox(Slots[I]), MOUSE_LEFT);
+          Mouse.Click(Self.GetSlotBox(Slots[i]), MOUSE_LEFT);
 
           // Spam click a little
-          for 1 to SRL.TruncatedGauss(0, 3) do
+          for j := 1 to SRL.TruncatedGauss(0, 3) do
           begin
             Circle.X := Mouse.Position().X;
             Circle.Y := Mouse.Position().Y;
@@ -460,10 +460,10 @@ begin
           Wait(0, 250, wdLeft);
         end;
 
-        Inc(I);
+        Inc(i);
       end;
 
-      if (I = Length(Slots)) then
+      if (i = Length(Slots)) then
         Exit;
     end;
   finally

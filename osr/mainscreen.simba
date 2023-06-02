@@ -5,7 +5,7 @@ MainScreen
 
 {$DEFINE SRL_MAINSCREEN_INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL/osr.simba}
+  {$I SRL-T/osr.simba}
 {$ENDIF}
 
 {.$DEFINE SRL_DEBUG_MOUSE} // Enable me print uptext recognition
@@ -598,29 +598,28 @@ Example
   for I := 0 to High(Splats) do
     WriteLn(Splats[I].Position);
 *)
-function TRSMainScreen.FindHitsplats(Area: TBox): TRSHitsplatArray;
+function TRSMainScreen.FindHitsplats(area: TBox): TRSHitsplatArray;
 
-  function Find(Color: Int32; Red: Boolean): TRSHitsplatArray;
+  function Find(color: Int32; red: Boolean): TRSHitsplatArray;
   var
-    TPA: TPointArray;
-    B: TBox;
-    Text: String;
-    Hit: Int32;
+    tpa: TPointArray;
+    b: TBox;
+    hit: Int32;
   begin
-    if SRL.FindColors(TPA, CTS0(Color), Area) = 0 then
+    if SRL.FindColors(tpa, CTS0(color), area) = 0 then
       Exit;
 
-    for B in TPA.Cluster(3).ToTBA() do
-      if (B.Width >= 10) and (B.Height >= 10) then
+    for b in tpa.Cluster(3).ToTBA() do
+      if (b.Width() >= 10) and (b.Height() >= 10) then
       begin
-        Hit := OCR.RecognizeNumber(B.Expand(5, Area), TOCRColorRule.Create([$FFFFFF]), RS_FONT_PLAIN_11);
+        hit := OCR.RecognizeNumber(b.Expand(5, area), TOCRColorRule.Create([$FFFFFF]), RS_FONT_PLAIN_11);
 
-        Result += [B.Middle(), Hit, Red];
+        Result += [b.Middle(), hit, red];
       end;
   end;
 
 begin
-  Result := Find($0000C0, True) + Find($FF4040, False); // red, blue
+  Result := Find($0000BE, True) + Find($0009E3, True) + Find($FF4040, False); // red, max hit, blue
 end;
 
 (*
@@ -630,7 +629,7 @@ Mainscreen.FindHitsplats
 
 Overload which finds hitsplats on the entire mainscreen.
 *)
-function TRSMainScreen.FindHitsplats: TRSHitsplatArray; overload;
+function TRSMainScreen.FindHitsplats(): TRSHitsplatArray; overload;
 begin
   Result := Self.FindHitsplats(Self.Bounds());
 end;
@@ -856,7 +855,7 @@ Example
   if MainScreen.DidRedClick() then
     WriteLn('Red click!');
 *)
-function TRSMainScreen.DidRedClick: Boolean;
+function TRSMainScreen.DidRedClick(): Boolean;
 begin
   Result := Self.FindClick(Box(Mouse.Position(), 10, 10)) = ERSClickType.RED;
 end;
@@ -876,7 +875,7 @@ Example
   if MainScreen.DidYellowClick() then
     WriteLn('Yellow click!');
 *)
-function TRSMainScreen.DidYellowClick: Boolean;
+function TRSMainScreen.DidYellowClick(): Boolean;
 begin
   Result := Self.FindClick(Box(Mouse.Position(), 10, 10)) = ERSClickType.YELLOW;
 end;
@@ -889,7 +888,13 @@ begin
   inherited;
 
   for Splat in Self.FindHitsplats() do
-    Bitmap.DrawCircle(Splat.Position, 10, $00FF00);
+  begin
+    if Splat.Red then
+      Bitmap.DrawCircle(Splat.Position, 10, $FF00FF)
+    else
+      Bitmap.DrawCircle(Splat.Position, 10, $00FF00);
+  end;
+
   for Bar in Self.FindHPBars() do
     Bitmap.DrawBox(Bar.Bounds, $00FFFF);
 end;
