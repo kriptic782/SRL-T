@@ -1,3 +1,12 @@
+## [1.2.3](https://github.com/Torwent/SRL-T/compare/v1.2.2...v1.2.3) (2023-06-02)
+
+
+### Bug Fixes
+
+* read notes ([366fd98](https://github.com/Torwent/SRL-T/commit/366fd98960c60307c58a005c6a721cd4e51ccebc))
+
+
+
 ## [1.2.2](https://github.com/Torwent/SRL-T/compare/v1.2.1...v1.2.2) (2023-05-26)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **Bank:** fix Bank.GetCurrentTab() that broke with a recent update ([2941375](https://github.com/Torwent/SRL-T/commit/294137508bc9a9e60a2f4a0802046d53765a0aee))
-
-
-
-## [1.1.6](https://github.com/Torwent/SRL-T/compare/v1.1.5...v1.1.6) (2023-04-15)
-
-
-### Bug Fixes
-
-* force bump srl-t version ([d3f6338](https://github.com/Torwent/SRL-T/commit/d3f6338cc374764e88af988d60589525b05a8b67))
 
 
 
