@@ -1,3 +1,12 @@
+## [1.2.4](https://github.com/Torwent/SRL-T/compare/v1.2.3...v1.2.4) (2023-06-11)
+
+
+### Bug Fixes
+
+* **Make:** read notes ([ab97060](https://github.com/Torwent/SRL-T/commit/ab97060433e97aeb9df903446babd97cd5ba4465))
+
+
+
 ## [1.2.3](https://github.com/Torwent/SRL-T/compare/v1.2.2...v1.2.3) (2023-06-02)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **Login:** add launcher support ([73ba94b](https://github.com/Torwent/SRL-T/commit/73ba94b1d2653f4b58491d18b338e7953405628a))
-
-
-
-## [1.1.7](https://github.com/Torwent/SRL-T/compare/v1.1.6...v1.1.7) (2023-04-20)
-
-
-### Bug Fixes
-
-* **Bank:** fix Bank.GetCurrentTab() that broke with a recent update ([2941375](https://github.com/Torwent/SRL-T/commit/294137508bc9a9e60a2f4a0802046d53765a0aee))
 
 
 
