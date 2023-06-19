@@ -843,7 +843,7 @@ end;
 (*
 Mainscreen.DidRedClick
 ~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMainScreen.DidRedClick: Boolean;
+.. pascal:: function TRSMainScreen.DidRedClick(time: UInt32 = 250): Boolean;
 
 Returns true if a red click happened at the current mouse position.
 
@@ -855,15 +855,19 @@ Example
   if MainScreen.DidRedClick() then
     WriteLn('Red click!');
 *)
-function TRSMainScreen.DidRedClick(): Boolean;
+function TRSMainScreen.DidRedClick(time: UInt32 = 250): Boolean;
+var
+  area: TBox;
 begin
-  Result := Self.FindClick(Box(Mouse.Position(), 10, 10)) = ERSClickType.RED;
+  area := Box(Mouse.Position(), 10, 10);
+  area.LimitTo(Self.Bounds());
+  Result := WaitUntil(SRL.CountColor(CTS1(255,0), area) + SRL.CountColor(CTS1(262600,0), area) > 0, 50, time);
 end;
 
 (*
 Mainscreen.DidYellowClick
 ~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMainScreen.DidYellowClick: Boolean;
+.. pascal::function TRSMainScreen.DidYellowClick(time: UInt32 = 250): Boolean;
 
 Returns true if a yellow click happened at the current mouse position.
 
@@ -875,10 +879,18 @@ Example
   if MainScreen.DidYellowClick() then
     WriteLn('Yellow click!');
 *)
-function TRSMainScreen.DidYellowClick(): Boolean;
+function TRSMainScreen.DidYellowClick(time: UInt32 = 250): Boolean;
+var
+  area: TBox;
 begin
-  Result := Self.FindClick(Box(Mouse.Position(), 10, 10)) = ERSClickType.YELLOW;
+  area := Box(Mouse.Position(), 10, 10);
+  area.LimitTo(Self.Bounds());
+  Result := WaitUntil(SRL.CountColor(CTS1(65535,0), area) > 0, 50, time);
 end;
+
+
+
+
 
 procedure TRSMainScreen.Draw(Bitmap: TMufasaBitmap); override;
 var

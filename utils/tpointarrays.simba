@@ -237,7 +237,7 @@ end;
 
 (*
 TPointArray.Sort
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 .. code-block:: pascal
 
     procedure TPointArray.Sort(From:TPoint=[0,0]);
@@ -251,7 +251,7 @@ end;
 
 (*
 TPointArray.Sorted
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 .. code-block:: pascal
 
     function TPointArray.Sorted(From:TPoint=[0,0]): TPointArray;

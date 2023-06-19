@@ -103,7 +103,7 @@ end;
 (*
 Chat.GetDisplayNameBox
 ~~~~~~~~~~~~~~~~~~~~~~
-function TRSChat.GetDisplayNameBox(Colors: TIntegerArray = [$FFFFFF, $000000]): TBox;
+function TRSChat.GetDisplayNameBox(Colors: TIntegerArray = [$FFFFFF, $000000], out color: Integer): TBox;
 function TRSChat.GetDisplayNameBox(Colors: TIntegerArray = [$FFFFFF, $000000]): TBox; overload;
 
 Get the user name box. Useful for certain things like hiding the username for screenshots.
