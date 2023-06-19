@@ -1,3 +1,12 @@
+## [1.2.5](https://github.com/Torwent/SRL-T/compare/v1.2.4...v1.2.5) (2023-06-19)
+
+
+### Bug Fixes
+
+* DidRedClick and DidYellowClick ([0074b1b](https://github.com/Torwent/SRL-T/commit/0074b1b36ac0c86c9d3752f1b2c19ee2da0fd161))
+
+
+
 ## [1.2.4](https://github.com/Torwent/SRL-T/compare/v1.2.3...v1.2.4) (2023-06-11)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **login:** launcher should relog properly now after disconnecting ([2239dc2](https://github.com/Torwent/SRL-T/commit/2239dc2797bc7d05c6298f6f22bd77c721aaf3ce))
-
-
-
-# [1.2.0](https://github.com/Torwent/SRL-T/compare/v1.1.7...v1.2.0) (2023-04-27)
-
-
-### Features
-
-* **Login:** add launcher support ([73ba94b](https://github.com/Torwent/SRL-T/commit/73ba94b1d2653f4b58491d18b338e7953405628a))
 
 
 
