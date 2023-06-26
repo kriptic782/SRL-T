@@ -1,3 +1,12 @@
+# [1.3.0](https://github.com/Torwent/SRL-T/compare/v1.2.5...v1.3.0) (2023-06-26)
+
+
+### Features
+
+* **Bank:** The bank interface now has bank scrolling for items implemented ([e5b170d](https://github.com/Torwent/SRL-T/commit/e5b170de9494f796cfa3ea52a7e13a37e73b575f))
+
+
+
 ## [1.2.5](https://github.com/Torwent/SRL-T/compare/v1.2.4...v1.2.5) (2023-06-19)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **login:** jagex launcher improvements ([51238ff](https://github.com/Torwent/SRL-T/commit/51238ff19d46fc7f08d22d661400d3211746d6d7))
-
-
-
-## [1.2.1](https://github.com/Torwent/SRL-T/compare/v1.2.0...v1.2.1) (2023-05-20)
-
-
-### Bug Fixes
-
-* **login:** launcher should relog properly now after disconnecting ([2239dc2](https://github.com/Torwent/SRL-T/commit/2239dc2797bc7d05c6298f6f22bd77c721aaf3ce))
 
 
 
