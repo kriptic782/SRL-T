@@ -1,3 +1,12 @@
+## [1.3.1](https://github.com/Torwent/SRL-T/compare/v1.3.0...v1.3.1) (2023-06-29)
+
+
+### Bug Fixes
+
+* **bank:** scrolling shouldn't get stuck in an endless loop anymore ([aa329fb](https://github.com/Torwent/SRL-T/commit/aa329fbe89751e7b0eb69692846168bb39928fce))
+
+
+
 # [1.3.0](https://github.com/Torwent/SRL-T/compare/v1.2.5...v1.3.0) (2023-06-26)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([366fd98](https://github.com/Torwent/SRL-T/commit/366fd98960c60307c58a005c6a721cd4e51ccebc))
-
-
-
-## [1.2.2](https://github.com/Torwent/SRL-T/compare/v1.2.1...v1.2.2) (2023-05-26)
-
-
-### Bug Fixes
-
-* **login:** jagex launcher improvements ([51238ff](https://github.com/Torwent/SRL-T/commit/51238ff19d46fc7f08d22d661400d3211746d6d7))
 
 
 
