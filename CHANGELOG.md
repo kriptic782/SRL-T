@@ -1,3 +1,12 @@
+## [1.3.2](https://github.com/Torwent/SRL-T/compare/v1.3.1...v1.3.2) (2023-06-29)
+
+
+### Bug Fixes
+
+* **Bank:** fixing the previous commit, it wasn't done properly ([0280640](https://github.com/Torwent/SRL-T/commit/028064052973e0134c4db845ce206fd9b0b4dd74))
+
+
+
 ## [1.3.1](https://github.com/Torwent/SRL-T/compare/v1.3.0...v1.3.1) (2023-06-29)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **Make:** read notes ([ab97060](https://github.com/Torwent/SRL-T/commit/ab97060433e97aeb9df903446babd97cd5ba4465))
-
-
-
-## [1.2.3](https://github.com/Torwent/SRL-T/compare/v1.2.2...v1.2.3) (2023-06-02)
-
-
-### Bug Fixes
-
-* read notes ([366fd98](https://github.com/Torwent/SRL-T/commit/366fd98960c60307c58a005c6a721cd4e51ccebc))
 
 
 
