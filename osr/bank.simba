@@ -667,7 +667,10 @@ begin
     scroll := Self.GetScrollPosition();
     if Self.ContainsItem(item) then
       Exit(scroll);
-  until (scroll = 0) or (scroll = 100) or not Self.IsOpen();
+
+    if not Self.IsOpen() then
+      Exit(-1);
+  until (scroll = 0) or (scroll = 100);
 
   down := not down;
 
@@ -682,6 +685,9 @@ begin
     scroll := Self.GetScrollPosition();
     if Self.ContainsItem(item) then
       Exit(scroll);
+
+    if not Self.IsOpen() then
+      Exit(-1);
   until (scroll = 0) or (scroll = 100);
 
   Result := -1;
