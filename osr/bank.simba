@@ -1187,12 +1187,9 @@ begin
   //to something that will match all required items in a script.
   item.Scroll := Self.GetScrollPosition();
 
-  count := SRL.GetItemAmount(b);
+  count := SRL.GetItemAmount(b) - 1;
   if Self.WithdrawHelper(b, item.Quantity, item.Noted, useQuantityButtons) then
-  begin
-    WaitUntil(SRL.GetItemAmount(b) > 0, 100, 1000); //wait item fade.
-    Result := WaitUntil(SRL.GetItemAmount(b) < count, 300, 2000);
-  end;
+    Result := WaitUntil(InRange(SRL.GetItemAmount(b), 1, count), 300, 3000);
 end;
 
 function TRSBank.WithdrawSlot(Item: TRSBankWithdrawSlot; UseQuantityButtons: Boolean): Boolean;
