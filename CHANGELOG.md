@@ -1,3 +1,12 @@
+## [1.3.4](https://github.com/Torwent/SRL-T/compare/v1.3.3...v1.3.4) (2023-07-02)
+
+
+### Bug Fixes
+
+* **bank:** further tweaks to the new bank.withdrawitem ([7b732e3](https://github.com/Torwent/SRL-T/commit/7b732e385a7eed9d6a0e3b5547a501e979e5fd01))
+
+
+
 ## [1.3.3](https://github.com/Torwent/SRL-T/compare/v1.3.2...v1.3.3) (2023-06-30)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **Bank:** The bank interface now has bank scrolling for items implemented ([e5b170d](https://github.com/Torwent/SRL-T/commit/e5b170de9494f796cfa3ea52a7e13a37e73b575f))
-
-
-
-## [1.2.5](https://github.com/Torwent/SRL-T/compare/v1.2.4...v1.2.5) (2023-06-19)
-
-
-### Bug Fixes
-
-* DidRedClick and DidYellowClick ([0074b1b](https://github.com/Torwent/SRL-T/commit/0074b1b36ac0c86c9d3752f1b2c19ee2da0fd161))
 
 
 
