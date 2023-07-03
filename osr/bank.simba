@@ -867,17 +867,17 @@ begin
 
   Mouse.Move(b);
 
-  if (Self.CachedQuantity = amount) or MainScreen.IsUpText('Withdraw-' + ToString(amount)) then
+  if (TRSBank.CachedQuantity = amount) or MainScreen.IsUpText('Withdraw-' + ToString(amount)) then
   begin
-    Self.CachedQuantity := amount;
+    TRSBank.CachedQuantity := amount;
     Mouse.Click(MOUSE_LEFT);
     Exit(True);
   end;
 
-  Self.CachedQuantity := 0; //in case we falsely return the next statement true we reset this.
+  TRSBank.CachedQuantity := 0; //in case we falsely return the next statement true we reset this.
   Result := ChooseOption.Select('Withdraw-X') and Chat.AnswerQuery('Enter amount', ToString(amount), Random(2000, 4000));
   if Result then
-    Self.CachedQuantity := amount;
+    TRSBank.CachedQuantity := amount;
 end;
 
 (*

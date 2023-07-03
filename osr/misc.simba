@@ -59,16 +59,33 @@ SRL.GetItemAmount
 For use with items in like bankscreen, inventory, shops and so on to
 get the number of stacked items there are.
 *)
-function TSRL.GetItemAmount(constref Area: TBox): Int32; constref;
+function TSRL.GetItemAmount(area: TBox): Int32; constref;
+var
+  tpa: TPointArray;
 begin
-  if SRL.CountColor(RS_ITEM_YELLOW_STACK, Area) > 0 then
-    Result := OCR.RecognizeNumber(Area, TOCRColorRule.Create([RS_ITEM_YELLOW_STACK]), RS_FONT_PLAIN_11)
-  else
-  if SRL.CountColor(RS_ITEM_WHITE_STACK, Area) > 0 then
-    Result := OCR.RecognizeNumber(Area, TOCRColorRule.Create([RS_ITEM_WHITE_STACK]), RS_FONT_PLAIN_11) * 1000
-  else
-  if SRL.CountColor(RS_ITEM_GREEN_STACK, Area) > 0 then
-    Result := OCR.RecognizeNumber(Area, TOCRColorRule.Create([RS_ITEM_GREEN_STACK]), RS_FONT_PLAIN_11) * 1000000;
+  if SRL.FindColors(tpa, RS_ITEM_YELLOW_STACK, Area) > 0 then
+  begin
+    area := tpa.Bounds();
+    if area.Width() = 32 then
+      area.X2 += 1;
+    Exit(OCR.RecognizeNumber(area, TOCRColorRule.Create([RS_ITEM_YELLOW_STACK]), RS_FONT_PLAIN_11));
+  end;
+
+  if SRL.FindColors(tpa, RS_ITEM_WHITE_STACK, Area) > 0 then
+  begin
+    area := tpa.Bounds();
+    if area.Width() = 32 then
+      area.X2 += 1;
+    Exit(OCR.RecognizeNumber(area, TOCRColorRule.Create([RS_ITEM_WHITE_STACK]), RS_FONT_PLAIN_11) * 1000);
+  end;
+
+  if SRL.FindColors(tpa, RS_ITEM_GREEN_STACK, Area) > 0 then
+  begin
+    area := tpa.Bounds();
+    if area.Width() = 32 then
+      area.X2 += 1;
+    Result := OCR.RecognizeNumber(area, TOCRColorRule.Create([RS_ITEM_GREEN_STACK]), RS_FONT_PLAIN_11) * 1000000;
+  end;
 end;
 
 (*
