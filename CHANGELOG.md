@@ -1,3 +1,12 @@
+## [1.3.5](https://github.com/Torwent/SRL-T/compare/v1.3.4...v1.3.5) (2023-07-03)
+
+
+### Bug Fixes
+
+* **SRL:** SRL.CountItemAmount() should use the right bounds to read the text now ([885bd07](https://github.com/Torwent/SRL-T/commit/885bd07614cdf4510f6ddc61824a3ac196b0d7c6))
+
+
+
 ## [1.3.4](https://github.com/Torwent/SRL-T/compare/v1.3.3...v1.3.4) (2023-07-02)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **bank:** scrolling shouldn't get stuck in an endless loop anymore ([aa329fb](https://github.com/Torwent/SRL-T/commit/aa329fbe89751e7b0eb69692846168bb39928fce))
-
-
-
-# [1.3.0](https://github.com/Torwent/SRL-T/compare/v1.2.5...v1.3.0) (2023-06-26)
-
-
-### Features
-
-* **Bank:** The bank interface now has bank scrolling for items implemented ([e5b170d](https://github.com/Torwent/SRL-T/commit/e5b170de9494f796cfa3ea52a7e13a37e73b575f))
 
 
 
