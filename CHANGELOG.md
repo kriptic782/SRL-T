@@ -1,3 +1,12 @@
+## [1.3.7](https://github.com/Torwent/SRL-T/compare/v1.3.6...v1.3.7) (2023-07-04)
+
+
+### Bug Fixes
+
+* Bank.WithdrawItem().... again ([47a5d2f](https://github.com/Torwent/SRL-T/commit/47a5d2f0ccd93a5fa5bc7649123d53c20f2c193d))
+
+
+
 ## [1.3.6](https://github.com/Torwent/SRL-T/compare/v1.3.5...v1.3.6) (2023-07-04)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * all SRL-T files now use the new TRSBank constants ([39b4fb4](https://github.com/Torwent/SRL-T/commit/39b4fb46dddd4b3866296b9b8998e2343f43c364))
-
-
-
-## [1.3.2](https://github.com/Torwent/SRL-T/compare/v1.3.1...v1.3.2) (2023-06-29)
-
-
-### Bug Fixes
-
-* **Bank:** fixing the previous commit, it wasn't done properly ([0280640](https://github.com/Torwent/SRL-T/commit/028064052973e0134c4db845ce206fd9b0b4dd74))
 
 
 
