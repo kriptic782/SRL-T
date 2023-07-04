@@ -5,7 +5,7 @@ Methods to interact with the XP bar.
 *)
 {$DEFINE SRL_XPBAR_INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL/osr.simba}
+  {$I SRL-T/osr.simba}
 {$ENDIF}
 
 type
@@ -168,7 +168,7 @@ begin
   if not Self.IsSetup or not Self.Enable() then
     Exit;
 
-  Result := OCR.RecognizeNumber(Self.Bounds(), TOCRColorRule.Create([$FFFFFF]), Self.Font);
+  Result := OCR.RecognizeNumber(Self.Bounds(), TOCRColorFilter.Create([$FFFFFF]), Self.Font);
 end;
 
 (*

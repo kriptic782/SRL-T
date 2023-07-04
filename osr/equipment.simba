@@ -1,6 +1,6 @@
 {$DEFINE SRL_STATS_INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL/osr.simba}
+  {$I SRL-T/osr.simba}
 {$ENDIF}
 
 type
@@ -150,17 +150,17 @@ end;
 //to count arrows, darts, etc.
 function TRSEquipment.CountItemStack(Item: TRSItem): Int32;
 var
-  B: TBox;
+  b: TBox;
 begin
-  if Self.FindItem(Item, B) then
-    Result := SRL.GetItemAmount(B);
+  if Self.FindItem(Item, b) then
+    Result := SRL.GetItemAmount(SRL.GetItemAmountBox(b));
 end;
 
 
-function TRSEquipment.IsSlotUsed(B: TBox): Boolean; overload;
+function TRSEquipment.IsSlotUsed(b: TBox): Boolean; overload;
 begin
   // black with tolerance for when item is transparent
-  Result := SRL.CountColor(CTS1(1118740, 35), B) > 0;
+  Result := SRL.CountColor(CTS1(1118740, 35), b) > 0;
 end;
 
 function TRSEquipment.IsSlotUsed(Slot: ERSEquipmentButton): Boolean; overload;

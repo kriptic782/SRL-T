@@ -3,7 +3,7 @@ Webber
 ======
 *)
 
-{$I SRL/osr.simba}
+{$I SRL-T/osr.simba}
 
 type
   TWebberForm = record

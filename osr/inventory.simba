@@ -6,7 +6,7 @@ Methods to interact with the inventory.
 
 {$DEFINE SRL_INVENTORY_INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL/osr.simba}
+  {$I SRL-T/osr.simba}
 {$ENDIF}
 
 const
@@ -827,7 +827,7 @@ var
   Slot: Int32;
 begin
   if Self.FindItem(Item, Slot) then
-    Result := SRL.GetItemAmount(Self.GetSlotBox(Slot));
+    Result := SRL.GetItemAmount(SRL.GetItemAmountBox(Self.GetSlotBox(Slot)));
 end;
 
 

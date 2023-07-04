@@ -5,11 +5,11 @@ Item Finder
 
 {$DEFINE SRL_ITEMFINDER_INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL/osr.simba}
+  {$I SRL-T/osr.simba}
 {$ENDIF}
 
 const
-  ITEM_FINDER_IMAGES_VERSION = '6'; // Inc if images have changed
+  ITEM_FINDER_IMAGES_VERSION = '7'; // Inc if images have changed
   ITEM_FINDER_IMAGES_ZIP     = {$macro CURRENT_DIRECTORY} + '/item-images.zip';
   ITEM_FINDER_IMAGES_PATH    = {$macro CURRENT_DIRECTORY} + '/images/' + ITEM_FINDER_IMAGES_VERSION + '/';
 

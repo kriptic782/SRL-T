@@ -144,7 +144,7 @@ type
 
   TRSMainScreen = record(TRSInterface)
     UpTextArea: TBox;
-    UpTextFilter: TCompareRules;
+    UpTextFilter: TOCRFilter;
 
     YellowClicks: TIntegerArray;
     RedClicks: TIntegerArray;
@@ -175,7 +175,7 @@ begin
 
   Self.Name := 'MainScreen';
 
-  Self.UpTextFilter := TOCRAnyColorRule.Create(85, 60);
+  Self.UpTextFilter := TOCRAnyColorFilter.Create(85, 60);
   Self.UpTextFilter.MinCharacterMatch := '-';
 
   Self.YellowClicks := [
@@ -612,7 +612,7 @@ function TRSMainScreen.FindHitsplats(area: TBox): TRSHitsplatArray;
     for b in tpa.Cluster(3).ToTBA() do
       if (b.Width() >= 10) and (b.Height() >= 10) then
       begin
-        hit := OCR.RecognizeNumber(b.Expand(5, area), TOCRColorRule.Create([$FFFFFF]), RS_FONT_PLAIN_11);
+        hit := OCR.RecognizeNumber(b.Expand(5, area), TOCRColorFilter.Create([$FFFFFF]), RS_FONT_PLAIN_11);
 
         Result += [b.Middle(), hit, red];
       end;

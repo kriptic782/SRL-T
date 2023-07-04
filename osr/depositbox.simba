@@ -6,7 +6,7 @@ Methods to interact with the deposit box interface.
 
 {$DEFINE SRL_DEPOSITBOX_INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL/osr.simba}
+  {$I SRL-T/osr.simba}
 {$ENDIF}
 
 type

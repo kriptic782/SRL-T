@@ -6,7 +6,7 @@ Methods to interact with the Bank.
 
 {$DEFINE SRL_BANK_INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL/osr.simba}
+  {$I SRL-T/osr.simba}
 {$ENDIF}
 
 type
@@ -623,9 +623,9 @@ begin
   tpa := atpa[0];
 
   //Now we run OCR on the number tpa to find out what number is it and set our result
-  Result := OCR.RecognizeNumber(tpa.Bounds(), TOCRColorRule.Create([10672356]), RS_FONT_PLAIN_11);
+  Result := OCR.RecognizeNumber(tpa.Bounds(), TOCRColorFilter.Create([10672356]), RS_FONT_PLAIN_11);
   if Result = 0 then
-    Result := OCR.RecognizeNumber(tpa.Bounds(), TOCRColorRule.Create([16777215]), RS_FONT_PLAIN_11);
+    Result := OCR.RecognizeNumber(tpa.Bounds(), TOCRColorFilter.Create([16777215]), RS_FONT_PLAIN_11);
 
   if (Result > 0) and openTab then
     Self.OpenTab(Result);
@@ -1051,11 +1051,11 @@ Example
 *)
 function TRSBank.CountItemStack(Item: TRSItem): Int32;
 var
-  B: TBox;
+  b: TBox;
 begin
   Result := -1;
-  if Self.FindItem(Item, B) then
-    Result := SRL.GetItemAmount(B);
+  if Self.FindItem(Item, b) then
+    Result := SRL.GetItemAmount(SRL.GetItemAmountBox(b));
 end;
 
 (*
@@ -1189,7 +1189,7 @@ begin
 
   count := SRL.GetItemAmount(b) - 1;
   if Self.WithdrawHelper(b, item.Quantity, item.Noted, useQuantityButtons) then
-    Result := WaitUntil(InRange(SRL.GetItemAmount(b), 1, count), 300, 3000);
+    Result := WaitUntil(SRL.GetItemAmount(b) = 0, 300, 3000);
 end;
 
 function TRSBank.WithdrawSlot(Item: TRSBankWithdrawSlot; UseQuantityButtons: Boolean): Boolean;

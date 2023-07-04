@@ -10,7 +10,7 @@ if `SRL_USE_REMOTEINPUT_DEBUG` is defined. Debug() calls will drawn on the RS cl
 
 {$DEFINE SRL_RSCLIENT_INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL/osr.simba}
+  {$I SRL-T/osr.simba}
 {$ENDIF}
 
 {$IFDEF SRL_DISABLE_REMOTEINPUT}
