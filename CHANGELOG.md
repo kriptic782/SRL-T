@@ -1,3 +1,12 @@
+## [1.3.6](https://github.com/Torwent/SRL-T/compare/v1.3.5...v1.3.6) (2023-07-04)
+
+
+### Bug Fixes
+
+* read notes ([5f53c6a](https://github.com/Torwent/SRL-T/commit/5f53c6a99d83fbf8e1ca5e1a9b004d8abfa6113e))
+
+
+
 ## [1.3.5](https://github.com/Torwent/SRL-T/compare/v1.3.4...v1.3.5) (2023-07-03)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **Bank:** fixing the previous commit, it wasn't done properly ([0280640](https://github.com/Torwent/SRL-T/commit/028064052973e0134c4db845ce206fd9b0b4dd74))
-
-
-
-## [1.3.1](https://github.com/Torwent/SRL-T/compare/v1.3.0...v1.3.1) (2023-06-29)
-
-
-### Bug Fixes
-
-* **bank:** scrolling shouldn't get stuck in an endless loop anymore ([aa329fb](https://github.com/Torwent/SRL-T/commit/aa329fbe89751e7b0eb69692846168bb39928fce))
 
 
 
