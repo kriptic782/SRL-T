@@ -360,28 +360,33 @@ begin
   Result := not Self.Enabled() or Self.Click();
 end;
 
-function TRSButton.FindText(constref Text: String; constref Font: TFontSet; Color: Int32): Boolean; constref; overload;
+function TRSButton.FindText(constref text: String; constref font: TFontSet; colors: TIntegerArray = [$0]): Boolean; constref;
 begin
-  Result := OCR.LocateText(Self.Bounds, Text, Font, TOCRColorFilter.Create([Color]), 1);
+  Result := OCR.LocateText(Self.Bounds, text, font, TOCRColorFilter.Create(colors), 1);
 end;
 
-function TRSButton.FindText(constref Text: String; constref Font: TFontSet): Boolean; constref; overload;
-begin
-  Result := OCR.LocateText(Self.Bounds, Text, Font, TOCRColorFilter.Create([0]), 1);
-end;
-
-function TRSButton.FindText(Text: TStringArray; constref Font: TFontSet; out Found: String): Boolean; constref; overload;
+function TRSButton.FindText(text: TStringArray; constref font: TFontSet; out found: String; colors: TIntegerArray = [$0]): Boolean; constref; overload;
 var
-  I: Int32;
+  i: Int32;
 begin
-  for I := 0 to High(Text) do
-    if Self.FindText(Text[I], Font) then
+  for I := 0 to High(text) do
+    if Self.FindText(text[I], font, colors) then
     begin
-      Found := Text[I];
-      
+      found := Text[i];
       Exit(True);
     end;
 end;
+
+function TRSButton.FindText(constref text: String; constref font: TFontSet; color: Int32): Boolean; constref; overload;
+begin
+  Result := Self.FindText(text, font, [color]);
+end;
+
+function TRSButton.FindText(text: TStringArray; constref font: TFontSet; color: Int32; out found: String): Boolean; constref; overload;
+begin
+  Self.FindText(text, font, found, [color]);
+end;
+
 
 type
   TRSScrollBar = record
