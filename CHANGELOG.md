@@ -1,3 +1,12 @@
+## [1.3.8](https://github.com/Torwent/SRL-T/compare/v1.3.7...v1.3.8) (2023-07-05)
+
+
+### Bug Fixes
+
+* improved button OCR reading methods ([165228c](https://github.com/Torwent/SRL-T/commit/165228c0a27fa8987adec7ebc5c902fe457fa4ff))
+
+
+
 ## [1.3.7](https://github.com/Torwent/SRL-T/compare/v1.3.6...v1.3.7) (2023-07-04)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **bank:** further tweaks to the new bank.withdrawitem ([7b732e3](https://github.com/Torwent/SRL-T/commit/7b732e385a7eed9d6a0e3b5547a501e979e5fd01))
-
-
-
-## [1.3.3](https://github.com/Torwent/SRL-T/compare/v1.3.2...v1.3.3) (2023-06-30)
-
-
-### Bug Fixes
-
-* all SRL-T files now use the new TRSBank constants ([39b4fb4](https://github.com/Torwent/SRL-T/commit/39b4fb46dddd4b3866296b9b8998e2343f43c364))
 
 
 
