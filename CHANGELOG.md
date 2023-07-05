@@ -1,3 +1,12 @@
+## [1.3.10](https://github.com/Torwent/SRL-T/compare/v1.3.9...v1.3.10) (2023-07-05)
+
+
+### Bug Fixes
+
+* **plugins:** read notes ([714c298](https://github.com/Torwent/SRL-T/commit/714c29849d4dca00a5f2b47ce721317a2ca9ae50))
+
+
+
 ## [1.3.9](https://github.com/Torwent/SRL-T/compare/v1.3.8...v1.3.9) (2023-07-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([5f53c6a](https://github.com/Torwent/SRL-T/commit/5f53c6a99d83fbf8e1ca5e1a9b004d8abfa6113e))
-
-
-
-## [1.3.5](https://github.com/Torwent/SRL-T/compare/v1.3.4...v1.3.5) (2023-07-03)
-
-
-### Bug Fixes
-
-* **SRL:** SRL.CountItemAmount() should use the right bounds to read the text now ([885bd07](https://github.com/Torwent/SRL-T/commit/885bd07614cdf4510f6ddc61824a3ac196b0d7c6))
 
 
 
