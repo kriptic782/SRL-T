@@ -1,3 +1,12 @@
+## [1.3.9](https://github.com/Torwent/SRL-T/compare/v1.3.8...v1.3.9) (2023-07-05)
+
+
+### Bug Fixes
+
+* simpleOCR updated with RecognizeLines fixed ([f00bd2f](https://github.com/Torwent/SRL-T/commit/f00bd2f06065f7670dfb6a7d8850dfc38212c807))
+
+
+
 ## [1.3.8](https://github.com/Torwent/SRL-T/compare/v1.3.7...v1.3.8) (2023-07-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **SRL:** SRL.CountItemAmount() should use the right bounds to read the text now ([885bd07](https://github.com/Torwent/SRL-T/commit/885bd07614cdf4510f6ddc61824a3ac196b0d7c6))
-
-
-
-## [1.3.4](https://github.com/Torwent/SRL-T/compare/v1.3.3...v1.3.4) (2023-07-02)
-
-
-### Bug Fixes
-
-* **bank:** further tweaks to the new bank.withdrawitem ([7b732e3](https://github.com/Torwent/SRL-T/commit/7b732e385a7eed9d6a0e3b5547a501e979e5fd01))
 
 
 
