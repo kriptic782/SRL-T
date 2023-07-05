@@ -285,23 +285,26 @@ Chat.GetOptions
 
 Internal function to retrieve the currently available chat options.
 *)
-function TRSChat.GetOptions(Colors: TIntegerArray = [CHAT_COLOR_BLACK, CHAT_COLOR_WHITE]): TRSChatboxOptionArray; 
+function TRSChat.GetOptions(colors: TIntegerArray = [CHAT_COLOR_BLACK, CHAT_COLOR_WHITE]; tolerances: TIntegerArray = []): TRSChatboxOptionArray;
 var
-  Strings: TStringArray;
-  Boxes: TBoxArray;
-  I, Key: Int32;
+  strings: TStringArray;
+  boxes: TBoxArray;
+  i, key: Int32;
 begin
-  Strings :=OCR.RecognizeLines(Self.Bounds(), TOCRColorFilter.Create(Colors), RS_FONT_QUILL_8, Boxes);
+  if (tolerances = []) or (Length(colors) <> Length(tolerances)) then
+    SetLength(tolerances, Length(colors));
 
-  SetLength(Result, Length(Strings));
-  for I := 0 to High(Result) do
+  strings := OCR.RecognizeLines(Self.Bounds(), TOCRColorFilter.Create(colors, tolerances), RS_FONT_QUILL_8, boxes);
+
+  SetLength(Result, Length(strings));
+  for i := 0 to High(Result) do
   begin
-    if ('Click here to continue' in Strings[I]) then
-      Key := VK_SPACE
+    if ('Click here to continue' in strings[i]) then
+      key := VK_SPACE
     else
-      Key := VK_1 + I;
+      key := VK_1 + i;
       
-    Result[I] := [Strings[I], Boxes[I], Key];
+    Result[i] := [strings[i], boxes[i], key];
   end;
 end;
 
@@ -317,12 +320,12 @@ Example
 
   Chat.FindOption('Yes'); //Common chat option in several instances as an example where you are asked Yes or No.
 *)
-function TRSChat.FindOption(Text: String; Colors: TIntegerArray = [CHAT_COLOR_WHITE, CHAT_COLOR_BLUE]): Boolean;
+function TRSChat.FindOption(text: String; colors: TIntegerArray = [CHAT_COLOR_WHITE, CHAT_COLOR_BLUE]): Boolean;
 var
-  Option: TRSChatboxOption;
+  option: TRSChatboxOption;
 begin
-  for Option in GetOptions(Colors) do
-    if Text in Option.Text then
+  for option in GetOptions(colors) do
+    if text in option.Text then
       Exit(True);
 end;
 
@@ -338,17 +341,17 @@ Example
 
   Chat.ClickOption('Yes', True); //Common chat option in several instances as an example where you are asked Yes or No.
 *)
-function TRSChat.ClickOption(Text: String; UseKeyboard: Boolean = True; Colors: TIntegerArray = [CHAT_COLOR_BLACK, CHAT_COLOR_WHITE]): Boolean;
+function TRSChat.ClickOption(text: String; useKeyboard: Boolean = True; colors: TIntegerArray = [CHAT_COLOR_BLACK, CHAT_COLOR_WHITE]): Boolean;
 var
-  Option: TRSChatboxOption;
+  option: TRSChatboxOption;
 begin
-  for Option in GetOptions(Colors) do
-    if Text in Option.Text then
+  for option in Self.GetOptions(colors) do
+    if text in option.Text then
     begin 
-      if UseKeyboard then
-        Keyboard.PressKey(Option.Number)
+      if useKeyboard then
+        Keyboard.PressKey(option.Number)
       else
-        Mouse.Click(Option.Bounds, MOUSE_LEFT);
+        Mouse.Click(option.Bounds, MOUSE_LEFT);
 
       Exit(True);
     end;
