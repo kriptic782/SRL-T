@@ -1,3 +1,12 @@
+## [1.3.12](https://github.com/Torwent/SRL-T/compare/v1.3.11...v1.3.12) (2023-07-06)
+
+
+### Bug Fixes
+
+* rollback remote input ([af1371b](https://github.com/Torwent/SRL-T/commit/af1371b8071368c22b4349e13864d1701e703cc9))
+
+
+
 ## [1.3.11](https://github.com/Torwent/SRL-T/compare/v1.3.10...v1.3.11) (2023-07-06)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * improved button OCR reading methods ([165228c](https://github.com/Torwent/SRL-T/commit/165228c0a27fa8987adec7ebc5c902fe457fa4ff))
-
-
-
-## [1.3.7](https://github.com/Torwent/SRL-T/compare/v1.3.6...v1.3.7) (2023-07-04)
-
-
-### Bug Fixes
-
-* Bank.WithdrawItem().... again ([47a5d2f](https://github.com/Torwent/SRL-T/commit/47a5d2f0ccd93a5fa5bc7649123d53c20f2c193d))
 
 
 
