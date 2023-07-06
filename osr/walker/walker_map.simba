@@ -9,7 +9,6 @@ This file contains internal methods used by walker.
   {$I SRL-T/osr.simba}
 {$ENDIF}
 
-
 type
 (*
 TRSWalkerRegions
@@ -214,10 +213,12 @@ Example
 *)
 procedure TRSWalkerMap.Load(FileName: String; Scaling: Integer);
 begin
-  Self.Map := Self.InternalLoadMap(FileName);
   Self.ScaledMap.Init();
-  AddOnTerminate(@Self.Free);
+  Self.Map := Self.InternalLoadMap(FileName);
   Self.Map.Downsample(Scaling, Self.ScaledMap);
+  AddOnTerminate(@Self.Free);
+
+  Self.Regions := [[0, 0, Self.Map.getWidth()-1, Self.Map.getHeight()-1]];
 end;
 
 procedure TRSWalkerMap.Load(FileName: String; ARegions: TBoxArray; Scaling: Integer; Padding: Integer = 50); overload;
