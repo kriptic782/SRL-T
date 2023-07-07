@@ -785,6 +785,7 @@ Example
 function TRSWalker.Click(MinimapPoint: TPoint; Randomness: Int32): Boolean;
 var
   P: TPoint;
+  i: Int32;
 begin
   Result := True;
 
@@ -807,10 +808,9 @@ begin
 
   // 15% chance of spam clicking
   if (Randomness > 0) and (Random() < 0.15) then
-    for 0 to Random(3) do
+    for i := 0 to Random(3) do
     begin
       Mouse.Click(Mouse.Position(), MOUSE_LEFT);
-
       Wait(0, 150, wdLeft);
     end;
 end;

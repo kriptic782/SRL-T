@@ -15,27 +15,29 @@ type
       MaxHeight: Int32;
     end;
   end;
-  
+
   TRSInterface = record(TSRLBaseRecord)
     Mode: ERSClientMode;
-    
+
+    ItemFinder: TRSInterfaceItemFinder;
+
     ButtonColors: array of TCTS1Color;
     ButtonEnabledColors: array of TCTS1Color;
-    
+
     Cache: record
       Enabled: Boolean;
-    
+
       X1, Y1, X2, Y2: record
         Mode: ERSClientMode;
         ClientWidth, ClientHeight: Int32;
         Value: Int32;
       end;
     end;
-    
+
     Alignment: TRSInterfaceAlignment;
   end;
 
-procedure TRSInterface.Setup; 
+procedure TRSInterface.Setup;
 begin
   Self.Name := 'Unnamed';
   Self.ButtonColors := [CTS1(5334129, 2), CTS1(2303648, 1), CTS1(657930, 20), CTS1(1514268, 10)];
@@ -43,11 +45,11 @@ begin
   Self.Cache.Enabled := True;
 end;
 
-procedure TRSInterface.SetupAlignment(Mode: ERSClientMode); 
+procedure TRSInterface.SetupAlignment(Mode: ERSClientMode);
 begin
   Self.Mode := Mode;
-end; 
-  
+end;
+
 function TRSInterface.X1: Int32;
 var
   Left, Right, Width, Center: Single;
@@ -59,10 +61,10 @@ begin
     if (Self.Cache.X1.Mode = Self.Mode) and (Self.Cache.X1.ClientWidth = ClientWidth) and (Self.Cache.X1.ClientHeight = ClientHeight) then
       Exit(Self.Cache.X1.Value);
   end;
-  
+
   if (@Self.Alignment.Left.Method = nil) then
     Self.Fatal('No left anchor');
-    
+
   if (Self.Alignment.Center.MaxWidth > 0) then
   begin
     Left := Self.Alignment.Left.Method() + Self.Alignment.Left.Offset;
@@ -77,7 +79,7 @@ begin
     );
   end else
     Result := Round(Self.Alignment.Left.Method() + Self.Alignment.Left.Offset);
-    
+
   if Self.Cache.Enabled then
     Self.Cache.X1 := [Self.Mode, ClientWidth, ClientHeight, Result];
 end;
@@ -93,10 +95,10 @@ begin
     if (Self.Cache.X2.Mode = Self.Mode) and (Self.Cache.X2.ClientWidth = ClientWidth) and (Self.Cache.X2.ClientHeight = ClientHeight) then
       Exit(Self.Cache.X2.Value);
   end;
-    
+
   if (@Self.Alignment.Right.Method = nil) then
     Self.Fatal('No right anchor');
- 
+
   if (Self.Alignment.Center.MaxWidth > 0) then
   begin
     Left := Self.Alignment.Left.Method() + Self.Alignment.Left.Offset;
@@ -111,8 +113,8 @@ begin
     );
   end else
     Result := Round(Self.Alignment.Right.Method() + Self.Alignment.Right.Offset);
-  
-  if Self.Cache.Enabled then  
+
+  if Self.Cache.Enabled then
     Self.Cache.X2 := [Self.Mode, ClientWidth, ClientHeight, Result];
 end;
 
@@ -127,7 +129,7 @@ begin
     if (Self.Cache.Y1.Mode = Self.Mode) and (Self.Cache.Y1.ClientWidth = ClientWidth) and (Self.Cache.Y1.ClientHeight = ClientHeight) then
       Exit(Self.Cache.Y1.Value);
   end;
-   
+
   if (@Self.Alignment.Top.Method = nil) then
     Self.Fatal('No top anchor');
 
@@ -145,8 +147,8 @@ begin
     );
   end else
     Result := Round(Self.Alignment.Top.Method() + Self.Alignment.Top.Offset);
-   
-  if Self.Cache.Enabled then  
+
+  if Self.Cache.Enabled then
     Self.Cache.Y1 := [Self.Mode, ClientWidth, ClientHeight, Result];
 end;
 
@@ -161,7 +163,7 @@ begin
     if (Self.Cache.Y2.Mode = Self.Mode) and (Self.Cache.Y2.ClientWidth = ClientWidth) and (Self.Cache.Y2.ClientHeight = ClientHeight) then
       Exit(Self.Cache.Y2.Value);
   end;
-    
+
   if (@Self.Alignment.Bottom.Method = nil) then
     Self.Fatal('No bottom anchor');
 
@@ -179,43 +181,43 @@ begin
     );
   end else
     Result := Round(Self.Alignment.Bottom.Method() + Self.Alignment.Bottom.Offset);
-   
-  if Self.Cache.Enabled then  
+
+  if Self.Cache.Enabled then
     Self.Cache.Y2 := [Self.Mode, ClientWidth, ClientHeight, Result];
 end;
 
-function TRSInterface.Bounds: TBox; 
+function TRSInterface.Bounds: TBox;
 begin
   Result := [Self.X1, Self.Y1, Self.X2, Self.Y2];
 end;
 
-function TRSInterface.Width: Int32; 
+function TRSInterface.Width: Int32;
 begin
   Result := Bounds.Width;
 end;
 
-function TRSInterface.Height: Int32; 
+function TRSInterface.Height: Int32;
 begin
   Result := Bounds.Height;
 end;
 
-function TRSInterface.Center: TPoint; 
+function TRSInterface.Center: TPoint;
 begin
   Result := Self.Bounds().Middle;
 end;
 
 type
-  TRSButton = record 
+  TRSButton = record
     EnabledColors: array of TCTS1Color;
-  
-    Index: Int32; 
-    Bounds: TBox; 
+
+    Index: Int32;
+    Bounds: TBox;
     Middle: TPoint;
   end;
-  
+
   TRSButtonArray = array of TRSButton;
   TRSButtonDimensions = array of record Width, Height: Int32; end;
-  
+
 function TRSInterface.FindButtons(Dimensions: TRSButtonDimensions; Area: TBox): TRSButtonArray; overload;
 var
   TPA: TPointArray;
@@ -228,32 +230,32 @@ begin
   for Color in Self.ButtonColors do
     if SRL.FindColors(TPA, Color, Area) > 0 then
       ATPA += TPA;
-  
+
   ATPA := ATPA.Merge().Cluster(1);
 
   for TPA in ATPA do
   begin
     if Length(TPA) < 50 then
       Continue;
-      
+
     B := TPA.Bounds();
     B.GetDimensions(W, H);
 
     for I := 0 to High(Dimensions) do
     begin
       if ((W = Dimensions[I].Width) or (Dimensions[I].Width = 0)) and
-         ((H = Dimensions[I].Height) or (Dimensions[I].Height = 0)) and 
+         ((H = Dimensions[I].Height) or (Dimensions[I].Height = 0)) and
           (TPA.Frameness > 75) then
         Boxes += B;
     end;
-      
-    {$IFDEF SRL_DEBUG_FINDBUTTONS}        
+
+    {$IFDEF SRL_DEBUG_FINDBUTTONS}
     Writeln(W, ', ', H);
     {$ENDIF}
   end;
-  
+
   Boxes.SortByXY(10);
-  
+
   SetLength(Result, Length(Boxes));
   for I := 0 to High(Boxes) do
   begin
@@ -262,8 +264,8 @@ begin
     Result[I].Middle := Boxes[I].Middle;
     Result[I].EnabledColors := Self.ButtonEnabledColors;
   end;
-end; 
-  
+end;
+
 function TRSInterface.FindButtons(Dimensions: TRSButtonDimensions): TRSButtonArray; overload;
 var
   TPA: TPointArray;
@@ -274,39 +276,39 @@ var
   Boxes: TBoxArray;
 begin
   B := Self.Bounds();
-  
+
   for Color in Self.ButtonColors do
     if SRL.FindColors(TPA, Color, B) > 0 then
       ATPA += TPA;
-  
+
   ATPA := ATPA.Merge().Cluster(1);
 
   //Debug(ATPA);
   //Halt;
-  
+
   for TPA in ATPA do
   begin
     if Length(TPA) < 50 then
       Continue;
-      
+
     B := TPA.Bounds();
     B.GetDimensions(W, H);
 
     for I := 0 to High(Dimensions) do
     begin
       if ((W = Dimensions[I].Width) or (Dimensions[I].Width = 0)) and
-         ((H = Dimensions[I].Height) or (Dimensions[I].Height = 0)) and 
+         ((H = Dimensions[I].Height) or (Dimensions[I].Height = 0)) and
           (TPA.Frameness > 75) then
         Boxes += B;
     end;
-      
-    {$IFDEF SRL_DEBUG_FINDBUTTONS}        
+
+    {$IFDEF SRL_DEBUG_FINDBUTTONS}
     Writeln(W, ', ', H);
     {$ENDIF}
   end;
-  
+
   Boxes.SortByXY(10);
-  
+
   SetLength(Result, Length(Boxes));
   for I := 0 to High(Boxes) do
   begin
@@ -327,7 +329,7 @@ begin
 end;
 
 function TRSButton.Visible: Boolean; constref;
-begin 
+begin
   Result := Self <> [];
 end;
 
@@ -394,7 +396,7 @@ type
     Slider: TBox;
     Position: Int32;
   end;
-  
+
 procedure TRSScrollBar.Draw(Bitmap: TMufasaBitmap); constref;
 begin
   Bitmap.DrawBox(Self.SliderRegion, $00FFFF);
@@ -420,32 +422,32 @@ var
   Area, B: TBox;
 begin
   Area := Self.Bounds();
-  
+
   if SRL.FindColors(TPA, COLOR_ARROW, Area) > 0 then
   begin
     for B in TPA.Cluster(1).ToTBA() do
       if (B.Width = 14) and (B.Height = 14) and (SRL.CountColor(COLOR_BORDER, B.Expand(1, Area)) = 62) then
         Arrows += B;
-        
-    Arrows.SortByX(False);   
-    
+
+    Arrows.SortByX(False);
+
     if (Length(Arrows) >= 2) and (Arrows[0].X1 = Arrows[1].X1) and (Arrows[1].X2 = Arrows[1].X2) then
     begin
       if (Arrows[0].Y1 > Arrows[1].Y1) then
         Swap(Arrows[0], Arrows[1]);
-        
+
       B.X1 := Arrows[0].X1;
       B.Y1 := Arrows[0].Y2 + 2;
       B.X2 := Arrows[1].X2;
       B.Y2 := Arrows[1].Y1 - 2;
-  
-      if SRL.FindColors(TPA, COLOR_BORDER, B) > 0 then 
+
+      if SRL.FindColors(TPA, COLOR_BORDER, B) > 0 then
       begin
         Result.SliderRegion := B;
         Result.Slider := TPA.Bounds;
         Result.Position := Round((Result.Slider.Y1 - Result.SliderRegion.Y1) * 100 / (Result.SliderRegion.Height - Result.Slider.Height));
       end;
-    end; 
+    end;
   end;
 end;
 
@@ -461,7 +463,7 @@ var
   ScrollBar: TRSScrollBar;
 begin
   Result := -1;
-  
+
   ScrollBar := Self.GetScrollBar();
   if ScrollBar.IsVisible() then
     Result := ScrollBar.Position;
@@ -474,7 +476,7 @@ begin
   value := EnsureRange(value, 0, 100);
 
   scrollBar := Self.GetScrollBar();
-  
+
   if not scrollBar.IsVisible() or not Self.CanScroll() then
     Exit;
 
@@ -505,11 +507,11 @@ var
   ScrollBar: TRSScrollBar;
 begin
   Bitmap.DrawBox(Self.Bounds(), $00FFFF);
-  
+
   ScrollBar := Self.GetScrollBar();
   if ScrollBar.IsVisible() then
-    ScrollBar.Draw(Bitmap); 
-end; 
+    ScrollBar.Draw(Bitmap);
+end;
 
 type
   TRSTitledInteface = type TRSInterface;
@@ -538,7 +540,7 @@ begin
   B.Y2 := Self.Y1+28;
 
   Result := SRL.CountColor(65536, B) > 80;
-  
+
   if Result then
   begin
     case PressEscape of

@@ -1,0 +1,241 @@
+{$DEFINE SRL_INTERFACE_ITEMFINDER_INCLUDED}
+{$IFNDEF SRL_OSR}
+  {$I SRL-T/osr.simba}
+{$ENDIF}
+
+type
+  TRSInterfaceItemFinder = record(TSRLBaseRecord)
+    GetSearchBoxesFunction: function: TBoxArray of object;
+  end;
+
+
+function TRSInterfaceItemFinder.PointToSlot(p: TPoint): Int32;
+var
+  i: Int32;
+  slots: TBoxArray;
+begin
+  if (@Self.GetSearchBoxesFunction = nil) then
+    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+
+  slots := Self.GetSearchBoxesFunction();
+  for i := 0 to High(slots) do
+    if slots[i].Contains(p) then
+      Exit(i);
+
+  Result := -1;
+end;
+
+function TRSInterfaceItemFinder.GetUsedSlots(): TIntegerArray;
+var
+  slots: TBoxArray;
+  i: Int32;
+begin
+  if (@Self.GetSearchBoxesFunction = nil) then
+    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+
+  slots := Self.GetSearchBoxesFunction();
+  for i := 0 to High(slots) do
+    if SRL.CountColor(CTS1(1118740, 35), slots[i]) > 0 then
+      Result += i;
+end;
+
+
+function TRSInterfaceItemFinder.IndexOf(items: TRSItemArray): Integer;
+var
+  Match: TRSItemFinderMatch;
+begin
+  if (@Self.GetSearchBoxesFunction = nil) then
+    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+
+  if ItemFinder.Find(items, Self.GetSearchBoxesFunction(), Match) then
+    Result := Match.Index
+  else
+    Result := -1;
+end;
+
+function TRSInterfaceItemFinder.IndicesOf(items: TRSItemArray): TIntegerArray;
+var
+  matches: TRSItemFinderMatchArray;
+  I: Integer;
+begin
+  if (@Self.GetSearchBoxesFunction = nil) then
+    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+
+  matches := ItemFinder.FindAll(items, Self.GetSearchBoxesFunction());
+
+  SetLength(Result, Length(matches));
+  for I := 0 to High(matches) do
+    Result[I] := matches[I].Index;
+end;
+
+
+function TRSInterfaceItemFinder.Find(items: TRSItemArray; out box: TBox): Boolean;
+var
+  Match: TRSItemFinderMatch;
+begin
+  if (@Self.GetSearchBoxesFunction = nil) then
+    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+
+  Result := ItemFinder.Find(items, Self.GetSearchBoxesFunction(), Match);
+  if Result then
+    Box := Match.Box;
+end;
+
+function TRSInterfaceItemFinder.FindAll(items: TRSItemArray): TBoxArray;
+var
+  matches: TRSItemFinderMatchArray;
+  I: Integer;
+begin
+  if (@Self.GetSearchBoxesFunction = nil) then
+    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+
+  matches := ItemFinder.FindAll(items, Self.GetSearchBoxesFunction());
+
+  SetLength(Result, Length(matches));
+  for I := 0 to High(matches) do
+    Result[I] := matches[I].Box;
+end;
+
+function TRSInterfaceItemFinder.FindAll(items: TRSItemArray; out boxes: TBoxArray): Boolean; overload;
+var
+  matches: TRSItemFinderMatchArray;
+  foundItems: TRSItemArray;
+  i: Integer;
+begin
+  matches := ItemFinder.FindAll(items, Self.GetSearchBoxesFunction());
+  for i := 0 to High(matches) do
+  begin
+    foundItems += matches[i].Item;
+    boxes += matches[i].Box;
+  end;
+
+  Result := Length(Unique(foundItems)) = Length(items);
+end;
+
+
+function TRSInterfaceItemFinder.Contains(item: TRSItem): Boolean;
+begin
+  Result := Self.IndexOf([Item]) > -1;
+end;
+
+function TRSInterfaceItemFinder.ContainsAny(items: TRSItemArray): Boolean;
+begin
+  Result := Self.IndexOf(items) > -1;
+end;
+
+function TRSInterfaceItemFinder.ContainsAll(items: TRSItemArray): Boolean;
+var
+  matches: TRSItemFinderMatchArray;
+  foundItems: TRSItemArray;
+  i: Integer;
+begin
+  matches := ItemFinder.FindAll(items, Self.GetSearchBoxesFunction());
+  for i := 0 to High(matches) do
+    foundItems += matches[i].Item;
+
+  Result := Length(Unique(foundItems)) = Length(items);
+end;
+
+
+function TRSInterfaceItemFinder.FindRandomItems(items: TRSItemArray): TIntegerArray;
+var
+  usedSlots: TIntegerArray;
+begin
+  usedSlots := Self.GetUsedSlots();
+  Result := usedSlots.Difference(Self.IndicesOf(items));
+end;
+
+function TRSInterfaceItemFinder.ContainsRandomItem(items: TRSItemArray): Boolean; overload;
+begin
+  Result := Self.FindRandomItems(items) <> [];
+end;
+
+
+function TRSInterfaceItemFinder.Count(): Int32;
+var
+  slots: TBoxArray;
+  tpa: TPointArray;
+  atpa: T2DPointArray;
+begin
+  if (@Self.GetSearchBoxesFunction = nil) then
+    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+
+  slots := Self.GetSearchBoxesFunction();
+
+  if SRL.FindColors(tpa, CTS1(1118740, 35), slots.Merge()) = 0 then
+    Exit;
+
+  atpa := tpa.Cluster(5);
+  atpa.FilterSize(13, __GT__);
+
+  Result := atpa.Len();
+end;
+
+function TRSInterfaceItemFinder.Count(item: TRSItem): Integer; overload;
+begin
+  Result := Length(Self.IndicesOf([Item]));
+end;
+
+
+function TRSInterfaceItemFinder.CountStack(item: TRSItem): Integer;
+var
+  box: TBox;
+begin
+  Result := -1;
+
+  if Self.Find([item], box) then
+  begin
+    box.X2 := box.X1 + 35;
+    box.Y2 := box.Y1 + 7;
+    Result := SRL.GetItemAmount(box);
+  end;
+end;
+
+
+function TRSInterfaceItemFinder.MouseSlot(slot: Int32): Boolean;
+var
+  slots: TBoxArray;
+begin
+  if (@Self.GetSearchBoxesFunction = nil) then
+    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+
+  slots := Self.GetSearchBoxesFunction();
+  Result := InRange(slot, 0, High(slots));
+  if Result then
+    Mouse.Move(slots[slot]);
+end;
+
+function TRSInterfaceItemFinder.MouseItem(item: TRSItem): Boolean;
+var
+  box: TBox;
+begin
+  Result := Self.Find([item], box);
+  if Result then
+    Mouse.Move(box);
+end;
+
+
+function TRSInterfaceItemFinder.ClickSlot(slot: Int32; mouseButton: Int32 = MOUSE_LEFT): Boolean;
+begin
+  Result := Self.MouseItem(slot);
+  if Result then
+    Mouse.Click(mouseButton);
+end;
+
+function TRSInterfaceItemFinder.ClickItem(item: TRSItem; mouseButton: Int32 = MOUSE_LEFT): Boolean;
+begin
+  Result := Self.MouseItem(item);
+  if Result then
+    Mouse.Click(mouseButton);
+end;
+
+
+function TRSInterfaceItemFinder.InteractSlot(slot: Int32; option: String): Boolean;
+begin
+  Result := Self.MouseSlot(slot) and ChooseOption.Select(option);
+end;
+
+function TRSInterfaceItemFinder.InteractItem(item: TRSItem; option: String): Boolean;
+begin
+  Result := Self.MouseItem(item) and ChooseOption.Select(option);
+end;

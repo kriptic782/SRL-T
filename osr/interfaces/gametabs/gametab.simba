@@ -1,6 +1,6 @@
 {$DEFINE SRL_GAMEERSGameTab.INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL-T/osr.simba}
+  {$I SRL/osr.simba}
 {$ENDIF}
 
 type

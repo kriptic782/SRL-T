@@ -20,7 +20,7 @@ Example
 
 {$DEFINE SRL_LOGIN_INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL-T/osr.simba}
+  {$I SRL/osr.simba}
 {$ENDIF}
 
 type
@@ -173,21 +173,6 @@ begin
   Result := FindText(Text, _);
 end;  
 
-(*
-Login.UsingLauncher
-~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSLogin.UsingLauncher(): Boolean;
-
-Checks if the client was launched by a launcher (Steam/Jagex Launcher) or was manually ran by the user.
-
-Example
--------
-  WriteLn Login.UsingLauncher();
-*)
-function TRSLogin.UsingLauncher(): Boolean;
-begin
-  Result := Self.FindText('Welcome') and not Self.FindText('New User') and not Self.FindText('Existing User');
-end;
 
 (*
 Login.ClickText
@@ -575,68 +560,6 @@ begin
 end;
 
 (*
-Login.DoLogin
-~~~~~~~~~~~~~
-.. pascal:: function TRSLogin.DoLogin(player: TRSLoginPlayer; launcher: Boolean = False): Boolean;
-
-Performs a login in the loginscreen with the specified player.
-*)
-function TRSLogin.DoLogin(player: TRSLoginPlayer; launcher: Boolean = False): Boolean;
-var
-  tpa: TPointArray;
-  b: TBox;
-begin
-  if launcher then
-  begin
-    SRL.FindColors(tpa, 1117967, Self.Bounds());
-
-    if tpa = [] then
-      Exit;
-
-    b := tpa.Bounds();
-    b.Y2 -= 18;
-
-    Mouse.Click(b, MOUSE_LEFT, True);
-    Exit(WaitUntil(not Self.UsingLauncher(), 600, 3000));
-  end;
-
-  Result := Self.EnterField('Login:', player.User) and
-            Self.EnterField('Password:', player.Password);
-
-  if Result then
-    Keyboard.PressKey(VK_ENTER);
-end;
-
-(*
-Login.WaitLoginMessage
-~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSLogin.WaitLoginMessage(): Boolean;
-
-Waits for a login message after a login was performed, returns true if we successfully enter the game lobby.
-*)
-function TRSLogin.WaitLoginMessage(): Boolean;
-var
-  message: String;
-  timeout: UInt64;
-begin
-  timeout := GetTickCount() + 80000; //80 seconds.
-
-  while Self.IsOpen() do
-  begin
-    message := Self.GetLoginMessage();
-    if (message <> LOGIN_MESSAGE_CONNECTING) and
-       (message <> LOGIN_MESSAGE_NONE) then
-      Break;
-
-    if GetTickCount >= timeout then
-      Exit;
-    Wait(500);
-  end;
-
-  Result := not Self.IsOpen() or Self.HandleMessage(message);
-end;
-
-(*
 Login.LoginPlayer
 ~~~~~~~~~~~~~~~~~
 .. pascal:: function TRSLogin.LoginPlayer(): Boolean;
@@ -652,35 +575,51 @@ Example
 *)
 function TRSLogin.LoginPlayer(): Boolean;
 var
-  attempts, world: Int32;
+  message: String;
+  attempts, World: Int32;
   player: TRSLoginPlayer;
 begin
   Self.DebugLn('Logging in player');
 
   player := Self.GetPlayer();
-
-  if ((player.User = '') or (player.Password = '')) and not Self.UsingLauncher() then
+  if (player.User = '') or (player.Password = '') then
     Self.Fatal('Player has no username or password');
 
   while Self.IsOpen() and (attempts < 10) do
   begin
     Self.DebugLn('Attempt ' + ToString(attempts + 1));
     
-    if player.Worlds <> [] then
+    if (player.Worlds <> []) and (not (Self.GetCurrentWorld() in player.Worlds)) then
     begin
-      if not (Self.GetCurrentWorld() in player.Worlds) or SRL.Dice(30) then
-      begin
-        world := Player.Worlds[Random(Length(Player.Worlds))];
-        if (not Self.SwitchToWorld(world)) then
-          Exit;
-      end;
+      World := Player.Worlds[Random(Length(Player.Worlds))];
+      if (not Self.SwitchToWorld(World)) then
+        Exit;
     end;
-
+    
     if Self.HandleDialogs() then
       Wait(500);
 
-    if Self.DoLogin(player, Self.UsingLauncher()) and not Self.WaitLoginMessage() then
-      Exit;
+    if Self.EnterField('Login:', player.User) and
+       Self.EnterField('Password:', player.Password) then
+    begin
+      Keyboard.PressKey(VK_ENTER);
+  
+      while Self.IsOpen() do
+      begin
+        message := Self.GetLoginMessage();
+        if (message <> LOGIN_MESSAGE_CONNECTING) and
+           (message <> LOGIN_MESSAGE_NONE) then
+          Break;
+
+        Wait(500);
+      end;
+
+      if Self.IsOpen() then
+      begin
+        if not Self.HandleMessage(message) then
+          Exit(False);
+      end;
+    end;
     
     Inc(attempts);
   end;

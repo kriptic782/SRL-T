@@ -258,6 +258,43 @@ begin
 end;
 
 (*
+Bank.FindItemBoundaries
+~~~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSBank.FindItemBoundaries(): TBoxArray;
+
+Finds item boundaries. This is an internal function used to retrieve the boxes we
+search for items in.
+
+Example
+-------
+
+  Boxes := Self.FindItemBoundaries();
+  WriteLn ItemFinder.Find(Item, Boxes);
+*)
+function TRSBank.FindItemBoundaries(): TBoxArray;
+var
+  TPA: TPointArray;
+  ATPA: T2DPointArray;
+  Area, B: TBox;
+begin
+  Area := Self.GetSlotBoxes().Merge();
+
+  if SRL.FindColors(TPA, RS_ITEM_BORDER, Area) > 0 then
+  begin
+    ATPA := TPA.Cluster(50, 3);
+
+    for B in ATPA.ToTBA() do
+    begin
+      if B.Height() <= 5 then
+        Continue;
+
+      Result += Grid(8, 1, 32, B.Height(), [16], [Area.X1, B.Y1 - 1]);
+    end;
+  end;
+end;
+
+
+(*
 Bank.Setup
 ~~~~~~~~~~
 .. pascal:: procedure Bank.Setup;
@@ -271,6 +308,8 @@ begin
   inherited;
     
   Self.Name := 'Bank';
+  Self.ItemFinder.Name := Self.Name + '.ItemFinder';
+  Self.ItemFinder.GetSearchBoxesFunction := @Self.FindItemBoundaries;
 end;
 
 procedure TRSBank.SetupAlignment(Mode: ERSClientMode); override;
@@ -363,41 +402,6 @@ begin
             Chat.AnswerQuery('Show items', '', Random(2000, 2500));
 end;
 
-(*
-Bank.FindItemBoundaries
-~~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSBank.FindItemBoundaries(): TBoxArray;
-
-Finds item boundaries. This is an internal function used to retrieve the boxes we
-search for items in.
-
-Example
--------
-  
-  Boxes := Self.FindItemBoundaries();
-  WriteLn ItemFinder.Find(Item, Boxes);
-*)
-function TRSBank.FindItemBoundaries(): TBoxArray;
-var
-  TPA: TPointArray;
-  ATPA: T2DPointArray;
-  Area, B: TBox;
-begin
-  Area := Self.GetSlotBoxes().Merge();
-  
-  if SRL.FindColors(TPA, RS_ITEM_BORDER, Area) > 0 then
-  begin
-    ATPA := TPA.Cluster(50, 3);
-    
-    for B in ATPA.ToTBA() do
-    begin
-      if B.Height() <= 5 then
-        Continue;
-        
-      Result += Grid(8, 1, 32, B.Height(), [16], [Area.X1, B.Y1 - 1]);
-    end;
-  end;
-end;
 
 (*
 Bank.Open
@@ -616,7 +620,6 @@ begin
   if atpa = [] then Exit(-1); //At this point, if everything got filtered something must have gone wrong and we didn't find a tab. I don't think this ever happens.
 
   atpa.SortByY(False); //Sort the tabs text from bottom to top. This is because we are only interested in the very first above the item.
-
 
   atpa := atpa[0].Cluster(1); //Now we make clusters of that single tab text. This will separate the text from the number.
   atpa.SortByX(False);        //Sort the tab text from right to left because now we are only interested in the number which is to the right.
@@ -965,7 +968,7 @@ end;
 (*
 Bank.FindItem
 ~~~~~~~~~~~~~
-.. pascal:: function TRSBank.FindItem(Item: TRSItem; out Bounds: TBox): Boolean;
+.. pascal:: function TRSBank.FindItem(Item: TRSItem; out box: TBox): Boolean;
 
 Finds and returns the bounds of an item in the bank
 
@@ -975,18 +978,12 @@ Example
   Bank.FindItem('Coins', Box);
   Debug(Box);
 *)
-function TRSBank.FindItem(Item: TRSItem; out Bounds: TBox): Boolean;
-var
-  Boxes: TBoxArray;
-  Indices: TIntegerArray;
+function TRSBank.FindItem(item: TRSItem; out box: TBox): Boolean;
 begin
   if not Self.IsOpen() then
     Exit;
 
-  Boxes := Self.FindItemBoundaries();
-  Indices := ItemFinder.Find(Item, Boxes, 1);
-  if Result := Indices <> [] then
-    Bounds := Boxes[Indices[0]];
+  Result := Self.ItemFinder.Find([item], box);
 end;
 
 function TRSBank.FindItem(Item: TRSItem): Boolean; overload; deprecated 'Use TRSBank.ContainsItem() instead.';
@@ -1008,11 +1005,11 @@ Example
 
   WriteLn Bank.ContainsItem('Coins');
 *)
-function TRSBank.ContainsItem(Item: TRSItem): Boolean;
+function TRSBank.ContainsItem(item: TRSItem): Boolean;
 var
   b: TBox;
 begin
-  Result := Self.FindItem(Item, b);
+  Result := Self.ItemFinder.Contains(item);
 end;
 
 
@@ -1029,12 +1026,12 @@ Example
 
   WriteLn Bank.CountItem('Seaweed');
 *)
-function TRSBank.CountItem(Item: TRSItem): Int32;
+function TRSBank.CountItem(item: TRSItem): Int32;
 begin
   if not Self.IsOpen() then
     Exit;
 
-  Result := Length(ItemFinder.Find(Item, Self.FindItemBoundaries()));
+  Result := Length(Self.ItemFinder.FindAll([item]));
 end;
 
 (*
@@ -1053,9 +1050,10 @@ function TRSBank.CountItemStack(Item: TRSItem): Int32;
 var
   b: TBox;
 begin
-  Result := -1;
-  if Self.FindItem(Item, b) then
-    Result := SRL.GetItemAmount(SRL.GetItemAmountBox(b));
+  if not Self.IsOpen() then
+    Exit;
+
+  Result := Self.ItemFinder.CountStack(item);
 end;
 
 (*
@@ -1311,4 +1309,3 @@ begin
 
   Bank.Draw(Bitmap);
 end;
-

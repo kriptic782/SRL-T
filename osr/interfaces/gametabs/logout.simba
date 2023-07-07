@@ -1,6 +1,6 @@
 {$DEFINE SRL_LOGOUT_INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL-T/osr.simba}
+  {$I SRL/osr.simba}
 {$ENDIF}
 
 type
@@ -84,14 +84,13 @@ end;
 function TRSLogout.ClickLogout(Attempts: Int32 = 5; TryTime: Int32 = 20000): Boolean;
 var
   Interval: UInt64;
-  i: Int32;
 begin
   if (not Self.Open()) or (not Self.CloseWorldSwitcher()) then
     Exit;
 
   Interval := TryTime div Attempts;
 
-  for i := 1 to Attempts do
+  for 1 to Attempts do
     if Self.GetButton(ERSLogoutButton.CLICK_HERE).Click() and WaitUntil(not RSClient.IsLoggedIn(), 500, Interval + SRL.NormalRange(-2000, 2000)) then 
       Exit(True);
 end;

@@ -1,6 +1,6 @@
 {$DEFINE SRL_GAMETABS_INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL-T/osr.simba}
+  {$I SRL/osr.simba}
 {$ENDIF}
 
 type
@@ -112,13 +112,11 @@ begin
 end;
 
 function TRSGameTabs.Open(Tab: ERSGameTab): Boolean;
-var
-  i: Int32;
 begin
-  if Self.GetCurrentTab() = Tab then
+  if GetCurrentTab() = Tab then
     Exit(True);
 
-  for i := 1 to 3 do
+  for 1 to 3 do
   begin
     Mouse.Click(GetTabBox(Tab), MOUSE_LEFT, SRL.Dice(50));
 

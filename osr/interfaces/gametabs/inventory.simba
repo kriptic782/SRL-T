@@ -31,7 +31,44 @@ type
     HIGH_SLOT: Int32;
   end;
 
-procedure TRSInventory.Setup; override;
+
+(*
+Inventory.GetSlotBoxes
+~~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSInventory.GetSlotBoxes(): TBoxArray;
+
+Mainly used internally by TRSInventory methods.
+This function is used to return a TBoxArray of the inventory slots.
+
+Example
+-------
+
+  Debug(Inventory.GetSlotBoxes());
+*)
+function TRSInventory.GetSlotBoxes(): TBoxArray;
+begin
+  Result := Grid(4, 7, 31, 31, [11, 5], [Self.X1 + 13, Self.Y1 + 9]);
+end;
+
+(*
+Inventory.GetSlotBox
+~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSInventory.GetSlotBox(): TBox;
+
+Mainly used internally by TRSInventory methods.
+This function is used to return a TBox of the specified inventory slot.
+
+Example
+-------
+
+  Debug(Inventory.GetSlotBox(5));
+*)
+function TRSInventory.GetSlotBox(slot: Int32): TBox;
+begin
+  Result := Self.GetSlotBoxes()[slot];
+end;
+
+procedure TRSInventory.Setup(); override;
 begin
   inherited;
 
@@ -39,6 +76,8 @@ begin
 
   Self.LOW_SLOT := 0;
   Self.HIGH_SLOT := 27;
+  Self.ItemFinder.Name := Self.Name + '.ItemFinder';
+  Self.ItemFinder.GetSearchBoxesFunction := @Self.GetSlotBoxes;
 end;
 
 procedure TRSInventory.SetupAlignment(Mode: ERSClientMode); override;
@@ -85,42 +124,6 @@ begin
   Result := GameTabs.Open(ERSGameTab.INVENTORY);
 end;
 
-(*
-Inventory.GetSlotBoxes
-~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSInventory.GetSlotBoxes(): TBoxArray;
-
-Mainly used internally by TRSInventory methods.
-This function is used to return a TBoxArray of the inventory slots.
-
-Example
--------
-
-  Debug(Inventory.GetSlotBoxes());
-*)
-function TRSInventory.GetSlotBoxes(): TBoxArray;
-begin
-  Result := Grid(4, 7, 31, 31, [11, 5], [Self.X1 + 13, Self.Y1 + 9]);
-end;
-
-(*
-Inventory.GetSlotBox
-~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSInventory.GetSlotBox(): TBox;
-
-Mainly used internally by TRSInventory methods.
-This function is used to return a TBox of the specified inventory slot.
-
-Example
--------
-
-  Debug(Inventory.GetSlotBox(5));
-*)
-function TRSInventory.GetSlotBox(Slot: Int32): TBox;
-begin
-  Result := Self.GetSlotBoxes()[Slot];
-end;
-
 
 (*
 Inventory.PointToSlot
@@ -141,17 +144,9 @@ Example
   Slot := Inventory.PointToSlot(P);
   WriteLn(Slot); // 15
 *)
-function TRSInventory.PointToSlot(P: TPoint): Int32;
-var
-  I: Int32;
-  Slots: TBoxArray;
+function TRSInventory.PointToSlot(p: TPoint): Int32;
 begin
-  Slots := Self.GetSlotBoxes();
-  for I := 0 to High(Slots) do
-    if Slots[I].Contains(P) then
-      Exit(I);
-
-  Result := -1;
+  Result := Self.ItemFinder.PointToSlot(p);
 end;
 
 (*
@@ -411,7 +406,7 @@ Example
 function TRSInventory.ShiftDrop(Slots: TIntegerArray): Boolean;
 var
   Boxes: TBoxArray;
-  i, j, Attempts: Int32;
+  I, Attempts: Int32;
   Selected: Int32;
   Circle: TCircle;
 begin
@@ -425,9 +420,9 @@ begin
   try
     for Attempts := 1 to 5 do
     begin
-      i := 0;
+      I := 0;
 
-      while (i < Length(Slots)) do
+      while (I < Length(Slots)) do
       begin
         Selected := Self.GetSelectedSlot();
         if (Selected > -1) then
@@ -437,7 +432,7 @@ begin
           Break;
         end;
 
-        if Self.IsSlotUsed(Slots[i]) then
+        if Self.IsSlotUsed(Slots[I]) then
         begin
           if not IsKeyDown(VK_SHIFT) then
           begin
@@ -445,10 +440,10 @@ begin
             Wait(95,170,wdLeft); //Wait for SHIFT to be registered before the click (important).
           end; 
 
-          Mouse.Click(Self.GetSlotBox(Slots[i]), MOUSE_LEFT);
+          Mouse.Click(Self.GetSlotBox(Slots[I]), MOUSE_LEFT);
 
           // Spam click a little
-          for j := 1 to SRL.TruncatedGauss(0, 3) do
+          for 1 to SRL.TruncatedGauss(0, 3) do
           begin
             Circle.X := Mouse.Position().X;
             Circle.Y := Mouse.Position().Y;
@@ -460,10 +455,10 @@ begin
           Wait(0, 250, wdLeft);
         end;
 
-        Inc(i);
+        Inc(I);
       end;
 
-      if (i = Length(Slots)) then
+      if (I = Length(Slots)) then
         Exit;
     end;
   finally
@@ -498,22 +493,10 @@ Example
   WriteLn Inventory.Count();
 *)
 function TRSInventory.Count(): Int32;
-var
-  b: TBox;
-  tpa: TPointArray;
-  atpa: T2DPointArray;
 begin
   if not Self.Open() then
     Exit;
-
-  // black with tolerance for when item is transparent
-  if SRL.FindColors(tpa, CTS1(1118740, 35), Self.Bounds().Expand(-5)) = 0 then
-    Exit;
-
-  atpa := tpa.Cluster(5);
-  atpa.FilterSize(13, __GT__);
-
-  Result := atpa.Len();
+  Result := Self.ItemFinder.Count();
 end;
 
 (*
@@ -603,31 +586,13 @@ Example
       WriteLn('The slots that have sharks and lobsters are: ', slots);
   end;
 *)
-function TRSInventory.FindItems(Items: TRSItemArray; out Slots: TIntegerArray): Boolean;
-var
-  Item: TRSItem;
-  i: Int32;
-  TBA, tmp: TBoxArray;
-  UsedSlots, TempSlots: TIntegerArray;
+function TRSInventory.FindItems(items: TRSItemArray; out slots: TIntegerArray): Boolean;
 begin
   if not Self.Open() then
     Exit;
 
-  TBA := Self.GetSlotBoxes();
-  for i:=0 to High(TBA) do
-    if Self.IsSlotUsed(TBA[i]) then
-    begin
-      tmp += TBA[i];
-      UsedSlots += i;
-    end;
-
-  for Item in Items do
-    TempSlots += ItemFinder.Find(Item, tmp);
-
-  for i in TempSlots do
-    Slots += UsedSlots[i];
-
-  Result := Length(Slots) > 0;
+  slots := Self.ItemFinder.IndicesOf(items);
+  Result := Length(slots) > 0;
 end;
 
 (*
@@ -658,32 +623,12 @@ begin
 end;
 
 function TRSInventory.FindItem(item: TRSItem; out slot: Int32): Boolean; overload;
-var
-  i: Int32;
-  b: TBox;
-  tmp, tba: TBoxArray;
-  slots: TIntegerArray;
 begin
   if not Self.Open() then
     Exit;
 
-  tba := Self.GetSlotBoxes();
-  for i:=0 to High(tba) do
-  begin
-    b := [];
-    if Self.IsSlotUsed(tba[i]) then
-      b := tba[i];
-    tmp += b;
-  end;
-
-  slots := ItemFinder.Find(item, tmp, 1);
-
-  if Length(slots) > 0 then
-  begin
-    slot := slots[0];
-
-    Result := True;
-  end;
+  slot := Self.ItemFinder.IndexOf([item]);
+  Result := slot <> -1;
 end;
 
 
@@ -709,14 +654,7 @@ begin
   if not Self.Open() then
     Exit;
 
-  tba := Self.GetSlotBoxes();
-  for i:=0 to High(tba) do
-    if Self.IsSlotUsed(tba[i]) then
-      tmp += tba[i];
-
-  for item in items do
-    if ItemFinder.Find(item, tmp, 1) <> [] then  //we don't use TRSInventory.FindItems() because of this, we only need to find 1.
-      Exit(True);
+  Result := Self.ItemFinder.ContainsAny(items);
 end;
 
 (*
@@ -760,16 +698,7 @@ begin
   if not Self.Open() then
     Exit;
 
-  tba := Self.GetSlotBoxes();
-  for i:=0 to High(tba) do
-    if Self.IsSlotUsed(tba[i]) then
-      tmp += tba[i];
-
-  Result := True;
-
-  for item in items do
-    if ItemFinder.Find(item, tmp, 1) = [] then
-      Exit(False);
+  Result := Self.ItemFinder.ContainsAll(items);
 end;
 
 
@@ -822,12 +751,12 @@ Example
   WriteLn Inventory.CountItemStack('Bronze arrows'); //will print the stack amount
   WriteLn Inventory.CountItemStack('Shark'); //will print 0 because sharks are not stackable.
 *)
-function TRSInventory.CountItemStack(Item: TRSItem): Int32;
-var
-  Slot: Int32;
+function TRSInventory.CountItemStack(item: TRSItem): Int32;
 begin
-  if Self.FindItem(Item, Slot) then
-    Result := SRL.GetItemAmount(SRL.GetItemAmountBox(Self.GetSlotBox(Slot)));
+  if not Self.IsOpen() then
+    Exit;
+
+  Result := Self.ItemFinder.CountStack(item);
 end;
 
 

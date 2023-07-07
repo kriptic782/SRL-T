@@ -5,7 +5,7 @@ Methods to interact with the XP bar.
 *)
 {$DEFINE SRL_XPBAR_INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL-T/osr.simba}
+  {$I SRL/osr.simba}
 {$ENDIF}
 
 type

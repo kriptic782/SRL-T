@@ -23,13 +23,49 @@ type
     FOLLOWER
   );
   
-  TRSEquipment = type TRSInterface;
+  TRSEquipment = record(TRSInterface)
+    Slots: TBoxArray;
+  end;
 
-procedure TRSEquipment.Setup; override;
+
+
+function TRSEquipment.GetSlotBoxes(): TBoxArray;
+var
+  tba: TBoxArray = [
+    [80, 8, 30, 30],
+    [39, 47, 30, 30],
+    [81, 47, 30, 30],
+    [121, 47, 30, 30],
+    [24, 86, 30, 30],
+    [81, 86, 30, 30],
+    [136, 86, 30, 30],
+    [80, 126, 30, 30],
+    [24, 166, 30, 30],
+    [80, 166, 30, 30],
+    [136, 166, 30, 30]
+  ];
+  i: Int32;
+begin
+  if Self.Slots <> [] then
+    Exit(Self.Slots);
+
+  for i := 0 to High(tba) do
+  begin
+    tba[i].X2 += tba[i].X1;
+    tba[i].Y2 += tba[i].Y1;
+  end;
+
+  Self.Slots := tba.Offset([Self.X1()-4, Self.Y1()]);
+  Result := Self.Slots;
+end;
+
+procedure TRSEquipment.Setup(); override;
 begin
   inherited;
 
   Self.Name := 'Equipment';
+  Self.ItemFinder.Name := Self.Name + '.ItemFinder';
+  Self.ItemFinder.GetSearchBoxesFunction := @Self.GetSlotBoxes;
 end;
 
 procedure TRSEquipment.SetupAlignment(Mode: ERSClientMode); override;
@@ -66,23 +102,12 @@ begin
 end;
 
 
-function TRSEquipment.FindItem(Item: TRSItem; out Bounds: TBox): Boolean;
-var
-  Boxes: TBoxArray;
-  Slots: TIntegerArray;
+function TRSEquipment.FindItem(Item: TRSItem; out box: TBox): Boolean;
 begin
   if not Self.Open() then
     Exit;
 
-  Boxes := Self.GetButtons().ToBoxes();
-
-  Slots := ItemFinder.Find(Item, Boxes, 1);
-  if Length(Slots) > 0 then
-  begin
-    Bounds := Boxes[Slots[0]];
-
-    Result := True;
-  end;
+  Result := Self.ItemFinder.Find([item], box);
 end;
 
 //for use without having to pass extra parameters
@@ -120,7 +145,6 @@ begin
       Exit(False);
 end;
 
-
 function TRSEquipment.HoverItem(Item: TRSItem): Boolean;
 var
   B: TBox;
@@ -148,12 +172,12 @@ begin
 end;
 
 //to count arrows, darts, etc.
-function TRSEquipment.CountItemStack(Item: TRSItem): Int32;
-var
-  b: TBox;
+function TRSEquipment.CountItemStack(item: TRSItem): Int32;
 begin
-  if Self.FindItem(Item, b) then
-    Result := SRL.GetItemAmount(SRL.GetItemAmountBox(b));
+  if not Self.IsOpen() then
+    Exit;
+
+  Result := Self.ItemFinder.CountStack(item);
 end;
 
 

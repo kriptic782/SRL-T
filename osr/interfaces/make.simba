@@ -7,16 +7,13 @@ TRSMake is the record SRL has to handle it.
 
 {$DEFINE SRL_MAKE_INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL-T/osr.simba}
+  {$I SRL/osr.simba}
 {$ENDIF}
 
 const
 (*
 const MAKE_QUANTITY_ALL
 ~~~~~~~~~~~~~~~~~~~~~~~
-
-DEPRECATED use MAKE_QUANTITY_ALL
-
 -1 is the value we reserve for the "All" quantity.
 This constant simply exists so we have a human readable version that makes sense.
 
@@ -25,40 +22,14 @@ When using TRSMake methods you can use either -1 or MAKE_QUANTITY_ALL for the "A
   MAKE_QUANTITY_ALL = -1;
 
 type
-(*
-type TRSMakeItem
-~~~~~~~~~~~~~~~~
-.. pascal::
-  TRSMakeItem = record
-    Item: String;
-    Index: Int32;
-    Quantity: Int32;
-  end;
-
-Internal helper type. You probably never have to touch this. This is used to cache the make buttons. after the we know their index.
-*)
   TRSMakeItem = record
       Item: String;
       Index: Int32;
       Quantity: Int32;
     end;
 
-(*
-type TRSMake
-~~~~~~~~~~~~
-.. pascal::
   TRSMake = record(TRSInterface)
     Items: array of TRSMakeItem;
-  class const
-    QUANTITY_ALL = -1;
-  end;
-
-Type responsible to handle the Make menu.
-*)
-  TRSMake = record(TRSInterface)
-    Items: array of TRSMakeItem;
-  class const
-    QUANTITY_ALL = -1;
   end;
 
 (*
@@ -225,7 +196,7 @@ Attempts to set a quantity.
 Example
 -------
 
-  WriteLn Make.SetQuantity(TRSMake.QUANTITY_ALL);
+  WriteLn Make.SetQuantity(MAKE_QUANTITY_ALL);
 *)
 function TRSMake.SetQuantity(Amount: Int32): Boolean;
 const
@@ -254,7 +225,7 @@ begin
     WaitUntil(Self.FindHint() = [], 100, 2000);
   end;
 
-  if Amount = TRSMake.QUANTITY_ALL then
+  if Amount = MAKE_QUANTITY_ALL then
     Text := 'All'
   else
     Text := ToString(Amount);
@@ -347,7 +318,7 @@ Select a **Index** of the available buttons or the button with **Item** text on 
 Example
 -------
 
-  WriteLn Make.Select('Maple longbow', TRSMake.QUANTITY_ALL, True);
+  WriteLn Make.Select('Maple longbow', MAKE_QUANTITY_ALL, True);
 *)
 function TRSMake.Select(Index: Int32; Quantity: Int32; UseKeyboard: Boolean = True): Boolean;
 var

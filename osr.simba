@@ -49,43 +49,45 @@ end;
 // The following allows individual include files to compile on their own with just having {$I SRL-T/osr.simba}
 // Summary: It includes this file until the current file is reached.
 
-{$IFNDEF SRL_OCR_INCLUDED}             {$I osr/ocr.simba}
-{$IFNDEF SRL_MISC_INCLUDED}            {$I osr/misc.simba}
-{$IFNDEF SRL_ITEMFINDER_INCLUDED}      {$I osr/itemfinder/itemfinder.simba}
-{$IFNDEF SRL_RSCLIENT_INCLUDED}        {$I osr/rsclient.simba}
-{$IFNDEF SRL_INTERFACE_INCLUDED}       {$I osr/interface.simba}
-{$IFNDEF SRL_CHOOSEOPTION_INCLUDED}    {$I osr/chooseoption.simba}
-{$IFNDEF SRL_CHATBUTTONS_INCLUDED}     {$I osr/chatbuttons.simba}
-{$IFNDEF SRL_LOGIN_INCLUDED}           {$I osr/login.simba}
-{$IFNDEF SRL_CHAT_INCLUDED}            {$I osr/chat.simba}
-{$IFNDEF SRL_MAKE_INCLUDED}            {$I osr/make.simba}
-{$IFNDEF SRL_GAMETABS_INCLUDED}        {$I osr/gametabs.simba}
-{$IFNDEF SRL_GAMETAB_INCLUDED}         {$I osr/gametab.simba}
-{$IFNDEF SRL_OPTIONS_INCLUDED}         {$I osr/options.simba}
-{$IFNDEF SRL_LOGOUT_INCLUDED}          {$I osr/logout.simba}
-{$IFNDEF SRL_MINIMAP_INCLUDED}         {$I osr/minimap.simba}
-{$IFNDEF SRL_MAINSCREEN_INCLUDED}      {$I osr/mainscreen.simba}
-{$IFNDEF SRL_INTERFACEAREA_INCLUDED}   {$I osr/interfacearea.simba}
-{$IFNDEF SRL_MM2MS_PROJECTOR_INCLUDED} {$I osr/mm2ms_projector.simba}
-{$IFNDEF SRL_MM2MS_INCLUDED}           {$I osr/mm2ms.simba}
-{$IFNDEF SRL_XPBAR_INCLUDED}           {$I osr/xpbar.simba}
-{$IFNDEF SRL_INVENTORY_INCLUDED}       {$I osr/inventory.simba}
-{$IFNDEF SRL_BANK_INCLUDED}            {$I osr/bank.simba}
-{$IFNDEF SRL_BANKPIN_INCLUDED}         {$I osr/bankpin.simba}
-{$IFNDEF SRL_GRANDEXCHANGE_INCLUDED}   {$I osr/grandexchange.simba}
-{$IFNDEF SRL_DEPOSITBOX_INCLUDED}      {$I osr/depositbox.simba}
-{$IFNDEF SRL_WALKER_MAP_INCLUDED}      {$I osr/walker/walker_map.simba}
-{$IFNDEF SRL_WALKER_INCLUDED}          {$I osr/walker/walker.simba}
-{$IFNDEF SRL_STATS_INCLUDED}           {$I osr/stats.simba}
-{$IFNDEF SRL_EQUIPMENT_INCLUDED}       {$I osr/equipment.simba}
-{$IFNDEF SRL_ANTIBAN_INCLUDED}         {$I osr/antiban.simba}
-{$IFNDEF SRL_COMBAT_INCLUDED}          {$I osr/combat.simba}
-{$IFNDEF SRL_MAGIC_INCLUDED}           {$I osr/magic.simba}
-{$IFNDEF SRL_PRAYER_INCLUDED}          {$I osr/prayer.simba}
-{$IFNDEF SRL_KEYBINDINGS_INCLUDED}     {$I osr/keybindings.simba}
+{$IFNDEF SRL_OCR_INCLUDED}                  {$I osr/ocr.simba}
+{$IFNDEF SRL_MISC_INCLUDED}                 {$I osr/misc.simba}
+{$IFNDEF SRL_ITEMFINDER_INCLUDED}           {$I osr/itemfinder/itemfinder.simba}
+{$IFNDEF SRL_RSCLIENT_INCLUDED}             {$I osr/rsclient.simba}
+{$IFNDEF SRL_CHOOSEOPTION_INCLUDED}         {$I osr/interfaces/chooseoption.simba}
+{$IFNDEF SRL_INTERFACE_ITEMFINDER_INCLUDED} {$I osr/interfaces/core/interface_itemfinder.simba}
+{$IFNDEF SRL_INTERFACE_INCLUDED}            {$I osr/interfaces/core/interface.simba}
+{$IFNDEF SRL_CHATBUTTONS_INCLUDED}          {$I osr/interfaces/chatbuttons.simba}
+{$IFNDEF SRL_LOGIN_INCLUDED}                {$I osr/interfaces/login.simba}
+{$IFNDEF SRL_CHAT_INCLUDED}                 {$I osr/interfaces/chat.simba}
+{$IFNDEF SRL_MAKE_INCLUDED}                 {$I osr/interfaces/make.simba}
+{$IFNDEF SRL_GAMETABS_INCLUDED}             {$I osr/interfaces/gametabs/gametabs.simba}
+{$IFNDEF SRL_GAMETAB_INCLUDED}              {$I osr/interfaces/gametabs/gametab.simba}
+{$IFNDEF SRL_OPTIONS_INCLUDED}              {$I osr/interfaces/gametabs/options.simba}
+{$IFNDEF SRL_LOGOUT_INCLUDED}               {$I osr/interfaces/gametabs/logout.simba}
+{$IFNDEF SRL_MINIMAP_INCLUDED}              {$I osr/interfaces/minimap.simba}
+{$IFNDEF SRL_MAINSCREEN_INCLUDED}           {$I osr/interfaces/mainscreen/mainscreen.simba}
+{$IFNDEF SRL_INTERFACEAREA_INCLUDED}        {$I osr/interfaces/mainscreen/interfacearea.simba}
+{$IFNDEF SRL_MM2MS_PROJECTOR_INCLUDED}      {$I osr/mm2ms_projector.simba}
+{$IFNDEF SRL_MM2MS_INCLUDED}                {$I osr/mm2ms.simba}
+{$IFNDEF SRL_XPBAR_INCLUDED}                {$I osr/interfaces/xpbar.simba}
+{$IFNDEF SRL_INVENTORY_INCLUDED}            {$I osr/interfaces/gametabs/inventory.simba}
+{$IFNDEF SRL_BANK_INCLUDED}                 {$I osr/interfaces/mainscreen/bank.simba}
+{$IFNDEF SRL_BANKPIN_INCLUDED}              {$I osr/interfaces/mainscreen/bankpin.simba}
+{$IFNDEF SRL_GRANDEXCHANGE_INCLUDED}        {$I osr/interfaces/mainscreen/grandexchange.simba}
+{$IFNDEF SRL_DEPOSITBOX_INCLUDED}           {$I osr/interfaces/mainscreen/depositbox.simba}
+{$IFNDEF SRL_WALKER_MAP_INCLUDED}           {$I osr/walker/walker_map.simba}
+{$IFNDEF SRL_WALKER_INCLUDED}               {$I osr/walker/walker.simba}
+{$IFNDEF SRL_STATS_INCLUDED}                {$I osr/interfaces/gametabs/stats.simba}
+{$IFNDEF SRL_EQUIPMENT_INCLUDED}            {$I osr/interfaces/gametabs/equipment.simba}
+{$IFNDEF SRL_ANTIBAN_INCLUDED}              {$I osr/antiban.simba}
+{$IFNDEF SRL_COMBAT_INCLUDED}               {$I osr/interfaces/gametabs/combat.simba}
+{$IFNDEF SRL_MAGIC_INCLUDED}                {$I osr/interfaces/gametabs/magic.simba}
+{$IFNDEF SRL_PRAYER_INCLUDED}               {$I osr/interfaces/gametabs/prayer.simba}
+{$IFNDEF SRL_KEYBINDINGS_INCLUDED}          {$I osr/keybindings.simba}
 
 {$SCOPEDENUMS OFF}
 
+{$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}

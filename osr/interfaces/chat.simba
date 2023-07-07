@@ -6,7 +6,7 @@ Methods to interact with the chat box.
 
 {$DEFINE SRL_CHAT_INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL-T/osr.simba}
+  {$I SRL/osr.simba}
 {$ENDIF}
 
 const
@@ -103,7 +103,7 @@ end;
 (*
 Chat.GetDisplayNameBox
 ~~~~~~~~~~~~~~~~~~~~~~
-function TRSChat.GetDisplayNameBox(Colors: TIntegerArray = [$FFFFFF, $000000], out color: Integer): TBox;
+function TRSChat.GetDisplayNameBox(Colors: TIntegerArray = [$FFFFFF, $000000]): TBox;
 function TRSChat.GetDisplayNameBox(Colors: TIntegerArray = [$FFFFFF, $000000]): TBox; overload;
 
 Get the user name box. Useful for certain things like hiding the username for screenshots.
@@ -285,26 +285,23 @@ Chat.GetOptions
 
 Internal function to retrieve the currently available chat options.
 *)
-function TRSChat.GetOptions(colors: TIntegerArray = [CHAT_COLOR_BLACK, CHAT_COLOR_WHITE]; tolerances: TIntegerArray = []): TRSChatboxOptionArray;
+function TRSChat.GetOptions(Colors: TIntegerArray = [CHAT_COLOR_BLACK, CHAT_COLOR_WHITE]): TRSChatboxOptionArray; 
 var
-  strings: TStringArray;
-  boxes: TBoxArray;
-  i, key: Int32;
+  Strings: TStringArray;
+  Boxes: TBoxArray;
+  I, Key: Int32;
 begin
-  if (tolerances = []) or (Length(colors) <> Length(tolerances)) then
-    SetLength(tolerances, Length(colors));
+  Strings := OCR.RecognizeLines(Self.Bounds(), TOCRColorFilter.Create(Colors), RS_FONT_QUILL_8, Boxes);
 
-  strings := OCR.RecognizeLines(Self.Bounds(), TOCRColorFilter.Create(colors, tolerances), RS_FONT_QUILL_8, boxes);
-
-  SetLength(Result, Length(strings));
-  for i := 0 to High(Result) do
+  SetLength(Result, Length(Strings));
+  for I := 0 to High(Result) do
   begin
-    if ('Click here to continue' in strings[i]) then
-      key := VK_SPACE
+    if ('Click here to continue' in Strings[I]) then
+      Key := VK_SPACE
     else
-      key := VK_1 + i;
+      Key := VK_1 + I;
       
-    Result[i] := [strings[i], boxes[i], key];
+    Result[I] := [Strings[I], Boxes[I], Key];
   end;
 end;
 
@@ -320,12 +317,12 @@ Example
 
   Chat.FindOption('Yes'); //Common chat option in several instances as an example where you are asked Yes or No.
 *)
-function TRSChat.FindOption(text: String; colors: TIntegerArray = [CHAT_COLOR_WHITE, CHAT_COLOR_BLUE]): Boolean;
+function TRSChat.FindOption(Text: String; Colors: TIntegerArray = [CHAT_COLOR_WHITE, CHAT_COLOR_BLUE]): Boolean;
 var
-  option: TRSChatboxOption;
+  Option: TRSChatboxOption;
 begin
-  for option in GetOptions(colors) do
-    if text in option.Text then
+  for Option in GetOptions(Colors) do
+    if Text in Option.Text then
       Exit(True);
 end;
 
@@ -341,17 +338,17 @@ Example
 
   Chat.ClickOption('Yes', True); //Common chat option in several instances as an example where you are asked Yes or No.
 *)
-function TRSChat.ClickOption(text: String; useKeyboard: Boolean = True; colors: TIntegerArray = [CHAT_COLOR_BLACK, CHAT_COLOR_WHITE]): Boolean;
+function TRSChat.ClickOption(Text: String; UseKeyboard: Boolean = True; Colors: TIntegerArray = [CHAT_COLOR_BLACK, CHAT_COLOR_WHITE]): Boolean;
 var
-  option: TRSChatboxOption;
+  Option: TRSChatboxOption;
 begin
-  for option in Self.GetOptions(colors) do
-    if text in option.Text then
+  for Option in GetOptions(Colors) do
+    if Text in Option.Text then
     begin 
-      if useKeyboard then
-        Keyboard.PressKey(option.Number)
+      if UseKeyboard then
+        Keyboard.PressKey(Option.Number)
       else
-        Mouse.Click(option.Bounds, MOUSE_LEFT);
+        Mouse.Click(Option.Bounds, MOUSE_LEFT);
 
       Exit(True);
     end;

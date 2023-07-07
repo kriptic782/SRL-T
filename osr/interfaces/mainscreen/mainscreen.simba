@@ -5,7 +5,7 @@ MainScreen
 
 {$DEFINE SRL_MAINSCREEN_INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL-T/osr.simba}
+  {$I SRL/osr.simba}
 {$ENDIF}
 
 {.$DEFINE SRL_DEBUG_MOUSE} // Enable me print uptext recognition
@@ -143,6 +143,7 @@ type
   end;
 
   TRSMainScreen = record(TRSInterface)
+    UpTextBitmapBuffer: TMufasaBitmap;
     UpTextArea: TBox;
     UpTextFilter: TOCRFilter;
 
@@ -154,6 +155,7 @@ procedure TRSMainScreen.Free;
 var
   Bitmap: Int32;
 begin
+  Self.UpTextBitmapBuffer.Free();
   for Bitmap in Self.YellowClicks + Self.RedClicks do
     FreeBitmap(Bitmap);
 end;
@@ -175,7 +177,8 @@ begin
 
   Self.Name := 'MainScreen';
 
-  Self.UpTextFilter := TOCRAnyColorFilter.Create(85, 60);
+  Self.UpTextBitmapBuffer.Init(Client.GetMBitmaps());
+  Self.UpTextFilter := TOCRAnyColorFilter.Create(85, 65);
   Self.UpTextFilter.MinCharacterMatch := '-';
 
   Self.YellowClicks := [
@@ -237,8 +240,16 @@ Example
   WriteLn(MainScreen.GetUpText());
 *)
 function TRSMainScreen.GetUpText(): String;
+var
+  Bitmap: TMufasaBitmap;
 begin
-  Result := OCR.RecognizeStatic(Self.UpTextArea, Self.UpTextFilter, RS_FONT_BOLD_12_SHADOW);
+  with Self.UpTextArea do
+    Self.UpTextBitmapBuffer.CopyClientToBitmap(Client.GetIOManager(), True, X1,Y1,X2,Y2);
+
+  // improve when bankscreen (and other interfaces) are open
+  // replace orange title text with interface background color
+  Self.UpTextBitmapBuffer.ReplaceColor(2070783, 3424329);
+  Result := OCR._RecognizeStatic(Self.UpTextBitmapBuffer.ToMatrix(), Self.UpTextFilter, RS_FONT_BOLD_12_SHADOW);
 
   {$IFDEF SRL_DEBUG_UPTEXT}
   Self.DebugLn('UpText: ' + Result);
@@ -322,13 +333,11 @@ Example
   MainScreen.SetHighestPitch();
 *)
 procedure TRSMainScreen.SetHighestPitch;
-var
-  i: Int32;
 begin
   Keyboard.KeyDown(VK_UP);
 
   try
-    for i := 1 to 10 do // 2500ms timeout
+    for 1 to 10 do // 2500ms timeout
       if (SRL.GetPixelShift(Self.Bounds(), 250) / Self.Bounds.Area() * 100) < 10 then // less than 10% of the screen changed in 250ms
         Break;
   finally
@@ -598,28 +607,29 @@ Example
   for I := 0 to High(Splats) do
     WriteLn(Splats[I].Position);
 *)
-function TRSMainScreen.FindHitsplats(area: TBox): TRSHitsplatArray;
+function TRSMainScreen.FindHitsplats(Area: TBox): TRSHitsplatArray;
 
-  function Find(color: Int32; red: Boolean): TRSHitsplatArray;
+  function Find(Color: Int32; Red: Boolean): TRSHitsplatArray;
   var
-    tpa: TPointArray;
-    b: TBox;
-    hit: Int32;
+    TPA: TPointArray;
+    B: TBox;
+    Text: String;
+    Hit: Int32;
   begin
-    if SRL.FindColors(tpa, CTS0(color), area) = 0 then
+    if SRL.FindColors(TPA, CTS0(Color), Area) = 0 then
       Exit;
 
-    for b in tpa.Cluster(3).ToTBA() do
-      if (b.Width() >= 10) and (b.Height() >= 10) then
+    for B in TPA.Cluster(3).ToTBA() do
+      if (B.Width >= 10) and (B.Height >= 10) then
       begin
-        hit := OCR.RecognizeNumber(b.Expand(5, area), TOCRColorFilter.Create([$FFFFFF]), RS_FONT_PLAIN_11);
+        Hit := OCR.RecognizeNumber(B.Expand(5, Area), TOCRColorFilter.Create([$FFFFFF]), RS_FONT_PLAIN_11);
 
-        Result += [b.Middle(), hit, red];
+        Result += [B.Middle(), Hit, Red];
       end;
   end;
 
 begin
-  Result := Find($0000BE, True) + Find($0009E3, True) + Find($FF4040, False); // red, max hit, blue
+  Result := Find($0000C0, True) + Find($FF4040, False); // red, blue
 end;
 
 (*
@@ -629,7 +639,7 @@ Mainscreen.FindHitsplats
 
 Overload which finds hitsplats on the entire mainscreen.
 *)
-function TRSMainScreen.FindHitsplats(): TRSHitsplatArray; overload;
+function TRSMainScreen.FindHitsplats: TRSHitsplatArray; overload;
 begin
   Result := Self.FindHitsplats(Self.Bounds());
 end;
@@ -843,7 +853,7 @@ end;
 (*
 Mainscreen.DidRedClick
 ~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMainScreen.DidRedClick(time: UInt32 = 250): Boolean;
+.. pascal:: function TRSMainScreen.DidRedClick: Boolean;
 
 Returns true if a red click happened at the current mouse position.
 
@@ -855,19 +865,15 @@ Example
   if MainScreen.DidRedClick() then
     WriteLn('Red click!');
 *)
-function TRSMainScreen.DidRedClick(time: UInt32 = 250): Boolean;
-var
-  area: TBox;
+function TRSMainScreen.DidRedClick: Boolean;
 begin
-  area := Box(Mouse.Position(), 10, 10);
-  area.LimitTo(Self.Bounds());
-  Result := WaitUntil(SRL.CountColor(CTS1(255,0), area) + SRL.CountColor(CTS1(262600,0), area) > 0, 50, time);
+  Result := Self.FindClick(Box(Mouse.Position(), 10, 10)) = ERSClickType.RED;
 end;
 
 (*
 Mainscreen.DidYellowClick
 ~~~~~~~~~~~~~~~~~~~~~~
-.. pascal::function TRSMainScreen.DidYellowClick(time: UInt32 = 250): Boolean;
+.. pascal:: function TRSMainScreen.DidYellowClick: Boolean;
 
 Returns true if a yellow click happened at the current mouse position.
 
@@ -879,18 +885,10 @@ Example
   if MainScreen.DidYellowClick() then
     WriteLn('Yellow click!');
 *)
-function TRSMainScreen.DidYellowClick(time: UInt32 = 250): Boolean;
-var
-  area: TBox;
+function TRSMainScreen.DidYellowClick: Boolean;
 begin
-  area := Box(Mouse.Position(), 10, 10);
-  area.LimitTo(Self.Bounds());
-  Result := WaitUntil(SRL.CountColor(CTS1(65535,0), area) > 0, 50, time);
+  Result := Self.FindClick(Box(Mouse.Position(), 10, 10)) = ERSClickType.YELLOW;
 end;
-
-
-
-
 
 procedure TRSMainScreen.Draw(Bitmap: TMufasaBitmap); override;
 var
@@ -900,13 +898,7 @@ begin
   inherited;
 
   for Splat in Self.FindHitsplats() do
-  begin
-    if Splat.Red then
-      Bitmap.DrawCircle(Splat.Position, 10, $FF00FF)
-    else
-      Bitmap.DrawCircle(Splat.Position, 10, $00FF00);
-  end;
-
+    Bitmap.DrawCircle(Splat.Position, 10, $00FF00);
   for Bar in Self.FindHPBars() do
     Bitmap.DrawBox(Bar.Bounds, $00FFFF);
 end;
