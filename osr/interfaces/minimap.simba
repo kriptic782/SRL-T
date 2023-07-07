@@ -250,9 +250,10 @@ begin
   Result := SRL.PointInPoly(P, ExpandPolygon(Self.GetPolygon(), Expand));
 end;
 
+
 function TRSMinimap.IsPoisoned: Boolean;
 begin
-  Result := SRL.CountColor(CTS2(271525, 10, 0.05, 0.37), Self.GetHPCircle().Bounds) = 0;
+  Result := SRL.CountColor(CTS0(16391, 3), Self.GetHPCircle().Bounds()) > 0;
 end;
 
 function TRSMinimap.CurePoison: Boolean;

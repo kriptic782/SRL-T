@@ -30,6 +30,8 @@ type
 
   TRSMake = record(TRSInterface)
     Items: array of TRSMakeItem;
+  class const
+    QUANTITY_ALL = -1;
   end;
 
 (*
@@ -196,7 +198,7 @@ Attempts to set a quantity.
 Example
 -------
 
-  WriteLn Make.SetQuantity(MAKE_QUANTITY_ALL);
+  WriteLn Make.SetQuantity(TRSMake.QUANTITY_ALL);
 *)
 function TRSMake.SetQuantity(Amount: Int32): Boolean;
 const
@@ -225,7 +227,7 @@ begin
     WaitUntil(Self.FindHint() = [], 100, 2000);
   end;
 
-  if Amount = MAKE_QUANTITY_ALL then
+  if Amount = TRSMake.QUANTITY_ALL then
     Text := 'All'
   else
     Text := ToString(Amount);
@@ -318,7 +320,7 @@ Select a **Index** of the available buttons or the button with **Item** text on 
 Example
 -------
 
-  WriteLn Make.Select('Maple longbow', MAKE_QUANTITY_ALL, True);
+  WriteLn Make.Select('Maple longbow', TRSMake.QUANTITY_ALL, True);
 *)
 function TRSMake.Select(Index: Int32; Quantity: Int32; UseKeyboard: Boolean = True): Boolean;
 var

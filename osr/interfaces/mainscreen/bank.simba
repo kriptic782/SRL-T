@@ -986,13 +986,6 @@ begin
   Result := Self.ItemFinder.Find([item], box);
 end;
 
-function TRSBank.FindItem(Item: TRSItem): Boolean; overload; deprecated 'Use TRSBank.ContainsItem() instead.';
-var
-  B: TBox;
-begin
-  Result := Self.FindItem(Item, B);
-end;
-
 (*
 Bank.ContainsItem
 ~~~~~~~~~~~~~~~~~
@@ -1031,7 +1024,7 @@ begin
   if not Self.IsOpen() then
     Exit;
 
-  Result := Length(Self.ItemFinder.FindAll([item]));
+  Result := Self.ItemFinder.Count(item);
 end;
 
 (*
@@ -1068,13 +1061,12 @@ Example
 
   Bank.MouseItem('Coins');
 *)
-function TRSBank.MouseItem(Item: TRSItem): Boolean;
-var
-  B: TBox;
+function TRSBank.MouseItem(item: TRSItem): Boolean;
 begin
-  Result := Self.FindItem(Item, B);
-  if Result then
-    Mouse.Move(B);
+  if not Self.IsOpen() then
+    Exit;
+
+  Result := Self.ItemFinder.MouseItem(item);
 end;
 
 (*
@@ -1089,19 +1081,12 @@ Example
 
   Bank.ClickItem('Coins', 'All');
 *)
-function TRSBank.ClickItem(Item: TRSItem; Option: String = ''): Boolean;
+function TRSBank.ClickItem(item: TRSItem; Option: String = ''): Boolean;
 begin
-  if Self.MouseItem(Item) then
-  begin
-    if Option <> '' then
-      Result := ChooseOption.Select(Option)
-    else
-    begin
-      Mouse.Click(MOUSE_LEFT);
-      
-      Result := True;
-    end;
-  end;
+  if not Self.IsOpen() then
+    Exit;
+
+  Result := Self.ItemFinder.InteractItem(item, option);
 end;
 
 (*
@@ -1254,7 +1239,7 @@ Bank.DepositAll
 
 Depositis your inventory by clicking the deposit inventory button
 *)
-function TRSBank.DepositAll: Boolean;
+function TRSBank.DepositAll(): Boolean;
 begin
   Result := (Inventory.Count() = 0) or Self.GetButton(ERSBankButton.DEPOSIT_INVENTORY).Click();
 end;

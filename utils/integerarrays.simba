@@ -9,6 +9,34 @@ TIntegerArray
 TIntegerArray related methods
 *)
 
+function TIntegerArray.GetRarest(): Int32;
+var
+  i,hits,least: Int32;
+begin
+  Self.Sort();
+  for i:=0 to high(Self) do
+  begin
+    hits := Length(Self.FindAll(Self[i]));
+    if i<1 then
+      least := Self[i]
+    else if i>0 then
+      if hits < Length(Self.FindAll(Self[i-1])) then
+        least := Self[i];
+  end;
+
+  Result := least;
+end;
+
+
+function TIntegerArray.Intersection(other: TIntegerArray): TIntegerArray; constref;
+var
+  i: Int32;
+begin
+  for i := 0 to High(other) do
+    if Self.Find(other[i]) > -1 then
+      Result += other[i];
+end;
+
 function TIntegerArray.Difference(Other: TIntegerArray): TIntegerArray;
 var
   i: Int64;
@@ -21,8 +49,8 @@ begin
     if Self.Find(i) = -1 then
       Result += i;
 
-  Result.ClearDuplicates;
-  Result.Sort;
+  Result.ClearDuplicates();
+  Result.Sort();
 end;
 
 procedure TIntegerArray.Append(const Value: Integer);
