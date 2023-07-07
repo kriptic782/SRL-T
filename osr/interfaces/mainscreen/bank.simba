@@ -770,11 +770,11 @@ begin
   Result := not (Quantity in [1,5,10, TRSBank.QUANTITY_ALL]);
 end;
 
-function TRSBank.DepositHelper(b: TBox; Amount: Int32; UseQuantityButtons: Boolean): Boolean;
+function TRSBank.DepositHelper(b: TBox; Amount: Int32; useQuantityButtons: Boolean): Boolean;
 var
   Button: TRSButton;
 begin
-  if UseQuantityButtons then
+  if useQuantityButtons then
   begin
     if Self.IsCustomQuantity(Amount) then
     begin
@@ -949,7 +949,7 @@ Example
 *)
 function TRSBank.OpenTab(Tab: Int32): Boolean;
 var
-  TabBox: TBox;
+  box: TBox;
 begin
   if not Self.IsOpen() then
     Exit;
@@ -957,12 +957,17 @@ begin
   if Tab = Self.GetCurrentTab() then
     Exit(True);
 
-  TabBox := Self.GetTabBox(Tab);
-  if TabBox <> [] then
+  box := Self.GetTabBox(Tab);
+  if box <> [] then
   begin
-    Mouse.Click(TabBox, MOUSE_LEFT);
+    Mouse.Click(box, MOUSE_LEFT);
     Result := WaitUntil((Tab = Self.GetCurrentTab), 100, 2000);
   end;
+end;
+
+function TRSBank.FindAny(items: TRSItemArray; out box: TBox): Boolean;
+begin
+  Result := Self.ItemFinder.FindAny(items, box);
 end;
 
 (*
@@ -999,10 +1004,13 @@ Example
   WriteLn Bank.ContainsItem('Coins');
 *)
 function TRSBank.ContainsItem(item: TRSItem): Boolean;
-var
-  b: TBox;
 begin
   Result := Self.ItemFinder.Contains(item);
+end;
+
+function TRSBank.ContainsAny(items: TRSItemArray): Boolean;
+begin
+  Result := Self.ItemFinder.ContainsAny(items);
 end;
 
 
@@ -1027,6 +1035,11 @@ begin
   Result := Self.ItemFinder.Count(item);
 end;
 
+function TRSBank.CountSlotStack(slot: Int32): Int32;
+begin
+  Result := Self.ItemFinder.CountStack(slot);
+end;
+
 (*
 Bank.CountItemStack
 ~~~~~~~~~~~~~~~~~~~
@@ -1039,13 +1052,8 @@ Example
 
   WriteLn Bank.CountItemStack('Coins');
 *)
-function TRSBank.CountItemStack(Item: TRSItem): Int32;
-var
-  b: TBox;
+function TRSBank.CountItemStack(item: TRSItem): Int32;
 begin
-  if not Self.IsOpen() then
-    Exit;
-
   Result := Self.ItemFinder.CountStack(item);
 end;
 
@@ -1093,7 +1101,7 @@ end;
 Bank.WithdrawItem
 ~~~~~~~~~~~~~~~~~
 .. pascal::
-  function TRSBank.WithdrawItem(Item: TRSBankWithdrawItem; UseQuantityButtons: Boolean): Boolean; deprecated 'User the TRSBankItem version instead';
+  function TRSBank.WithdrawItem(Item: TRSBankWithdrawItem; useQuantityButtons: Boolean): Boolean; deprecated 'User the TRSBankItem version instead';
   function TRSBank.WithdrawItem(out item: TRSBankItem; useQuantityButtons: Boolean): Boolean; overload;
 
 Finds and withdraws an item.
@@ -1105,7 +1113,7 @@ Item
 	TRSBankWithdrawItem or TRSBankItem variable to withdraw.
   TRSBankItem caches the bank tab and scroll position the item is at for next uses.
 
-UseQuantityButtons  
+useQuantityButtons  
   Determines if to use the 1,5,10,X,ALL `Quantity` buttons.
 
 Example
@@ -1124,15 +1132,7 @@ Example
   
   Bank.WithdrawItem(['Iron full helm', 5, False], True);  
 *)
-function TRSBank.WithdrawItem(Item: TRSBankWithdrawItem; UseQuantityButtons: Boolean): Boolean; deprecated 'User the TRSBankItem version instead';
-var
-  B: TBox;
-begin
-  if Self.FindItem(Item.Item, B) then
-    Result := Self.WithdrawHelper(B, Item.Quantity, Item.Noted, UseQuantityButtons);
-end;
-
-function TRSBank.WithdrawItem(out item: TRSBankItem; useQuantityButtons: Boolean): Boolean; overload;
+function TRSBank.WithdrawItem(out item: TRSBankItem; useQuantityButtons: Boolean): Boolean;
 var
   b: TBox;
 begin
@@ -1172,16 +1172,32 @@ begin
   Result := Self.WithdrawHelper(b, item.Quantity, item.Noted, useQuantityButtons);
 end;
 
-function TRSBank.WithdrawSlot(Item: TRSBankWithdrawSlot; UseQuantityButtons: Boolean): Boolean;
+function TRSBank.WithdrawItem(item: TRSItem; useQuantityButtons: Boolean): Boolean; overload;
+var
+  tmp: TRSBankItem;
 begin
-  Result := Self.WithdrawHelper(Self.GetSlotBoxes()[Item.Slot], Item.Quantity, Item.Noted, UseQuantityButtons);
+  tmp.Setup(item);
+  Result := Self.WithdrawItem(tmp, useQuantityButtons);
+end;
+
+function TRSBank.WithdrawItem(Item: TRSBankWithdrawItem; useQuantityButtons: Boolean): Boolean; overload; deprecated 'User the TRSBankItem version instead';
+var
+  b: TBox;
+begin
+  if Self.FindItem(Item.Item, B) then
+    Result := Self.WithdrawHelper(B, Item.Quantity, Item.Noted, useQuantityButtons);
+end;
+
+function TRSBank.WithdrawSlot(Item: TRSBankWithdrawSlot; useQuantityButtons: Boolean): Boolean;
+begin
+  Result := Self.WithdrawHelper(Self.GetSlotBoxes()[Item.Slot], Item.Quantity, Item.Noted, useQuantityButtons);
 end;
 
 (*
 Bank.DepositItem
 ~~~~~~~~~~~~~~~~
 .. pascal::
-  function TRSBank.DepositItem(Item: TRSBankDepositItem; UseQuantityButtons: Boolean): Boolean; deprecated 'Use the TRSBankItem version instead';
+  function TRSBank.DepositItem(Item: TRSBankDepositItem; useQuantityButtons: Boolean): Boolean; deprecated 'Use the TRSBankItem version instead';
   function TRSBank.DepositItem(item: TRSBankItem; useQuantityButtons: Boolean): Boolean; overload
 
 Deposits the specified **item** into the bank.
@@ -1191,19 +1207,11 @@ Example
 
   WriteLn BankDepositItem(['Coins', TRSBank.QUANTITY_ALL]);
 *)
-function TRSBank.DepositItem(Item: TRSBankDepositItem; UseQuantityButtons: Boolean): Boolean; deprecated 'Use the TRSBankItem version instead';
-var
-  Slot: Int32;
-begin
-  if Inventory.FindItem(Item.Item, Slot) then
-    Result := Self.DepositHelper(Inventory.GetSlotBox(Slot), Item.Quantity, UseQuantityButtons);
-end;
-
-function TRSBank.DepositItem(item: TRSBankItem; useQuantityButtons: Boolean): Boolean; overload;
+function TRSBank.DepositItem(item: TRSBankItem; useQuantityButtons: Boolean): Boolean;
 var
   isStackable: Boolean;
   count: Int32;
-  slot: Int32;
+  slot: TBox;
 begin
   if not Self.IsOpen() then
     Exit;
@@ -1214,8 +1222,8 @@ begin
   if not isStackable then
     count := Inventory.CountItem(item.Item);
 
-  if Inventory.FindItem(item.Item, slot) then
-    Result := Self.DepositHelper(Inventory.GetSlotBox(slot), item.Quantity, useQuantityButtons);
+  if Inventory.ItemFinder.FindAny([item.Item], slot) then
+    Result := Self.DepositHelper(slot, item.Quantity, useQuantityButtons);
 
   if Result then
   begin
@@ -1226,10 +1234,25 @@ begin
   end;
 end;
 
-
-function TRSBank.DepositSlot(Item: TRSBankDepositSlot; UseQuantityButtons: Boolean): Boolean; 
+function TRSBank.DepositItem(item: TRSItem; useQuantityButtons: Boolean): Boolean; overload;
+var
+  tmp: TRSBankItem;
 begin
-  Result := Self.DepositHelper(Inventory.GetSlotBox(Item.Slot), Item.Quantity, UseQuantityButtons);
+  tmp.Setup(item);
+  Result := Self.DepositItem(tmp, useQuantityButtons);
+end;
+
+function TRSBank.DepositItem(Item: TRSBankDepositItem; useQuantityButtons: Boolean): Boolean; overload; deprecated 'Use the TRSBankItem version instead';
+var
+  slot: TBox;
+begin
+  if Inventory.ItemFinder.FindAny([Item.Item], slot) then
+    Result := Self.DepositHelper(slot, Item.Quantity, useQuantityButtons);
+end;
+
+function TRSBank.DepositSlot(Item: TRSBankDepositSlot; useQuantityButtons: Boolean): Boolean; 
+begin
+  Result := Self.DepositHelper(Inventory.GetSlotBox(Item.Slot), Item.Quantity, useQuantityButtons);
 end;
 
 (*

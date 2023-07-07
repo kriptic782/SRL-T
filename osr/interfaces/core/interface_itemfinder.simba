@@ -154,6 +154,14 @@ begin
   Result := Length(Unique(foundItems)) = Length(items);
 end;
 
+function TRSInterfaceItemFinder.FindAny(items: TRSItemArray; out box: TBox): Boolean;
+var
+  boxes: TBoxArray;
+begin
+  Result := Self.FindAll(items, boxes);
+  if Result then
+    box := boxes[SRL.TruncatedGauss(0, High(boxes))];
+end;
 
 function TRSInterfaceItemFinder.Contains(item: TRSItem): Boolean;
 begin
@@ -239,7 +247,19 @@ begin
 end;
 
 
-function TRSInterfaceItemFinder.CountStack(item: TRSItem): Int32;
+function TRSInterfaceItemFinder.CountStack(slot: Int32): Int32;
+var
+  box: TBox;
+begin
+  Result := -1;
+
+  box := Self.GetSlotBox(slot);
+  box.X2 := box.X1 + 35;
+  box.Y2 := box.Y1 + 7;
+  Result := SRL.GetItemAmount(box);
+end;
+
+function TRSInterfaceItemFinder.CountStack(item: TRSItem): Int32; overload;
 var
   box: TBox;
 begin

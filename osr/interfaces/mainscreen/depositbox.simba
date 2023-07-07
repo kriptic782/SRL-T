@@ -127,11 +127,6 @@ begin
   Result := Self.ItemFinder.Find([item], box);
 end;
 
-function TRSDepositBox.FindItem(item: TRSItem): Boolean; overload; deprecated 'Use DepositBox.ContainsItem() instead';
-begin
-  Result := Self.ItemFinder.IndexOf([item]) > -1;
-end;
-
 function TRSDepositBox.ContainsItem(item: TRSItem): Boolean;
 begin
   if not Self.IsOpen() then
@@ -173,7 +168,7 @@ end;
 
 
 
-function TRSDepositBox.DepositHelper(B: TBox; Amount: Int32; UseQuantityButtons: Boolean): Boolean;
+function TRSDepositBox.DepositHelper(b: TBox; amount: Int32; useQuantityButtons: Boolean): Boolean;
 var
   Button: TRSButton;
 begin
@@ -226,63 +221,61 @@ begin
   end;
 end;
 
-function TRSDepositBox.DepositItem(Item: TRSBankDepositItem; UseQuantityButtons: Boolean): Boolean;
+function TRSDepositBox.DepositItem(item: TRSBankItem; useQuantityButtons: Boolean): Boolean;
 var
-  B: TBox;
+  b: TBox;
 begin
-  if Self.FindItem(Item.Item, B) then
-    Result := Self.DepositHelper(B, Item.Quantity, UseQuantityButtons);
+  if Self.ItemFinder.FindAny([item.Item], b) then
+    Result := Self.DepositHelper(b, item.Quantity, useQuantityButtons);
+end;
+
+function TRSDepositBox.DepositItem(Item: TRSBankDepositItem; UseQuantityButtons: Boolean): Boolean; overload; deprecated 'Use the TRSBankItem version instead.';
+var
+  b: TBox;
+begin
+  if Self.ItemFinder.FindAny([item.Item], b) then
+    Result := Self.DepositHelper(b, Item.Quantity, UseQuantityButtons);
+end;
+
+function TRSDepositBox.DepositItem(Item: TRSItem; useQuantityButtons: Boolean): Boolean; overload;
+var
+  tmp: TRSBankItem;
+begin
+  tmp.Setup(item);
+  Result := Self.DepositItem(tmp, useQuantityButtons);
 end;
 
 
-
-
-
-function TRSDepositBox.DepositItem(Item: TRSItem; UseQuantityButtons: Boolean): Boolean; overload;
-begin
-  Result := Self.DepositItem([Item, BANK_DEPOSIT_ALL], UseQuantityButtons);
-end;
-
-function TRSDepositBox.DepositItemArray(ItemArray: array of TRSBankDepositItem; UseQuantityButtons: Boolean): Boolean;
+function TRSDepositBox.DepositItemArray(items: array of TRSBankItem; useQuantityButtons: Boolean): Boolean;
 var
-  Item: TRSBankDepositItem;
-  ItemList: array of TRSBankDepositItem;
+  item: TRSBankItem;
 begin
-  for Item in ItemArray do
-    if Self.ContainsItem(Item.Item) then
-      ItemList += Item;
-
-  for Item in Itemlist do
-    if not Self.DepositItem(Item, UseQuantityButtons) then
-      Exit(False);
-
   Result := True;
+  for item in items do
+    if not Self.DepositItem(item, useQuantityButtons) then
+      Result := False;
 end;
 
-function TRSDepositBox.DepositItemArray(ItemArray: TRSItemArray; UseQuantityButtons: Boolean): Boolean; overload;
+function TRSDepositBox.DepositItemArray(items: TRSItemArray; useQuantityButtons: Boolean): Boolean; overload;
 var
-  Item: TRSItem;
-  ItemList: TRSItemArray;
+  item: TRSItem;
 begin
-  for Item in ItemArray do
-    if Self.ContainsItem(Item) then
-      ItemList += Item;
-
-  for Item in Itemlist do
-    if not Self.DepositItem(Item, UseQuantityButtons) then
-      Exit(False);
-
   Result := True;
+  for item in items do
+    if not Self.DepositItem(item, useQuantityButtons) then
+      Result := False;
 end;
+
 (*
 DepositBox.DepositAll
 ~~~~~~~~~~~~~~~~~~~~~
 .. pascal:: function TRSDepositBox.DepositAll(): Boolean;
+
 Depositis your inventory by clicking the deposit inventory button
 *)
 function TRSDepositBox.DepositAll(): Boolean;
 begin
-  Result := (Inventory.Count() = 0) or Self.GetButton(ERSDepositButton.DEPOSIT_INVENTORY).Click();
+  Result := (Self.ItemFinder.Count() = 0) or Self.GetButton(ERSDepositButton.DEPOSIT_INVENTORY).Click();
 end;
 
 
