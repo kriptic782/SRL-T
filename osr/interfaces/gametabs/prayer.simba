@@ -6,7 +6,7 @@ Methods to interact with the prayer tab and quick prayers.
 
 {$DEFINE SRL_PRAYER_INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL/osr.simba}
+  {$I SRL-T/osr.simba}
 {$ENDIF}
 
 type

@@ -5,7 +5,7 @@ MainScreen
 
 {$DEFINE SRL_MAINSCREEN_INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL/osr.simba}
+  {$I SRL-T/osr.simba}
 {$ENDIF}
 
 {.$DEFINE SRL_DEBUG_MOUSE} // Enable me print uptext recognition

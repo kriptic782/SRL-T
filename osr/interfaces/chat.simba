@@ -6,7 +6,7 @@ Methods to interact with the chat box.
 
 {$DEFINE SRL_CHAT_INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL/osr.simba}
+  {$I SRL-T/osr.simba}
 {$ENDIF}
 
 const

@@ -7,7 +7,7 @@ TRSMake is the record SRL has to handle it.
 
 {$DEFINE SRL_MAKE_INCLUDED}
 {$IFNDEF SRL_OSR}
-  {$I SRL/osr.simba}
+  {$I SRL-T/osr.simba}
 {$ENDIF}
 
 const
