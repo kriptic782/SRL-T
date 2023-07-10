@@ -1018,6 +1018,42 @@ begin
   Result := Self.ItemFinder.Contains(item);
 end;
 
+function TRSBank.ContainsItem(out item: TRSBankItem; attempts: Int32 = 0): Boolean; overload;
+begin
+  Result := Self.ContainsItem(item.Item);
+  if not Result then
+  begin
+    if item.Tab = -1 then
+      item.Tab := Self.FindItemTab(item.Item, False);
+    Self.OpenTab(item.Tab);
+
+    if not Self.ContainsItem(item.Item) then
+    begin
+      if item.Scroll = -1 then
+        item.Scroll := Self.FindItemScroll(item.Item);
+
+      if Self.GetScrollPosition() <> item.Scroll then
+        Self.SetScrollPosition(item.Scroll);
+
+      if not Self.ContainsItem(item.Item) then
+      begin
+        item.Tab := -1;
+        item.Scroll := -1;
+        if attempts = 2 then
+          Exit;
+        Exit(Self.ContainsItem(item, attempts + 1));
+      end;
+    end;
+  end;
+
+  if item.Tab = -1 then
+    item.Tab := Self.GetCurrentTab();
+
+  //by setting this everytime, item.Scroll will slowly be adjusted
+  //to something that will match all required items in a script.
+  item.Scroll := Self.GetScrollPosition();
+end;
+
 function TRSBank.ContainsAny(items: TRSItemArray): Boolean;
 begin
   Result := Self.ItemFinder.ContainsAny(items);
@@ -1142,7 +1178,7 @@ Example
   
   Bank.WithdrawItem(['Iron full helm', 5, False], True);  
 *)
-function TRSBank.WithdrawItem(out item: TRSBankItem; useQuantityButtons: Boolean): Boolean;
+function TRSBank.WithdrawItem(out item: TRSBankItem; useQuantityButtons: Boolean; attempts: Int32 = 0): Boolean;
 var
   b: TBox;
 begin
@@ -1167,7 +1203,9 @@ begin
       begin
         item.Tab := -1;
         item.Scroll := -1;
-        Exit(Self.WithdrawItem(item, useQuantityButtons));
+        if attempts = 2 then
+          Exit;
+        Exit(Self.WithdrawItem(item, useQuantityButtons, attempts + 1));
       end;
     end;
   end;
