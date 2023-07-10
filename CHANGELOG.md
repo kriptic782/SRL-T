@@ -1,3 +1,12 @@
+## [2.0.3](https://github.com/Torwent/SRL-T/compare/v2.0.2...v2.0.3) (2023-07-10)
+
+
+### Bug Fixes
+
+* **GE:** readd Garret's changes to GE ([77d1ec0](https://github.com/Torwent/SRL-T/commit/77d1ec0370ec468276ec377590d5784804b8f7fb))
+
+
+
 ## [2.0.2](https://github.com/Torwent/SRL-T/compare/v2.0.1...v2.0.2) (2023-07-10)
 
 
@@ -44,15 +53,6 @@
 ### Bug Fixes
 
 * rollback remote input ([af1371b](https://github.com/Torwent/SRL-T/commit/af1371b8071368c22b4349e13864d1701e703cc9))
-
-
-
-## [1.3.11](https://github.com/Torwent/SRL-T/compare/v1.3.10...v1.3.11) (2023-07-06)
-
-
-### Bug Fixes
-
-* **TRSWalkerMap:** Loading a map without regions will now set regions anyway ([b3b4809](https://github.com/Torwent/SRL-T/commit/b3b480972721ae119d42f0f9a5c70c1f9b256c79))
 
 
 
