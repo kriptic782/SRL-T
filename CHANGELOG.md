@@ -1,3 +1,12 @@
+## [2.0.2](https://github.com/Torwent/SRL-T/compare/v2.0.1...v2.0.2) (2023-07-10)
+
+
+### Bug Fixes
+
+* **Bank:** depositting TRSItem should now work again ([8d0438c](https://github.com/Torwent/SRL-T/commit/8d0438cf18b657b36f6769f888702dcc23325e8a))
+
+
+
 ## [2.0.1](https://github.com/Torwent/SRL-T/compare/v2.0.0...v2.0.1) (2023-07-10)
 
 
@@ -44,15 +53,6 @@
 ### Bug Fixes
 
 * **TRSWalkerMap:** Loading a map without regions will now set regions anyway ([b3b4809](https://github.com/Torwent/SRL-T/commit/b3b480972721ae119d42f0f9a5c70c1f9b256c79))
-
-
-
-## [1.3.10](https://github.com/Torwent/SRL-T/compare/v1.3.9...v1.3.10) (2023-07-05)
-
-
-### Bug Fixes
-
-* **plugins:** read notes ([714c298](https://github.com/Torwent/SRL-T/commit/714c29849d4dca00a5f2b47ce721317a2ca9ae50))
 
 
 
