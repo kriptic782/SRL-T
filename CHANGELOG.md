@@ -1,3 +1,12 @@
+## [2.0.1](https://github.com/Torwent/SRL-T/compare/v2.0.0...v2.0.1) (2023-07-10)
+
+
+### Bug Fixes
+
+* add Bank.ContainsItem(TRSBankItem) ([4d90050](https://github.com/Torwent/SRL-T/commit/4d9005012d1089c22bc245c4c4b4533873401430))
+
+
+
 # [2.0.0](https://github.com/Torwent/SRL-T/compare/v1.3.12...v2.0.0) (2023-07-10)
 
 
@@ -44,15 +53,6 @@
 ### Bug Fixes
 
 * **plugins:** read notes ([714c298](https://github.com/Torwent/SRL-T/commit/714c29849d4dca00a5f2b47ce721317a2ca9ae50))
-
-
-
-## [1.3.9](https://github.com/Torwent/SRL-T/compare/v1.3.8...v1.3.9) (2023-07-05)
-
-
-### Bug Fixes
-
-* simpleOCR updated with RecognizeLines fixed ([f00bd2f](https://github.com/Torwent/SRL-T/commit/f00bd2f06065f7670dfb6a7d8850dfc38212c807))
 
 
 
