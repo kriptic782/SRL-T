@@ -155,6 +155,12 @@ begin
   Result := Self.ItemFinder.MouseSlot(slot);
 end;
 
+function TRSInventory.HoverSlot(slot: Int32): Boolean; deprecated 'Use TRSInventory.MouseSlot() instead!';
+begin
+  Result := Self.MouseSlot(slot);
+end;
+
+
 (*
 Inventory.ClickSlot
 ~~~~~~~~~~~~~~~~~~~
@@ -378,36 +384,36 @@ Example
 
   Inventory.ShiftDrop(DROP_PATTERN_REGULAR);
 *)
-function TRSInventory.ShiftDrop(Slots: TIntegerArray): Boolean;
+function TRSInventory.ShiftDrop(slots: TIntegerArray): Boolean;
 var
-  Boxes: TBoxArray;
-  I, Attempts: Int32;
-  Selected: Int32;
-  Circle: TCircle;
+  boxes: TBoxArray;
+  box: TBox;
+  i, j, attempts: Int32;
+  selected: Int32;
+  circle: TCircle;
 begin
-  if (Length(Slots) = 0) then
+  if (Length(slots) = 0) then
     Exit(True);
 
   IsKeyDown(VK_SHIFT); // Clear cache
-
-  Boxes := Self.GetSlotBoxes();
+  boxes := Self.GetSlotBoxes();
 
   try
-    for Attempts := 1 to 5 do
+    for attempts := 1 to 5 do
     begin
-      I := 0;
+      i := 0;
 
-      while (I < Length(Slots)) do
+      while (i < Length(slots)) do
       begin
-        Selected := Self.GetSelectedSlot();
-        if (Selected > -1) then
+        box := boxes[slots[i]];
+        selected := Self.GetSelectedSlot();
+        if (selected > -1) then
         begin
           Self.SetSelectedSlot(-1);
-
           Break;
         end;
 
-        if Self.IsSlotUsed(Slots[I]) then
+        if Self.IsSlotUsed(box) then
         begin
           if not IsKeyDown(VK_SHIFT) then
           begin
@@ -415,25 +421,25 @@ begin
             Wait(95,170,wdLeft); //Wait for SHIFT to be registered before the click (important).
           end; 
 
-          Mouse.Click(Self.GetSlotBox(Slots[I]), MOUSE_LEFT);
+          Mouse.Click(box, MOUSE_LEFT);
 
           // Spam click a little
-          for 1 to SRL.TruncatedGauss(0, 3) do
+          for j := 1 to SRL.TruncatedGauss(0, 3) do
           begin
-            Circle.X := Mouse.Position().X;
-            Circle.Y := Mouse.Position().Y;
-            Circle.Radius := 5;
+            circle.X := Mouse.Position().X;
+            circle.Y := Mouse.Position().Y;
+            circle.Radius := 5;
 
-            Mouse.Click(Circle, MOUSE_LEFT, True);
+            Mouse.Click(circle, MOUSE_LEFT, True);
           end;
 
           Wait(0, 250, wdLeft);
         end;
 
-        Inc(I);
+        Inc(i);
       end;
 
-      if (I = Length(Slots)) then
+      if (i = Length(slots)) then
         Exit;
     end;
   finally
@@ -441,7 +447,7 @@ begin
       KeyUp(VK_SHIFT);
   end;
 
-  Result := Attempts <= 5;
+  Result := attempts <= 5;
 end;
 
 
@@ -527,20 +533,9 @@ Example
   WriteLn('This slot is likely nearby slot 0');
   WriteLn(Slot);
 *)
-function TRSInventory.RandomSlotNearby(Slot: Int32; Slots: TIntegerArray): Int32;
-var
-  I: Int32;
-  Boxes: TBoxArray;
+function TRSInventory.RandomSlotNearby(slot: Int32; slots: TIntegerArray): Int32;
 begin
-  Slots.Remove(Slot);
-  if (Length(Slots) = 0) then
-    Self.Fatal('RandomSlotNearby: No slots to choose from');
-
-  SetLength(Boxes, Length(Slots));
-  for I := 0 to High(Slots) do
-    Boxes[I] := Self.GetSlotBox(Slots[I]);
-
-  Result := Slots[SRL.RandomBoxNearby(Self.GetSlotBox(Slot).Middle, Boxes)];
+  Result := Self.ItemFinder.RandomSlotNearby(slot, slots);
 end;
 
 
@@ -621,10 +616,6 @@ Example
   WriteLn Inventory.ContainsAny(['Shark', 'Lobster']);
 *)
 function TRSInventory.ContainsAny(items: TRSItemArray): Boolean;
-var
-  item: TRSItem;
-  i: Int32;
-  tba, tmp: TBoxArray;
 begin
   if not Self.Open() then
     Exit;
@@ -666,10 +657,6 @@ Example
   WriteLn Inventory.ContainsAll('Shark');
 *)
 function TRSInventory.ContainsAll(items: TRSItemArray): Boolean;
-var
-  item: TRSItem;
-  i: Int32;
-  tba, tmp: TBoxArray;
 begin
   if not Self.Open() then
     Exit;
@@ -731,12 +718,18 @@ Example
   if Inventory.MouseItem('Bronze arrows') then
     ChooseOption.Select('Drop');
 *)
-function TRSInventory.MouseItem(Item: TRSItem): Boolean;
+function TRSInventory.MouseItem(item: TRSItem): Boolean;
 begin
   if not Self.IsOpen() then
     Exit;
   Result := Self.ItemFinder.MouseItem(item);
 end;
+
+function TRSInventory.HoverItem(item: TRSItem): Boolean; deprecated 'Use TRSInventory.MouseItem() instead!';
+begin
+  Result := Self.MouseItem(item);
+end;
+
 
 (*
 Inventory.ClickItem
@@ -802,18 +795,18 @@ Example
   // Shift drop maple & willow logs in the snake pattern
   Inventory.ShiftDrop(['Maple logs', 'Willow logs'], DROP_PATTERN_SNAKE);
 *)
-function TRSInventory.ShiftDrop(Items: TRSItemArray; Pattern: TIntegerArray): Boolean; overload;
+function TRSInventory.ShiftDrop(items: TRSItemArray; pattern: TIntegerArray): Boolean; overload;
 var
-  Slots, Order: TIntegerArray;
-  I: Int32;
+  slots, order: TIntegerArray;
+  i: Int32;
 begin
-  if Self.FindItems(Items, Slots) then
+  if Self.FindItems(items, slots) then
   begin
-    for I := 0 to High(Pattern) do
-      if Slots.Find(Pattern[I]) > -1 then
-        Order += Pattern[I];
+    for i := 0 to High(pattern) do
+      if slots.Find(pattern[i]) > -1 then
+        order += pattern[i];
   
-    Result := Self.ShiftDrop(Order);
+    Result := Self.ShiftDrop(order);
   end;
 end;
 

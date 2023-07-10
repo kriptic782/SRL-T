@@ -70,29 +70,29 @@ begin
   end;
 end;
 
-function TRSBankPin.Enter(Pin: String): Boolean;
+function TRSBankPin.Enter(pin: String): Boolean;
 
-  function GetDigitToEnter: Char;
+  function GetDigitToEnter(): Char;
   begin 
-    if OCR.LocateText(Self.Bounds, 'FIRST',  RS_FONT_BOLD_12, TOCRColorFilter.Create([$FFFFFF]), 1) then Exit(Pin[1]);
-    if OCR.LocateText(Self.Bounds, 'SECOND', RS_FONT_BOLD_12, TOCRColorFilter.Create([$FFFFFF]), 1) then Exit(Pin[2]);
-    if OCR.LocateText(Self.Bounds, 'THIRD',  RS_FONT_BOLD_12, TOCRColorFilter.Create([$FFFFFF]), 1) then Exit(Pin[3]);
-    if OCR.LocateText(Self.Bounds, 'FOURTH', RS_FONT_BOLD_12, TOCRColorFilter.Create([$FFFFFF]), 1) then Exit(Pin[4]);
+    if OCR.LocateText(Self.Bounds(), 'FIRST',  RS_FONT_BOLD_12, TOCRColorFilter.Create([$FFFFFF]), 1) then Exit(pin[1]);
+    if OCR.LocateText(Self.Bounds(), 'SECOND', RS_FONT_BOLD_12, TOCRColorFilter.Create([$FFFFFF]), 1) then Exit(pin[2]);
+    if OCR.LocateText(Self.Bounds(), 'THIRD',  RS_FONT_BOLD_12, TOCRColorFilter.Create([$FFFFFF]), 1) then Exit(pin[3]);
+    if OCR.LocateText(Self.Bounds(), 'FOURTH', RS_FONT_BOLD_12, TOCRColorFilter.Create([$FFFFFF]), 1) then Exit(pin[4]);
   end;
 
 var
-  I: Int32;
-  Digit: Char;
+  i, j: Int32;
+  digit: Char;
 begin
-  for 1 to 3 do // 3 Attempts
+  for i := 1 to 3 do // 3 Attempts
   begin
-    for I := 1 to 4 do
+    for j := 1 to 4 do
     begin
-      Digit := GetDigitToEnter();
-      if Digit = '' then
+      digit := GetDigitToEnter();
+      if digit = '' then
         Break;
     
-      if not Self.ClickDigit(Digit) then
+      if not Self.ClickDigit(digit) then
         Break;
         
       Wait(1000, 2000, wdLeft);

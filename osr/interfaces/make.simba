@@ -14,6 +14,9 @@ const
 (*
 const MAKE_QUANTITY_ALL
 ~~~~~~~~~~~~~~~~~~~~~~~
+
+Deprecated! Use TRSMake.QUANTITY_ALL instead.
+
 -1 is the value we reserve for the "All" quantity.
 This constant simply exists so we have a human readable version that makes sense.
 
@@ -30,8 +33,7 @@ type
 
   TRSMake = record(TRSInterface)
     Items: array of TRSMakeItem;
-  class const
-    QUANTITY_ALL = -1;
+    QUANTITY_ALL: Int32;
   end;
 
 (*
@@ -47,6 +49,7 @@ begin
   inherited;
 
   Self.Name := 'Make';
+  Self.QUANTITY_ALL := -1;
 end;
 
 (*
@@ -198,7 +201,7 @@ Attempts to set a quantity.
 Example
 -------
 
-  WriteLn Make.SetQuantity(TRSMake.QUANTITY_ALL);
+  WriteLn Make.SetQuantity(Make.QUANTITY_ALL);
 *)
 function TRSMake.SetQuantity(Amount: Int32): Boolean;
 const
@@ -227,7 +230,7 @@ begin
     WaitUntil(Self.FindHint() = [], 100, 2000);
   end;
 
-  if Amount = TRSMake.QUANTITY_ALL then
+  if Amount = Self.QUANTITY_ALL then
     Text := 'All'
   else
     Text := ToString(Amount);
@@ -320,7 +323,7 @@ Select a **Index** of the available buttons or the button with **Item** text on 
 Example
 -------
 
-  WriteLn Make.Select('Maple longbow', TRSMake.QUANTITY_ALL, True);
+  WriteLn Make.Select('Maple longbow', Make.QUANTITY_ALL, True);
 *)
 function TRSMake.Select(Index: Int32; Quantity: Int32; UseKeyboard: Boolean = True): Boolean;
 var

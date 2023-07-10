@@ -37,6 +37,31 @@ begin
 end;
 
 
+
+function TRSInterfaceItemFinder.RandomSlotNearby(slot: Int32; slots: TIntegerArray): Int32;
+var
+  i: Int32;
+  boxes, tmp: TBoxArray;
+begin
+  if (@Self.GetSearchBoxesFunction = nil) then
+    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+
+  slots.Remove(slot);
+
+  if (Length(Slots) = 0) then
+    Self.Fatal('RandomSlotNearby: No slots to choose from');
+
+  boxes := Self.GetSearchBoxesFunction();
+
+  SetLength(tmp, Length(slots));
+  for i := 0 to High(slots) do
+    tmp[i] := boxes[slots[i]];
+
+  Result := slots[SRL.RandomBoxNearby(boxes[slot].Middle(), tmp)];
+end;
+
+
+
 function TRSInterfaceItemFinder.PointToSlot(p: TPoint): Int32;
 var
   i: Int32;

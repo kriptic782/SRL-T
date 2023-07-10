@@ -247,6 +247,60 @@ type
   end;
   TRSItemFinderMatchArray = array of TRSItemFinderMatch;
 
+
+function ItemFinderMatchSort(constref L, R: TRSItemFinderMatch): Int32;
+begin
+  if L.Index < R.Index then
+    Result := -1
+  else if L.Index > R.Index then
+    Result := 1;
+end;
+
+function TRSItemFinderMatchArray.Find(const Value: TRSItemFinderMatch): Int32; constref;
+begin
+  for Result := 0 to High(Self) do
+    if Self[result] = Value then
+      Exit;
+
+  Result := -1;
+end;
+
+//Can probably be optimized but needed something that worked.
+function TRSItemFinderMatchArray.Difference(other: TRSItemFinderMatchArray): TRSItemFinderMatchArray;
+var
+  arr: TRSItemFinderMatchArray;
+  element: TRSItemFinderMatch;
+  value: Int32;
+begin
+  for element in Self do
+  begin
+    value := other.Find(element);
+    if value = -1 then
+    begin
+      Result += element;
+      Continue;
+    end;
+
+    Delete(other, value, 1); //make the other array smaller with values we already checked.
+  end;
+
+  arr := Copy(Self);
+
+  for element in other do
+  begin
+    value := arr.Find(element);
+    if value = -1 then
+    begin
+      Result += element;
+      Continue;
+    end;
+
+    Delete(arr, value, 1);
+  end;
+
+  Sort(Result, @ItemFinderMatchSort);
+end;
+
 function TRSItemFinder.FindAll(items: TRSItemArray; boxes: TBoxArray; maxToFind: Integer = 0): TRSItemFinderMatchArray;
 var
   i, j: Integer;

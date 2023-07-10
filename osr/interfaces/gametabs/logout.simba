@@ -81,16 +81,17 @@ begin
   Result := Self.GetWorldSwitcherButton(ERSLogoutWorldSwitcherButton.CLOSE).Click() and WaitUntil(not Self.IsWorldSwitcherOpen(), 500, 5000);
 end;
 
-function TRSLogout.ClickLogout(Attempts: Int32 = 5; TryTime: Int32 = 20000): Boolean;
+function TRSLogout.ClickLogout(attempts: Int32 = 5; time: Int32 = 20000): Boolean;
 var
-  Interval: UInt64;
+  i: Int32;
+  interval: UInt64;
 begin
   if (not Self.Open()) or (not Self.CloseWorldSwitcher()) then
     Exit;
 
-  Interval := TryTime div Attempts;
+  interval := time div attempts;
 
-  for 1 to Attempts do
+  for i := 1 to attempts do
     if Self.GetButton(ERSLogoutButton.CLICK_HERE).Click() and WaitUntil(not RSClient.IsLoggedIn(), 500, Interval + SRL.NormalRange(-2000, 2000)) then 
       Exit(True);
 end;

@@ -36,12 +36,11 @@ type
     DEPOSIT_WORN   
   );
 
-type TRSBank = record(TRSTitledInteface) class const
-    FINDER_UPTEXT: TStringArray = ['Use Bank', 'Bank chest', 'Bank Bank', 'Bank booth', 'Banker'];
-    FINDER_OPTION: TStringArray = ['Use Bank', 'Bank Bank'];
-    QUANTITY_ALL = -1;
-    QUANTITY_ALL_BUT_ONE = -2;
-  class var
+  TRSBank = record(TRSTitledInteface)
+    FINDER_UPTEXT: TStringArray;
+    FINDER_OPTION: TStringArray;
+    QUANTITY_ALL: Int32;
+    QUANTITY_ALL_BUT_ONE: Int32;
     CachedQuantity: Int32;
   end;
 
@@ -62,6 +61,12 @@ begin
 
   Result.Tab := -1;
   Result.Scroll := -1;
+end;
+
+function TRSBankItem.GetNoted(): TRSBankItem;
+begin
+  Result := Self;
+  Result.Noted := True;
 end;
 
 const
@@ -310,6 +315,11 @@ begin
   Self.Name := 'Bank';
   Self.ItemFinder.Name := Self.Name + '.ItemFinder';
   Self.ItemFinder.GetSearchBoxesFunction := @Self.FindItemBoundaries;
+
+  Self.FINDER_UPTEXT := ['Use Bank', 'Bank chest', 'Bank Bank', 'Bank booth', 'Banker'];
+  Self.FINDER_OPTION := ['Use Bank', 'Bank Bank'];
+  Self.QUANTITY_ALL := -1;
+  Self.QUANTITY_ALL_BUT_ONE := -2;
 end;
 
 procedure TRSBank.SetupAlignment(Mode: ERSClientMode); override;
@@ -767,7 +777,7 @@ end;
 
 function TRSBank.IsCustomQuantity(Quantity: Int32): Boolean;
 begin
-  Result := not (Quantity in [1,5,10, TRSBank.QUANTITY_ALL]);
+  Result := not (Quantity in [1,5,10, Self.QUANTITY_ALL]);
 end;
 
 function TRSBank.DepositHelper(b: TBox; Amount: Int32; useQuantityButtons: Boolean): Boolean;
@@ -813,7 +823,7 @@ begin
   begin
     Mouse.Move(B);
 
-    if (Amount = TRSBank.QUANTITY_ALL) then
+    if (Amount = Self.QUANTITY_ALL) then
       Result := ChooseOption.Select('Deposit-All')
     else
       Result := ChooseOption.Select('Deposit-' + ToString(Amount) + ' ', MOUSE_LEFT, True, False) or
@@ -838,8 +848,8 @@ begin
     Mouse.Move(B);
 
     case amount of
-      TRSBank.QUANTITY_ALL:         Exit(ChooseOption.Select('Withdraw-All'));
-      TRSBank.QUANTITY_ALL_BUT_ONE: Exit(ChooseOption.Select('Withdraw-All-but-1'));
+      Self.QUANTITY_ALL:         Exit(ChooseOption.Select('Withdraw-All'));
+      Self.QUANTITY_ALL_BUT_ONE: Exit(ChooseOption.Select('Withdraw-All-but-1'));
     end;
 
     Exit(ChooseOption.Select('Withdraw-' + ToString(amount) + ' ', MOUSE_LEFT, True, False) or
@@ -870,17 +880,17 @@ begin
 
   Mouse.Move(b);
 
-  if (TRSBank.CachedQuantity = amount) or MainScreen.IsUpText('Withdraw-' + ToString(amount)) then
+  if (Self.CachedQuantity = amount) or MainScreen.IsUpText('Withdraw-' + ToString(amount)) then
   begin
-    TRSBank.CachedQuantity := amount;
+    Self.CachedQuantity := amount;
     Mouse.Click(MOUSE_LEFT);
     Exit(True);
   end;
 
-  TRSBank.CachedQuantity := 0; //in case we falsely return the next statement true we reset this.
+  Self.CachedQuantity := 0; //in case we falsely return the next statement true we reset this.
   Result := ChooseOption.Select('Withdraw-X') and Chat.AnswerQuery('Enter amount', ToString(amount), Random(2000, 4000));
   if Result then
-    TRSBank.CachedQuantity := amount;
+    Self.CachedQuantity := amount;
 end;
 
 (*
@@ -1242,13 +1252,37 @@ begin
   Result := Self.DepositItem(tmp, useQuantityButtons);
 end;
 
-function TRSBank.DepositItem(Item: TRSBankDepositItem; useQuantityButtons: Boolean): Boolean; overload; deprecated 'Use the TRSBankItem version instead';
+function TRSBank.DepositItem(item: TRSBankDepositItem; useQuantityButtons: Boolean): Boolean; overload; deprecated 'Use the TRSBankItem version instead';
 var
   slot: TBox;
 begin
-  if Inventory.ItemFinder.FindAny([Item.Item], slot) then
-    Result := Self.DepositHelper(slot, Item.Quantity, useQuantityButtons);
+  if Inventory.ItemFinder.FindAny([item.Item], slot) then
+    Result := Self.DepositHelper(slot, item.Quantity, useQuantityButtons);
 end;
+
+
+function TRSBank.DepositItems(items: array of TRSBankItem; useQuantityButtons: Boolean): Boolean;
+var
+  i: Int32;
+begin
+  for i := 0 to High(items) do
+    if not Self.DepositItem(items[i], useQuantityButtons) then
+      Exit;
+
+  Result := True;
+end;
+
+function TRSBank.DepositItems(items: TRSItemArray; useQuantityButtons: Boolean): Boolean; overload;
+var
+  i: Int32;
+begin
+  for i := 0 to High(items) do
+    if not Self.DepositItem(items[i], useQuantityButtons) then
+      Exit;
+
+  Result := True;
+end;
+
 
 function TRSBank.DepositSlot(Item: TRSBankDepositSlot; useQuantityButtons: Boolean): Boolean; 
 begin
