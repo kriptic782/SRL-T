@@ -1,3 +1,25 @@
+# [2.0.0](https://github.com/Torwent/SRL-T/compare/v1.3.12...v2.0.0) (2023-07-10)
+
+
+### Bug Fixes
+
+* added methods to deposit a random item instead of the first index every time ([0412f18](https://github.com/Torwent/SRL-T/commit/0412f1813429df2c78b7c64931b68bb6ffc0fb8e))
+* lunars magic spells bounds were off ([6bbeab9](https://github.com/Torwent/SRL-T/commit/6bbeab926c6f5bea503b6067063cc25b420102ed))
+* more item interface methods and better integration ([7a6c900](https://github.com/Torwent/SRL-T/commit/7a6c900b1d3556853275e598e69edfe3a196a179))
+* read notes ([a633863](https://github.com/Torwent/SRL-T/commit/a6338638a8f3e2ee59d25c80727d116967ad1d4b))
+
+
+### Features
+
+* backport of srl1500 interface_itemfinder ([6c2242c](https://github.com/Torwent/SRL-T/commit/6c2242cecbc25e6c9738c931cc0cdc827b647be6))
+
+
+### BREAKING CHANGES
+
+* This has changed a lot of core things related to item interfaces. Don't update if you don't know how to rollback for now
+
+
+
 ## [1.3.12](https://github.com/Torwent/SRL-T/compare/v1.3.11...v1.3.12) (2023-07-06)
 
 
@@ -31,15 +53,6 @@
 ### Bug Fixes
 
 * simpleOCR updated with RecognizeLines fixed ([f00bd2f](https://github.com/Torwent/SRL-T/commit/f00bd2f06065f7670dfb6a7d8850dfc38212c807))
-
-
-
-## [1.3.8](https://github.com/Torwent/SRL-T/compare/v1.3.7...v1.3.8) (2023-07-05)
-
-
-### Bug Fixes
-
-* improved button OCR reading methods ([165228c](https://github.com/Torwent/SRL-T/commit/165228c0a27fa8987adec7ebc5c902fe457fa4ff))
 
 
 
