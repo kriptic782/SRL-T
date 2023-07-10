@@ -1224,7 +1224,7 @@ function TRSBank.WithdrawItem(item: TRSItem; useQuantityButtons: Boolean): Boole
 var
   tmp: TRSBankItem;
 begin
-  tmp.Setup(item);
+  tmp := TRSBankItem.Setup(item);
   Result := Self.WithdrawItem(tmp, useQuantityButtons);
 end;
 
@@ -1286,7 +1286,7 @@ function TRSBank.DepositItem(item: TRSItem; useQuantityButtons: Boolean): Boolea
 var
   tmp: TRSBankItem;
 begin
-  tmp.Setup(item);
+  tmp := TRSBankItem.Setup(item);
   Result := Self.DepositItem(tmp, useQuantityButtons);
 end;
 
