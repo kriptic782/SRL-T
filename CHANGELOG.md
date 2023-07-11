@@ -1,3 +1,12 @@
+## [2.0.4](https://github.com/Torwent/SRL-T/compare/v2.0.3...v2.0.4) (2023-07-11)
+
+
+### Bug Fixes
+
+* **Inventory:** minor tweaks so the recent changes have the same behavior they used to ([cbe1563](https://github.com/Torwent/SRL-T/commit/cbe156322a3fe3456831d34ca0011be46bda5258))
+
+
+
 ## [2.0.3](https://github.com/Torwent/SRL-T/compare/v2.0.2...v2.0.3) (2023-07-10)
 
 
@@ -44,15 +53,6 @@
 ### BREAKING CHANGES
 
 * This has changed a lot of core things related to item interfaces. Don't update if you don't know how to rollback for now
-
-
-
-## [1.3.12](https://github.com/Torwent/SRL-T/compare/v1.3.11...v1.3.12) (2023-07-06)
-
-
-### Bug Fixes
-
-* rollback remote input ([af1371b](https://github.com/Torwent/SRL-T/commit/af1371b8071368c22b4349e13864d1701e703cc9))
 
 
 
