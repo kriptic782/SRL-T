@@ -560,7 +560,6 @@ function TRSInventory.FindItems(items: TRSItemArray; out slots: TIntegerArray): 
 begin
   if not Self.Open() then
     Exit;
-
   slots := Self.ItemFinder.IndicesOf(items);
   Result := Length(slots) > 0;
 end;
@@ -587,16 +586,16 @@ Example
       WriteLn('The first slot that has a shark is: ', slot);
   end;
 *)
-function TRSInventory.FindItem(Item: TRSItem; out slots: TIntegerArray): Boolean;
+function TRSInventory.FindItem(item: TRSItem; out slots: TIntegerArray): Boolean;
 begin
-  Result := Self.FindItems([Item], slots);
+  Result := Self.FindItems([item], slots);
 end;
 
 function TRSInventory.FindItem(item: TRSItem; out slot: Int32): Boolean; overload;
 begin
+  slot := -1;
   if not Self.Open() then
     Exit;
-
   slot := Self.ItemFinder.IndexOf([item]);
   Result := slot <> -1;
 end;
@@ -617,10 +616,7 @@ Example
 *)
 function TRSInventory.ContainsAny(items: TRSItemArray): Boolean;
 begin
-  if not Self.Open() then
-    Exit;
-
-  Result := Self.ItemFinder.ContainsAny(items);
+  Result := Self.Open() and Self.ItemFinder.ContainsAny(items);
 end;
 
 (*
@@ -638,10 +634,7 @@ Example
 *)
 function TRSInventory.ContainsItem(item: TRSItem): Boolean;
 begin
-  if not Self.Open() then
-    Exit;
-
-  Result := Self.ItemFinder.Contains(item);
+  Result := Self.Open() and Self.ItemFinder.Contains(item);
 end;
 
 (*
@@ -658,10 +651,7 @@ Example
 *)
 function TRSInventory.ContainsAll(items: TRSItemArray): Boolean;
 begin
-  if not Self.Open() then
-    Exit;
-
-  Result := Self.ItemFinder.ContainsAll(items);
+  Result := Self.Open() and Self.ItemFinder.ContainsAll(items);
 end;
 
 
@@ -680,7 +670,8 @@ Example
 *)
 function TRSInventory.CountItem(item: TRSItem): Int32;
 begin
-  Result := Self.ItemFinder.Count(item);
+  if Self.Open() then
+    Result := Self.ItemFinder.Count(item);
 end;
 
 (*
@@ -698,10 +689,8 @@ Example
 *)
 function TRSInventory.CountItemStack(item: TRSItem): Int32;
 begin
-  if not Self.IsOpen() then
-    Exit;
-
-  Result := Self.ItemFinder.CountStack(item);
+  if Self.Open() then
+    Result := Self.ItemFinder.CountStack(item);
 end;
 
 

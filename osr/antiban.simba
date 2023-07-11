@@ -453,21 +453,22 @@ begin
   Mouse.Move(P);
 end;
 
-procedure TAntiban.RandomMouse;
+procedure TAntiban.RandomMouse();
 var
-  CustomMouse: TMouse;
+  customMouse: TMouse;
+  i: Int32;
 begin
   Self.DebugLn('Random Mouse');
 
-  CustomMouse := Mouse;
-  CustomMouse.Speed += Random(1, 5);
+  customMouse := Mouse;
+  customMouse.Speed += Random(1, 5);
 
-  for 1 to SRL.TruncatedGauss(1, 6) do
+  for i := 1 to SRL.TruncatedGauss(1, 6) do
   begin
     if Random() < 0.30 then
-      CustomMouse.Move(GetClientBounds().Expand(150), True, MOUSE_DISTRIBUTION_GAUSS)
+      customMouse.Move(GetClientBounds().Expand(150), True, MOUSE_DISTRIBUTION_GAUSS)
     else
-      CustomMouse.Move(GetClientBounds().Expand(150), True, MOUSE_DISTRIBUTION_RANDOM);
+      customMouse.Move(GetClientBounds().Expand(150), True, MOUSE_DISTRIBUTION_RANDOM);
 
     if Random() < 0.50 then
       Wait(0, 1000, wdLeft);
