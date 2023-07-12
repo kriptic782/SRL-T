@@ -1,3 +1,12 @@
+## [2.0.7](https://github.com/Torwent/SRL-T/compare/v2.0.6...v2.0.7) (2023-07-12)
+
+
+### Bug Fixes
+
+* **bank:** DepositItems() doesn't fail anymore ([6288636](https://github.com/Torwent/SRL-T/commit/62886366d3d748891e745d89725735dbb09f067e))
+
+
+
 ## [2.0.6](https://github.com/Torwent/SRL-T/compare/v2.0.5...v2.0.6) (2023-07-12)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **GE:** readd Garret's changes to GE ([77d1ec0](https://github.com/Torwent/SRL-T/commit/77d1ec0370ec468276ec377590d5784804b8f7fb))
-
-
-
-## [2.0.2](https://github.com/Torwent/SRL-T/compare/v2.0.1...v2.0.2) (2023-07-10)
-
-
-### Bug Fixes
-
-* **Bank:** depositting TRSItem should now work again ([8d0438c](https://github.com/Torwent/SRL-T/commit/8d0438cf18b657b36f6769f888702dcc23325e8a))
 
 
 
