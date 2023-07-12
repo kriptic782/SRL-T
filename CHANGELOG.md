@@ -1,3 +1,12 @@
+## [2.0.6](https://github.com/Torwent/SRL-T/compare/v2.0.5...v2.0.6) (2023-07-12)
+
+
+### Bug Fixes
+
+* **bankpin:** read notes ([5dc52c9](https://github.com/Torwent/SRL-T/commit/5dc52c9106222a9f81462dd5e5da044936d1f225))
+
+
+
 ## [2.0.5](https://github.com/Torwent/SRL-T/compare/v2.0.4...v2.0.5) (2023-07-11)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **Bank:** depositting TRSItem should now work again ([8d0438c](https://github.com/Torwent/SRL-T/commit/8d0438cf18b657b36f6769f888702dcc23325e8a))
-
-
-
-## [2.0.1](https://github.com/Torwent/SRL-T/compare/v2.0.0...v2.0.1) (2023-07-10)
-
-
-### Bug Fixes
-
-* add Bank.ContainsItem(TRSBankItem) ([4d90050](https://github.com/Torwent/SRL-T/commit/4d9005012d1089c22bc245c4c4b4533873401430))
 
 
 
