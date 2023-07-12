@@ -1304,10 +1304,8 @@ var
   i: Int32;
 begin
   for i := 0 to High(items) do
-    if not Self.DepositItem(items[i], useQuantityButtons) then
-      Exit;
-
-  Result := True;
+    if Self.DepositItem(items[i], useQuantityButtons) then
+      Result := True;
 end;
 
 function TRSBank.DepositItems(items: TRSItemArray; useQuantityButtons: Boolean): Boolean; overload;
@@ -1315,10 +1313,8 @@ var
   i: Int32;
 begin
   for i := 0 to High(items) do
-    if not Self.DepositItem(items[i], useQuantityButtons) then
-      Exit;
-
-  Result := True;
+    if Self.DepositItem(items[i], useQuantityButtons) then
+      Result := True;
 end;
 
 
