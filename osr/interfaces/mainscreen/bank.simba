@@ -1182,9 +1182,6 @@ function TRSBank.WithdrawItem(out item: TRSBankItem; useQuantityButtons: Boolean
 var
   b: TBox;
 begin
-  if Inventory.IsFull() and (Inventory.CountItemStack(item.Item) = 0) then //item not stackable.
-    Exit;
-
   if not Self.FindItem(item.Item, b) then
   begin
     if item.Tab = -1 then
