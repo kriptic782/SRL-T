@@ -9,7 +9,7 @@ Item Finder
 {$ENDIF}
 
 const
-  ITEM_FINDER_IMAGES_VERSION = '7'; // Inc if images have changed
+  ITEM_FINDER_IMAGES_VERSION = '8'; // Inc if images have changed
   ITEM_FINDER_IMAGES_ZIP     = {$macro CURRENT_DIRECTORY} + '/item-images.zip';
   ITEM_FINDER_IMAGES_PATH    = {$macro CURRENT_DIRECTORY} + '/images/' + ITEM_FINDER_IMAGES_VERSION + '/';
   ITEM_FINDER_ITEM_NAMES_FILE  = {$macro CURRENT_DIRECTORY} + '/item-names';
@@ -374,8 +374,11 @@ var
   ItemFinder: TRSItemFinder;
 
 begin
+
+
   ItemFinder.Setup();
 
   // We can map some useful things here
   //ItemFinder.AddItemName('Arrow shaft', '300');
+  ItemFinder.AddItemFilter('Magic logs', @ItemFinder.ClearSparkles);
 end;
