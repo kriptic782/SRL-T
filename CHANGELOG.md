@@ -1,3 +1,12 @@
+## [2.0.8](https://github.com/Torwent/SRL-T/compare/v2.0.7...v2.0.8) (2023-07-13)
+
+
+### Bug Fixes
+
+* **itemfinder:** read notes ([d778b73](https://github.com/Torwent/SRL-T/commit/d778b73b4b95506b823bcac5354e9b345d36eaf5))
+
+
+
 ## [2.0.7](https://github.com/Torwent/SRL-T/compare/v2.0.6...v2.0.7) (2023-07-12)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **Inventory:** minor tweaks so the recent changes have the same behavior they used to ([cbe1563](https://github.com/Torwent/SRL-T/commit/cbe156322a3fe3456831d34ca0011be46bda5258))
-
-
-
-## [2.0.3](https://github.com/Torwent/SRL-T/compare/v2.0.2...v2.0.3) (2023-07-10)
-
-
-### Bug Fixes
-
-* **GE:** readd Garret's changes to GE ([77d1ec0](https://github.com/Torwent/SRL-T/commit/77d1ec0370ec468276ec377590d5784804b8f7fb))
 
 
 
