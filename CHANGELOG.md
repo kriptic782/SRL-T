@@ -1,3 +1,12 @@
+## [2.0.9](https://github.com/Torwent/SRL-T/compare/v2.0.8...v2.0.9) (2023-07-13)
+
+
+### Bug Fixes
+
+* removed code that doesn't belong in SRL and moved it to WaspLib ([9a07adf](https://github.com/Torwent/SRL-T/commit/9a07adfa111e8671c316489090671d11d192ffbc))
+
+
+
 ## [2.0.8](https://github.com/Torwent/SRL-T/compare/v2.0.7...v2.0.8) (2023-07-13)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * readd jagex launcher tweaks + improvements ([eb85535](https://github.com/Torwent/SRL-T/commit/eb855355d1fd00511198b2587725931a70a0aefd))
-
-
-
-## [2.0.4](https://github.com/Torwent/SRL-T/compare/v2.0.3...v2.0.4) (2023-07-11)
-
-
-### Bug Fixes
-
-* **Inventory:** minor tweaks so the recent changes have the same behavior they used to ([cbe1563](https://github.com/Torwent/SRL-T/commit/cbe156322a3fe3456831d34ca0011be46bda5258))
 
 
 
