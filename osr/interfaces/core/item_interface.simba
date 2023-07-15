@@ -1,22 +1,20 @@
-{$DEFINE SRL_INTERFACE_ITEMFINDER_INCLUDED}
+{$DEFINE SRL_ITEM_INTERFACE_INCLUDED}
 {$IFNDEF SRL_OSR}
   {$I SRL-T/osr.simba}
 {$ENDIF}
 
 type
-  TRSInterfaceItemFinder = record(TSRLBaseRecord)
+  TRSItemInterface = record(TSRLBaseRecord)
     GetSearchBoxesFunction: function: TBoxArray of object;
   end;
 
-
-
-function TRSInterfaceItemFinder.GetSlotBoxes(slots: TIntegerArray): TBoxArray;
+function TRSItemInterface.GetSlotBoxes(slots: TIntegerArray): TBoxArray;
 var
   boxes: TBoxArray;
   i: Int32;
 begin
   if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+    Self.Fatal('ItemInterface.GetSearchBoxesFunction = nil');
 
   boxes := Self.GetSearchBoxesFunction();
   for i := 0 to High(slots) do
@@ -24,7 +22,7 @@ begin
       Result += boxes[i];
 end;
 
-function TRSInterfaceItemFinder.GetSlotBox(slot: Int32): TBox;
+function TRSItemInterface.GetSlotBox(slot: Int32): TBox;
 var
   boxes: TBoxArray;
 begin
@@ -37,8 +35,7 @@ begin
 end;
 
 
-
-function TRSInterfaceItemFinder.RandomSlotNearby(slot: Int32; slots: TIntegerArray): Int32;
+function TRSItemInterface.RandomSlotNearby(slot: Int32; slots: TIntegerArray): Int32;
 var
   i: Int32;
   boxes, tmp: TBoxArray;
@@ -60,9 +57,7 @@ begin
   Result := slots[SRL.RandomBoxNearby(boxes[slot].Middle(), tmp)];
 end;
 
-
-
-function TRSInterfaceItemFinder.PointToSlot(p: TPoint): Int32;
+function TRSItemInterface.PointToSlot(p: TPoint): Int32;
 var
   i: Int32;
   slots: TBoxArray;
@@ -78,7 +73,8 @@ begin
   Result := -1;
 end;
 
-function TRSInterfaceItemFinder.GetUsedSlots(): TIntegerArray;
+
+function TRSItemInterface.GetUsedSlots(): TIntegerArray;
 var
   slots: TBoxArray;
   i: Int32;
@@ -92,7 +88,7 @@ begin
       Result += i;
 end;
 
-function TRSInterfaceItemFinder.GetEmptySlots(): TIntegerArray;
+function TRSItemInterface.GetEmptySlots(): TIntegerArray;
 var
   slots: TBoxArray;
   i: Int32;
@@ -107,7 +103,7 @@ begin
 end;
 
 
-function TRSInterfaceItemFinder.IndexOf(items: TRSItemArray): Int32;
+function TRSItemInterface.IndexOf(items: TRSItemArray): Int32;
 var
   Match: TRSItemFinderMatch;
 begin
@@ -120,7 +116,7 @@ begin
     Result := -1;
 end;
 
-function TRSInterfaceItemFinder.IndicesOf(items: TRSItemArray): TIntegerArray;
+function TRSItemInterface.IndicesOf(items: TRSItemArray): TIntegerArray;
 var
   matches: TRSItemFinderMatchArray;
   I: Integer;
@@ -136,7 +132,7 @@ begin
 end;
 
 
-function TRSInterfaceItemFinder.Find(items: TRSItemArray; out box: TBox): Boolean;
+function TRSItemInterface.Find(items: TRSItemArray; out box: TBox): Boolean;
 var
   Match: TRSItemFinderMatch;
 begin
@@ -148,7 +144,7 @@ begin
     Box := Match.Box;
 end;
 
-function TRSInterfaceItemFinder.FindAll(items: TRSItemArray): TBoxArray;
+function TRSItemInterface.FindAll(items: TRSItemArray): TBoxArray;
 var
   matches: TRSItemFinderMatchArray;
   I: Integer;
@@ -163,7 +159,7 @@ begin
     Result[I] := matches[I].Box;
 end;
 
-function TRSInterfaceItemFinder.FindAll(items: TRSItemArray; out boxes: TBoxArray): Boolean; overload;
+function TRSItemInterface.FindAll(items: TRSItemArray; out boxes: TBoxArray): Boolean; overload;
 var
   matches: TRSItemFinderMatchArray;
   foundItems: TRSItemArray;
@@ -179,7 +175,7 @@ begin
   Result := Length(Unique(foundItems)) = Length(items);
 end;
 
-function TRSInterfaceItemFinder.FindAny(items: TRSItemArray; out box: TBox): Boolean;
+function TRSItemInterface.FindAny(items: TRSItemArray; out box: TBox): Boolean;
 var
   boxes: TBoxArray;
 begin
@@ -188,17 +184,17 @@ begin
     box := boxes[SRL.TruncatedGauss(0, High(boxes))];
 end;
 
-function TRSInterfaceItemFinder.Contains(item: TRSItem): Boolean;
+function TRSItemInterface.Contains(item: TRSItem): Boolean;
 begin
   Result := Self.IndexOf([Item]) > -1;
 end;
 
-function TRSInterfaceItemFinder.ContainsAny(items: TRSItemArray): Boolean;
+function TRSItemInterface.ContainsAny(items: TRSItemArray): Boolean;
 begin
   Result := Self.IndexOf(items) > -1;
 end;
 
-function TRSInterfaceItemFinder.ContainsAll(items: TRSItemArray): Boolean;
+function TRSItemInterface.ContainsAll(items: TRSItemArray): Boolean;
 var
   matches: TRSItemFinderMatchArray;
   foundItems: TRSItemArray;
@@ -212,7 +208,7 @@ begin
 end;
 
 
-function TRSInterfaceItemFinder.FindRandomItems(items: TRSItemArray): TIntegerArray;
+function TRSItemInterface.FindRandomItems(items: TRSItemArray): TIntegerArray;
 var
   usedSlots: TIntegerArray;
 begin
@@ -220,13 +216,13 @@ begin
   Result := usedSlots.Difference(Self.IndicesOf(items));
 end;
 
-function TRSInterfaceItemFinder.ContainsRandomItems(items: TRSItemArray): Boolean; overload;
+function TRSItemInterface.ContainsRandomItems(items: TRSItemArray): Boolean; overload;
 begin
   Result := Self.FindRandomItems(items) <> [];
 end;
 
 
-function TRSInterfaceItemFinder.Count(): Int32;
+function TRSItemInterface.Count(): Int32;
 var
   slots: TBoxArray;
   tpa: TPointArray;
@@ -246,12 +242,12 @@ begin
   Result := atpa.Len();
 end;
 
-function TRSInterfaceItemFinder.Count(item: TRSItem): Int32; overload;
+function TRSItemInterface.Count(item: TRSItem): Int32; overload;
 begin
   Result := Length(Self.IndicesOf([Item]));
 end;
 
-function TRSInterfaceItemFinder.CountEmptySlots(): Int32;
+function TRSItemInterface.CountEmptySlots(): Int32;
 var
   slots: TBoxArray;
   tpa: TPointArray;
@@ -272,7 +268,7 @@ begin
 end;
 
 
-function TRSInterfaceItemFinder.CountStack(slot: Int32): Int32;
+function TRSItemInterface.CountStack(slot: Int32): Int32;
 var
   box: TBox;
 begin
@@ -284,7 +280,7 @@ begin
   Result := SRL.GetItemAmount(box);
 end;
 
-function TRSInterfaceItemFinder.CountStack(item: TRSItem): Int32; overload;
+function TRSItemInterface.CountStack(item: TRSItem): Int32; overload;
 var
   box: TBox;
 begin
@@ -299,7 +295,7 @@ begin
 end;
 
 
-function TRSInterfaceItemFinder.MouseSlot(slot: Int32): Boolean;
+function TRSItemInterface.MouseSlot(slot: Int32): Boolean;
 var
   slots: TBoxArray;
 begin
@@ -312,7 +308,7 @@ begin
     Mouse.Move(slots[slot]);
 end;
 
-function TRSInterfaceItemFinder.MouseItem(item: TRSItem): Boolean;
+function TRSItemInterface.MouseItem(item: TRSItem): Boolean;
 var
   box: TBox;
 begin
@@ -322,14 +318,14 @@ begin
 end;
 
 
-function TRSInterfaceItemFinder.ClickSlot(slot: Int32; mouseButton: Int32 = MOUSE_LEFT): Boolean;
+function TRSItemInterface.ClickSlot(slot: Int32; mouseButton: Int32 = MOUSE_LEFT): Boolean;
 begin
   Result := Self.MouseItem(slot);
   if Result then
     Mouse.Click(mouseButton);
 end;
 
-function TRSInterfaceItemFinder.ClickItem(item: TRSItem; mouseButton: Int32 = MOUSE_LEFT): Boolean;
+function TRSItemInterface.ClickItem(item: TRSItem; mouseButton: Int32 = MOUSE_LEFT): Boolean;
 begin
   Result := Self.MouseItem(item);
   if Result then
@@ -337,7 +333,7 @@ begin
 end;
 
 
-function TRSInterfaceItemFinder.InteractSlot(slot: Int32; option: String = ''): Boolean;
+function TRSItemInterface.InteractSlot(slot: Int32; option: String = ''): Boolean;
 begin
   if not Self.MouseSlot(slot) then
     Exit;
@@ -351,7 +347,7 @@ begin
   Result := ChooseOption.Select(option);
 end;
 
-function TRSInterfaceItemFinder.InteractItem(item: TRSItem; option: String = ''): Boolean;
+function TRSItemInterface.InteractItem(item: TRSItem; option: String = ''): Boolean;
 begin
   if not Self.MouseItem(item) then
     Exit;
@@ -366,12 +362,12 @@ begin
 end;
 
 
-function TRSInterfaceItemFinder.MouseRandomSlot(slots: TIntegerArray): Boolean;
+function TRSItemInterface.MouseRandomSlot(slots: TIntegerArray): Boolean;
 begin
   Result := Self.MouseSlot(slots[SRL.TruncatedGauss(0, High(slots))]);
 end;
 
-function TRSInterfaceItemFinder.MouseRandomItem(item: TRSItem): Boolean;
+function TRSItemInterface.MouseRandomItem(item: TRSItem): Boolean;
 var
   boxes: TBoxArray;
 begin
@@ -381,14 +377,14 @@ begin
 end;
 
 
-function TRSInterfaceItemFinder.ClickRandomSlot(slots: TIntegerArray; mouseButton: Int32 = MOUSE_LEFT): Boolean;
+function TRSItemInterface.ClickRandomSlot(slots: TIntegerArray; mouseButton: Int32 = MOUSE_LEFT): Boolean;
 begin
   Result := Self.MouseRandomSlot(slots);
   if Result then
     Mouse.Click(mouseButton);
 end;
 
-function TRSInterfaceItemFinder.ClickRandomItem(item: TRSItem; mouseButton: Int32 = MOUSE_LEFT): Boolean;
+function TRSItemInterface.ClickRandomItem(item: TRSItem; mouseButton: Int32 = MOUSE_LEFT): Boolean;
 begin
   Result := Self.MouseRandomItem(item);
   if Result then
@@ -396,12 +392,12 @@ begin
 end;
 
 
-function TRSInterfaceItemFinder.InteractRandomSlot(slots: TIntegerArray; option: String): Boolean;
+function TRSItemInterface.InteractRandomSlot(slots: TIntegerArray; option: String): Boolean;
 begin
   Result := Self.MouseRandomSlot(slots) and ChooseOption.Select(option);
 end;
 
-function TRSInterfaceItemFinder.InteractRandomItem(item: TRSItem; option: String): Boolean;
+function TRSItemInterface.InteractRandomItem(item: TRSItem; option: String): Boolean;
 begin
   Result := Self.MouseRandomItem(item) and ChooseOption.Select(option);
 end;

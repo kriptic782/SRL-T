@@ -64,8 +64,8 @@ begin
   inherited;
 
   Self.Name := 'Equipment';
-  Self.ItemFinder.Name := Self.Name + '.ItemFinder';
-  Self.ItemFinder.GetSearchBoxesFunction := @Self.GetSlotBoxes;
+  Self.ItemInterface.Name := Self.Name + '.ItemInterface';
+  Self.ItemInterface.GetSearchBoxesFunction := @Self.GetSlotBoxes;
 end;
 
 procedure TRSEquipment.SetupAlignment(Mode: ERSClientMode); override;
@@ -107,7 +107,7 @@ begin
   if not Self.Open() then
     Exit;
 
-  Result := Self.ItemFinder.Find([item], box);
+  Result := Self.ItemInterface.Find([item], box);
 end;
 
 //for use without having to pass extra parameters
@@ -177,7 +177,7 @@ begin
   if not Self.IsOpen() then
     Exit;
 
-  Result := Self.ItemFinder.CountStack(item);
+  Result := Self.ItemInterface.CountStack(item);
 end;
 
 

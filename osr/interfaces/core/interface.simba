@@ -19,7 +19,7 @@ type
   TRSInterface = record(TSRLBaseRecord)
     Mode: ERSClientMode;
 
-    ItemFinder: TRSInterfaceItemFinder;
+    ItemInterface: TRSItemInterface;
 
     ButtonColors: array of TCTS1Color;
     ButtonEnabledColors: array of TCTS1Color;

@@ -13,6 +13,32 @@ const
   STR_WHITESPACE = #9#10#11#12#13#32;
   STR_NEW_LINE = #13#10;
 
+
+function String.Contains(SubString: String): Boolean;
+begin
+  Result := Self.Pos(SubString) > 0;
+end;
+
+function String.ContainsAny(subStrings: TStringArray): Boolean;
+var
+  str: String;
+begin
+  Result := False;
+  for str in subStrings do
+    if Self.Contains(str) then
+      Exit(True);
+end;
+
+function String.ContainsAll(SubStrings: TStringArray): Boolean;
+var
+  Str: String;
+begin
+  Result := True;
+  for Str in SubStrings do
+    if not Self.Contains(Str) then
+      Exit(False);
+end;
+
 (*
 String.Len
 ~~~~~~~~~~~~~~~

@@ -274,7 +274,7 @@ Example
 -------
 
   Boxes := Self.FindItemBoundaries();
-  WriteLn ItemFinder.Find(Item, Boxes);
+  WriteLn ItemInterface.Find(Item, Boxes);
 *)
 function TRSBank.FindItemBoundaries(): TBoxArray;
 var
@@ -313,8 +313,8 @@ begin
   inherited;
     
   Self.Name := 'Bank';
-  Self.ItemFinder.Name := Self.Name + '.ItemFinder';
-  Self.ItemFinder.GetSearchBoxesFunction := @Self.FindItemBoundaries;
+  Self.ItemInterface.Name := Self.Name + '.ItemInterface';
+  Self.ItemInterface.GetSearchBoxesFunction := @Self.FindItemBoundaries;
 
   Self.FINDER_UPTEXT := ['Use Bank', 'Bank chest', 'Bank Bank', 'Bank booth', 'Banker'];
   Self.FINDER_OPTION := ['Use Bank', 'Bank Bank'];
@@ -977,7 +977,7 @@ end;
 
 function TRSBank.FindAny(items: TRSItemArray; out box: TBox): Boolean;
 begin
-  Result := Self.ItemFinder.FindAny(items, box);
+  Result := Self.ItemInterface.FindAny(items, box);
 end;
 
 (*
@@ -998,7 +998,7 @@ begin
   if not Self.IsOpen() then
     Exit;
 
-  Result := Self.ItemFinder.Find([item], box);
+  Result := Self.ItemInterface.Find([item], box);
 end;
 
 (*
@@ -1015,7 +1015,7 @@ Example
 *)
 function TRSBank.ContainsItem(item: TRSItem): Boolean;
 begin
-  Result := Self.ItemFinder.Contains(item);
+  Result := Self.ItemInterface.Contains(item);
 end;
 
 function TRSBank.ContainsItem(out item: TRSBankItem; attempts: Int32 = 0): Boolean; overload;
@@ -1056,7 +1056,7 @@ end;
 
 function TRSBank.ContainsAny(items: TRSItemArray): Boolean;
 begin
-  Result := Self.ItemFinder.ContainsAny(items);
+  Result := Self.ItemInterface.ContainsAny(items);
 end;
 
 
@@ -1078,12 +1078,12 @@ begin
   if not Self.IsOpen() then
     Exit;
 
-  Result := Self.ItemFinder.Count(item);
+  Result := Self.ItemInterface.Count(item);
 end;
 
 function TRSBank.CountSlotStack(slot: Int32): Int32;
 begin
-  Result := Self.ItemFinder.CountStack(slot);
+  Result := Self.ItemInterface.CountStack(slot);
 end;
 
 (*
@@ -1100,7 +1100,7 @@ Example
 *)
 function TRSBank.CountItemStack(item: TRSItem): Int32;
 begin
-  Result := Self.ItemFinder.CountStack(item);
+  Result := Self.ItemInterface.CountStack(item);
 end;
 
 (*
@@ -1120,7 +1120,7 @@ begin
   if not Self.IsOpen() then
     Exit;
 
-  Result := Self.ItemFinder.MouseItem(item);
+  Result := Self.ItemInterface.MouseItem(item);
 end;
 
 (*
@@ -1140,7 +1140,7 @@ begin
   if not Self.IsOpen() then
     Exit;
 
-  Result := Self.ItemFinder.InteractItem(item, option);
+  Result := Self.ItemInterface.InteractItem(item, option);
 end;
 
 (*
@@ -1267,7 +1267,7 @@ begin
   if not isStackable then
     count := Inventory.CountItem(item.Item);
 
-  if Inventory.ItemFinder.FindAny([item.Item], slot) then
+  if Inventory.ItemInterface.FindAny([item.Item], slot) then
     Result := Self.DepositHelper(slot, item.Quantity, useQuantityButtons);
 
   if Result then
@@ -1291,7 +1291,7 @@ function TRSBank.DepositItem(item: TRSBankDepositItem; useQuantityButtons: Boole
 var
   slot: TBox;
 begin
-  if Inventory.ItemFinder.FindAny([item.Item], slot) then
+  if Inventory.ItemInterface.FindAny([item.Item], slot) then
     Result := Self.DepositHelper(slot, item.Quantity, useQuantityButtons);
 end;
 

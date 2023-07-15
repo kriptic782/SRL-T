@@ -64,8 +64,8 @@ begin
 
   Self.LOW_SLOT := 0;
   Self.HIGH_SLOT := 27;
-  Self.ItemFinder.Name := Self.Name + '.ItemFinder';
-  Self.ItemFinder.GetSearchBoxesFunction := @Self.GetSlotBoxes;
+  Self.ItemInterface.Name := Self.Name + '.ItemInterface';
+  Self.ItemInterface.GetSearchBoxesFunction := @Self.GetSlotBoxes;
 end;
 
 procedure TRSInventory.SetupAlignment(Mode: ERSClientMode); override;
@@ -134,7 +134,7 @@ Example
 *)
 function TRSInventory.PointToSlot(p: TPoint): Int32;
 begin
-  Result := Self.ItemFinder.PointToSlot(p);
+  Result := Self.ItemInterface.PointToSlot(p);
 end;
 
 (*
@@ -152,7 +152,7 @@ Example
 *)
 function TRSInventory.MouseSlot(slot: Int32): Boolean;
 begin
-  Result := Self.ItemFinder.MouseSlot(slot);
+  Result := Self.ItemInterface.MouseSlot(slot);
 end;
 
 function TRSInventory.HoverSlot(slot: Int32): Boolean; deprecated 'Use TRSInventory.MouseSlot() instead!';
@@ -182,7 +182,7 @@ Example
 *)
 function TRSInventory.ClickSlot(slot: Int32; option: String = ''): Boolean;
 begin
-  Result := Self.ItemFinder.InteractSlot(slot, option);
+  Result := Self.ItemInterface.InteractSlot(slot, option);
 end;
 
 function TRSInventory.IsSlotUsed(b: TBox): Boolean; overload;
@@ -477,7 +477,7 @@ function TRSInventory.Count(): Int32;
 begin
   if not Self.Open() then
     Exit;
-  Result := Self.ItemFinder.Count();
+  Result := Self.ItemInterface.Count();
 end;
 
 (*
@@ -535,7 +535,7 @@ Example
 *)
 function TRSInventory.RandomSlotNearby(slot: Int32; slots: TIntegerArray): Int32;
 begin
-  Result := Self.ItemFinder.RandomSlotNearby(slot, slots);
+  Result := Self.ItemInterface.RandomSlotNearby(slot, slots);
 end;
 
 
@@ -560,7 +560,7 @@ function TRSInventory.FindItems(items: TRSItemArray; out slots: TIntegerArray): 
 begin
   if not Self.Open() then
     Exit;
-  slots := Self.ItemFinder.IndicesOf(items);
+  slots := Self.ItemInterface.IndicesOf(items);
   Result := Length(slots) > 0;
 end;
 
@@ -596,7 +596,7 @@ begin
   slot := -1;
   if not Self.Open() then
     Exit;
-  slot := Self.ItemFinder.IndexOf([item]);
+  slot := Self.ItemInterface.IndexOf([item]);
   Result := slot <> -1;
 end;
 
@@ -616,7 +616,7 @@ Example
 *)
 function TRSInventory.ContainsAny(items: TRSItemArray): Boolean;
 begin
-  Result := Self.Open() and Self.ItemFinder.ContainsAny(items);
+  Result := Self.Open() and Self.ItemInterface.ContainsAny(items);
 end;
 
 (*
@@ -634,7 +634,7 @@ Example
 *)
 function TRSInventory.ContainsItem(item: TRSItem): Boolean;
 begin
-  Result := Self.Open() and Self.ItemFinder.Contains(item);
+  Result := Self.Open() and Self.ItemInterface.Contains(item);
 end;
 
 (*
@@ -651,7 +651,7 @@ Example
 *)
 function TRSInventory.ContainsAll(items: TRSItemArray): Boolean;
 begin
-  Result := Self.Open() and Self.ItemFinder.ContainsAll(items);
+  Result := Self.Open() and Self.ItemInterface.ContainsAll(items);
 end;
 
 
@@ -671,7 +671,7 @@ Example
 function TRSInventory.CountItem(item: TRSItem): Int32;
 begin
   if Self.Open() then
-    Result := Self.ItemFinder.Count(item);
+    Result := Self.ItemInterface.Count(item);
 end;
 
 (*
@@ -690,7 +690,7 @@ Example
 function TRSInventory.CountItemStack(item: TRSItem): Int32;
 begin
   if Self.Open() then
-    Result := Self.ItemFinder.CountStack(item);
+    Result := Self.ItemInterface.CountStack(item);
 end;
 
 
@@ -711,7 +711,7 @@ function TRSInventory.MouseItem(item: TRSItem): Boolean;
 begin
   if not Self.IsOpen() then
     Exit;
-  Result := Self.ItemFinder.MouseItem(item);
+  Result := Self.ItemInterface.MouseItem(item);
 end;
 
 function TRSInventory.HoverItem(item: TRSItem): Boolean; deprecated 'Use TRSInventory.MouseItem() instead!';
@@ -739,7 +739,7 @@ begin
   if not Self.IsOpen() then
     Exit;
 
-  Result := Self.ItemFinder.InteractItem(item, option);
+  Result := Self.ItemInterface.InteractItem(item, option);
 end;
 
 (*

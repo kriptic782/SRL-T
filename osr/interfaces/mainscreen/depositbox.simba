@@ -35,8 +35,8 @@ begin
   inherited;
 
   Self.Name := 'Deposit Screen';
-  Self.ItemFinder.Name := Self.Name + '.ItemFinder';
-  Self.ItemFinder.GetSearchBoxesFunction := @Self.GetSlotBoxes;
+  Self.ItemInterface.Name := Self.Name + '.ItemInterface';
+  Self.ItemInterface.GetSearchBoxesFunction := @Self.GetSlotBoxes;
 end;
 
 procedure TRSDepositBox.SetupAlignment(Mode: ERSClientMode); override;
@@ -111,12 +111,12 @@ end;
 
 function TRSDepositBox.FindItems(items: TRSItemArray): TIntegerArray;
 begin
-  Result := Self.ItemFinder.IndicesOf(items);
+  Result := Self.ItemInterface.IndicesOf(items);
 end;
 
 function TRSDepositBox.FindItem(item: TRSItem): Int32;
 begin
-  Result := Self.ItemFinder.IndexOf([item]);
+  Result := Self.ItemInterface.IndexOf([item]);
 end;
 
 function TRSDepositBox.FindItem(item: TRSItem; out box: TBox): Boolean; overload;
@@ -124,28 +124,28 @@ begin
   if not Self.IsOpen() then
     Exit;
 
-  Result := Self.ItemFinder.Find([item], box);
+  Result := Self.ItemInterface.Find([item], box);
 end;
 
 function TRSDepositBox.ContainsItem(item: TRSItem): Boolean;
 begin
   if not Self.IsOpen() then
     Exit;
-  Result := Self.ItemFinder.Contains(item);
+  Result := Self.ItemInterface.Contains(item);
 end;
 
 function TRSDepositBox.ContainsAny(items: TRSItemArray): Boolean;
 begin
   if not Self.IsOpen() then
     Exit;
-  Result := Self.ItemFinder.ContainsAny(items);
+  Result := Self.ItemInterface.ContainsAny(items);
 end;
 
 function TRSDepositBox.ContainsAll(items: TRSItemArray): Boolean;
 begin
   if not Self.IsOpen() then
     Exit;
-  Result := Self.ItemFinder.ContainsAll(items);
+  Result := Self.ItemInterface.ContainsAll(items);
 end;
 
 function TRSDepositBox.CountItem(item: TRSItem): Int32;
@@ -153,17 +153,17 @@ begin
   if not Self.IsOpen() then
     Exit;
 
-  Result := Self.ItemFinder.Count(item);
+  Result := Self.ItemInterface.Count(item);
 end;
 
 function TRSDepositBox.CountItemStack(item: TRSItem): Int32;
 begin
-  Result := Self.ItemFinder.CountStack(item);
+  Result := Self.ItemInterface.CountStack(item);
 end;
 
 function TRSDepositBox.ClickItem(item: TRSItem; option: String = ''): Boolean;
 begin
-  Result := Self.ItemFinder.InteractItem(item, option);
+  Result := Self.ItemInterface.InteractItem(item, option);
 end;
 
 
@@ -225,7 +225,7 @@ function TRSDepositBox.DepositItem(item: TRSBankItem; useQuantityButtons: Boolea
 var
   b: TBox;
 begin
-  if Self.ItemFinder.FindAny([item.Item], b) then
+  if Self.ItemInterface.FindAny([item.Item], b) then
     Result := Self.DepositHelper(b, item.Quantity, useQuantityButtons);
 end;
 
@@ -233,7 +233,7 @@ function TRSDepositBox.DepositItem(Item: TRSBankDepositItem; UseQuantityButtons:
 var
   b: TBox;
 begin
-  if Self.ItemFinder.FindAny([item.Item], b) then
+  if Self.ItemInterface.FindAny([item.Item], b) then
     Result := Self.DepositHelper(b, Item.Quantity, UseQuantityButtons);
 end;
 
@@ -275,7 +275,7 @@ Depositis your inventory by clicking the deposit inventory button
 *)
 function TRSDepositBox.DepositAll(): Boolean;
 begin
-  Result := (Self.ItemFinder.Count() = 0) or Self.GetButton(ERSDepositButton.DEPOSIT_INVENTORY).Click();
+  Result := (Self.ItemInterface.Count() = 0) or Self.GetButton(ERSDepositButton.DEPOSIT_INVENTORY).Click();
 end;
 
 
