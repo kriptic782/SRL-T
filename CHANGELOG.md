@@ -1,3 +1,12 @@
+## [2.0.10](https://github.com/Torwent/SRL-T/compare/v2.0.9...v2.0.10) (2023-07-15)
+
+
+### Bug Fixes
+
+* renamed ItemFinderInterface to ItemInterface ([405df1b](https://github.com/Torwent/SRL-T/commit/405df1bb967cdf5c4b21c09592fa7aaa91faa17f))
+
+
+
 ## [2.0.9](https://github.com/Torwent/SRL-T/compare/v2.0.8...v2.0.9) (2023-07-13)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **bankpin:** read notes ([5dc52c9](https://github.com/Torwent/SRL-T/commit/5dc52c9106222a9f81462dd5e5da044936d1f225))
-
-
-
-## [2.0.5](https://github.com/Torwent/SRL-T/compare/v2.0.4...v2.0.5) (2023-07-11)
-
-
-### Bug Fixes
-
-* readd jagex launcher tweaks + improvements ([eb85535](https://github.com/Torwent/SRL-T/commit/eb855355d1fd00511198b2587725931a70a0aefd))
 
 
 
