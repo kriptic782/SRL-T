@@ -53,6 +53,8 @@ type
     Scroll: Int32;
   end;
 
+  TRSBankItemArray = array of TRSBankItem;
+
 function TRSBankItem.Setup(item: TRSItem; quantity: Int32 = -1; noted: Boolean = False): TRSBankItem; static;
 begin
   Result.Item := item;
@@ -983,9 +985,12 @@ end;
 (*
 Bank.FindItem
 ~~~~~~~~~~~~~
-.. pascal:: function TRSBank.FindItem(Item: TRSItem; out box: TBox): Boolean;
+.. pascal::
+  function TRSBank.FindItem(Item: TRSItem; out box: TBox): Boolean;
+  function TRSBank.FindItem(out item: TRSBankItem; out box: TBox; attempts: Int32 = 0): Boolean; overload;
 
 Finds and returns the bounds of an item in the bank
+The TRSBankItem version of the method will actually search the bank for the item while the TRSItem will not.
 
 Example
 -------
@@ -1001,12 +1006,52 @@ begin
   Result := Self.ItemInterface.Find([item], box);
 end;
 
+function TRSBank.FindItem(out item: TRSBankItem; out box: TBox; attempts: Int32 = 0): Boolean; overload;
+begin
+  if not Self.FindItem(item.Item, box) then
+  begin
+    if item.Tab = -1 then
+      item.Tab := Self.FindItemTab(item.Item, False);
+    Self.OpenTab(item.Tab);
+
+    if not Self.FindItem(item.Item, box) then
+    begin
+      if item.Scroll = -1 then
+        item.Scroll := Self.FindItemScroll(item.Item);
+
+      if Self.GetScrollPosition() <> item.Scroll then
+        Self.SetScrollPosition(item.Scroll);
+
+      if not Self.FindItem(item.Item, box) then
+      begin
+        item.Tab := -1;
+        item.Scroll := -1;
+        if attempts = 2 then
+          Exit;
+        Exit(Self.FindItem(item, box, attempts + 1));
+      end;
+    end;
+  end;
+
+  if item.Tab = -1 then
+    item.Tab := Self.GetCurrentTab();
+
+  //by setting this everytime, item.Scroll will slowly be adjusted
+  //to something that will match all required items in a script.
+  item.Scroll := Self.GetScrollPosition();
+  Result := True;
+end;
+
+
 (*
 Bank.ContainsItem
 ~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSBank.ContainsItem(Item: TRSItem): Boolean;
+.. pascal::
+  function TRSBank.ContainsItem(Item: TRSItem): Boolean;
+  function TRSBank.ContainsItem(out item: TRSBankItem): Boolean; overload;
 
-Returns true/false wether a item is found in the bank or not.
+Returns true/false whether a item is found in the bank or not.
+The TRSBankItem version of the method will actually search the bank for the item while the TRSItem will not.
 
 Example
 -------
@@ -1018,42 +1063,21 @@ begin
   Result := Self.ItemInterface.Contains(item);
 end;
 
-function TRSBank.ContainsItem(out item: TRSBankItem; attempts: Int32 = 0): Boolean; overload;
+function TRSBank.ContainsItem(out item: TRSBankItem): Boolean; overload;
+var
+  box: TBox;
 begin
-  Result := Self.ContainsItem(item.Item);
-  if not Result then
-  begin
-    if item.Tab = -1 then
-      item.Tab := Self.FindItemTab(item.Item, False);
-    Self.OpenTab(item.Tab);
-
-    if not Self.ContainsItem(item.Item) then
-    begin
-      if item.Scroll = -1 then
-        item.Scroll := Self.FindItemScroll(item.Item);
-
-      if Self.GetScrollPosition() <> item.Scroll then
-        Self.SetScrollPosition(item.Scroll);
-
-      if not Self.ContainsItem(item.Item) then
-      begin
-        item.Tab := -1;
-        item.Scroll := -1;
-        if attempts = 2 then
-          Exit;
-        Exit(Self.ContainsItem(item, attempts + 1));
-      end;
-    end;
-  end;
-
-  if item.Tab = -1 then
-    item.Tab := Self.GetCurrentTab();
-
-  //by setting this everytime, item.Scroll will slowly be adjusted
-  //to something that will match all required items in a script.
-  item.Scroll := Self.GetScrollPosition();
+  Result := Self.FindItem(item, box);
 end;
 
+
+(*
+Bank.ContainsItem
+~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSBank.ContainsAny(items: TRSItemArray): Boolean;
+
+Returns true/false whether any item in **items** is visible in the bank.
+*)
 function TRSBank.ContainsAny(items: TRSItemArray): Boolean;
 begin
   Result := Self.ItemInterface.ContainsAny(items);
@@ -1147,8 +1171,9 @@ end;
 Bank.WithdrawItem
 ~~~~~~~~~~~~~~~~~
 .. pascal::
-  function TRSBank.WithdrawItem(Item: TRSBankWithdrawItem; useQuantityButtons: Boolean): Boolean; deprecated 'User the TRSBankItem version instead';
+  function TRSBank.WithdrawItem(out item: TRSBankItem; useQuantityButtons: Boolean): Boolean;
   function TRSBank.WithdrawItem(out item: TRSBankItem; useQuantityButtons: Boolean): Boolean; overload;
+  function TRSBank.WithdrawItem(item: TRSItem; useQuantityButtons: Boolean): Boolean; overload;
 
 Finds and withdraws an item.
 
@@ -1178,43 +1203,12 @@ Example
   
   Bank.WithdrawItem(['Iron full helm', 5, False], True);  
 *)
-function TRSBank.WithdrawItem(out item: TRSBankItem; useQuantityButtons: Boolean; attempts: Int32 = 0): Boolean;
+function TRSBank.WithdrawItem(out item: TRSBankItem; useQuantityButtons: Boolean): Boolean;
 var
-  b: TBox;
+  box: TBox;
 begin
-  if not Self.FindItem(item.Item, b) then
-  begin
-    if item.Tab = -1 then
-      item.Tab := Self.FindItemTab(item.Item, False);
-    Self.OpenTab(item.Tab);
-
-    if not Self.FindItem(item.Item, b) then
-    begin
-      if item.Scroll = -1 then
-        item.Scroll := Self.FindItemScroll(item.Item);
-
-      if Self.GetScrollPosition() <> item.Scroll then
-        Self.SetScrollPosition(item.Scroll);
-
-      if not Self.FindItem(item.Item, b) then
-      begin
-        item.Tab := -1;
-        item.Scroll := -1;
-        if attempts = 2 then
-          Exit;
-        Exit(Self.WithdrawItem(item, useQuantityButtons, attempts + 1));
-      end;
-    end;
-  end;
-
-  if item.Tab = -1 then
-    item.Tab := Self.GetCurrentTab();
-
-  //by setting this everytime, item.Scroll will slowly be adjusted
-  //to something that will match all required items in a script.
-  item.Scroll := Self.GetScrollPosition();
-
-  Result := Self.WithdrawHelper(b, item.Quantity, item.Noted, useQuantityButtons);
+  if Self.FindItem(item, box) then
+    Result := Self.WithdrawHelper(box, item.Quantity, item.Noted, useQuantityButtons);
 end;
 
 function TRSBank.WithdrawItem(item: TRSItem; useQuantityButtons: Boolean): Boolean; overload;
@@ -1232,6 +1226,7 @@ begin
   if Self.FindItem(Item.Item, B) then
     Result := Self.WithdrawHelper(B, Item.Quantity, Item.Noted, useQuantityButtons);
 end;
+
 
 function TRSBank.WithdrawSlot(Item: TRSBankWithdrawSlot; useQuantityButtons: Boolean): Boolean;
 begin

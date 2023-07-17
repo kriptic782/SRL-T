@@ -103,6 +103,28 @@ begin
 end;
 
 
+function TRSItemInterface.GetPixelShift(slot: TBox; waitTime: Int32): Int32;
+begin
+  Result := SRL.GetPixelShift(slot, waitTime);
+end;
+
+function TRSItemInterface.DidFade(slot: TBox; waitTime: Int32 = 5): Boolean;
+begin
+  Result := SRL.GetPixelShift(slot, waitTime) > 0;
+end;
+
+function TRSItemInterface.WaitFade(slot: Int32; waitTime: Int32 = 200): Boolean;
+var
+  box: TBox;
+begin
+  box := Self.GetSlotBox(slot);
+  if WaitUntil(Self.DidFade(box), 0, waitTime) then
+    Result := WaitUntil(
+                (SRL.CountColor(RS_ITEM_BORDER, box) > 0) or
+                (SRL.CountColor($FFFFFF, box) > 0), 100, 1000);
+end;
+
+
 function TRSItemInterface.IndexOf(items: TRSItemArray): Int32;
 var
   Match: TRSItemFinderMatch;
