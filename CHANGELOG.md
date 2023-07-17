@@ -1,3 +1,12 @@
+# [2.1.0](https://github.com/Torwent/SRL-T/compare/v2.0.10...v2.1.0) (2023-07-17)
+
+
+### Features
+
+* read notes ([0b8bb3d](https://github.com/Torwent/SRL-T/commit/0b8bb3d6c407a34e3e99ebf99087c1621046cfbb))
+
+
+
 ## [2.0.10](https://github.com/Torwent/SRL-T/compare/v2.0.9...v2.0.10) (2023-07-15)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **bank:** DepositItems() doesn't fail anymore ([6288636](https://github.com/Torwent/SRL-T/commit/62886366d3d748891e745d89725735dbb09f067e))
-
-
-
-## [2.0.6](https://github.com/Torwent/SRL-T/compare/v2.0.5...v2.0.6) (2023-07-12)
-
-
-### Bug Fixes
-
-* **bankpin:** read notes ([5dc52c9](https://github.com/Torwent/SRL-T/commit/5dc52c9106222a9f81462dd5e5da044936d1f225))
 
 
 
