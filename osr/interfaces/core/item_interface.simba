@@ -184,17 +184,18 @@ end;
 function TRSItemInterface.FindAll(items: TRSItemArray; out boxes: TBoxArray): Boolean; overload;
 var
   matches: TRSItemFinderMatchArray;
-  foundItems: TRSItemArray;
+  found: TRSItemArray;
   i: Integer;
 begin
   matches := ItemFinder.FindAll(items, Self.GetSearchBoxesFunction());
   for i := 0 to High(matches) do
   begin
-    foundItems += matches[i].Item;
+    if not found.Contains(matches[i].Item) then
+      found += matches[i].Item;
     boxes += matches[i].Box;
   end;
 
-  Result := Length(Unique(foundItems)) = Length(items);
+  Result := Length(found) = Length(items);
 end;
 
 function TRSItemInterface.FindAny(items: TRSItemArray; out box: TBox): Boolean;
@@ -219,14 +220,18 @@ end;
 function TRSItemInterface.ContainsAll(items: TRSItemArray): Boolean;
 var
   matches: TRSItemFinderMatchArray;
-  foundItems: TRSItemArray;
+  found: TRSItemArray;
   i: Integer;
 begin
+  if (@Self.GetSearchBoxesFunction = nil) then
+    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+
   matches := ItemFinder.FindAll(items, Self.GetSearchBoxesFunction());
   for i := 0 to High(matches) do
-    foundItems += matches[i].Item;
+    if not found.Contains(matches[i].Item) then
+      found += matches[i].Item;
 
-  Result := Length(Unique(foundItems)) = Length(items);
+  Result := Length(found) = Length(items);
 end;
 
 
