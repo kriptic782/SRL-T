@@ -1,3 +1,12 @@
+## [2.1.1](https://github.com/Torwent/SRL-T/compare/v2.1.0...v2.1.1) (2023-07-17)
+
+
+### Bug Fixes
+
+* fixed a nasty bug introduced by the new unified iteminterface. ([88322c4](https://github.com/Torwent/SRL-T/commit/88322c4165c45c4424daa422abd952c81439740a))
+
+
+
 # [2.1.0](https://github.com/Torwent/SRL-T/compare/v2.0.10...v2.1.0) (2023-07-17)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **itemfinder:** read notes ([d778b73](https://github.com/Torwent/SRL-T/commit/d778b73b4b95506b823bcac5354e9b345d36eaf5))
-
-
-
-## [2.0.7](https://github.com/Torwent/SRL-T/compare/v2.0.6...v2.0.7) (2023-07-12)
-
-
-### Bug Fixes
-
-* **bank:** DepositItems() doesn't fail anymore ([6288636](https://github.com/Torwent/SRL-T/commit/62886366d3d748891e745d89725735dbb09f067e))
 
 
 
