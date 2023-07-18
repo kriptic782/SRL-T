@@ -184,37 +184,16 @@ begin
   Self.ItemImages += [item, Result];
 end;
 
-procedure TRSItemFinder.ClearSparkles(constref Image, Templ: TMufasaBitmap);
-var
-  I: Int32;
-  ImagePtr, TemplPtr: PRGB32;
-begin
-  ImagePtr := Image.GetData();
-  TemplPtr := Templ.GetData();
-  
-  for I := 0 to (Image.GetWidth() * Image.GetHeight())-1 do
-  begin
-    // grey/brightness calculation. Works for magic logs
-    if ((ImagePtr^.R + ImagePtr^.G + ImagePtr^.B) div 3 > 130) or    
-       ((TemplPtr^.R + TemplPtr^.G + TemplPtr^.B) div 3 > 130) then
-      ImagePtr^ := TemplPtr^ := Default(TRGB32);
-    
-    Inc(ImagePtr);
-    Inc(TemplPtr);
-  end;
-end;
-
-
 function TRSItemFinder.CompareItems(constref Image, Template: TMufasaBitmap; constref CustomFilter: TRSItemFinderCustomFilter): Single;
 var
-  ImageBorder, TemplateBorder: TPointArray;
-  TPA, ClearTPA: TPointArray;
+  imageBorder, templateBorder: TPointArray;
+  tpa, clearTPA: TPointArray;
   AlignedTemplate, AlignedImage: TMufasaBitmap;
   Align: TPoint;
   ClearColor: Int32;
   P: TPoint;
 begin
-  if Image.FindColors(ImageBorder, RS_ITEM_BORDER) and Template.FindColors(TemplateBorder, RS_ITEM_BORDER) then
+  if Image.FindColors(imageBorder, RS_ITEM_BORDER) and Template.FindColors(TemplateBorder, RS_ITEM_BORDER) then
   begin
     with TemplateBorder.Bounds() do
     begin
@@ -224,16 +203,16 @@ begin
     
     // Use highest Y point of both images for alignment
     // TPA is already sorted like this with how FindColors operates.
-    Align.X := Max(0, ImageBorder[High(ImageBorder)].X - TemplateBorder[High(TemplateBorder)].X);
-    Align.Y := Max(0, ImageBorder[High(ImageBorder)].Y - TemplateBorder[High(TemplateBorder)].Y);
-  
+    Align.X := Max(0, imageBorder[High(imageBorder)].X - TemplateBorder[High(TemplateBorder)].X);
+    Align.Y := Max(0, imageBorder[High(imageBorder)].Y - TemplateBorder[High(TemplateBorder)].Y);
+
     // Compare borders. Sparkles can modify boundaries.
     if (@CustomFilter = nil) then
       for P in TemplateBorder.Offset(Align) do
       begin
         if (P.Y <= 8) then // Possible stack number... Don't compare.
           Continue;
-        if (not PointInTPA(P, ImageBorder)) then // Borders don't match. No point going further.
+        if (not PointInTPA(P, imageBorder)) then // Borders don't match. No point going further.
           Exit;
       end;
     
@@ -245,18 +224,18 @@ begin
     Template.DrawTransparent(Align.X, Align.Y, AlignedTemplate);  
     
     if (@CustomFilter <> nil) then
-      Self.ClearSparkles(AlignedImage, AlignedTemplate);
+      CustomFilter(AlignedImage, AlignedTemplate);
 
     // Clear these template colors on both images
     for ClearColor in [RS_ITEM_YELLOW_STACK, RS_ITEM_WHITE_STACK, RS_ITEM_GREEN_STACK, RS_ITEM_BORDER] do
-      if AlignedTemplate.FindColors(TPA, ClearColor) then 
-        ClearTPA += TPA;  
-   
+      if AlignedTemplate.FindColors(tpa, ClearColor) then
+        clearTPA += tpa;
+
     // Clear image background on template
-    if AlignedImage.FindColors(TPA, 0) then 
-      ClearTPA += TPA;  
+    if AlignedImage.FindColors(tpa, 0) then
+      clearTPA += tpa;
     if AlignedTemplate.FindColors(TPA, 0) then
-      ClearTPA += TPA;
+      clearTPA += tpa;
 
     AlignedTemplate.DrawTPA(ClearTPA, 0);
     AlignedImage.DrawTPA(ClearTPA, 0);
@@ -346,8 +325,13 @@ begin
   begin
     filter := nil;
     for j := 0 to High(Self.ItemFilters) do
+    begin
       if SameText(Self.ItemFilters[j].Name, items[i]) then
+      begin
         filter := @Self.ItemFilters[j].Filter;
+        Break;
+      end;
+    end;
 
     images := Self.GetItemImages(items[i]);
     for j := 0 to High(images) do
@@ -358,8 +342,8 @@ begin
   for i := 0 to High(images) do
   begin
     images[i].Init();
-    if boxes[i].Width() <> 35 then
-      boxes[i].X2 := boxes[i].X1 + 35;
+    if boxes[i].Width() <> 36 then
+      boxes[i].X2 := boxes[i].X1 + 36;
     images[i].FromClient(boxes[i]);
   end;
 
@@ -399,15 +383,105 @@ begin
     Match := Matches[0];
 end;
 
+
+procedure TRSItemFinder.ClearSparkles(constref Image, Templ: TMufasaBitmap);
+var
+  I: Int32;
+  ImagePtr, TemplPtr: PRGB32;
+begin
+  ImagePtr := Image.GetData();
+  TemplPtr := Templ.GetData();
+
+  for I := 0 to (Image.GetWidth() * Image.GetHeight())-1 do
+  begin
+    // grey/brightness calculation. Works for magic logs
+    if ((ImagePtr^.R + ImagePtr^.G + ImagePtr^.B) div 3 > 130) or
+       ((TemplPtr^.R + TemplPtr^.G + TemplPtr^.B) div 3 > 130) then
+      ImagePtr^ := TemplPtr^ := Default(TRGB32);
+
+    Inc(ImagePtr);
+    Inc(TemplPtr);
+  end;
+end;
+
+procedure TRSItemFinder.FireCape(constref Image, Templ: TMufasaBitmap);
+var
+  I: Int32;
+  ImagePtr, TemplPtr: PRGB32;
+begin
+  ImagePtr := Image.GetData();
+  TemplPtr := Templ.GetData();
+
+  for I := 0 to (Image.GetWidth() * Image.GetHeight())-1 do
+  begin
+    if ((ImagePtr^.R + ImagePtr^.G + ImagePtr^.B) > 300) or
+       ((TemplPtr^.R + TemplPtr^.G + TemplPtr^.B) > 300) then
+      ImagePtr^ := TemplPtr^ := Default(TRGB32);
+
+    Inc(ImagePtr);
+    Inc(TemplPtr);
+  end;
+end;
+
+procedure TRSItemFinder.LavaScales(constref Image, Templ: TMufasaBitmap);
+var
+  I: Int32;
+  ImagePtr, TemplPtr: PRGB32;
+  img, tmp: TMufasaBitmap;
+begin
+  ImagePtr := Image.GetData();
+  TemplPtr := Templ.GetData();
+
+  for I := 0 to (Image.GetWidth() * Image.GetHeight())-1 do
+  begin
+    if ((ImagePtr^.R + ImagePtr^.G + ImagePtr^.B) > 235) or
+       ((TemplPtr^.R + TemplPtr^.G + TemplPtr^.B) > 235) then
+      ImagePtr^ := TemplPtr^ := Default(TRGB32);
+
+    Inc(ImagePtr);
+    Inc(TemplPtr);
+  end;
+
+  img := Image;
+  tmp := Templ;
+  img.Debug();
+  Wait(100);
+  tmp.Debug();
+  Wait(100);
+end;
+
+procedure TRSItemFinder._SetupHerbSeeds(herbSeed: String);
+const
+  ID_ARRAY = ['5224', '5225', '5226', '5227'];
+var
+  i: Int32;
+begin
+  for i := 0 to High(ID_ARRAY) do
+    Self.AddItemName(herbSeed, ID_ARRAY[i]);
+end;
+
 var
   ItemFinder: TRSItemFinder;
 
 begin
-
-
   ItemFinder.Setup();
 
   // We can map some useful things here
-  //ItemFinder.AddItemName('Arrow shaft', '300');
+  ItemFinder._SetupHerbSeeds('Marrentill seed');
+  ItemFinder._SetupHerbSeeds('Tarromin seed');
+  ItemFinder._SetupHerbSeeds('Harralander seed');
+  ItemFinder._SetupHerbSeeds('Ranarr seed');
+  ItemFinder._SetupHerbSeeds('Toadflax seed');
+  ItemFinder._SetupHerbSeeds('Irit seed');
+  ItemFinder._SetupHerbSeeds('Avantoe seed');
+  ItemFinder._SetupHerbSeeds('Kwuarm seed');
+  ItemFinder._SetupHerbSeeds('Snapdragon seed');
+  ItemFinder._SetupHerbSeeds('Cadantine seed');
+  ItemFinder._SetupHerbSeeds('Lantadyme seed');
+  ItemFinder._SetupHerbSeeds('Dwarf weed seed');
+  ItemFinder._SetupHerbSeeds('Torstol seed');
   ItemFinder.AddItemFilter('Magic logs', @ItemFinder.ClearSparkles);
+  ItemFinder.AddItemFilter('Fire cape', @ItemFinder.FireCape);
+  ItemFinder.AddItemFilter('Lava scale', @ItemFinder.LavaScales);
+  ItemFinder.AddItemFilter('Lava scale shard', @ItemFinder.LavaScales);
 end;
