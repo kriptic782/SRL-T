@@ -1,3 +1,12 @@
+## [2.1.2](https://github.com/Torwent/SRL-T/compare/v2.1.1...v2.1.2) (2023-07-18)
+
+
+### Bug Fixes
+
+* **ItemFinder:** read notes ([616a630](https://github.com/Torwent/SRL-T/commit/616a63009c6301918193de39a8836c0579156c8e))
+
+
+
 ## [2.1.1](https://github.com/Torwent/SRL-T/compare/v2.1.0...v2.1.1) (2023-07-17)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * removed code that doesn't belong in SRL and moved it to WaspLib ([9a07adf](https://github.com/Torwent/SRL-T/commit/9a07adfa111e8671c316489090671d11d192ffbc))
-
-
-
-## [2.0.8](https://github.com/Torwent/SRL-T/compare/v2.0.7...v2.0.8) (2023-07-13)
-
-
-### Bug Fixes
-
-* **itemfinder:** read notes ([d778b73](https://github.com/Torwent/SRL-T/commit/d778b73b4b95506b823bcac5354e9b345d36eaf5))
 
 
 
