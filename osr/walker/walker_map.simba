@@ -156,13 +156,10 @@ begin
   end;
 
   Result.Init();
+  Result.LoadFromFile(FileName);
 
   if (Region <> []) then
-  begin
-    Result.LoadFromFile(FileName);
     Result.Crop(Region.X1, Region.Y1, Region.X2, Region.Y2);
-  end else
-    Result.LoadFromFile(FileName);
 end;
 
 (*
