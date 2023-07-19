@@ -1,3 +1,12 @@
+# [2.2.0](https://github.com/Torwent/SRL-T/compare/v2.1.2...v2.2.0) (2023-07-19)
+
+
+### Features
+
+* **bank:** read notes ([9459058](https://github.com/Torwent/SRL-T/commit/9459058ff8fd28a3c61d57a81759656d6a24987b))
+
+
+
 ## [2.1.2](https://github.com/Torwent/SRL-T/compare/v2.1.1...v2.1.2) (2023-07-18)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * renamed ItemFinderInterface to ItemInterface ([405df1b](https://github.com/Torwent/SRL-T/commit/405df1bb967cdf5c4b21c09592fa7aaa91faa17f))
-
-
-
-## [2.0.9](https://github.com/Torwent/SRL-T/compare/v2.0.8...v2.0.9) (2023-07-13)
-
-
-### Bug Fixes
-
-* removed code that doesn't belong in SRL and moved it to WaspLib ([9a07adf](https://github.com/Torwent/SRL-T/commit/9a07adfa111e8671c316489090671d11d192ffbc))
 
 
 
