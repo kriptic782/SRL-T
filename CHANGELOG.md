@@ -1,3 +1,12 @@
+## [2.2.1](https://github.com/Torwent/SRL-T/compare/v2.2.0...v2.2.1) (2023-07-21)
+
+
+### Bug Fixes
+
+* **itemfinder:** noted magic logs ([6a68b7a](https://github.com/Torwent/SRL-T/commit/6a68b7a81e492f6c6caa29d1a8d187ef786b851e))
+
+
+
 # [2.2.0](https://github.com/Torwent/SRL-T/compare/v2.1.2...v2.2.0) (2023-07-19)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * read notes ([0b8bb3d](https://github.com/Torwent/SRL-T/commit/0b8bb3d6c407a34e3e99ebf99087c1621046cfbb))
-
-
-
-## [2.0.10](https://github.com/Torwent/SRL-T/compare/v2.0.9...v2.0.10) (2023-07-15)
-
-
-### Bug Fixes
-
-* renamed ItemFinderInterface to ItemInterface ([405df1b](https://github.com/Torwent/SRL-T/commit/405df1bb967cdf5c4b21c09592fa7aaa91faa17f))
 
 
 
