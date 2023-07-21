@@ -486,6 +486,7 @@ begin
   ItemFinder._SetupHerbSeeds('Dwarf weed seed');
   ItemFinder._SetupHerbSeeds('Torstol seed');
   ItemFinder.AddItemFilter('Magic logs', @ItemFinder.ClearSparkles);
+  ItemFinder.AddItemFilter('noted Magic logs', @ItemFinder.ClearSparkles);
   ItemFinder.AddItemFilter('Fire cape', @ItemFinder.FireCape);
   ItemFinder.AddItemFilter('Lava scale', @ItemFinder.LavaScales);
   ItemFinder.AddItemFilter('Lava scale shard', @ItemFinder.LavaScales);
