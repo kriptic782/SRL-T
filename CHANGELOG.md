@@ -1,3 +1,12 @@
+## [2.2.3](https://github.com/Torwent/SRL-T/compare/v2.2.2...v2.2.3) (2023-07-22)
+
+
+### Bug Fixes
+
+* **ItemFinder:** fixed memory leak ([c539614](https://github.com/Torwent/SRL-T/commit/c53961466d0e95bc60853fc7ffc60e94eb826799))
+
+
+
 ## [2.2.2](https://github.com/Torwent/SRL-T/compare/v2.2.1...v2.2.2) (2023-07-22)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **ItemFinder:** read notes ([616a630](https://github.com/Torwent/SRL-T/commit/616a63009c6301918193de39a8836c0579156c8e))
-
-
-
-## [2.1.1](https://github.com/Torwent/SRL-T/compare/v2.1.0...v2.1.1) (2023-07-17)
-
-
-### Bug Fixes
-
-* fixed a nasty bug introduced by the new unified iteminterface. ([88322c4](https://github.com/Torwent/SRL-T/commit/88322c4165c45c4424daa422abd952c81439740a))
 
 
 
