@@ -715,8 +715,10 @@ begin
 end;
 
 procedure TAntiban.SwivelNear(start: TBox; radius: Int32; Iterations: Int32=1); overload;
+var
+  i: Int32;
 begin
-  for 1 to Iterations do
+  for i := 1 to Iterations do
   begin
     Self.SwivelNear(srl.RandomPoint(start), 1/2, Round(srl.TruncatedGauss(1,4)), radius, srl.TruncatedGauss(0.0,1.25) > 0.5, Random(12,22), 9, 14);
     if Random() < 0.5 then Wait(0, 300, wdLeft);

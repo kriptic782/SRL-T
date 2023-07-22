@@ -291,7 +291,7 @@ begin
   atpa := tpa.Cluster(5);
   atpa.FilterSize(13, __GT__);
 
-  Result := Length(slots) - atpa.Len();
+  Result := Length(slots) - Length(atpa);
 end;
 
 

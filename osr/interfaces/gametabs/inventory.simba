@@ -267,7 +267,7 @@ var
   selected: Int32;
 begin
   selected := Self.GetSelectedSlot();
-  if (selected = Slot) then
+  if (selected = slot) then
     Exit(True);
 
   if (selected > -1) then
@@ -290,17 +290,20 @@ Example
 
   Inventory.Use(1, 5); // Use item in slot 1 on Item in slot 5
 *)
-function TRSInventory.Use(Slot, OtherSlot: Int32): Boolean;
+function TRSInventory.Use(slot, otherSlot: Int32): Boolean;
 var
   b: TBox;
 begin
-  b := Self.GetSlotBox(OtherSlot);
+  b := Self.GetSlotBox(otherSlot);
   if b = [] then
     Exit;
 
-  Result := Self.SetSelectedSlot(Slot);
-  Wait(0, 1000, wdLeft);
-  Mouse.Click(b, MOUSE_LEFT);
+  Result := Self.SetSelectedSlot(slot);
+  if Result then
+  begin
+    Wait(0, 1000, wdLeft);
+    Mouse.Click(b, MOUSE_LEFT);
+  end;
 end;
 
 (*
@@ -754,20 +757,20 @@ Example
 
   WriteLn Inventory.Use('Knife', 'Oak logs');
 *)
-function TRSInventory.Use(Item, OtherItem: TRSItem): Boolean; overload;
+function TRSInventory.Use(item, otherItem: TRSItem): Boolean; overload;
 var
-  Slots, OtherSlots: TIntegerArray;
-  Slot, OtherSlot: Int32;
+  slots, otherSlots: TIntegerArray;
+  slot, otherSlot: Int32;
 begin
   Self.SetSelectedSlot(-1); // Item images change when selected...
 
-  Result := Self.FindItem(Item, Slots) and Self.FindItem(OtherItem, OtherSlots);
+  Result := Self.FindItem(item, slots) and Self.FindItem(otherItem, otherSlots);
   if Result then
   begin
-    Slot := Slots[Random(Length(Slots))];
-    OtherSlot := Self.RandomSlotNearby(Slot, OtherSlots);
+    slot := slots[Random(Length(slots))];
+    otherSlot := Self.RandomSlotNearby(slot, otherSlots);
   
-    Result := Self.Use(Slot, OtherSlot);
+    Result := Self.Use(slot, otherSlot);
   end;
 end;
 
