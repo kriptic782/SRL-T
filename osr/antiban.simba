@@ -726,8 +726,10 @@ begin
 end;
 
 procedure TAntiban.Swivel(); overload;
+var
+  i: Int32;
 begin
-  for 1 to Round(srl.TruncatedGauss(1,4)) do
+  for i := 1 to Round(srl.TruncatedGauss(1,4)) do
   begin
     Self.SwivelNear(mouse.Position, 1/2, Round(srl.TruncatedGauss(1,4)), Random(25,40), srl.TruncatedGauss(0.0,1.25) > 0.5, Random(12,22), 9, 14);
     if Random() < 0.5 then Wait(0, 300, wdLeft);

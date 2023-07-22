@@ -152,7 +152,10 @@ var
 begin
   for i := 0 to High(Self.ItemImages) do
     if (Self.ItemImages[i].Name = item) then
-      Exit(Self.ItemImages[i].Images);
+    begin
+      Result := Self.ItemImages[i].Images;
+      Exit;
+    end;
 
   for itemID in Self.GetItemIDs(item) do
   begin
@@ -189,66 +192,66 @@ begin
   Self.ItemImages += [item, Result];
 end;
 
-function TRSItemFinder.CompareItems(constref Image, Template: TMufasaBitmap; constref CustomFilter: TRSItemFinderCustomFilter): Single;
+function TRSItemFinder.CompareItems(constref image, template: TMufasaBitmap; constref CustomFilter: TRSItemFinderCustomFilter): Single;
 var
   imageBorder, templateBorder: TPointArray;
   tpa, clearTPA: TPointArray;
-  AlignedTemplate, AlignedImage: TMufasaBitmap;
-  Align: TPoint;
-  ClearColor: Int32;
-  P: TPoint;
+  alignedTemplate, alignedImage: TMufasaBitmap;
+  align: TPoint;
+  clearColor: Int32;
+  p: TPoint;
 begin
-  if Image.FindColors(imageBorder, RS_ITEM_BORDER) and Template.FindColors(TemplateBorder, RS_ITEM_BORDER) then
+  if image.FindColors(imageBorder, RS_ITEM_BORDER) and template.FindColors(templateBorder, RS_ITEM_BORDER) then
   begin
-    with TemplateBorder.Bounds() do
+    with templateBorder.Bounds() do
     begin
-      Template.Crop(X1, Y1, X2, Y2);
-      TemplateBorder := TemplateBorder.Offset(-X1,-Y1);
+      template.Crop(X1, Y1, X2, Y2);
+      templateBorder := templateBorder.Offset(-X1,-Y1);
     end;
     
     // Use highest Y point of both images for alignment
     // TPA is already sorted like this with how FindColors operates.
-    Align.X := Max(0, imageBorder[High(imageBorder)].X - TemplateBorder[High(TemplateBorder)].X);
-    Align.Y := Max(0, imageBorder[High(imageBorder)].Y - TemplateBorder[High(TemplateBorder)].Y);
+    align.X := Max(0, imageBorder[High(imageBorder)].X - templateBorder[High(templateBorder)].X);
+    align.Y := Max(0, imageBorder[High(imageBorder)].Y - templateBorder[High(templateBorder)].Y);
 
     // Compare borders. Sparkles can modify boundaries.
     if (@CustomFilter = nil) then
-      for P in TemplateBorder.Offset(Align) do
+      for p in templateBorder.Offset(align) do
       begin
-        if (P.Y <= 8) then // Possible stack number... Don't compare.
+        if (p.Y <= 8) then // Possible stack number... Don't compare.
           Continue;
-        if (not PointInTPA(P, imageBorder)) then // Borders don't match. No point going further.
+        if (not PointInTPA(p, imageBorder)) then // Borders don't match. No point going further.
           Exit;
       end;
     
-    AlignedImage := Image.Copy();
+    alignedImage := image.Copy();
   
-    AlignedTemplate.Init(Client.GetMBitmaps());
-    AlignedTemplate.SetSize(Image.GetWidth(), Image.GetHeight());
+    alignedTemplate.Init(Client.GetMBitmaps());
+    alignedTemplate.SetSize(image.GetWidth(), image.GetHeight());
     
-    Template.DrawTransparent(Align.X, Align.Y, AlignedTemplate);  
+    template.DrawTransparent(align.X, align.Y, alignedTemplate);
     
     if (@CustomFilter <> nil) then
-      CustomFilter(AlignedImage, AlignedTemplate);
+      CustomFilter(alignedImage, alignedTemplate);
 
     // Clear these template colors on both images
-    for ClearColor in [RS_ITEM_YELLOW_STACK, RS_ITEM_WHITE_STACK, RS_ITEM_GREEN_STACK, RS_ITEM_BORDER] do
-      if AlignedTemplate.FindColors(tpa, ClearColor) then
+    for clearColor in [RS_ITEM_YELLOW_STACK, RS_ITEM_WHITE_STACK, RS_ITEM_GREEN_STACK, RS_ITEM_BORDER] do
+      if AlignedTemplate.FindColors(tpa, clearColor) then
         clearTPA += tpa;
 
     // Clear image background on template
-    if AlignedImage.FindColors(tpa, 0) then
+    if alignedImage.FindColors(tpa, 0) then
       clearTPA += tpa;
-    if AlignedTemplate.FindColors(TPA, 0) then
+    if alignedTemplate.FindColors(tpa, 0) then
       clearTPA += tpa;
 
-    AlignedTemplate.DrawTPA(ClearTPA, 0);
-    AlignedImage.DrawTPA(ClearTPA, 0);
+    alignedTemplate.DrawTPA(clearTPA, 0);
+    alignedImage.DrawTPA(clearTPA, 0);
 
-    Result := AlignedImage.MatchTemplate(AlignedTemplate, TM_CCORR_NORMED)[0][0]; // IDK why I used CCORR. But it works!
+    Result := alignedImage.MatchTemplate(alignedTemplate, TM_CCORR_NORMED)[0][0]; // IDK why I used CCORR. But it works!
   
-    AlignedImage.Free();
-    AlignedTemplate.Free(); 
+    alignedImage.Free();
+    alignedTemplate.Free(); 
   end;
 end;
 
@@ -343,38 +346,26 @@ begin
       itemsToSearchFor += [images[j], items[i], @filter];
   end;
 
-  SetLength(images, Length(boxes));
-  for i := 0 to High(images) do
-  begin
-    images[i].Init();
-    if boxes[i].Width() <> 36 then
-      boxes[i].X2 := boxes[i].X1 + 36;
-    images[i].FromClient(boxes[i]);
-  end;
+  for i := 0 to High(boxes) do
+    for j := 0 to High(itemsToSearchFor) do
+    begin
+      if boxes[i].Width() <> 36 then
+        boxes[i].X2 := boxes[i].X1 + 36;
+      template.FromClient(boxes[i]);
 
-  try
-    for i := 0 to High(images) do
-      for j := 0 to High(itemsToSearchFor) do
-      begin
-        template := images[i].Copy();
-
-        try
-          // Search for item image *ON* the screen image since screen image is never larger than 36x36 item image.
-          if Self.CompareItems(itemsToSearchFor[j].Image, template, @itemsToSearchFor[j].Filter) >= Self.Similarity then
-          begin
-            Result += [itemsToSearchFor[j].Name, boxes[i], i];
-            if Length(Result) = maxToFind then
-              Exit;
-            Break;
-          end;
-        finally
-          template.Free();
+      try
+        // Search for item image *ON* the screen image since screen image is never larger than 36x36 item image.
+        if Self.CompareItems(itemsToSearchFor[j].Image, template, @itemsToSearchFor[j].Filter) >= Self.Similarity then
+        begin
+          Result += [itemsToSearchFor[j].Name, boxes[i], i];
+          if Length(Result) = maxToFind then
+            Exit;
+          Break;
         end;
+      finally
+        template.Free();
       end;
-  finally
-    for i := 0 to High(images) do
-      images[i].Free();
-  end;
+    end;
 end;
 
 function TRSItemFinder.Find(Items: TRSItemArray; Boxes: TBoxArray; out Match: TRSItemFinderMatch): Boolean;
