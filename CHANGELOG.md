@@ -1,3 +1,12 @@
+## [2.2.2](https://github.com/Torwent/SRL-T/compare/v2.2.1...v2.2.2) (2023-07-22)
+
+
+### Bug Fixes
+
+* **inventory:** tweak to use slot on slot ([77e37cf](https://github.com/Torwent/SRL-T/commit/77e37cf5222fb7b68a6ccb3771f484e330bbe5ba))
+
+
+
 ## [2.2.1](https://github.com/Torwent/SRL-T/compare/v2.2.0...v2.2.1) (2023-07-21)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * fixed a nasty bug introduced by the new unified iteminterface. ([88322c4](https://github.com/Torwent/SRL-T/commit/88322c4165c45c4424daa422abd952c81439740a))
-
-
-
-# [2.1.0](https://github.com/Torwent/SRL-T/compare/v2.0.10...v2.1.0) (2023-07-17)
-
-
-### Features
-
-* read notes ([0b8bb3d](https://github.com/Torwent/SRL-T/commit/0b8bb3d6c407a34e3e99ebf99087c1621046cfbb))
 
 
 
