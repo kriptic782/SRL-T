@@ -1,3 +1,12 @@
+## [2.2.4](https://github.com/Torwent/SRL-T/compare/v2.2.3...v2.2.4) (2023-07-23)
+
+
+### Bug Fixes
+
+* **itemfinder:** add dark ess filter ([89c44eb](https://github.com/Torwent/SRL-T/commit/89c44eb8ba045b5df990329e41a40557dc148b0d))
+
+
+
 ## [2.2.3](https://github.com/Torwent/SRL-T/compare/v2.2.2...v2.2.3) (2023-07-22)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **bank:** read notes ([9459058](https://github.com/Torwent/SRL-T/commit/9459058ff8fd28a3c61d57a81759656d6a24987b))
-
-
-
-## [2.1.2](https://github.com/Torwent/SRL-T/compare/v2.1.1...v2.1.2) (2023-07-18)
-
-
-### Bug Fixes
-
-* **ItemFinder:** read notes ([616a630](https://github.com/Torwent/SRL-T/commit/616a63009c6301918193de39a8836c0579156c8e))
 
 
 
