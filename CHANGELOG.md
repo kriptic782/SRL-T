@@ -1,3 +1,12 @@
+## [2.2.5](https://github.com/Torwent/SRL-T/compare/v2.2.4...v2.2.5) (2023-07-26)
+
+
+### Bug Fixes
+
+* launcher login improvements when there's thematic changes ([ff95dc5](https://github.com/Torwent/SRL-T/commit/ff95dc51745ade7fe0eeb09981dd0f1f8ee97fda))
+
+
+
 ## [2.2.4](https://github.com/Torwent/SRL-T/compare/v2.2.3...v2.2.4) (2023-07-23)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **itemfinder:** noted magic logs ([6a68b7a](https://github.com/Torwent/SRL-T/commit/6a68b7a81e492f6c6caa29d1a8d187ef786b851e))
-
-
-
-# [2.2.0](https://github.com/Torwent/SRL-T/compare/v2.1.2...v2.2.0) (2023-07-19)
-
-
-### Features
-
-* **bank:** read notes ([9459058](https://github.com/Torwent/SRL-T/commit/9459058ff8fd28a3c61d57a81759656d6a24987b))
 
 
 
