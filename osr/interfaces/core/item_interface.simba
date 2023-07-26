@@ -156,14 +156,14 @@ end;
 
 function TRSItemInterface.Find(items: TRSItemArray; out box: TBox): Boolean;
 var
-  Match: TRSItemFinderMatch;
+  match: TRSItemFinderMatch;
 begin
   if (@Self.GetSearchBoxesFunction = nil) then
     Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
 
-  Result := ItemFinder.Find(items, Self.GetSearchBoxesFunction(), Match);
+  Result := ItemFinder.Find(items, Self.GetSearchBoxesFunction(), match);
   if Result then
-    Box := Match.Box;
+    Box := match.Box;
 end;
 
 function TRSItemInterface.FindAll(items: TRSItemArray): TBoxArray;
@@ -347,7 +347,7 @@ end;
 
 function TRSItemInterface.ClickSlot(slot: Int32; mouseButton: Int32 = MOUSE_LEFT): Boolean;
 begin
-  Result := Self.MouseItem(slot);
+  Result := Self.MouseSlot(slot);
   if Result then
     Mouse.Click(mouseButton);
 end;
@@ -357,6 +357,59 @@ begin
   Result := Self.MouseItem(item);
   if Result then
     Mouse.Click(mouseButton);
+end;
+
+
+function TRSItemInterface.Move(slot, destination: Int32): Boolean;
+var
+  slots: TBoxArray;
+begin
+  if (@Self.GetSearchBoxesFunction = nil) then
+    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+
+  if slot = destination then
+    Exit(True);
+
+  slots := Self.GetSearchBoxesFunction();
+  Result := InRange(slot, 0, High(slots)) and InRange(destination, 0, High(slots));
+
+  if Result then
+  begin
+    Mouse.Move(slots[slot]);
+    Mouse.Hold(MOUSE_LEFT);
+    Wait(50,100,wdLeft);
+    Mouse.Move(slots[destination]);
+    Mouse.Release(MOUSE_LEFT);
+    Wait(50,100,wdLeft);
+  end;
+end;
+
+function TRSItemInterface.Move(item: TRSItem; destination: Int32): Boolean; overload;
+var
+  slots: TBoxArray;
+  match: TRSItemFinderMatch;
+begin
+  if (@Self.GetSearchBoxesFunction = nil) then
+    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+
+  slots := Self.GetSearchBoxesFunction();
+  if ItemFinder.Find([item], slots, match) then
+  begin
+    if match.Index = destination then
+      Exit(True);
+
+    Result := InRange(destination, 0, High(slots));
+  end;
+
+  if Result then
+  begin
+    Mouse.Move(match.Box);
+    Mouse.Hold(MOUSE_LEFT);
+    Wait(50,100,wdLeft);
+    Mouse.Move(slots[destination]);
+    Mouse.Release(MOUSE_LEFT);
+    Wait(50,100,wdLeft);
+  end;
 end;
 
 

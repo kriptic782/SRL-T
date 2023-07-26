@@ -44,7 +44,7 @@ begin
   end;
 end;
 
-function TRSChooseOption.IsOpen: Boolean; overload;
+function TRSChooseOption.IsOpen(): Boolean; overload;
 begin
   Result := Self.Find();
 end;
@@ -57,14 +57,13 @@ begin
   Result := WaitUntil(Self.IsOpen(), Interval, WaitTime);
 end;
 
-function TRSChooseOption.Open: Boolean;
+function TRSChooseOption.Open(): Boolean;
 begin
   Result := Self.IsOpen();
 
   if not Result then
   begin
     Mouse.Click(MOUSE_RIGHT);
-
     Result := Self.IsOpen(3000);
   end;
 end;
