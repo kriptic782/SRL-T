@@ -604,18 +604,25 @@ Performs a login in the loginscreen with the specified player.
 function TRSLogin.DoLogin(player: TRSLoginPlayer; launcher: Boolean = False): Boolean;
 var
   tpa: TPointArray;
+  atpa: T2DPointArray;
   b: TBox;
 begin
   if launcher then
   begin
-    SRL.FindColors(tpa, 1117967, Self.Bounds());
+    SRL.FindColors(tpa, CTS0(591881, 9), Self.Bounds());
 
     if tpa = [] then
       Exit;
 
+    atpa := tpa.Cluster(3);
+    atpa.FilterDimensions(200, 50, 230, 70);
+
+    if Length(atpa) > 1 then
+      Exit;
+    tpa := atpa[0];
+
     b := tpa.Bounds();
     b.Y2 -= 18;
-
     Mouse.Click(b, MOUSE_LEFT, True);
     Exit(True);
   end;
