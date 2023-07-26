@@ -1,3 +1,12 @@
+# [2.3.0](https://github.com/Torwent/SRL-T/compare/v2.2.5...v2.3.0) (2023-07-26)
+
+
+### Features
+
+* **TRSItemInterface:** added methods to move items ([232a422](https://github.com/Torwent/SRL-T/commit/232a4224df6222952761198a0219bb7a3c57dde2))
+
+
+
 ## [2.2.5](https://github.com/Torwent/SRL-T/compare/v2.2.4...v2.2.5) (2023-07-26)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **inventory:** tweak to use slot on slot ([77e37cf](https://github.com/Torwent/SRL-T/commit/77e37cf5222fb7b68a6ccb3771f484e330bbe5ba))
-
-
-
-## [2.2.1](https://github.com/Torwent/SRL-T/compare/v2.2.0...v2.2.1) (2023-07-21)
-
-
-### Bug Fixes
-
-* **itemfinder:** noted magic logs ([6a68b7a](https://github.com/Torwent/SRL-T/commit/6a68b7a81e492f6c6caa29d1a8d187ef786b851e))
 
 
 
