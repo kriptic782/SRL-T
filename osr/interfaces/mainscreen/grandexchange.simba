@@ -345,14 +345,12 @@ begin
   if (Item <> '') then
     Item[1] := UpCase(Item[1]);
 
-  RS_FONT_PLAIN_12.maxHeight -= 2;
   for b in searchGrid do
     if OCR.RecognizeLines(b, TOCRColorFilter.Create([$000000]), RS_FONT_PLAIN_12).Merge(' ') = Item then
     begin
       result := True;
       break;
     end;
-  RS_FONT_PLAIN_12.maxHeight += 2;
 end;
 
 function TRSGrandExchange.ClickSearch(Item: String): Boolean;
