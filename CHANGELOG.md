@@ -1,3 +1,12 @@
+## [2.3.1](https://github.com/Torwent/SRL-T/compare/v2.3.0...v2.3.1) (2023-07-27)
+
+
+### Bug Fixes
+
+* **GE:** removed ocr hacks ordered by garrett ([12901fc](https://github.com/Torwent/SRL-T/commit/12901fcea1e752c6aa399397bde16884e5e8f773))
+
+
+
 # [2.3.0](https://github.com/Torwent/SRL-T/compare/v2.2.5...v2.3.0) (2023-07-26)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **ItemFinder:** fixed memory leak ([c539614](https://github.com/Torwent/SRL-T/commit/c53961466d0e95bc60853fc7ffc60e94eb826799))
-
-
-
-## [2.2.2](https://github.com/Torwent/SRL-T/compare/v2.2.1...v2.2.2) (2023-07-22)
-
-
-### Bug Fixes
-
-* **inventory:** tweak to use slot on slot ([77e37cf](https://github.com/Torwent/SRL-T/commit/77e37cf5222fb7b68a6ccb3771f484e330bbe5ba))
 
 
 
