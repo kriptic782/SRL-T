@@ -198,13 +198,24 @@ begin
   Result := Length(found) = Length(items);
 end;
 
-function TRSItemInterface.FindAny(items: TRSItemArray; out box: TBox): Boolean;
+function TRSItemInterface.FindAny(items: TRSItemArray): TRSItemFinderMatch;
 var
-  boxes: TBoxArray;
+  matches: TRSItemFinderMatchArray;
 begin
-  Result := Self.FindAll(items, boxes);
+  matches := ItemFinder.FindAll(items, Self.GetSearchBoxesFunction(), 1);
+  if matches <> [] then
+    Result := matches[0];
+end;
+
+function TRSItemInterface.FindAny(items: TRSItemArray; out box: TBox): Boolean; overload;
+var
+  match: TRSItemFinderMatch;
+begin
+  match := Self.FindAny(items);
+  Result := match <> [];
+
   if Result then
-    box := boxes[SRL.TruncatedGauss(0, High(boxes))];
+    box := match.Box;
 end;
 
 function TRSItemInterface.Contains(item: TRSItem): Boolean;
