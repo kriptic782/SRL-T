@@ -1,3 +1,12 @@
+# [2.4.0](https://github.com/Torwent/SRL-T/compare/v2.3.2...v2.4.0) (2023-07-31)
+
+
+### Features
+
+* **Stats:** Added WaspLib's BaseStats functionality directly into the Stats interface ([0b586ad](https://github.com/Torwent/SRL-T/commit/0b586ad9e8abdd511acf7a50d658810a790a8d57))
+
+
+
 ## [2.3.2](https://github.com/Torwent/SRL-T/compare/v2.3.1...v2.3.2) (2023-07-28)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * launcher login improvements when there's thematic changes ([ff95dc5](https://github.com/Torwent/SRL-T/commit/ff95dc51745ade7fe0eeb09981dd0f1f8ee97fda))
-
-
-
-## [2.2.4](https://github.com/Torwent/SRL-T/compare/v2.2.3...v2.2.4) (2023-07-23)
-
-
-### Bug Fixes
-
-* **itemfinder:** add dark ess filter ([89c44eb](https://github.com/Torwent/SRL-T/commit/89c44eb8ba045b5df990329e41a40557dc148b0d))
 
 
 
