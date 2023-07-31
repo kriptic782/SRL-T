@@ -339,7 +339,7 @@ function TRSWalker.GetCleanMinimap(): TMufasaBitmap;
 var
   Bitmap: TMufasaBitmap;
 begin
-  Bitmap := GetMufasaBitmap(BitmapFromClient(Minimap.Bounds));
+  Bitmap := GetMufasaBitmap(BitmapFromClient(Minimap.Bounds()));
   Bitmap.ReplaceColor(0, 1); // We need zero to be unique
 
   Self.CleanMinimap(Bitmap);

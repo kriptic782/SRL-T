@@ -500,7 +500,7 @@ Example
   if 'Select an Option' = Chat.GetChatTitle then
     Chat.ClickOption('access my bank');
 *)
-function TRSChat.GetChatTitle: String;
+function TRSChat.GetChatTitle(): String;
 var
   Options: TRSChatboxOptionArray;
 begin
@@ -512,9 +512,10 @@ end;
 (*
 Chat.LeveledUp
 ~~~~~~~~~~~~~~
-.. pascal:: function TRSChat.LeveledUp: Boolean;
+.. pascal:: function TRSChat.LeveledUp(): Boolean; forward;
 
 Returns true if we have the level up message on the chat box.
+Forwarded here and declared in stats.simba
 
 Example
 -------
@@ -522,10 +523,7 @@ Example
   if Chat.LeveledUp then
     Chat.ClickContinue(True);
 *)
-function TRSChat.LeveledUp: Boolean;
-begin
-  Result := Self.FindOption('Congratulations', [CHAT_COLOR_NAVY]); 
-end;
+function TRSChat.LeveledUp(): Boolean; forward;
 
 (*
 var Chat

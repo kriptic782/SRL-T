@@ -261,7 +261,7 @@ begin
   begin
     Result[I].Index := I;
     Result[I].Bounds := Boxes[I];
-    Result[I].Middle := Boxes[I].Middle;
+    Result[I].Middle := Boxes[I].Middle();
     Result[I].EnabledColors := Self.ButtonEnabledColors;
   end;
 end;
