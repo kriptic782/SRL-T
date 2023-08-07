@@ -163,7 +163,7 @@ begin
 
     if not FileExists(fileName) then
     begin
-      Self.DebugLn('Unzipping file sprite: ' + ExtractFileName(fileName) + 'this can take a few seconds');
+      Self.DebugLn('Unzipping file sprite: ' + ExtractFileName(fileName) + ' this can take a few seconds');
       if not UnZipOneFile(ITEM_FINDER_IMAGES_ZIP, ExtractFileName(fileName), Self.IMAGES_PATH) then
         Self.Fatal('Unknown item: ' + ToString(itemID));
     end;
@@ -295,7 +295,7 @@ begin
   for i := 0 to High(boxes) do
     for j := 0 to High(itemsToSearchFor) do
     begin
-      if boxes[i].Width() <> 36 then
+      if boxes[i].Width() < 36 then
         boxes[i].X2 := boxes[i].X1 + 36;
       template.FromClient(boxes[i]);
 
