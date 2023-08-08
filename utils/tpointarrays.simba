@@ -1,6 +1,6 @@
 {$DEFINE SRL_TPOINTARRAY_INCLUDED}
 {$IFNDEF SRL_UTILS}
-  {$I SRL/utils.simba}
+  {$I SRL-T/utils.simba}
 {$ENDIF}
 
 (*
@@ -42,20 +42,24 @@ begin
   Result := Length(Self);
 end;
 
-procedure TPointArray.Remove(const Value: TPoint; const All: Boolean = False);
+procedure TPointArray.Remove(const value: TPoint; const all: Boolean = False);
 var
-  Arr: TIntegerArray;
+  arr: TIntegerArray;
   i: Integer;
 begin
-  if (All) then
-    Arr := Self.FindAll(Value)
+  if all then
+    arr := Self.FindAll(value)
   else begin
-    SetLength(Arr, 1);
-    Arr[0] := Self.Find(Value);
+    i := Self.Find(value);
+    if i > -1 then
+    begin
+      SetLength(arr, 1);
+      arr[0] := i;
+    end;
   end;
 
-  for i := 0 to High(Arr) do
-    Self.Del(Arr[i]);
+  for i := 0 to High(arr) do
+    Self.Del(arr[i]);
 end;
 
 function TPointArray.Pop(): TPoint;
