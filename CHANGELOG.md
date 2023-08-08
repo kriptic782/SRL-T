@@ -1,3 +1,12 @@
+## [2.4.2](https://github.com/Torwent/SRL-T/compare/v2.4.1...v2.4.2) (2023-08-08)
+
+
+### Bug Fixes
+
+* **TPointArray:** Fixed bug found in TPA.Remove() by Skunk ([9cba052](https://github.com/Torwent/SRL-T/commit/9cba052fa0ec2e5f55408335ba8c036fe676cfea))
+
+
+
 ## [2.4.1](https://github.com/Torwent/SRL-T/compare/v2.4.0...v2.4.1) (2023-08-07)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **GE:** removed ocr hacks ordered by garrett ([12901fc](https://github.com/Torwent/SRL-T/commit/12901fcea1e752c6aa399397bde16884e5e8f773))
-
-
-
-# [2.3.0](https://github.com/Torwent/SRL-T/compare/v2.2.5...v2.3.0) (2023-07-26)
-
-
-### Features
-
-* **TRSItemInterface:** added methods to move items ([232a422](https://github.com/Torwent/SRL-T/commit/232a4224df6222952761198a0219bb7a3c57dde2))
 
 
 
