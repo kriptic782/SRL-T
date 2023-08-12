@@ -1,3 +1,12 @@
+## [2.4.3](https://github.com/Torwent/SRL-T/compare/v2.4.2...v2.4.3) (2023-08-12)
+
+
+### Bug Fixes
+
+* add stundent's and slacky's fixes to Minimap.GetDotsBitmap() ([d35bfd8](https://github.com/Torwent/SRL-T/commit/d35bfd81da941c66b6d9d6e0ed69923784d2f836))
+
+
+
 ## [2.4.2](https://github.com/Torwent/SRL-T/compare/v2.4.1...v2.4.2) (2023-08-08)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **iteminterface:** findAny overload and fixes ([0af67a4](https://github.com/Torwent/SRL-T/commit/0af67a4a8ff33e160bc972f28ad78f65d3043ef3))
-
-
-
-## [2.3.1](https://github.com/Torwent/SRL-T/compare/v2.3.0...v2.3.1) (2023-07-27)
-
-
-### Bug Fixes
-
-* **GE:** removed ocr hacks ordered by garrett ([12901fc](https://github.com/Torwent/SRL-T/commit/12901fcea1e752c6aa399397bde16884e5e8f773))
 
 
 
