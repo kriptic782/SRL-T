@@ -241,16 +241,17 @@ function TRSCombat.SetAutoRetaliate(Value: Boolean): Boolean;
 var
   Buttons: TRSButtonArray;
   Button: TRSButton;
+  AutoRetaliateColor: TColor := 2070783;
 begin
   if not Self.Open() then
     Exit;
-    
+
   Buttons := Self.GetButtons();
   for Button in Buttons do
-    if Button.FindText('Auto Retaliate', RS_FONT_PLAIN_12) then
+    if Button.FindText('Auto Retaliate', RS_FONT_PLAIN_12, [AutoRetaliateColor]) then
     begin
       Result := (Value and Button.Enable()) or (not Value and Button.Disable());
-      
+
       Exit;
     end;
 end;
@@ -465,4 +466,3 @@ begin
 
   Combat.Draw(Bitmap);
 end;
-
