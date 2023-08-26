@@ -196,7 +196,7 @@ end;
 (*
 Combat.GetAutoRetaliate
 ~~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSCombat.GetAutoRetaliate: Boolean;
+.. pascal:: function TRSCombat.GetAutoRetaliate(): Boolean;
 
 Get the current state of auto retaliate.
 
@@ -206,28 +206,22 @@ Example
   WriteLn Combat.GetAutoRetaliate;
 
 *)
-function TRSCombat.GetAutoRetaliate: Boolean;
+function TRSCombat.GetAutoRetaliate(): Boolean;
 var
-  Buttons: TRSButtonArray;
-  Button: TRSButton;
+  button: TRSButton;
 begin
   if not Self.Open() then
     Exit;
-    
-  Buttons := Self.GetButtons();
-  for Button in Buttons do
-    if Button.FindText('Auto Retaliate', RS_FONT_PLAIN_12) then
-    begin
-      Result := Button.Enabled();
-      
-      Exit;
-    end;
+
+  for button in Self.GetButtons() do
+    if button.FindText('Auto Retaliate', RS_FONT_PLAIN_12, $1F98FF) then
+      Exit(button.Enabled());
 end;
 
 (*
 Combat.SetAutoRetaliate
 ~~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSCombat.SetAutoRetaliate(Value: Boolean): Boolean;
+.. pascal:: function TRSCombat.SetAutoRetaliate(value: Boolean): Boolean;
 
 Set the state of auto retaliate on or off.
 
@@ -237,22 +231,16 @@ Example
   Combat.SetAutoRetaliate(True);
 
 *)
-function TRSCombat.SetAutoRetaliate(Value: Boolean): Boolean;
+function TRSCombat.SetAutoRetaliate(value: Boolean): Boolean;
 var
-  Buttons: TRSButtonArray;
-  Button: TRSButton;
+  button: TRSButton;
 begin
   if not Self.Open() then
     Exit;
-    
-  Buttons := Self.GetButtons();
-  for Button in Buttons do
-    if Button.FindText('Auto Retaliate', RS_FONT_PLAIN_12) then
-    begin
-      Result := (Value and Button.Enable()) or (not Value and Button.Disable());
-      
-      Exit;
-    end;
+
+  for button in Self.GetButtons() do
+    if button.FindText('Auto Retaliate', RS_FONT_PLAIN_12, $1F98FF) then
+      Exit((value and button.Enable()) or (not value and button.Disable()));
 end;
 
 (*
@@ -465,4 +453,3 @@ begin
 
   Combat.Draw(Bitmap);
 end;
-
