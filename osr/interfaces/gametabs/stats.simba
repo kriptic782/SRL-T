@@ -267,7 +267,6 @@ begin
     Exit(-1);
 
   b := Self.GetSkillBox(skill);
-  b.Y2 := b.Y1 + (b.Height() div 2);
 
   text := OCR.Recognize(b, TOCRColorFilter.Create([65535]), RS_FONT_PLAIN_11);
   Result := StrToIntDef(ExtractFromStr(text, Numbers), -1);
@@ -302,7 +301,6 @@ begin
     Exit(-1);
 
   b := Self.GetSkillBox(skill);
-  b.Y2 := b.Y1 + (b.Height());
 
   text := OCR.Recognize(b, TOCRColorFilter.Create([65535]), RS_FONT_PLAIN_11);
   Result := StrToIntDef(ExtractFromStr(text, Numbers), -1);
