@@ -1,3 +1,17 @@
+## [2.4.5](https://github.com/Torwent/SRL-T/compare/v2.4.4...v2.4.5) (2023-08-27)
+
+
+### Bug Fixes
+
+* make .GetLevel() use only the bottom of the skill box ([a650fa5](https://github.com/Torwent/SRL-T/commit/a650fa5e80691702bdde2c00fbdd2f59ec866ad6))
+
+
+### Reverts
+
+* Revert "fixed Stats.GetCurrentLevel even though its deprecated" ([ac14442](https://github.com/Torwent/SRL-T/commit/ac14442ef9f6398304d084df29e485cb38c3cb64))
+
+
+
 ## [2.4.4](https://github.com/Torwent/SRL-T/compare/v2.4.3...v2.4.4) (2023-08-26)
 
 
@@ -31,15 +45,6 @@
 ### Bug Fixes
 
 * **itemfinder:** the boundary correction should only be reset if it's lower than what it should be. ([e720165](https://github.com/Torwent/SRL-T/commit/e7201656284d9ee9dd7e7a7487af22e6b1504225))
-
-
-
-# [2.4.0](https://github.com/Torwent/SRL-T/compare/v2.3.2...v2.4.0) (2023-07-31)
-
-
-### Features
-
-* **Stats:** Added WaspLib's BaseStats functionality directly into the Stats interface ([0b586ad](https://github.com/Torwent/SRL-T/commit/0b586ad9e8abdd511acf7a50d658810a790a8d57))
 
 
 
