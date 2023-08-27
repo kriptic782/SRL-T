@@ -333,14 +333,14 @@ begin
   Result := Self <> [];
 end;
 
-function TRSButton.Enabled: Boolean; constref;
+function TRSButton.Enabled(): Boolean; constref;
 var
-  Color: TCTS1Color;
+  color: TCTS1Color;
 begin
   if Self.Visible() then
   begin
-    for Color in Self.EnabledColors do
-      if SRL.CountColor(Color, Self.Bounds) > 0 then
+    for color in Self.EnabledColors do
+      if SRL.CountColor(color, Self.Bounds) > 0 then
         Exit(True);
   end;
 end;
