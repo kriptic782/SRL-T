@@ -258,7 +258,7 @@ Example
 
   WriteLn Stats.GetCurrentLevel(ERSSkill.HITPOINTS);
 *)
-function TRSStats.GetCurrentLevel(skill: ERSSkill): Int32; deprecated 'Use Stats.GetLevel() instead.'
+function TRSStats.GetCurrentLevel(skill: ERSSkill): Int32;
 var
   text: String;
   b: TBox;
@@ -302,7 +302,7 @@ begin
     Exit(-1);
 
   b := Self.GetSkillBox(skill);
-  b.Y2 := b.Y1 + (b.Height());
+  b.Y1 := b.Y2 - (b.Height() div 2);
 
   text := OCR.Recognize(b, TOCRColorFilter.Create([65535]), RS_FONT_PLAIN_11);
   Result := StrToIntDef(ExtractFromStr(text, Numbers), -1);
