@@ -217,13 +217,13 @@ Login.ClickText
 Internal TRSLogin method used to find the specified **Text** on the TRSLogin interface and click it.
 You probably will never to use this directly.
 *)
-function TRSLogin.ClickText(Text: String): Boolean;
+function TRSLogin.ClickText(text: String): Boolean;
 var
-  B: TBox;
+  b: TBox;
 begin
-  Result := FindText(Text, B);
+  Result := FindText(text, b);
   if Result then
-    Mouse.Click(B, MOUSE_LEFT);
+    Mouse.Click(b, MOUSE_LEFT);
 end;
 
 (*
@@ -556,16 +556,18 @@ Example
 *)
 function TRSLogin.EnterGame(): Boolean;
 var
-  T: UInt64;
+  t: UInt64;
+  i: Int32;
 begin
-  T := GetTickCount() + 2500;
-  while (T > GetTickCount()) do
-  begin
+  t := GetTickCount() + 2500;
+  repeat
+    if Inc(i) > 6 then
+      Mouse.Move(Box(Mouse.Position(), 10, 10), True);
     if Self.ClickText('CLICK HERE TO PLAY') then
       Break;
 
     Wait(100);
-  end;
+  until t > GetTickCount();
 
   Result := RSClient.IsLoggedIn(5000);
 end;
