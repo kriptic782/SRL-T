@@ -34,10 +34,11 @@ type
       end;
     end;
 
+    GetScrollAreaFunction: function: TBox of object;
     Alignment: TRSInterfaceAlignment;
   end;
 
-procedure TRSInterface.Setup;
+procedure TRSInterface.Setup();
 begin
   Self.Name := 'Unnamed';
   Self.ButtonColors := [CTS1(5334129, 2), CTS1(2303648, 1), CTS1(657930, 20), CTS1(1514268, 10)];
@@ -50,7 +51,7 @@ begin
   Self.Mode := Mode;
 end;
 
-function TRSInterface.X1: Int32;
+function TRSInterface.X1(): Int32;
 var
   Left, Right, Width, Center: Single;
   ClientWidth, ClientHeight: Int32;
@@ -84,7 +85,7 @@ begin
     Self.Cache.X1 := [Self.Mode, ClientWidth, ClientHeight, Result];
 end;
 
-function TRSInterface.X2: Int32;
+function TRSInterface.X2(): Int32;
 var
   Left, Right, Width, Center: Single;
   ClientWidth, ClientHeight: Int32;
@@ -118,7 +119,7 @@ begin
     Self.Cache.X2 := [Self.Mode, ClientWidth, ClientHeight, Result];
 end;
 
-function TRSInterface.Y1: Int32;
+function TRSInterface.Y1(): Int32;
 var
   Top, Bottom, Height, Center: Single;
   ClientWidth, ClientHeight: Int32;
@@ -152,7 +153,7 @@ begin
     Self.Cache.Y1 := [Self.Mode, ClientWidth, ClientHeight, Result];
 end;
 
-function TRSInterface.Y2: Int32;
+function TRSInterface.Y2(): Int32;
 var
   Top, Bottom, Height, Center: Single;
   ClientWidth, ClientHeight: Int32;
@@ -186,22 +187,22 @@ begin
     Self.Cache.Y2 := [Self.Mode, ClientWidth, ClientHeight, Result];
 end;
 
-function TRSInterface.Bounds: TBox;
+function TRSInterface.Bounds(): TBox;
 begin
   Result := [Self.X1, Self.Y1, Self.X2, Self.Y2];
 end;
 
-function TRSInterface.Width: Int32;
+function TRSInterface.Width(): Int32;
 begin
   Result := Bounds.Width;
 end;
 
-function TRSInterface.Height: Int32;
+function TRSInterface.Height(): Int32;
 begin
   Result := Bounds.Height;
 end;
 
-function TRSInterface.Center: TPoint;
+function TRSInterface.Center(): TPoint;
 begin
   Result := Self.Bounds().Middle;
 end;
@@ -319,7 +320,7 @@ begin
   end;
 end;
 
-function TRSButtonArray.ToBoxes: TBoxArray; constref;
+function TRSButtonArray.ToBoxes(): TBoxArray; constref;
 var
   I: Int32;
 begin
@@ -328,7 +329,7 @@ begin
     Result[I] := Self[I].Bounds;
 end;
 
-function TRSButton.Visible: Boolean; constref;
+function TRSButton.Visible(): Boolean; constref;
 begin
   Result := Self <> [];
 end;
@@ -352,12 +353,12 @@ begin
     Mouse.Click(Self.Bounds, MouseButton);
 end;
 
-function TRSButton.Enable: Boolean; constref;
+function TRSButton.Enable(): Boolean; constref;
 begin
   Result := Self.Enabled() or Self.Click();
 end;
 
-function TRSButton.Disable: Boolean; constref;
+function TRSButton.Disable(): Boolean; constref;
 begin
   Result := not Self.Enabled() or Self.Click();
 end;
@@ -407,12 +408,21 @@ begin
     Bitmap.DrawText(ToString(Self.Position), [Self.SliderRegion.Middle.X - (X div 2), Self.Slider.Middle.Y - (Y div 3)], $00FF00);
 end;
 
-function TRSScrollBar.IsVisible: Boolean;
+function TRSScrollBar.IsVisible(): Boolean;
 begin
   Result := Self <> [];
 end;
 
-function TRSInterface.GetScrollBar: TRSScrollBar;
+
+function TRSInterface.GetScrollArea(scrollBar: TRSScrollBar): TBox;
+begin
+  if @Self.GetScrollAreaFunction = nil then
+    Exit(scrollBar.SliderRegion);
+
+  Result := Self.GetScrollAreaFunction();
+end;
+
+function TRSInterface.GetScrollBar(): TRSScrollBar;
 const
   COLOR_ARROW := CTS2(5206147, 15, 0.03, 0.28);
   COLOR_BORDER := 65536;
@@ -451,14 +461,14 @@ begin
   end;
 end;
 
-function TRSInterface.CanScroll: Boolean;
+function TRSInterface.CanScroll(): Boolean;
 var
   ScrollBar: TRSScrollBar := Self.GetScrollBar();
 begin
   Result := Scrollbar.IsVisible() and (ScrollBar.Slider <> ScrollBar.SliderRegion);
 end;
 
-function TRSInterface.GetScrollPosition: Int32;
+function TRSInterface.GetScrollPosition(): Int32;
 var
   ScrollBar: TRSScrollBar;
 begin
@@ -471,11 +481,13 @@ end;
 
 procedure TRSInterface.SetScrollPosition(value: Int32);
 var
+  oldPos: Int32;
   scrollBar: TRSScrollBar;
 begin
   value := EnsureRange(value, 0, 100);
 
   scrollBar := Self.GetScrollBar();
+  oldPos := scrollBar.Position;
 
   if not scrollBar.IsVisible() or not Self.CanScroll() then
     Exit;
@@ -487,18 +499,26 @@ begin
   begin
     while scrollBar.IsVisible() and (scrollBar.Position < value) do
     begin
-      Mouse.Scroll(scrollBar.SliderRegion, Random(1, 3), True);
+      Mouse.Scroll(Self.GetScrollArea(scrollBar), Random(1, 3), True);
 
       scrollBar := Self.GetScrollBar();
+      if oldPos = scrollBar.Position then
+        Mouse.Move(Self.GetScrollArea(scrollBar), True);
+
+      oldPos := scrollBar.Position;
     end;
     Exit;
   end;
 
   while scrollBar.IsVisible() and (scrollBar.Position > value) do
   begin
-    Mouse.Scroll(scrollBar.SliderRegion, Random(1, 3), False);
+    Mouse.Scroll(Self.GetScrollArea(scrollBar), Random(1, 3), False);
 
     scrollBar := Self.GetScrollBar();
+    if oldPos = scrollBar.Position then
+      Mouse.Move(scrollBar.SliderRegion, True);
+
+    oldPos := scrollBar.Position;
   end;
 end;
 
@@ -516,7 +536,7 @@ end;
 type
   TRSTitledInteface = type TRSInterface;
 
-function TRSTitledInteface.GetTitle: String;
+function TRSTitledInteface.GetTitle(): String;
 var
   B: TBox;
 begin
@@ -563,17 +583,17 @@ end;
 type
   TRSRootInterface = type TRSInterface;
 
-function TRSRootInterface.X1: Int32; override;
+function TRSRootInterface.X1(): Int32; override;
 begin
   Result := 0;
 end;
 
-function TRSRootInterface.Y1: Int32; override;
+function TRSRootInterface.Y1(): Int32; override;
 begin
   Result := 0;
 end;
 
-function TRSRootInterface.X2: Int32; override;
+function TRSRootInterface.X2(): Int32; override;
 var
   ClientWidth, ClientHeight: Int32;
 begin
@@ -582,7 +602,7 @@ begin
   Result := ClientWidth - 1;
 end;
 
-function TRSRootInterface.Y2: Int32; override;
+function TRSRootInterface.Y2(): Int32; override;
 var
   ClientWidth, ClientHeight: Int32;
 begin

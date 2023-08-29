@@ -336,6 +336,16 @@ begin
 end;
 
 
+function TRSBank.ScrollAreaFunction(): TBox;
+begin
+  Result := Self.Bounds();
+  Result.X1 += 5;
+  Result.Y1 += 77;
+  Result.X2 -= 24;
+  Result.Y2 -= 44;
+end;
+
+
 (*
 Bank.Setup
 ~~~~~~~~~~
@@ -352,6 +362,7 @@ begin
   Self.Name := 'Bank';
   Self.ItemInterface.Name := Self.Name + '.ItemInterface';
   Self.ItemInterface.GetSearchBoxesFunction := @Self.FindItemBoundaries;
+  Self.GetScrollAreaFunction := @Self.ScrollAreaFunction;
 
   Self.FINDER_UPTEXT := ['Use Bank', 'Bank chest', 'Bank Bank', 'Bank booth', 'Banker'];
   Self.FINDER_OPTION := ['Use Bank', 'Bank Bank'];
@@ -882,7 +893,7 @@ begin
 
   if not useQuantityButtons then
   begin
-    Mouse.Move(B);
+    Mouse.Move(b);
 
     case amount of
       Self.QUANTITY_ALL:         Exit(ChooseOption.Select('Withdraw-All'));

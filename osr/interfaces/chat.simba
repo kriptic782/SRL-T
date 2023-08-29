@@ -39,7 +39,6 @@ const
 
 type
   TRSChat = type TRSInterface;
-  
 
 (*
 Chat.Setup
@@ -50,11 +49,12 @@ Initializes **Chat** variables.
 
 .. note:: This is automatically called on the **Chat** variable.
 *)
-procedure TRSChat.Setup; override;
+procedure TRSChat.Setup(); override;
 begin
   inherited;
 
   Self.Name := 'Chatbox';
+  Self.GetScrollAreaFunction := @Self.Bounds;
 end;
 
 (*
@@ -93,7 +93,7 @@ Chat.GetLineBoxes
 
 Internal function that returns the bounds of the chat lines.
 *)
-function TRSChat.GetLineBoxes: TBoxArray;
+function TRSChat.GetLineBoxes(): TBoxArray;
 begin
   Result := Grid(1, 9, Width - 35, 13, [0, 1], [Self.X1 + 10, Self.Y1 + 8]);
   Result[CHAT_INPUT_LINE].Y2 += 2;
@@ -169,7 +169,7 @@ Example
 
   WriteLn Chat.IsTransparent;
 *)
-function TRSChat.IsTransparent: Boolean;
+function TRSChat.IsTransparent(): Boolean;
 begin
   Result := Self.GetDisplayName([$FFFFFF]) <> '';
 end;
@@ -186,7 +186,7 @@ Example
 
   WriteLn Chat.IsOpen;
 *)
-function TRSChat.IsOpen: Boolean;
+function TRSChat.IsOpen(): Boolean;
 begin
   Result := (SRL.CountColor(CTS0(9744834, 20), Self.Bounds) > 45000) or Self.IsTransparent();
 end;
@@ -204,7 +204,7 @@ Example
 
   WriteLn Chat.GetQuery;
 *)
-function TRSChat.GetQuery: String;
+function TRSChat.GetQuery(): String;
 begin
   Result := OCR.Recognize(Self.Bounds(), TOCRColorFilter.Create([$000000]), RS_FONT_BOLD_12);
 end;
@@ -221,7 +221,7 @@ Example
 
   WriteLn Chat.GetQueryAnswer;
 *)
-function TRSChat.GetQueryAnswer: String;
+function TRSChat.GetQueryAnswer(): String;
 begin
   Result := OCR.Recognize(Self.Bounds(), TOCRColorFilter.Create([8388608]), RS_FONT_BOLD_12);
 end;
@@ -474,7 +474,7 @@ Example
 
   WriteLn Chat.GetChat;
 *)
-function TRSChat.GetChat: String;
+function TRSChat.GetChat(): String;
 var
   Option: TRSChatboxOption;
 begin
