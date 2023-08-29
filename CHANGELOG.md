@@ -1,3 +1,12 @@
+## [2.4.7](https://github.com/Torwent/SRL-T/compare/v2.4.6...v2.4.7) (2023-08-29)
+
+
+### Bug Fixes
+
+* **login:** force the mouse to move if we stay too long on the lobby screen ([15e3b78](https://github.com/Torwent/SRL-T/commit/15e3b78e7000bf816f5e0ca6efe021eadbb013e6))
+
+
+
 ## [2.4.6](https://github.com/Torwent/SRL-T/compare/v2.4.5...v2.4.6) (2023-08-29)
 
 
@@ -36,15 +45,6 @@
 ### Bug Fixes
 
 * add stundent's and slacky's fixes to Minimap.GetDotsBitmap() ([d35bfd8](https://github.com/Torwent/SRL-T/commit/d35bfd81da941c66b6d9d6e0ed69923784d2f836))
-
-
-
-## [2.4.2](https://github.com/Torwent/SRL-T/compare/v2.4.1...v2.4.2) (2023-08-08)
-
-
-### Bug Fixes
-
-* **TPointArray:** Fixed bug found in TPA.Remove() by Skunk ([9cba052](https://github.com/Torwent/SRL-T/commit/9cba052fa0ec2e5f55408335ba8c036fe676cfea))
 
 
 
