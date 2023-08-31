@@ -1,3 +1,12 @@
+## [2.4.8](https://github.com/Torwent/SRL-T/compare/v2.4.7...v2.4.8) (2023-08-31)
+
+
+### Bug Fixes
+
+* **ItemInterface:** CountingStacks was 1 pixel off ([1c4ca76](https://github.com/Torwent/SRL-T/commit/1c4ca765d00963d35b0d80640343a0713c1deb8e))
+
+
+
 ## [2.4.7](https://github.com/Torwent/SRL-T/compare/v2.4.6...v2.4.7) (2023-08-29)
 
 
@@ -36,15 +45,6 @@
 ### Bug Fixes
 
 * fix auto-retaliate as well ([a850ddb](https://github.com/Torwent/SRL-T/commit/a850ddb779ca0154e94eb0494baf5e03ef90d08b))
-
-
-
-## [2.4.3](https://github.com/Torwent/SRL-T/compare/v2.4.2...v2.4.3) (2023-08-12)
-
-
-### Bug Fixes
-
-* add stundent's and slacky's fixes to Minimap.GetDotsBitmap() ([d35bfd8](https://github.com/Torwent/SRL-T/commit/d35bfd81da941c66b6d9d6e0ed69923784d2f836))
 
 
 
