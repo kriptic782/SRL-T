@@ -314,7 +314,7 @@ begin
 
   box := Self.GetSlotBox(slot);
   box.X2 := box.X1 + 35;
-  box.Y2 := box.Y1 + 7;
+  box.Y2 := box.Y1 + 8;
   Result := SRL.GetItemAmount(box);
 end;
 
@@ -327,7 +327,7 @@ begin
   if Self.Find([item], box) then
   begin
     box.X2 := box.X1 + 35;
-    box.Y2 := box.Y1 + 7;
+    box.Y2 := box.Y1 + 8;
     Result := SRL.GetItemAmount(box);
   end;
 end;
