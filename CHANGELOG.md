@@ -1,3 +1,12 @@
+## [2.4.10](https://github.com/Torwent/SRL-T/compare/v2.4.9...v2.4.10) (2023-09-08)
+
+
+### Bug Fixes
+
+* **login:** added longer timeout ([2cab0d9](https://github.com/Torwent/SRL-T/commit/2cab0d9148e2ad4e9576e36001a7d3b5df042237))
+
+
+
 ## [2.4.9](https://github.com/Torwent/SRL-T/compare/v2.4.8...v2.4.9) (2023-09-08)
 
 
@@ -31,20 +40,6 @@
 ### Bug Fixes
 
 * scroll areas ([7c51b83](https://github.com/Torwent/SRL-T/commit/7c51b83f34b761f4179dc4fffa41c19185172fb0))
-
-
-
-## [2.4.5](https://github.com/Torwent/SRL-T/compare/v2.4.4...v2.4.5) (2023-08-27)
-
-
-### Bug Fixes
-
-* make .GetLevel() use only the bottom of the skill box ([a650fa5](https://github.com/Torwent/SRL-T/commit/a650fa5e80691702bdde2c00fbdd2f59ec866ad6))
-
-
-### Reverts
-
-* Revert "fixed Stats.GetCurrentLevel even though its deprecated" ([ac14442](https://github.com/Torwent/SRL-T/commit/ac14442ef9f6398304d084df29e485cb38c3cb64))
 
 
 
