@@ -395,8 +395,8 @@ begin
   for I := 0 to (Image.GetWidth() * Image.GetHeight())-1 do
   begin
     // grey/brightness calculation. Works for magic logs
-    if ((ImagePtr^.R + ImagePtr^.G + ImagePtr^.B) div 3 > 90) or
-       ((TemplPtr^.R + TemplPtr^.G + TemplPtr^.B) div 3 > 90) then
+    if ((ImagePtr^.R + ImagePtr^.G + ImagePtr^.B) div 3 > 54) or
+       ((TemplPtr^.R + TemplPtr^.G + TemplPtr^.B) div 3 > 54) then
       ImagePtr^ := TemplPtr^ := Default(TRGB32);
 
     Inc(ImagePtr);
