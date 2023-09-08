@@ -1,3 +1,12 @@
+## [2.4.11](https://github.com/Torwent/SRL-T/compare/v2.4.10...v2.4.11) (2023-09-08)
+
+
+### Bug Fixes
+
+* **login:** minor logic fix ([9be324e](https://github.com/Torwent/SRL-T/commit/9be324ed24f726268d2051bde73a458f8cb82cb7))
+
+
+
 ## [2.4.10](https://github.com/Torwent/SRL-T/compare/v2.4.9...v2.4.10) (2023-09-08)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **login:** force the mouse to move if we stay too long on the lobby screen ([15e3b78](https://github.com/Torwent/SRL-T/commit/15e3b78e7000bf816f5e0ca6efe021eadbb013e6))
-
-
-
-## [2.4.6](https://github.com/Torwent/SRL-T/compare/v2.4.5...v2.4.6) (2023-08-29)
-
-
-### Bug Fixes
-
-* scroll areas ([7c51b83](https://github.com/Torwent/SRL-T/commit/7c51b83f34b761f4179dc4fffa41c19185172fb0))
 
 
 
