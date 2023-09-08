@@ -559,10 +559,12 @@ var
   t: UInt64;
   i: Int32;
 begin
-  t := GetTickCount() + 2500;
+  t := GetTickCount() + 15000;
   repeat
-    if Inc(i) > 6 then
+    //Ensure we hover the box if the player hovered the game.
+    if GetTickCount() > (t - 10000) then
       Mouse.Move(Box(Mouse.Position(), 10, 10), True);
+
     if Self.ClickText('CLICK HERE TO PLAY') then
       Break;
 
