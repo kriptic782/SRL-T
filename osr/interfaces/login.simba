@@ -568,8 +568,8 @@ begin
     if Self.ClickText('CLICK HERE TO PLAY') then
       Break;
 
-    Wait(100);
-  until t > GetTickCount();
+    Wait(500);
+  until t < GetTickCount();
 
   Result := RSClient.IsLoggedIn(5000);
 end;
