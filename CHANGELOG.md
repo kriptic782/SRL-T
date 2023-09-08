@@ -1,3 +1,12 @@
+## [2.4.9](https://github.com/Torwent/SRL-T/compare/v2.4.8...v2.4.9) (2023-09-08)
+
+
+### Bug Fixes
+
+* **ItemFinder:** made the Dark essence block filter less stricter ([374da17](https://github.com/Torwent/SRL-T/commit/374da173a90692d4154cf30d386257b8c37b617c))
+
+
+
 ## [2.4.8](https://github.com/Torwent/SRL-T/compare/v2.4.7...v2.4.8) (2023-08-31)
 
 
@@ -36,15 +45,6 @@
 ### Reverts
 
 * Revert "fixed Stats.GetCurrentLevel even though its deprecated" ([ac14442](https://github.com/Torwent/SRL-T/commit/ac14442ef9f6398304d084df29e485cb38c3cb64))
-
-
-
-## [2.4.4](https://github.com/Torwent/SRL-T/compare/v2.4.3...v2.4.4) (2023-08-26)
-
-
-### Bug Fixes
-
-* fix auto-retaliate as well ([a850ddb](https://github.com/Torwent/SRL-T/commit/a850ddb779ca0154e94eb0494baf5e03ef90d08b))
 
 
 
