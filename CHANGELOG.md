@@ -1,3 +1,13 @@
+## [2.4.12](https://github.com/Torwent/SRL-T/compare/v2.4.11...v2.4.12) (2023-09-10)
+
+
+### Bug Fixes
+
+* added slacky's mm2ms fixes ([f3ee359](https://github.com/Torwent/SRL-T/commit/f3ee359409c0fd433a8ca3f6beb8604a3701be16))
+* added TMouseMovementEx to TMouse ([344c8b5](https://github.com/Torwent/SRL-T/commit/344c8b5a1fa71d3560a18e8d815b3dcdc9c54504))
+
+
+
 ## [2.4.11](https://github.com/Torwent/SRL-T/compare/v2.4.10...v2.4.11) (2023-09-08)
 
 
@@ -31,15 +41,6 @@
 ### Bug Fixes
 
 * **ItemInterface:** CountingStacks was 1 pixel off ([1c4ca76](https://github.com/Torwent/SRL-T/commit/1c4ca765d00963d35b0d80640343a0713c1deb8e))
-
-
-
-## [2.4.7](https://github.com/Torwent/SRL-T/compare/v2.4.6...v2.4.7) (2023-08-29)
-
-
-### Bug Fixes
-
-* **login:** force the mouse to move if we stay too long on the lobby screen ([15e3b78](https://github.com/Torwent/SRL-T/commit/15e3b78e7000bf816f5e0ca6efe021eadbb013e6))
 
 
 
