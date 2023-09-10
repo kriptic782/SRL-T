@@ -714,7 +714,7 @@ begin
     while (k >= 2) and (srl.CrossProduct(result[k-2], result[k-1], pts[i]) <= 0) do
       Dec(k);
     result[k] := pts[i];
-    Inc(k)
+    Inc(k);
   end;
 
   u := k+1;
