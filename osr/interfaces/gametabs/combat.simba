@@ -15,8 +15,12 @@ const
   COMBAT_STYLE_LONGRANGE = 'Longrange';
   COMBAT_STYLE_BASH      = 'Bash';
   COMBAT_STYLE_POUND     = 'Pound';
+  COMBAT_STYLE_PUMMEL    = 'Pummel';
+  COMBAT_STYLE_SPIKE     = 'Spike';
+  COMBAT_STYLE_IMPALE    = 'Impale';
   COMBAT_STYLE_FOCUS     = 'Focus';
   COMBAT_STYLE_CHOP      = 'Chop';
+  COMBAT_STYLE_STAB      = 'Stab';
   COMBAT_STYLE_SLASH     = 'Slash';
   COMBAT_STYLE_LUNGE     = 'Lunge';
   COMBAT_STYLE_BLOCK     = 'Block';
@@ -24,17 +28,30 @@ const
   COMBAT_STYLE_LASH      = 'Lash';
   COMBAT_STYLE_DEFLECT   = 'Deflect';
   COMBAT_STYLE_SWIPE     = 'Swipe';
+  COMBAT_STYLE_JAB       = 'Jab';
+  COMBAT_STYLE_FEND      = 'Fend';
   COMBAT_STYLE_SMASH     = 'Smash';
-  
+  COMBAT_STYLE_PUNCH     = 'Punch';
+  COMBAT_STYLE_KICK      = 'Kick';
+  COMBAT_STYLE_SPELL     = 'Spell';
+  COMBAT_STYLE_HACK      = 'Hack';
+  COMBAT_STYLE_SCORCH    = 'Scorch';
+  COMBAT_STYLE_FLARE     = 'Flare';
+  COMBAT_STYLE_BLAZE     = 'Blaze';
+
 var
-  COMBAT_STYLES = [
+  COMBAT_STYLES: TStringArray = [
     COMBAT_STYLE_ACCURATE,
     COMBAT_STYLE_RAPID,
     COMBAT_STYLE_LONGRANGE,
     COMBAT_STYLE_BASH,
     COMBAT_STYLE_POUND,
+    COMBAT_STYLE_PUMMEL,
+    COMBAT_STYLE_SPIKE,
+    COMBAT_STYLE_IMPALE,
     COMBAT_STYLE_FOCUS,
     COMBAT_STYLE_CHOP,
+    COMBAT_STYLE_STAB,
     COMBAT_STYLE_SLASH,
     COMBAT_STYLE_LUNGE,
     COMBAT_STYLE_BLOCK,
@@ -42,7 +59,16 @@ var
     COMBAT_STYLE_LASH,
     COMBAT_STYLE_DEFLECT,
     COMBAT_STYLE_SWIPE,
-    COMBAT_STYLE_SMASH
+    COMBAT_STYLE_JAB,
+    COMBAT_STYLE_FEND,
+    COMBAT_STYLE_SMASH,
+    COMBAT_STYLE_PUNCH,
+    COMBAT_STYLE_KICK,
+    COMBAT_STYLE_SPELL,
+    COMBAT_STYLE_HACK,
+    COMBAT_STYLE_SCORCH,
+    COMBAT_STYLE_FLARE,
+    COMBAT_STYLE_BLAZE
   ];
 
 type
@@ -144,21 +170,22 @@ Example
 *)
 function TRSCombat.GetCombatStyle: String;
 var
-  I: Int32;
+  I,H: Int32;
   Buttons: TRSButtonArray;
 begin
   if not Self.Open() then
     Exit;
 
   Buttons := Self.GetButtons();
-  
+
   for I := 0 to High(Buttons) do
   begin
     if not Buttons[I].Enabled() then
       Continue;
-      
-    if Buttons[I].FindText(COMBAT_STYLES, RS_FONT_PLAIN_11, Result) then
-      Exit;
+
+    for H := 0 to High(COMBAT_STYLES) do
+      if Buttons[I].FindText(COMBAT_STYLES[H].Replace('l','I'), RS_FONT_PLAIN_11, 2070783) then
+        Exit(COMBAT_STYLES[H]);
   end;
 end;
 
@@ -182,15 +209,11 @@ var
 begin
   if not Self.Open() then
     Exit;
-    
+
   Buttons := Self.GetButtons();
   for Button in Buttons do
-    if Button.FindText(Style, RS_FONT_PLAIN_11) then
-    begin
-      Result := Button.Enable();
-      
-      Exit;
-    end;
+    if Button.FindText(Style, RS_FONT_PLAIN_11, [2070783]) then
+      Exit(Button.Enable());
 end;
 
 (*
