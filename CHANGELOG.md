@@ -1,3 +1,12 @@
+## [2.4.13](https://github.com/Torwent/SRL-T/compare/v2.4.12...v2.4.13) (2023-09-12)
+
+
+### Bug Fixes
+
+* **combat:** Flight's Combat tab fixes ([30286ff](https://github.com/Torwent/SRL-T/commit/30286ff0df2d8f05b050995911f5294983dfae7c))
+
+
+
 ## [2.4.12](https://github.com/Torwent/SRL-T/compare/v2.4.11...v2.4.12) (2023-09-10)
 
 
@@ -32,15 +41,6 @@
 ### Bug Fixes
 
 * **ItemFinder:** made the Dark essence block filter less stricter ([374da17](https://github.com/Torwent/SRL-T/commit/374da173a90692d4154cf30d386257b8c37b617c))
-
-
-
-## [2.4.8](https://github.com/Torwent/SRL-T/compare/v2.4.7...v2.4.8) (2023-08-31)
-
-
-### Bug Fixes
-
-* **ItemInterface:** CountingStacks was 1 pixel off ([1c4ca76](https://github.com/Torwent/SRL-T/commit/1c4ca765d00963d35b0d80640343a0713c1deb8e))
 
 
 
