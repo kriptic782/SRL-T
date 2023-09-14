@@ -1,3 +1,12 @@
+## [2.4.14](https://github.com/Torwent/SRL-T/compare/v2.4.13...v2.4.14) (2023-09-14)
+
+
+### Bug Fixes
+
+* **itemfinder:** add new items ([455beca](https://github.com/Torwent/SRL-T/commit/455beca3edde395273619660d31a5fefc95a38d7))
+
+
+
 ## [2.4.13](https://github.com/Torwent/SRL-T/compare/v2.4.12...v2.4.13) (2023-09-12)
 
 
@@ -32,15 +41,6 @@
 ### Bug Fixes
 
 * **login:** added longer timeout ([2cab0d9](https://github.com/Torwent/SRL-T/commit/2cab0d9148e2ad4e9576e36001a7d3b5df042237))
-
-
-
-## [2.4.9](https://github.com/Torwent/SRL-T/compare/v2.4.8...v2.4.9) (2023-09-08)
-
-
-### Bug Fixes
-
-* **ItemFinder:** made the Dark essence block filter less stricter ([374da17](https://github.com/Torwent/SRL-T/commit/374da173a90692d4154cf30d386257b8c37b617c))
 
 
 
