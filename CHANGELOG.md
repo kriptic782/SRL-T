@@ -1,3 +1,12 @@
+## [2.4.15](https://github.com/Torwent/SRL-T/compare/v2.4.14...v2.4.15) (2023-09-16)
+
+
+### Bug Fixes
+
+* **mainscreen:** read notes ([e2fa2bf](https://github.com/Torwent/SRL-T/commit/e2fa2bf58495a14ae8f789c1aa5a917451e6a177))
+
+
+
 ## [2.4.14](https://github.com/Torwent/SRL-T/compare/v2.4.13...v2.4.14) (2023-09-14)
 
 
@@ -32,15 +41,6 @@
 ### Bug Fixes
 
 * **login:** minor logic fix ([9be324e](https://github.com/Torwent/SRL-T/commit/9be324ed24f726268d2051bde73a458f8cb82cb7))
-
-
-
-## [2.4.10](https://github.com/Torwent/SRL-T/compare/v2.4.9...v2.4.10) (2023-09-08)
-
-
-### Bug Fixes
-
-* **login:** added longer timeout ([2cab0d9](https://github.com/Torwent/SRL-T/commit/2cab0d9148e2ad4e9576e36001a7d3b5df042237))
 
 
 
