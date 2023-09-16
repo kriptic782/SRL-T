@@ -512,10 +512,10 @@ end;
 (*
 Chat.LeveledUp
 ~~~~~~~~~~~~~~
-.. pascal:: function TRSChat.LeveledUp(): Boolean; forward;
+.. pascal:: function TRSChat.LeveledUp(): Boolean;
 
 Returns true if we have the level up message on the chat box.
-Forwarded here and declared in stats.simba
+Declared here and overriden in stats.simba
 
 Example
 -------
@@ -523,8 +523,10 @@ Example
   if Chat.LeveledUp then
     Chat.ClickContinue(True);
 *)
-function TRSChat.LeveledUp(): Boolean; forward;
-
+function TRSChat.LeveledUp(): Boolean;
+begin
+  //Overriden in stats.simba
+end;
 (*
 var Chat
 ~~~~~~~~

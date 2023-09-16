@@ -395,7 +395,7 @@ Example
   if Chat.LeveledUp then
     Chat.ClickContinue(True);
 *)
-function TRSChat.LeveledUp(): Boolean;
+function TRSChat.LeveledUp(): Boolean; override;
 var
   b: TBox;
   i: Int32;

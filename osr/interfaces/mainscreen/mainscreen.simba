@@ -609,29 +609,31 @@ Example
   for I := 0 to High(Splats) do
     WriteLn(Splats[I].Position);
 *)
-function TRSMainScreen.FindHitsplats(Area: TBox): TRSHitsplatArray;
+function TRSMainScreen.FindHitsplats(area: TBox): TRSHitsplatArray;
 
-  function Find(Color: Int32; Red: Boolean): TRSHitsplatArray;
+  function Find(color: TCTS2Color; red: Boolean): TRSHitsplatArray;
   var
-    TPA: TPointArray;
-    B: TBox;
-    Text: String;
-    Hit: Int32;
+    tpa: TPointArray;
+    b: TBox;
+    hit: Int32;
   begin
-    if SRL.FindColors(TPA, CTS0(Color), Area) = 0 then
+    if SRL.FindColors(tpa, color, area) = 0 then
       Exit;
 
-    for B in TPA.Cluster(3).ToTBA() do
-      if (B.Width >= 10) and (B.Height >= 10) then
+    for b in tpa.Cluster(3).ToTBA() do
+      if (b.Width() >= 10) and (b.Height() >= 10) then
       begin
-        Hit := OCR.RecognizeNumber(B.Expand(5, Area), TOCRColorFilter.Create([$FFFFFF]), RS_FONT_PLAIN_11);
+        hit := OCR.RecognizeNumber(b.Expand(5, area), TOCRColorFilter.Create([$FFFFFF]), RS_FONT_PLAIN_11);
 
-        Result += [B.Middle(), Hit, Red];
+        Result += [b.Middle(), hit, red];
       end;
   end;
 
 begin
-  Result := Find($0000C0, True) + Find($FF4040, False); // red, blue
+  //Known red hits used: 957,186,240,243
+  //Known blue hits used: 16530749, 16728128
+  Result := Find(CTS2(726, 6, 0.03, 0.01), True) +
+            Find(CTS2(4079358, 1, 33.34, 2.02), False);
 end;
 
 (*
