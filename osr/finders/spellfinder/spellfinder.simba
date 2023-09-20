@@ -1,0 +1,118 @@
+(*
+Spell Finder
+============
+*)
+
+{$DEFINE SRL_SPELLFINDER_INCLUDED}
+{$IFNDEF SRL_OSR}
+  {$I SRL-T/osr.simba}
+{$ENDIF}
+
+type
+  TRSSpellFinderCustomFilter = procedure(constref image, templ: TMufasaBitmap) of object;
+
+  TRSSpellFinder = record(TSRLBaseRecord)
+    IMAGES_ZIP: String;
+    IMAGES_PATH: String;
+    SpellImages: array [ERSSpell] of TMufasaBitmapArray;
+  end;
+
+procedure TRSSpellFinder.Free();
+var
+  spell: ERSSpell;
+  i: Int32;
+begin
+  for spell := ERSSpell(0) to ERSSpell(High(ERSSpell)) do
+    for i := 0 to High(Self.SpellImages[spell]) do
+      Self.SpellImages[spell][i].Free();
+end;
+
+procedure TRSSpellFinder.Setup();
+begin
+  Self.IMAGES_ZIP  := {$macro CURRENT_DIRECTORY} + DirectorySeparator + 'images.zip';
+  Self.IMAGES_PATH := DATAPATH + 'SRL' + DirectorySeparator + 'spellfinder' +
+                      DirectorySeparator + SHA1File(Self.IMAGES_ZIP) +
+                      DirectorySeparator;
+  ForceDirectories(Self.IMAGES_PATH);
+
+  Self.Name := 'SpellFinder';
+  AddOnTerminate(@Self.Free);
+end;
+
+function TRSSpellFinder.GetSpellImages(spell: ERSSpell): TMufasaBitmapArray;
+const
+  SIZES: TStringArray = ['_large.png', '_small.png'];
+var
+  fileName, size: String;
+  spellImage: TMufasaBitmap;
+begin
+  if Self.SpellImages[spell] <> nil then
+    Exit(Self.SpellImages[spell]);
+
+  for size in SIZES do
+  begin
+    fileName := ExpandFileName(Self.IMAGES_PATH + LowerCase(ToStr(spell)) + size);
+
+    if not FileExists(fileName) then
+    begin
+      Self.DebugLn('Unzipping spell sprite: ' + ExtractFileName(fileName) + ' this can take a few seconds');
+      if not UnZipOneFile(Self.IMAGES_ZIP, ExtractFileName(fileName), Self.IMAGES_PATH) then
+        Self.Fatal('Unknown spell: ' + ToStr(spell));
+    end;
+
+    spellImage.Init(Client.GetMBitmaps());
+    spellImage.LoadFromFile(fileName);
+    spellImage.SetName(ToStr(spell));
+    spellImage.ReplaceColor(RS_ITEM_SHADOW, 0);
+    Result += spellImage;
+  end;
+
+  Self.SpellImages[spell] := Result;
+end;
+
+type
+  TRSSpellFinderMatch = record
+    Spell: ERSSpell;
+    Box: TBox;
+    Index: Int32;
+  end;
+  TRSSpellFinderMatchArray = array of TRSSpellFinderMatch;
+
+function TRSSpellFinder.FindAll(spells: array of ERSSpell; box: TBox; maxToFind: Integer = 0): TRSSpellFinderMatchArray;
+var
+  i, j, x1, y1, x2, y2: Int32;
+  SpellBitmaps: array of TMufasaBitmapArray;
+begin
+  for i := 0 to High(spells) do
+    SpellBitmaps += Self.GetSpellImages(spells[i]);
+
+  for i := 0 to High(SpellBitmaps) do
+    for j := 0 to High(SpellBitmaps[i]) do
+      if FindBitmapIn(SpellBitmaps[i][j].getIndex(), x1, y1, box) then
+      begin
+        x2 := x1 + SpellBitmaps[i][j].getWidth() - 1;
+        y2 := y1 + SpellBitmaps[i][j].getHeight() - 1;
+        Result += [spells[i], [x1, y1, x2, y2], i];
+        if Length(Result) = maxToFind then
+          Exit;
+        Break;
+      end;
+end;
+
+function TRSSpellFinder.Find(spells: array of ERSSpell; box: TBox; out match: TRSSpellFinderMatch): Boolean;
+var
+  matches: TRSSpellFinderMatchArray;
+begin
+  matches := Self.FindAll(spells, box, 1);
+
+  Result := Length(matches) = 1;
+  if Result then
+    match := matches[0];
+end;
+
+var
+  SpellFinder: TRSSpellFinder;
+
+begin
+  SpellFinder.Setup();
+end;

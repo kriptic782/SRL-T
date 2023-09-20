@@ -8,10 +8,6 @@ Item Finder
   {$I SRL-T/osr.simba}
 {$ENDIF}
 
-const
-  ITEM_FINDER_IMAGES_ZIP     = {$macro CURRENT_DIRECTORY} + '/item-images.zip';
-  ITEM_FINDER_ITEM_NAMES_FILE  = {$macro CURRENT_DIRECTORY} + '/item-names';
-
 type
   TRSItem = Variant;
   TRSItemArray = array of TRSItem;
@@ -48,7 +44,10 @@ type
   TRSItemFinderCustomFilter = procedure(constref image, templ: TMufasaBitmap) of object;
 
   TRSItemFinder = record(TSRLBaseRecord)
+    IMAGES_ZIP: String;
+    ITEM_NAMES: String;
     IMAGES_PATH: String;
+
     ItemNames: TStringList;
     ItemFilters: array of record
       Name: String;
@@ -76,15 +75,19 @@ end;
 
 procedure TRSItemFinder.Setup();
 begin
-  Self.IMAGES_PATH := {$macro CURRENT_DIRECTORY} + DirectorySeparator + 'images' + DirectorySeparator + SHA1File(ITEM_FINDER_IMAGES_ZIP) + DirectorySeparator;
+  Self.IMAGES_ZIP  := {$macro CURRENT_DIRECTORY} + '/item-images.zip';
+  Self.ITEM_NAMES  := {$macro CURRENT_DIRECTORY} + '/item-names';
+  Self.IMAGES_PATH := DATAPATH + 'SRL' + DirectorySeparator + 'itemfinder' +
+                      DirectorySeparator + SHA1File(Self.IMAGES_ZIP) +
+                      DirectorySeparator;
 
   ForceDirectories(Self.IMAGES_PATH);
 
-  Self.Name := 'Item Finder';
+  Self.Name := 'ItemFinder';
   Self.Similarity := 0.999;
 
   Self.ItemNames.Init();
-  Self.ItemNames.LoadFromFile(ITEM_FINDER_ITEM_NAMES_FILE);
+  Self.ItemNames.LoadFromFile(Self.ITEM_NAMES);
   Self.ItemNames.SetSorted(True);
 
   AddOnTerminate(@Self.Free);
@@ -163,8 +166,8 @@ begin
 
     if not FileExists(fileName) then
     begin
-      Self.DebugLn('Unzipping file sprite: ' + ExtractFileName(fileName) + ' this can take a few seconds');
-      if not UnZipOneFile(ITEM_FINDER_IMAGES_ZIP, ExtractFileName(fileName), Self.IMAGES_PATH) then
+      Self.DebugLn('Unzipping item sprite: ' + ExtractFileName(fileName) + ' this can take a few seconds');
+      if not UnZipOneFile(Self.IMAGES_ZIP, ExtractFileName(fileName), Self.IMAGES_PATH) then
         Self.Fatal('Unknown item: ' + ToString(itemID));
     end;
 
