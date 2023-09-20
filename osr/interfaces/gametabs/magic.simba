@@ -10,240 +10,7 @@ Methods to interact with the magic tab.
 {$ENDIF}
 
 type
-  ERSSpellBook = (
-    STANDARD,
-    ANCIENT,
-    LUNAR,
-    ARCEUUS
-  );
-
-  ERSSpell = (
-    UNKNOWN,
-    
-    // Standard
-    LUMBRIDGE_HOME_TELEPORT,
-    WIND_STRIKE,
-    CONFUSE,
-    ENCHANT_CROSSBOW_BOLT,
-    WATER_STRIKE,
-    LVL1_ENCHANT,
-    EARTH_STRIKE,
-
-    WEAKEN,
-    FIRE_STRIKE,
-    BONES_TO_BANANAS,
-    WIND_BOLT,
-    CURSE,
-    BIND,
-    LOW_LEVEL_ALCHEMY,
-
-    WATER_BOLT,
-    VARROCK_TELEPORT,
-    LVL2_ENCHANT,
-    EARTH_BOLT,
-    LUMBRIDGE_TELEPORT,
-    TELEKINETIC_GRAB,
-    FIRE_BOLT,
-
-    FALADOR_TELEPORT,
-    CRUMBLE_UNDEAD,
-    TELEPORT_TO_HOUSE,
-    WIND_BLAST,
-    SUPERHEAT_ITEM,
-    CAMELOT_TELEPORT,
-    WATER_BLAST,
-
-    LVL3_ENCHANT,
-    IBAN_BLAST,
-    SNARE,
-    MAGIC_DART,
-    ARDOUGNE_TELEPORT,
-    EARTH_BLAST,
-    HIGH_LEVEL_ALCHEMY,
-
-    CHARGE_WATER_ORB,
-    LVL4_ENCHANT,
-    WATCHTOWER_TELEPORT,
-    FIRE_BLAST,
-    CHARGE_EARTH_ORB,
-    BONES_TO_PEACHES,
-    SARADOMIN_STRIKE,
-
-    CLAWS_OF_GUTHIX,
-    FLAMES_OF_ZAMORAK,
-    TROLLHEIM_TELEPORT,
-    WIND_WAVE,
-    CHARGE_FIRE_ORB,
-    TELEPORT_TO_APE_ATOLL,
-    WATER_WAVE,
-
-    CHARGE_AIR_ORB,
-    VULNERABILITY,
-    LVL5_ENCHANT,
-    TELEPORT_TO_KOUREND,
-    EARTH_WAVE,
-    ENFEEBLE,
-    TELEOTHER_LUMBRIDGE,
-
-    FIRE_WAVE,
-    ENTANGLE,
-    STUN,
-    CHARGE,
-    WIND_SURGE,
-    TELEOTHER_FALADOR,
-    WATER_SURGE,
-
-    TELE_BLOCK,
-    STANDARD_TARGET_TELEPORT,
-    LVL6_ENCHANT,
-    TELEOTHER_CAMELOT,
-    EARTH_SURGE,
-    LVL7_ENCHANT,
-    FIRE_SURGE,
-    
-    // Ancient
-    EDGEVILLE_HOME_TELEPORT,
-    SMOKE_RUSH,
-    SHADOW_RUSH,
-    PADDEWWA_TELEPORT,
-
-    BLOOD_RUSH,
-    ICE_RUSH,
-    SENNTISTEN_TELEPORT,
-    SMOKE_BURST,
-
-    SHADOW_BURST,
-    KHARYRLL_TELEPORT,
-    BLOOD_BURST,
-    ICE_BURST,
-
-    LASSAR_TELEPORT,
-    SMOKE_BLITZ,
-    SHADOW_BLITZ,
-    DAREEYAK_TELEPORT,
-
-    BLOOD_BLITZ,
-    ICE_BLITZ,
-    CARRALLANGAR_TELEPORT,
-    ANCIENT_TARGET_TELEPORT,
-
-    SMOKE_BARRAGE,
-    SHADOW_BARRAGE,
-    ANNAKARL_TELEPORT,
-    BLOOD_BARRAGE,
-
-    ICE_BARRAGE,
-    GHORROCK_TELEPORT,
-    
-    // Lunar
-    LUNAR_HOME_TELEPORT,
-    BAKE_PIE,
-    GEOMANCY,
-    CURE_PLANT,
-    MONSTER_EXAMINE,
-
-    NPC_CONTACT,
-    CURE_OTHER,
-    HUMIDIFY,
-    MOONCLAN_TELEPORT,
-    TELE_GROUP_MOONCLAN,
-
-    CURE_ME,
-    OURANIA_TELEPORT,
-    HUNTER_KIT,
-    WATERBIRTH_TELEPORT,
-    TELE_GROUP_WATERBIRTH,
-
-    CURE_GROUP,
-    STAT_SPY,
-    BARBARIAN_TELEPORT,
-    TELE_GROUP_BARBARIAN,
-    SPIN_FLAX,
-
-    SUPERGLASS_MAKE,
-    TAN_LEATHER,
-    KHAZARD_TELEPORT,
-    TELE_GROUP_KHAZARD,
-    DREAM,
-
-    STRING_JEWELLERY,
-    STAT_RESTORE_POT_SHARE,
-    MAGIC_IMBUE,
-    FERTILE_SOIL,
-    BOOST_POTION_SHARE,
-
-    FISHING_GUILD_TELEPORT,
-    BOUNTY_TELEPORT,
-    TELE_GROUP_FISHING_GUILD,
-    PLANK_MAKE,
-    CATHERBY_TELEPORT,
-
-    TELE_GROUP_CATHERBY,
-    RECHARGE_DRAGONSTONE,
-    ICE_PLATEU_TELEPORT,
-    TELE_GROUP_ICE_PLATEU,
-    ENERGY_TRANSFER,
-
-    HEAL_OTHER,
-    VENGEANCE_OTHER,
-    VENGEANCE,
-    HEAL_GROUP,
-    SPELLBOOK_SWAP,
-    
-    // Arceuus
-    ARCEUUS_HOME_TELEPORT,
-    ARCEUUS_LIBRARY_TELEPORT,
-    BASIC_REANIMATION,
-    DRAYNOR_MANOR_TELEPORT,
-    BATTLEFRONT_TELEPORT,
-
-    MIND_ALTAR_TELEPORT,
-    RESPAWN_TELEPORT,
-    GHOSTLY_GRASP,
-    RESURRECT_LESSER_GHOST,
-    RESURRECT_LESSER_SKELETON,
-
-    RESURRECT_LESSER_ZOMBIE,
-    SALVE_GRAVEYARD_TELEPORT,
-    ADEPT_REANIMATION,
-    INFERIOR_DEMONBANE,
-    SHADOW_VEIL,
-
-    FENKENSTRAINS_CASTLE_TELEPORT,
-    DARK_LURE,
-    SKELETAL_GRASP,
-    RESURRECT_SUPERIOR_GHOST,
-    RESURRECT_SUPERIOR_SKELETON,
-
-    RESURRECT_SUPERIOR_ZOMBIE,
-    MARK_OF_DARKNESS,
-    WEST_ARDOUGNE_TELEPORT,
-    SUPERIOR_DEMONBANE,
-    LESSER_CORRUPTION,
-
-    HARMONY_ISLAND_TELEPORT,
-    VILE_VIGOUR,
-    DEGRIME,
-    CEMETERY_TELEPORT,
-    EXPERT_REANIMATION,
-
-    WARD_OF_ARCEUUS,
-    RESURRECT_GREATER_GHOST,
-    RESURRECT_GREATER_SKELETON,
-    RESURRECT_GREATER_ZOMBIE,
-    RESURRECT_CROPS,
-
-    UNDEAD_GRASP,
-    DEATH_CHARGE,
-    DARK_DEMONBANE,
-    BARROWS_TELEPORT,
-    DEMONIC_OFFERING,
-
-    GREATER_CORRUPTION,
-    MASTER_REANIMATION,
-    APE_ATOLL_TELEPORT,
-    SINISTER_OFFERING
-  );
+  ERSSpellBook = (STANDARD, ANCIENT, LUNAR, ARCEUUS);
   TRSSpellSet = set of ERSSpell;
 
 const
@@ -307,7 +74,8 @@ const
     ERSSpell.CARRALLANGAR_TELEPORT,
     ERSSpell.ARCEUUS_HOME_TELEPORT,
     ERSSpell.WATERBIRTH_TELEPORT,
-    ERSSpell.SENNTISTEN_TELEPORT]);
+    ERSSpell.SENNTISTEN_TELEPORT
+  ]);
   
 type
   TRSMagic = type TRSInterface;
@@ -321,7 +89,7 @@ Initializes **Magic** variables.
 
 .. note:: This is automatically called on the **Magic** variable.
 *)
-procedure TRSMagic.Setup; override;
+procedure TRSMagic.Setup(); override;
 begin
   inherited;
   
@@ -350,16 +118,16 @@ end;
 (*
 Magic.IsOpen
 ~~~~~~~~~~~~
-.. pascal:: function TRSMagic.IsOpen: Boolean;
+.. pascal:: function TRSMagic.IsOpen(): Boolean;
 
 Returns true if the Magic tab is open.
 
 Example
 -------
 
-  WriteLn Magic.IsOpen;
+  WriteLn Magic.IsOpen();
 *)
-function TRSMagic.IsOpen: Boolean;
+function TRSMagic.IsOpen(): Boolean;
 begin
   Result := (GameTabs.GetCurrentTab() = ERSGameTab.MAGIC);
 end;
@@ -367,16 +135,16 @@ end;
 (*
 Magic.Open
 ~~~~~~~~~~
-.. pascal:: function TRSMagic.Open: Boolean;
+.. pascal:: function TRSMagic.Open(): Boolean;
 
 Attempts to open the magic tab.
 
 Example
 -------
 
-  Magic.Open;
+  Magic.Open();
 *)
-function TRSMagic.Open: Boolean;
+function TRSMagic.Open(): Boolean;
 begin
   Result := Self.IsOpen() or GameTabs.Open(ERSGameTab.MAGIC);
 end;
@@ -384,16 +152,16 @@ end;
 (*
 Magic.GetSpellBook
 ~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.GetSpellBook: ERSSpellBook;
+.. pascal:: function TRSMagic.GetSpellBook(): ERSSpellBook;
 
 Returns the current spell book.
 
 Example
 -------
 
-  WriteLn Magic.GetSpellBook;
+  WriteLn Magic.GetSpellBook();
 *)
-function TRSMagic.GetSpellBook: ERSSpellBook;
+function TRSMagic.GetSpellBook(): ERSSpellBook;
 const
   ARCEUUS_COLOR := CTS1(9801276, 78); // Colors of the book on the gametab
   ANCIENT_COLOR := CTS1(8077142, 28);
@@ -409,7 +177,7 @@ end;
 (*
 Magic.IsSpellBook
 ~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.IsSpellBook(SpellBook: ERSSpellBook): Boolean;
+.. pascal:: function TRSMagic.IsSpellBook(book: ERSSpellBook): Boolean;
 
 Returns true if we are using the specified spell book.
 
@@ -418,22 +186,22 @@ Example
 
   WriteLn Magic.IsSpellBook(ERSSpellBook.LUNAR);
 *)
-function TRSMagic.IsSpellBook(SpellBook: ERSSpellBook): Boolean;
+function TRSMagic.IsSpellBook(book: ERSSpellBook): Boolean;
 begin
-  Result := SpellBook = Self.GetSpellBook();
+  Result := book = Self.GetSpellBook();
 end;
 
 (*
 Magic.GetSpellBoxes
 ~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.GetSpellBoxes(out Spellbook: ERSSpellBook): TBoxArray;
+.. pascal:: function TRSMagic.GetSpellBoxes(out book: ERSSpellBook): TBoxArray;
 
 Internal function to get the bounds of the spells of the current spell book.
 *)
-function TRSMagic.GetSpellBoxes(out Spellbook: ERSSpellBook): TBoxArray;
+function TRSMagic.GetSpellBoxes(out book: ERSSpellBook): TBoxArray;
 begin 
-  Spellbook := Self.GetSpellBook;
-  case Spellbook of
+  book := Self.GetSpellBook();
+  case book of
     ERSSpellBook.STANDARD: Result := Grid(7, 10, 23, 23, [3, 1],   [Self.X1 + 2, Self.Y1 + 1]);
     ERSSpellBook.ARCEUUS:  Result := Grid(5, 9,  23, 23, [17, 4],  [Self.X1, Self.Y1 + 1]);
     ERSSpellBook.LUNAR:    Result := Grid(5, 9,  23, 23, [17, 4],  [Self.X1, Self.Y1 + 1]);
@@ -444,44 +212,44 @@ end;
 (*
 Magic.GetSpellBox
 ~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.GetSpellBox(Spell: ERSSpell; out Box: TBox): Boolean;
+.. pascal:: function TRSMagic.GetSpellBox(spell: ERSSpell; out box: TBox): Boolean;
 
 Internal function to get the specified spell bounds.
 *)
-function TRSMagic.GetSpellBox(Spell: ERSSpell; out Box: TBox): Boolean;
+function TRSMagic.GetSpellBox(spell: ERSSpell; out box: TBox): Boolean;
 var
-  Spellbook: ERSSpellBook;
-  Boxes: TBoxArray;
+  book: ERSSpellBook;
+  boxes: TBoxArray;
 begin
-  Boxes := Self.GetSpellBoxes(Spellbook);
+  boxes := Self.GetSpellBoxes(book);
   
-  case Spellbook of
+  case book of
     ERSSpellBook.STANDARD: 
       begin
-        Result := (Spell in RS_STANDARD_SPELLS); 
+        Result := (spell in RS_STANDARD_SPELLS);
         if Result then 
-          Box := Boxes[Spell - Ord(RS_STANDARD_SPELL_FIRST)];
+          box := boxes[spell - Ord(RS_STANDARD_SPELL_FIRST)];
       end;
     
     ERSSpellBook.ARCEUUS: 
       begin
-        Result := (Spell in RS_ARCEUUS_SPELLS); 
+        Result := (spell in RS_ARCEUUS_SPELLS);
         if Result then 
-          Box := Boxes[Spell - Ord(RS_ARCEUUS_SPELL_FIRST)];
+          box := boxes[spell - Ord(RS_ARCEUUS_SPELL_FIRST)];
       end;
       
     ERSSpellBook.LUNAR: 
       begin
-        Result := (Spell in RS_LUNAR_SPELLS); 
+        Result := (spell in RS_LUNAR_SPELLS);
         if Result then 
-          Box := Boxes[Spell - Ord(RS_LUNAR_SPELL_FIRST)];
+          box := boxes[spell - Ord(RS_LUNAR_SPELL_FIRST)];
       end;
       
     ERSSpellBook.ANCIENT: 
       begin
-        Result := (Spell in RS_ANCIENT_SPELLS); 
+        Result := (spell in RS_ANCIENT_SPELLS);
         if Result then 
-          Box := Boxes[Spell - Ord(RS_ANCIENT_SPELL_FIRST)];
+          box := boxes[spell - Ord(RS_ANCIENT_SPELL_FIRST)];
       end;     
   end;
 end;
@@ -489,7 +257,7 @@ end;
 (*
 Magic.MouseSpell
 ~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.MouseSpell(Spell: ERSSpell; Button: Int32 = MOUSE_MOVE): Boolean;
+.. pascal:: function TRSMagic.MouseSpell(spell: ERSSpell; button: Int32 = MOUSE_MOVE): Boolean;
 
 Used to interact with the specified spell.
 
@@ -498,24 +266,24 @@ Example
 
   Magic.MouseSpell(ERSSpell.HIGH_LEVEL_ALCHEMY, MOUSE_LEFT);
 *)
-function TRSMagic.MouseSpell(Spell: ERSSpell; Button: Int32 = MOUSE_MOVE): Boolean;
+function TRSMagic.MouseSpell(spell: ERSSpell; button: Int32 = MOUSE_MOVE): Boolean;
 var
-  Box: TBox;
+  box: TBox;
 begin
-  Result := Self.Open() and Self.GetSpellBox(Spell, Box);
+  Result := Self.Open() and Self.GetSpellBox(spell, box);
 
   if Result then
   begin
-    Mouse.Move(Box);
-    if (Button <> MOUSE_MOVE) then
-      Mouse.Click(Button);
+    Mouse.Move(box);
+    if (button <> MOUSE_MOVE) then
+      Mouse.Click(button);
   end;
 end;
 
 (*
 Magic.CanActivate
 ~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.CanActivate(Spell: ERSSpell): Boolean;
+.. pascal:: function TRSMagic.CanActivate(spell: ERSSpell): Boolean;
 
 Returns true if we can activate the spell (we have runes, level and the spell unlocked).
 
@@ -524,17 +292,17 @@ Example
 
   Magic.CanActivate(ERSSpell.HIGH_LEVEL_ALCHEMY);
 *)
-function TRSMagic.CanActivate(Spell: ERSSpell): Boolean;
+function TRSMagic.CanActivate(spell: ERSSpell): Boolean;
 var
-  Box: TBox;
+  box: TBox;
 begin
-  Result := Self.GetSpellBox(Spell, Box) and Self.Open() and (SRL.PeakBrightness(Box) > 35);
+  Result := Self.GetSpellBox(spell, box) and Self.Open() and (SRL.PeakBrightness(box) > 35);
 end;
 
 (*
 Magic.IsSpellSelected
 ~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.IsSpellSelected(Spell: ERSSpell): Boolean;
+.. pascal:: function TRSMagic.IsSpellSelected(spell: ERSSpell): Boolean;
 
 Returns true if the specified spell is currently active (with white outline).
 
@@ -543,17 +311,19 @@ Example
 
   Magic.IsSpellSelected(ERSSpell.ICE_BARRAGE);
 *)
-function TRSMagic.IsSpellSelected(Spell: ERSSpell): Boolean; 
+function TRSMagic.IsSpellSelected(spell: ERSSpell): Boolean;
 var
-  Box: TBox;
+  box: TBox;
 begin
-  Result := Self.GetSpellBox(Spell, Box) and Self.Open() and (SRL.CountColor($FFFFFF, Box) > 10);
+  if spell in RS_INSTANT_THROW_SPELLS then
+    Exit;
+  Result := Self.GetSpellBox(spell, box) and Self.Open() and (SRL.CountColor($FFFFFF, box) > 10);
 end;
 
 (*
 Magic.GetSelectedSpell
 ~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.GetSelectedSpell: ERSSpell;
+.. pascal:: function TRSMagic.GetSelectedspell: ERSSpell;
 
 Returns the currently selected spell.
 
@@ -562,31 +332,42 @@ Example
 
   WriteLn Magic.GetSelectedSpell;
 *)
-function TRSMagic.GetSelectedSpell: ERSSpell;
+function TRSMagic.GetSelectedSpell(): ERSSpell;
 var
-  I: Int32;
-  Spellbook: ERSSpellBook;
-  Boxes: TBoxArray;
+  i: Int32;
+  book: ERSSpellBook;
+  boxes: TBoxArray;
 begin
   if not Self.IsOpen() then
     Exit;
     
-  Boxes := Self.GetSpellBoxes(Spellbook);
+  boxes := Self.GetSpellBoxes(book);
  
-  for I := 0 to High(Boxes) do 
-    if SRL.CountColor($FFFFFF, Boxes[I]) > 30 then
-    case SpellBook of
-      ERSSpellBook.STANDARD: Exit(ERSSpell(RS_STANDARD_SPELL_FIRST + I));
-      ERSSpellBook.ARCEUUS:  Exit(ERSSpell(RS_ARCEUUS_SPELL_FIRST + I));
-      ERSSpellBook.LUNAR:    Exit(ERSSpell(RS_LUNAR_SPELL_FIRST + I));
-      ERSSpellBook.ANCIENT:  Exit(ERSSpell(RS_ANCIENT_SPELL_FIRST + I));
+  for I := 0 to High(boxes) do
+    if SRL.CountColor($FFFFFF, boxes[i]) > 30 then
+    case book of
+      ERSSpellBook.STANDARD: Exit(ERSSpell(RS_STANDARD_SPELL_FIRST + i));
+      ERSSpellBook.ARCEUUS:  Exit(ERSSpell(RS_ARCEUUS_SPELL_FIRST + i));
+      ERSSpellBook.LUNAR:    Exit(ERSSpell(RS_LUNAR_SPELL_FIRST + i));
+      ERSSpellBook.ANCIENT:  Exit(ERSSpell(RS_ANCIENT_SPELL_FIRST + i));
     end;
+end;
+
+function TRSMagic.SpellWasCast(spell: ERSSpell): Boolean;
+begin
+  if spell in RS_INSTANT_THROW_SPELLS then
+    Exit(True);
+
+  if Self.IsOpen() and (Self.GetSelectedSpell() = spell) then
+    Exit(True);
+
+  Result := Inventory.IsOpen();
 end;
 
 (*
 Magic.CastSpell
 ~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.CastSpell(Spell: ERSSpell): Boolean;
+.. pascal:: function TRSMagic.CastSpell(spell: ERSSpell): Boolean;
 
 Attempts to cast the specified spell.
 
@@ -595,69 +376,62 @@ Example
 
   Magic.CastSpell(ERSSpell.LOW_LEVEL_ALCHEMY);
 *)
-function TRSMagic.CastSpell(Spell: ERSSpell): Boolean;
+function TRSMagic.CastSpell(spell: ERSSpell): Boolean;
 var
-  Selected: ERSSpell;
+  selected: ERSSpell;
 begin
   if not Self.Open() then
     Exit(False); 
 
-  Selected := Self.GetSelectedSpell();
-  if (Selected := Self.GetSelectedSpell()) = Spell then
+  selected := Self.GetSelectedSpell();
+  if selected = spell then
     Exit(True);
     
   // Unselect
-  if (Selected <> ERSSpell.UNKNOWN) then
-    Self.MouseSpell(Selected, MOUSE_LEFT);
+  if (selected <> ERSSpell.UNKNOWN) then
+    Self.MouseSpell(selected, MOUSE_LEFT);
 
-  // spells that doesn't activete, but are thrown instantly
-  if Spell in RS_INSTANT_THROW_SPELLS then
-  begin
-    Self.MouseSpell(Spell, MOUSE_LEFT);
-    WaitUntil(Self.IsOpen(), 100, SRL.TruncatedGauss(1000, 2000));
-    Exit(True);
-  end;
-
-  Result := Self.MouseSpell(Spell, MOUSE_LEFT) and WaitUntil((Self.IsOpen() and (Self.GetSelectedSpell() = Spell)) or Inventory.IsOpen(), 100, SRL.TruncatedGauss(1000, 2000));
+  Result := Self.MouseSpell(spell, MOUSE_LEFT) and
+            WaitUntil(Self.SpellWasCast(spell), 300, SRL.TruncatedGauss(1000, 2000));
 end;
 
-procedure TRSMagic.Draw(Bitmap: TMufasaBitmap); override;
+procedure TRSMagic.Draw(bitmap: TMufasaBitmap); override;
 var
-  Spellbook: ERSSpellBook;
+  book: ERSSpellBook;
 begin
   if not Self.IsOpen() then
     Exit;
 
   inherited();
 
-  Bitmap.DrawBoxes(Self.GetSpellBoxes(Spellbook), $00FFFF);
+  bitmap.DrawBoxes(Self.GetSpellBoxes(book), $00FFFF);
 end;
 
 (*
 var Magic
-~~~~~~~~~~
+~~~~~~~~~
   Global Magic variable.
 *)
 var
   Magic: TRSMagic;
 
-procedure TRSClient.ClientModeChanged; override;
+procedure TRSClient.ClientModeChanged(); override;
 begin
   inherited;
 
   Magic.SetupAlignment(Self.Mode);
 end;
 
-procedure TSRL.Setup; override;
+procedure TSRL.Setup(); override;
 begin
   inherited;
 
   Magic.Setup();
 end;
 
-procedure TSRL.Debug(Bitmap: TMufasaBitmap); override;
+procedure TSRL.Debug(bitmap: TMufasaBitmap); override;
 begin
   inherited;
 
-  Magic.Draw(Bitmap);
+  Magic.Draw(bitmap);
 end;

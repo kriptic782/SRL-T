@@ -55,6 +55,7 @@ end;
 {$IFNDEF SRL_RSCLIENT_INCLUDED}             {$I osr/rsclient.simba}
 {$IFNDEF SRL_CHOOSEOPTION_INCLUDED}         {$I osr/interfaces/chooseoption.simba}
 {$IFNDEF SRL_ITEM_INTERFACE_INCLUDED}       {$I osr/interfaces/core/item_interface.simba}
+{$IFNDEF SRL_SPELLFINDER_INCLUDED}          {$I osr/finders/spellfinder/spellfinder.simba}
 {$IFNDEF SRL_INTERFACE_INCLUDED}            {$I osr/interfaces/core/interface.simba}
 {$IFNDEF SRL_CHATBUTTONS_INCLUDED}          {$I osr/interfaces/chatbuttons.simba}
 {$IFNDEF SRL_LOGIN_INCLUDED}                {$I osr/interfaces/login.simba}
@@ -82,7 +83,6 @@ end;
 {$IFNDEF SRL_ANTIBAN_INCLUDED}              {$I osr/antiban.simba}
 {$IFNDEF SRL_COMBAT_INCLUDED}               {$I osr/interfaces/gametabs/combat.simba}
 {$IFNDEF SRL_MAGIC_INCLUDED}                {$I osr/interfaces/gametabs/magic.simba}
-{$IFNDEF SRL_SPELLFINDER_INCLUDED}          {$I osr/finders/spellfinder/spellfinder.simba}
 
 
 {$IFNDEF SRL_PRAYER_INCLUDED}               {$I osr/interfaces/gametabs/prayer.simba}
