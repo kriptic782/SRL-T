@@ -1,3 +1,12 @@
+# [2.5.0](https://github.com/Torwent/SRL-T/compare/v2.4.16...v2.5.0) (2023-09-20)
+
+
+### Features
+
+* add spellfinder.simba ([1e12b86](https://github.com/Torwent/SRL-T/commit/1e12b865336a1e7132e52d1596e89505ae284f95))
+
+
+
 ## [2.4.16](https://github.com/Torwent/SRL-T/compare/v2.4.15...v2.4.16) (2023-09-16)
 
 
@@ -31,16 +40,6 @@
 ### Bug Fixes
 
 * **combat:** Flight's Combat tab fixes ([30286ff](https://github.com/Torwent/SRL-T/commit/30286ff0df2d8f05b050995911f5294983dfae7c))
-
-
-
-## [2.4.12](https://github.com/Torwent/SRL-T/compare/v2.4.11...v2.4.12) (2023-09-10)
-
-
-### Bug Fixes
-
-* added slacky's mm2ms fixes ([f3ee359](https://github.com/Torwent/SRL-T/commit/f3ee359409c0fd433a8ca3f6beb8604a3701be16))
-* added TMouseMovementEx to TMouse ([344c8b5](https://github.com/Torwent/SRL-T/commit/344c8b5a1fa71d3560a18e8d815b3dcdc9c54504))
 
 
 
