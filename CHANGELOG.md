@@ -1,3 +1,12 @@
+## [2.5.1](https://github.com/Torwent/SRL-T/compare/v2.5.0...v2.5.1) (2023-09-20)
+
+
+### Bug Fixes
+
+* move ERSSpell to the spellfinder file ([f1cd6d8](https://github.com/Torwent/SRL-T/commit/f1cd6d8bf888a02803316d8c94a976d2ea35f1df))
+
+
+
 # [2.5.0](https://github.com/Torwent/SRL-T/compare/v2.4.16...v2.5.0) (2023-09-20)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **itemfinder:** add new items ([455beca](https://github.com/Torwent/SRL-T/commit/455beca3edde395273619660d31a5fefc95a38d7))
-
-
-
-## [2.4.13](https://github.com/Torwent/SRL-T/compare/v2.4.12...v2.4.13) (2023-09-12)
-
-
-### Bug Fixes
-
-* **combat:** Flight's Combat tab fixes ([30286ff](https://github.com/Torwent/SRL-T/commit/30286ff0df2d8f05b050995911f5294983dfae7c))
 
 
 
