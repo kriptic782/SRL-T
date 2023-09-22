@@ -1,3 +1,12 @@
+# [2.6.0](https://github.com/Torwent/SRL-T/compare/v2.5.1...v2.6.0) (2023-09-22)
+
+
+### Features
+
+* magic tab now uses the new spellfinder ([be8ce9e](https://github.com/Torwent/SRL-T/commit/be8ce9e0da1e446e093cbf4786e9ea3e22b6ac37))
+
+
+
 ## [2.5.1](https://github.com/Torwent/SRL-T/compare/v2.5.0...v2.5.1) (2023-09-20)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **mainscreen:** read notes ([e2fa2bf](https://github.com/Torwent/SRL-T/commit/e2fa2bf58495a14ae8f789c1aa5a917451e6a177))
-
-
-
-## [2.4.14](https://github.com/Torwent/SRL-T/compare/v2.4.13...v2.4.14) (2023-09-14)
-
-
-### Bug Fixes
-
-* **itemfinder:** add new items ([455beca](https://github.com/Torwent/SRL-T/commit/455beca3edde395273619660d31a5fefc95a38d7))
 
 
 
