@@ -239,7 +239,7 @@ var
   p, destination: TPoint;
 begin
   p := Mouse.Position();
-  destination := GameTab.Bounds().NearestEdge(p);
+  destination := GameTab.Bounds().Expand(10).NearestEdge(p);
   Mouse.OnMovingEx := @Self._CloseInfoMouseCallback;
   Mouse.Move(destination);
   Mouse.OnMovingEx := nil;
