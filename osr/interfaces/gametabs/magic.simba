@@ -19,13 +19,13 @@ const
 
   RS_ANCIENT_SPELL_FIRST  = ERSSpell.EDGEVILLE_HOME_TELEPORT;
   RS_ANCIENT_SPELL_LAST   = ERSSpell.GHORROCK_TELEPORT;
-  
+
   RS_LUNAR_SPELL_FIRST    = ERSSpell.LUNAR_HOME_TELEPORT;
   RS_LUNAR_SPELL_LAST     = ERSSpell.SPELLBOOK_SWAP;
 
   RS_ARCEUUS_SPELL_FIRST  = ERSSpell.ARCEUUS_HOME_TELEPORT;
   RS_ARCEUUS_SPELL_LAST   = ERSSpell.SINISTER_OFFERING;
-  
+
   RS_STANDARD_SPELLS = [RS_STANDARD_SPELL_FIRST..RS_STANDARD_SPELL_LAST];
   RS_ANCIENT_SPELLS  = [RS_ANCIENT_SPELL_FIRST..RS_ANCIENT_SPELL_LAST];
   RS_LUNAR_SPELLS    = [RS_LUNAR_SPELL_FIRST..RS_LUNAR_SPELL_LAST];
@@ -76,7 +76,7 @@ const
     ERSSpell.WATERBIRTH_TELEPORT,
     ERSSpell.SENNTISTEN_TELEPORT
   ]);
-  
+
 type
   TRSMagic = type TRSInterface;
 
@@ -92,7 +92,7 @@ Initializes **Magic** variables.
 procedure TRSMagic.Setup(); override;
 begin
   inherited;
-  
+
   Self.Name := 'Magic';
 end;
 
@@ -167,11 +167,12 @@ const
   ANCIENT_COLOR := CTS1(8077142, 28);
   LUNAR_COLOR   := CTS1(12761525, 27);
 var
-  Box: TBox := Gametabs.GetTabBox(ERSGameTab.MAGIC); 
+  box: TBox;
 begin
-  if SRL.CountColor(ARCEUUS_COLOR, Box) >= 85 then Exit(ERSSpellBook.ARCEUUS);
-  if SRL.CountColor(ANCIENT_COLOR, Box) >= 85 then Exit(ERSSpellBook.ANCIENT);
-  if SRL.CountColor(LUNAR_COLOR,   Box) >= 85 then Exit(ERSSpellBook.LUNAR);
+  box := Gametabs.GetTabBox(ERSGameTab.MAGIC);
+  if SRL.CountColor(ARCEUUS_COLOR, box) >= 85 then Exit(ERSSpellBook.ARCEUUS);
+  if SRL.CountColor(ANCIENT_COLOR, box) >= 85 then Exit(ERSSpellBook.ANCIENT);
+  if SRL.CountColor(LUNAR_COLOR,   box) >= 85 then Exit(ERSSpellBook.LUNAR);
 end;
 
 (*
@@ -192,14 +193,70 @@ begin
 end;
 
 (*
+Magic.InfoIsOpen
+~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMagic.InfoIsOpen(): Boolean;
+
+Returns true if the info black box about a spell is open.
+
+Example
+-------
+
+  WriteLn Magic.IsSpellBook(ERSSpellBook.LUNAR);
+*)
+function TRSMagic.InfoIsOpen(): Boolean;
+begin
+  Result := SRL.CountColor(1731247, GameTab.Bounds()) > 0;
+end;
+
+(*
+Magic._CloseInfoMouseCallback
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: procedure TRSMagic._CloseInfoMouseCallback(sender: PMouse; var x, y: Double; var done: Boolean);
+
+Mouse movement callback to stop mouse movement when the spell info box closes.
+Do not touch this if you don't understand it.
+*)
+procedure TRSMagic._CloseInfoMouseCallback({$H-}sender: PMouse; var x, y: Double; {$H+}var done: Boolean);
+begin
+  done := not Self.InfoIsOpen() and SRL.Dice(30);
+end;
+
+(*
+Magic.CloseInfo
+~~~~~~~~~~~~~~~
+.. pascal:: function TRSMagic.CloseInfo(): Boolean;
+
+Returns true if the info black box about a spell is open.
+
+Example
+-------
+
+  WriteLn Magic.CloseInfo();
+*)
+function TRSMagic.CloseInfo(): Boolean;
+var
+  p, destination: TPoint;
+begin
+  p := Mouse.Position();
+  destination := GameTab.Bounds().NearestEdge(p);
+  Mouse.OnMovingEx := @Self._CloseInfoMouseCallback;
+  Mouse.Move(destination);
+  Mouse.OnMovingEx := nil;
+
+  Result := not Self.InfoIsOpen();
+end;
+
+
+(*
 Magic.GetSpellBoxes
 ~~~~~~~~~~~~~~~~~~~
 .. pascal:: function TRSMagic.GetSpellBoxes(out book: ERSSpellBook): TBoxArray;
 
 Internal function to get the bounds of the spells of the current spell book.
 *)
-function TRSMagic.GetSpellBoxes(out book: ERSSpellBook): TBoxArray;
-begin 
+function TRSMagic.GetSpellBoxes(out book: ERSSpellBook): TBoxArray; deprecated 'Use Magic.FindSpell() instead!';
+begin
   book := Self.GetSpellBook();
   case book of
     ERSSpellBook.STANDARD: Result := Grid(7, 10, 23, 23, [3, 1],   [Self.X1 + 2, Self.Y1 + 1]);
@@ -209,6 +266,29 @@ begin
   end;
 end;
 
+
+(*
+Magic.FindSpell
+~~~~~~~~~~~~~~~
+.. pascal:: function TRSMagic.FindSpell(spell: ERSSpell; out box: TBox): Boolean;
+
+Return true or false wether we found a spell or not and return it's bounds if found.
+*)
+function TRSMagic.FindSpell(spell: ERSSpell; out box: TBox): Boolean;
+var
+  match: TRSSpellFinderMatch;
+begin
+  if not Self.IsOpen() then
+    Exit;
+
+  if Self.InfoIsOpen() and not Self.CloseInfo() then
+    Exit;
+
+  Result := SpellFinder.Find([spell], GameTab.Bounds(), match);
+  if Result then
+    box := match.Box.Expand(1); //1 pixel larger to detect if it's selected.
+end;
+
 (*
 Magic.GetSpellBox
 ~~~~~~~~~~~~~~~~~
@@ -216,42 +296,112 @@ Magic.GetSpellBox
 
 Internal function to get the specified spell bounds.
 *)
-function TRSMagic.GetSpellBox(spell: ERSSpell; out box: TBox): Boolean;
+function TRSMagic.GetSpellBox(spell: ERSSpell; out box: TBox): Boolean; deprecated 'Use Magic.FindSpell() instead!';
 var
   book: ERSSpellBook;
   boxes: TBoxArray;
 begin
-  boxes := Self.GetSpellBoxes(book);
-  
+  boxes := {$H-}Self.GetSpellBoxes(book);{$H+}
+
   case book of
-    ERSSpellBook.STANDARD: 
+    ERSSpellBook.STANDARD:
       begin
         Result := (spell in RS_STANDARD_SPELLS);
-        if Result then 
+        if Result then
           box := boxes[spell - Ord(RS_STANDARD_SPELL_FIRST)];
       end;
-    
-    ERSSpellBook.ARCEUUS: 
+
+    ERSSpellBook.ARCEUUS:
       begin
         Result := (spell in RS_ARCEUUS_SPELLS);
-        if Result then 
+        if Result then
           box := boxes[spell - Ord(RS_ARCEUUS_SPELL_FIRST)];
       end;
-      
-    ERSSpellBook.LUNAR: 
+
+    ERSSpellBook.LUNAR:
       begin
         Result := (spell in RS_LUNAR_SPELLS);
-        if Result then 
+        if Result then
           box := boxes[spell - Ord(RS_LUNAR_SPELL_FIRST)];
       end;
-      
-    ERSSpellBook.ANCIENT: 
+
+    ERSSpellBook.ANCIENT:
       begin
         Result := (spell in RS_ANCIENT_SPELLS);
-        if Result then 
+        if Result then
           box := boxes[spell - Ord(RS_ANCIENT_SPELL_FIRST)];
-      end;     
+      end;
   end;
+end;
+
+
+(*
+Magic.ContainsSpell
+~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMagic.ContainsSpell(spell: ERSSpell): Boolean;
+
+Return true or false wether we found a spell or not.
+*)
+function TRSMagic.ContainsSpell(spell: ERSSpell): Boolean;
+var
+  match: TRSSpellFinderMatch;
+begin
+  if not Self.IsOpen() then
+    Exit;
+
+  if Self.InfoIsOpen() and not Self.CloseInfo() then
+    Exit;
+
+  Result := SpellFinder.Find([spell], GameTab.Bounds(), match);
+end;
+
+
+(*
+Magic.MouseSpell
+~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMagic.MouseSpell(spell: ERSSpell): Boolean;
+
+Used to move the mouse to the specified spell.
+
+Example
+-------
+
+  Magic.MouseSpell(ERSSpell.HIGH_LEVEL_ALCHEMY);
+*)
+function TRSMagic.MouseSpell(spell: ERSSpell): Boolean;
+var
+  box: TBox;
+begin
+  Result := Self.Open() and Self.FindSpell(spell, box);
+
+  if Result then
+    Mouse.Move(box);
+end;
+
+(*
+Magic.ClickSpell
+~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMagic.ClickSpell(spell: ERSSpell; option: String = ''): Boolean;
+
+Used to interact with the specified spell.
+
+Example
+-------
+
+  Magic.ClickSpell(ERSSpell.HIGH_LEVEL_ALCHEMY);
+*)
+function TRSMagic.ClickSpell(spell: ERSSpell; option: String = ''): Boolean;
+begin
+  if not Self.MouseSpell(spell) then
+    Exit;
+
+  if option = '' then
+  begin
+    Mouse.Click(MOUSE_LEFT);
+    Exit(True);
+  end;
+
+  Result := ChooseOption.Select(option);
 end;
 
 (*
@@ -266,11 +416,11 @@ Example
 
   Magic.MouseSpell(ERSSpell.HIGH_LEVEL_ALCHEMY, MOUSE_LEFT);
 *)
-function TRSMagic.MouseSpell(spell: ERSSpell; button: Int32 = MOUSE_MOVE): Boolean;
+function TRSMagic.MouseSpell(spell: ERSSpell; button: Int32): Boolean; overload; deprecated 'Use Magic.MouseSpell() and Magic.ClickSpell() instead!';
 var
   box: TBox;
 begin
-  Result := Self.Open() and Self.GetSpellBox(spell, box);
+  Result := Self.Open() and {$H-}Self.GetSpellBox(spell, box){$H+};
 
   if Result then
   begin
@@ -280,44 +430,46 @@ begin
   end;
 end;
 
-(*
-Magic.CanActivate
-~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.CanActivate(spell: ERSSpell): Boolean;
 
-Returns true if we can activate the spell (we have runes, level and the spell unlocked).
+(*
+Magic.FindSelected
+~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMagic.FindSelected(out tpa: TPointArray): Boolean;
+
+Returns the true if we have a selected spell and returns it's tpa.
 
 Example
 -------
 
-  Magic.CanActivate(ERSSpell.HIGH_LEVEL_ALCHEMY);
+  if Magic.FindSelected(tpa) then
+    Debug(tpa);
 *)
-function TRSMagic.CanActivate(spell: ERSSpell): Boolean;
-var
-  box: TBox;
+function TRSMagic.FindSelected(out tpa: TPointArray): Boolean;
 begin
-  Result := Self.GetSpellBox(spell, box) and Self.Open() and (SRL.PeakBrightness(box) > 35);
+  if not Self.IsOpen() then
+    Exit;
+
+  Result := SRL.FindColors(tpa, $FFFFFF, GameTab.Bounds()) > 10;
 end;
 
 (*
-Magic.IsSpellSelected
-~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.IsSpellSelected(spell: ERSSpell): Boolean;
+Magic.ContainsSelected
+~~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMagic.ContainsSelected(): Boolean;
 
-Returns true if the specified spell is currently active (with white outline).
+Returns the true if we have a selected spell.
 
 Example
 -------
 
-  Magic.IsSpellSelected(ERSSpell.ICE_BARRAGE);
+  WriteLn Magic.ContainsSelected();
 *)
-function TRSMagic.IsSpellSelected(spell: ERSSpell): Boolean;
-var
-  box: TBox;
+function TRSMagic.ContainsSelected(openTab: Boolean = False): Boolean;
 begin
-  if spell in RS_INSTANT_THROW_SPELLS then
-    Exit;
-  Result := Self.GetSpellBox(spell, box) and Self.Open() and (SRL.CountColor($FFFFFF, box) > 10);
+  if not openTab and not Self.IsOpen() then
+    Exit(MainScreen.IsUpText('Cast'));
+
+  Result := SRL.CountColor($FFFFFF, GameTab.Bounds()) > 30;
 end;
 
 (*
@@ -332,7 +484,7 @@ Example
 
   WriteLn Magic.GetSelectedSpell;
 *)
-function TRSMagic.GetSelectedSpell(): ERSSpell;
+function TRSMagic.GetSelectedSpell(): ERSSpell; deprecated 'Use Magic.FindSelected() or Magic.ContainsSelected() instead!';
 var
   i: Int32;
   book: ERSSpellBook;
@@ -340,9 +492,9 @@ var
 begin
   if not Self.IsOpen() then
     Exit;
-    
-  boxes := Self.GetSpellBoxes(book);
- 
+
+  boxes := {$H-}Self.GetSpellBoxes(book);{$H+}
+
   for I := 0 to High(boxes) do
     if SRL.CountColor($FFFFFF, boxes[i]) > 30 then
     case book of
@@ -353,15 +505,82 @@ begin
     end;
 end;
 
+
+(*
+Magic.IsSpellSelected
+~~~~~~~~~~~~~~~~~~~~~
+.. pascal::
+  function TRSMagic.IsSpellSelected(spell: ERSSpell): Boolean;
+  function TRSMagic.IsSpellSelected(spell: ERSSpell; selected: TPointArray): Boolean; overload;
+
+Returns true if the specified spell is currently active (with white outline).
+
+Example
+-------
+
+  Magic.IsSpellSelected(ERSSpell.ICE_BARRAGE);
+*)
+function TRSMagic.IsSpellSelected(spell: ERSSpell): Boolean;
+var
+  box: TBox;
+begin
+  if spell in RS_INSTANT_THROW_SPELLS then
+    Exit;
+
+  Result := Self.FindSpell(spell, box) and (SRL.CountColor($FFFFFF, box) > 10);
+end;
+
+function TRSMagic.IsSpellSelected(spell: ERSSpell; selected: TPointArray): Boolean; overload;
+var
+  box: TBox;
+begin
+  if spell in RS_INSTANT_THROW_SPELLS then
+    Exit;
+
+  if not Self.FindSpell(spell, box) then
+    Exit;
+
+  Result := box.Contains(selected.Mean());
+end;
+
+
+(*
+Magic.CanActivate
+~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMagic.CanActivate(spell: ERSSpell): Boolean;
+
+Returns true if we can activate the spell (we have runes, level and the spell unlocked).
+
+Example
+-------
+
+  Magic.CanActivate(ERSSpell.HIGH_LEVEL_ALCHEMY);
+*)
+function TRSMagic.CanActivate(spell: ERSSpell): Boolean;
+begin
+  Result := Self.ContainsSpell(spell);
+end;
+
+
+(*
+Magic.SpellWasCast
+~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMagic.SpellWasCast(spell: ERSSpell): Boolean;
+
+Returns true if we are in a state that casting a spell would leave you.
+
+Example
+-------
+
+  Magic.SpellWasCast(ERSSpell.ICE_BARRAGE);
+*)
 function TRSMagic.SpellWasCast(spell: ERSSpell): Boolean;
 begin
   if spell in RS_INSTANT_THROW_SPELLS then
     Exit(True);
 
-  if Self.IsOpen() and (Self.GetSelectedSpell() = spell) then
-    Exit(True);
-
-  Result := Inventory.IsOpen();
+  //enchant and alch spells open inventory
+  Result := Self.IsSpellSelected(spell) or Inventory.IsOpen();
 end;
 
 (*
@@ -376,22 +595,26 @@ Example
 
   Magic.CastSpell(ERSSpell.LOW_LEVEL_ALCHEMY);
 *)
-function TRSMagic.CastSpell(spell: ERSSpell): Boolean;
+function TRSMagic.CastSpell(spell: ERSSpell; option: String = ''): Boolean;
 var
-  selected: ERSSpell;
+  selected: TPointArray;
 begin
   if not Self.Open() then
-    Exit(False); 
+    Exit;
 
-  selected := Self.GetSelectedSpell();
-  if selected = spell then
-    Exit(True);
-    
-  // Unselect
-  if (selected <> ERSSpell.UNKNOWN) then
-    Self.MouseSpell(selected, MOUSE_LEFT);
+  if Self.FindSelected(selected) then
+  begin
+    if Self.IsSpellSelected(spell, selected) then
+      Exit(True);
+    Mouse.Click(selected.Bounds(), MOUSE_LEFT);
+    if Self.FindSelected(selected) then
+    begin
+      Self.DebugLn('Failed to deactivate the currently active spell.');
+      Exit;
+    end;
+  end;
 
-  Result := Self.MouseSpell(spell, MOUSE_LEFT) and
+  Result := Self.ClickSpell(spell, option) and
             WaitUntil(Self.SpellWasCast(spell), 300, SRL.TruncatedGauss(1000, 2000));
 end;
 
@@ -404,7 +627,14 @@ begin
 
   inherited();
 
-  bitmap.DrawBoxes(Self.GetSpellBoxes(book), $00FFFF);
+  book := Self.GetSpellBook();
+  bitmap.DrawBox(GameTab.Bounds(), $00FFFF);
+  case book of
+    ERSSpellBook.STANDARD: bitmap.DrawText('Standard book', GameTab.Bounds(), True, $00FFFF);
+    ERSSpellBook.ANCIENT: bitmap.DrawText('Ancient book', GameTab.Bounds(), True, $00FFFF);
+    ERSSpellBook.LUNAR: bitmap.DrawText('Lunar book', GameTab.Bounds(), True, $00FFFF);
+    ERSSpellBook.ARCEUUS: bitmap.DrawText('Arceuus book', GameTab.Bounds(), True, $00FFFF);
+  end;
 end;
 
 (*
