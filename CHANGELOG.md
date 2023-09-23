@@ -1,3 +1,12 @@
+## [2.6.1](https://github.com/Torwent/SRL-T/compare/v2.6.0...v2.6.1) (2023-09-23)
+
+
+### Bug Fixes
+
+* **Magic:** expanded the tab bounds when unhovering a spell ([0326d9d](https://github.com/Torwent/SRL-T/commit/0326d9d5c4dc54068b8d9bf05a9e7438b4ae3968))
+
+
+
 # [2.6.0](https://github.com/Torwent/SRL-T/compare/v2.5.1...v2.6.0) (2023-09-22)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **mm2ms:** coordinates offset was being inverted ([94c332c](https://github.com/Torwent/SRL-T/commit/94c332c36ccc7ab244c7e8b6bf455a2af98d42c5))
-
-
-
-## [2.4.15](https://github.com/Torwent/SRL-T/compare/v2.4.14...v2.4.15) (2023-09-16)
-
-
-### Bug Fixes
-
-* **mainscreen:** read notes ([e2fa2bf](https://github.com/Torwent/SRL-T/commit/e2fa2bf58495a14ae8f789c1aa5a917451e6a177))
 
 
 
