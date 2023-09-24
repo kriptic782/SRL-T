@@ -1,3 +1,12 @@
+## [2.6.2](https://github.com/Torwent/SRL-T/compare/v2.6.1...v2.6.2) (2023-09-24)
+
+
+### Bug Fixes
+
+* **magic:** read notes ([f5cb04b](https://github.com/Torwent/SRL-T/commit/f5cb04be983a0988afa5da5dc528de1126aa9480))
+
+
+
 ## [2.6.1](https://github.com/Torwent/SRL-T/compare/v2.6.0...v2.6.1) (2023-09-23)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * add spellfinder.simba ([1e12b86](https://github.com/Torwent/SRL-T/commit/1e12b865336a1e7132e52d1596e89505ae284f95))
-
-
-
-## [2.4.16](https://github.com/Torwent/SRL-T/compare/v2.4.15...v2.4.16) (2023-09-16)
-
-
-### Bug Fixes
-
-* **mm2ms:** coordinates offset was being inverted ([94c332c](https://github.com/Torwent/SRL-T/commit/94c332c36ccc7ab244c7e8b6bf455a2af98d42c5))
 
 
 
