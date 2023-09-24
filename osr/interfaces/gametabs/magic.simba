@@ -274,19 +274,22 @@ Magic.FindSpell
 
 Return true or false wether we found a spell or not and return it's bounds if found.
 *)
-function TRSMagic.FindSpell(spell: ERSSpell; out box: TBox): Boolean;
+function TRSMagic.FindSpell(spell: ERSSpell; out box: TBox; attempt: Int32 = 0): Boolean;
 var
   match: TRSSpellFinderMatch;
 begin
   if not Self.IsOpen() then
     Exit;
 
-  if Self.InfoIsOpen() and not Self.CloseInfo() then
-    Exit;
-
   Result := SpellFinder.Find([spell], GameTab.Bounds(), match);
   if Result then
+  begin
     box := match.Box.Expand(1); //1 pixel larger to detect if it's selected.
+    Exit;
+  end;
+
+  if (attempt < 2) and Self.InfoIsOpen() and Self.CloseInfo() then
+    Exit(Self.FindSpell(spell, box, attempt+1));
 end;
 
 (*
