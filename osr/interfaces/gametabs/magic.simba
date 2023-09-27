@@ -78,7 +78,13 @@ const
   ]);
 
 type
-  TRSMagic = type TRSInterface;
+  TRSMagic = record(TRSInterface)
+    SpellCache: array [ERSSpell] of
+      record
+        Box: TBox;
+        UpText: String;
+      end;
+  end;
 
 (*
 Magic.Setup
@@ -225,7 +231,9 @@ end;
 (*
 Magic.CloseInfo
 ~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.CloseInfo(): Boolean;
+.. pascal::
+  function TRSMagic.CloseInfo(): Boolean;
+  function TRSMagic.CloseInfo(spell: ERSSpell): Boolean; overload;
 
 Returns true if the info black box about a spell is open.
 
@@ -244,6 +252,17 @@ begin
   Mouse.Move(destination);
   Mouse.OnMovingEx := nil;
 
+  Result := not Self.InfoIsOpen();
+end;
+
+function TRSMagic.CloseInfo(spell: ERSSpell): Boolean; overload;
+var
+  p: TPoint;
+begin
+  p := Mouse.Position();
+  Mouse.OnMovingEx := @Self._CloseInfoMouseCallback;
+  Mouse.Move(Self.SpellCache[spell].Box);
+  Mouse.OnMovingEx := nil;
   Result := not Self.InfoIsOpen();
 end;
 
@@ -284,12 +303,21 @@ begin
   Result := SpellFinder.Find([spell], GameTab.Bounds(), match);
   if Result then
   begin
-    box := match.Box.Expand(1); //1 pixel larger to detect if it's selected.
+    box := match.Box.Expand(-1);
+    Self.SpellCache[spell].Box := box;
     Exit;
   end;
 
-  if (attempt < 2) and Self.InfoIsOpen() and Self.CloseInfo() then
-    Exit(Self.FindSpell(spell, box, attempt+1));
+  if Self.InfoIsOpen() then
+  begin
+    case attempt of
+      0: if Self.CloseInfo(spell) then
+          Result := Self.FindSpell(spell, box, attempt+1);
+
+      1: if Self.CloseInfo() then
+          Result := Self.FindSpell(spell, box, attempt+1);
+    end;
+  end;
 end;
 
 (*
@@ -374,11 +402,28 @@ Example
 function TRSMagic.MouseSpell(spell: ERSSpell): Boolean;
 var
   box: TBox;
+  upText: String;
 begin
+  if (Self.SpellCache[spell].UpText <> '') and
+     Self.SpellCache[spell].Box.Contains(Mouse.Position()) then
+  begin
+    upText := MainScreen.GetUpText().After('Cast').Before('/').Strip();
+    if (upText = Self.SpellCache[spell].UpText) then
+      Exit(True);
+  end;
+
   Result := Self.Open() and Self.FindSpell(spell, box);
 
   if Result then
+  begin
     Mouse.Move(box);
+
+    if Self.SpellCache[spell].UpText = '' then
+    begin
+      upText := MainScreen.GetUpText().After('Cast').Before('/').Strip();
+      Self.SpellCache[spell].UpText := upText;
+    end;
+  end;
 end;
 
 (*
@@ -510,11 +555,11 @@ end;
 
 
 (*
-Magic.IsSpellSelected
-~~~~~~~~~~~~~~~~~~~~~
+Magic.IsSelected
+~~~~~~~~~~~~~~~~
 .. pascal::
-  function TRSMagic.IsSpellSelected(spell: ERSSpell): Boolean;
-  function TRSMagic.IsSpellSelected(spell: ERSSpell; selected: TPointArray): Boolean; overload;
+  function TRSMagic.IsSelected(spell: ERSSpell): Boolean;
+  function TRSMagic.IsSelected(spell: ERSSpell; selected: TPointArray): Boolean; overload;
 
 Returns true if the specified spell is currently active (with white outline).
 
@@ -523,17 +568,17 @@ Example
 
   Magic.IsSpellSelected(ERSSpell.ICE_BARRAGE);
 *)
-function TRSMagic.IsSpellSelected(spell: ERSSpell): Boolean;
+function TRSMagic.IsSelected(spell: ERSSpell): Boolean;
 var
   box: TBox;
 begin
   if spell in RS_INSTANT_THROW_SPELLS then
     Exit;
 
-  Result := Self.FindSpell(spell, box) and (SRL.CountColor($FFFFFF, box) > 10);
+  Result := Self.FindSpell(spell, box) and (SRL.CountColor($FFFFFF, box.Expand(2)) > 10);
 end;
 
-function TRSMagic.IsSpellSelected(spell: ERSSpell; selected: TPointArray): Boolean; overload;
+function TRSMagic.IsSelected(spell: ERSSpell; selected: TPointArray): Boolean; overload;
 var
   box: TBox;
 begin
@@ -583,7 +628,7 @@ begin
     Exit(True);
 
   //enchant and alch spells open inventory
-  Result := Self.IsSpellSelected(spell) or Inventory.IsOpen();
+  Result := Self.IsSelected(spell) or Inventory.IsOpen();
 end;
 
 (*
@@ -607,7 +652,7 @@ begin
 
   if Self.FindSelected(selected) then
   begin
-    if Self.IsSpellSelected(spell, selected) then
+    if Self.IsSelected(spell, selected) then
       Exit(True);
     Mouse.Click(selected.Bounds(), MOUSE_LEFT);
     if Self.FindSelected(selected) then
