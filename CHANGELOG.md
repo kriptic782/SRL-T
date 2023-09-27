@@ -1,3 +1,12 @@
+## [2.6.3](https://github.com/Torwent/SRL-T/compare/v2.6.2...v2.6.3) (2023-09-27)
+
+
+### Bug Fixes
+
+* **Magic:** more magic tweaks ([f12f090](https://github.com/Torwent/SRL-T/commit/f12f0909bb4d74da85b890e664412a24f2a463f2))
+
+
+
 ## [2.6.2](https://github.com/Torwent/SRL-T/compare/v2.6.1...v2.6.2) (2023-09-24)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * move ERSSpell to the spellfinder file ([f1cd6d8](https://github.com/Torwent/SRL-T/commit/f1cd6d8bf888a02803316d8c94a976d2ea35f1df))
-
-
-
-# [2.5.0](https://github.com/Torwent/SRL-T/compare/v2.4.16...v2.5.0) (2023-09-20)
-
-
-### Features
-
-* add spellfinder.simba ([1e12b86](https://github.com/Torwent/SRL-T/commit/1e12b865336a1e7132e52d1596e89505ae284f95))
 
 
 
