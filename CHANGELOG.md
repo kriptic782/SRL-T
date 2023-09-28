@@ -1,3 +1,12 @@
+## [2.6.4](https://github.com/Torwent/SRL-T/compare/v2.6.3...v2.6.4) (2023-09-28)
+
+
+### Bug Fixes
+
+* **spellfinder:** fixed several standard spellbook sprites ([4e7bca3](https://github.com/Torwent/SRL-T/commit/4e7bca32c021b6bfafd8ea7c15adb56d94af01cf))
+
+
+
 ## [2.6.3](https://github.com/Torwent/SRL-T/compare/v2.6.2...v2.6.3) (2023-09-27)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * magic tab now uses the new spellfinder ([be8ce9e](https://github.com/Torwent/SRL-T/commit/be8ce9e0da1e446e093cbf4786e9ea3e22b6ac37))
-
-
-
-## [2.5.1](https://github.com/Torwent/SRL-T/compare/v2.5.0...v2.5.1) (2023-09-20)
-
-
-### Bug Fixes
-
-* move ERSSpell to the spellfinder file ([f1cd6d8](https://github.com/Torwent/SRL-T/commit/f1cd6d8bf888a02803316d8c94a976d2ea35f1df))
 
 
 
