@@ -1,3 +1,12 @@
+## [2.6.6](https://github.com/Torwent/SRL-T/compare/v2.6.5...v2.6.6) (2023-09-28)
+
+
+### Bug Fixes
+
+* **Magic:** read notes ([1811a91](https://github.com/Torwent/SRL-T/commit/1811a91dde415842f1854deb7330cab8897320d5))
+
+
+
 ## [2.6.5](https://github.com/Torwent/SRL-T/compare/v2.6.4...v2.6.5) (2023-09-28)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **magic:** read notes ([f5cb04b](https://github.com/Torwent/SRL-T/commit/f5cb04be983a0988afa5da5dc528de1126aa9480))
-
-
-
-## [2.6.1](https://github.com/Torwent/SRL-T/compare/v2.6.0...v2.6.1) (2023-09-23)
-
-
-### Bug Fixes
-
-* **Magic:** expanded the tab bounds when unhovering a spell ([0326d9d](https://github.com/Torwent/SRL-T/commit/0326d9d5c4dc54068b8d9bf05a9e7438b4ae3968))
 
 
 
