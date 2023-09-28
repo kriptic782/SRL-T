@@ -493,11 +493,16 @@ Example
     Debug(tpa);
 *)
 function TRSMagic.FindSelected(out tpa: TPointArray): Boolean;
+var
+  searchBox: TBox;
 begin
   if not Self.IsOpen() then
     Exit;
 
-  Result := SRL.FindColors(tpa, $FFFFFF, GameTab.Bounds()) > 10;
+  searchBox := GameTab.Bounds();
+  searchBox.Y2 -= 18;
+
+  Result := SRL.FindColors(tpa, $FFFFFF, searchBox) > 10;
 end;
 
 (*
@@ -513,11 +518,16 @@ Example
   WriteLn Magic.ContainsSelected();
 *)
 function TRSMagic.ContainsSelected(openTab: Boolean = False): Boolean;
+var
+  searchBox: TBox;
 begin
   if not openTab and not Self.IsOpen() then
     Exit(MainScreen.IsUpText('Cast'));
 
-  Result := SRL.CountColor($FFFFFF, GameTab.Bounds()) > 30;
+  searchBox := GameTab.Bounds();
+  searchBox.Y2 -= 18;
+
+  Result := SRL.CountColor($FFFFFF, searchBox) > 10;
 end;
 
 (*
