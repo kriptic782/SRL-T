@@ -1,3 +1,12 @@
+## [2.6.5](https://github.com/Torwent/SRL-T/compare/v2.6.4...v2.6.5) (2023-09-28)
+
+
+### Bug Fixes
+
+* **iteminterface:** occupied slot counting was not accurate with certain items ([f267b5a](https://github.com/Torwent/SRL-T/commit/f267b5ad95e1d2f447c5e20023846505dc204dd1))
+
+
+
 ## [2.6.4](https://github.com/Torwent/SRL-T/compare/v2.6.3...v2.6.4) (2023-09-28)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **Magic:** expanded the tab bounds when unhovering a spell ([0326d9d](https://github.com/Torwent/SRL-T/commit/0326d9d5c4dc54068b8d9bf05a9e7438b4ae3968))
-
-
-
-# [2.6.0](https://github.com/Torwent/SRL-T/compare/v2.5.1...v2.6.0) (2023-09-22)
-
-
-### Features
-
-* magic tab now uses the new spellfinder ([be8ce9e](https://github.com/Torwent/SRL-T/commit/be8ce9e0da1e446e093cbf4786e9ea3e22b6ac37))
 
 
 
