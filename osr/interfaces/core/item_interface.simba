@@ -274,7 +274,7 @@ begin
   if SRL.FindColors(tpa, CTS1(1118740, 35), slots.Merge()) = 0 then
     Exit;
 
-  atpa := tpa.Cluster(5);
+  atpa := tpa.Cluster(5, 4);
   atpa.FilterSize(13, __GT__);
 
   Result := atpa.Len();
@@ -299,9 +299,8 @@ begin
   if SRL.FindColors(tpa, CTS1(1118740, 35), slots.Merge()) = 0 then
     Exit;
 
-  atpa := tpa.Cluster(5);
+  atpa := tpa.Cluster(5, 4);
   atpa.FilterSize(13, __GT__);
-
   Result := Length(slots) - Length(atpa);
 end;
 
