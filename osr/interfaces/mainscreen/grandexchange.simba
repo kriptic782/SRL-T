@@ -54,7 +54,7 @@ type
     SELL
   );
 
-  TRSGrandExchange = record(TRSTitledInteface)
+  TRSGrandExchange = record(TRSTitledInterface)
     FINDER_BANKER: TRSObjectFinder;
     FINDER_CLERK: TRSObjectFinder;
   end;

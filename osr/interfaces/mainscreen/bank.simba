@@ -36,7 +36,7 @@ type
     DEPOSIT_WORN   
   );
 
-  TRSBank = record(TRSTitledInteface)
+  TRSBank = record(TRSTitledInterface)
     FINDER_UPTEXT: TStringArray;
     FINDER_OPTION: TStringArray;
     QUANTITY_ALL: Int32;

@@ -22,7 +22,7 @@ type
     DEPOSIT_LOOT
   );
 
-  TRSDepositBox = type TRSTitledInteface;
+  TRSDepositBox = type TRSTitledInterface;
 
 
 function TRSDepositBox.GetSlotBoxes(): TBoxArray;
