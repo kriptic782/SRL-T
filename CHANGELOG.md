@@ -1,3 +1,12 @@
+## [2.6.7](https://github.com/Torwent/SRL-T/compare/v2.6.6...v2.6.7) (2023-09-29)
+
+
+### Bug Fixes
+
+* read notes ([f5eff2f](https://github.com/Torwent/SRL-T/commit/f5eff2f1a30e10a719b1bac87d7416cbcfe18fc1))
+
+
+
 ## [2.6.6](https://github.com/Torwent/SRL-T/compare/v2.6.5...v2.6.6) (2023-09-28)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **Magic:** more magic tweaks ([f12f090](https://github.com/Torwent/SRL-T/commit/f12f0909bb4d74da85b890e664412a24f2a463f2))
-
-
-
-## [2.6.2](https://github.com/Torwent/SRL-T/compare/v2.6.1...v2.6.2) (2023-09-24)
-
-
-### Bug Fixes
-
-* **magic:** read notes ([f5cb04b](https://github.com/Torwent/SRL-T/commit/f5cb04be983a0988afa5da5dc528de1126aa9480))
 
 
 
