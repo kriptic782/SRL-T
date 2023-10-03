@@ -596,6 +596,26 @@ begin
 end;
 
 
+function TRSMagic.Deselect(spell: TPointArray = []): Boolean;
+begin
+  Result := True;
+
+  if Self.IsOpen() then
+  begin
+    if (spell = []) and not Self.FindSelected(spell) then
+      Exit;
+
+    Mouse.Click(spell.Bounds(), MOUSE_LEFT);
+    Exit(not Self.ContainsSelected());
+  end;
+
+  if MainScreen.IsUpText('Cast') then
+  begin
+    ChooseOption.Open();
+    ChooseOption.Select('Cancel');
+  end;
+end;
+
 (*
 Magic.CanActivate
 ~~~~~~~~~~~~~~~~~
@@ -658,8 +678,8 @@ begin
   begin
     if Self.IsSelected(spell, selected) then
       Exit(True);
-    Mouse.Click(selected.Bounds(), MOUSE_LEFT);
-    if Self.FindSelected(selected) then
+
+    if not Self.Deselect(selected) then
     begin
       Self.DebugLn('Failed to deactivate the currently active spell.');
       Exit;
