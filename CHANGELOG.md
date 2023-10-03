@@ -1,3 +1,12 @@
+# [2.7.0](https://github.com/Torwent/SRL-T/compare/v2.6.7...v2.7.0) (2023-10-03)
+
+
+### Features
+
+* **Magic:** added a method to deselect spells ([deccb08](https://github.com/Torwent/SRL-T/commit/deccb08ed6e34b9a4aaacdd214961c43e471d713))
+
+
+
 ## [2.6.7](https://github.com/Torwent/SRL-T/compare/v2.6.6...v2.6.7) (2023-09-29)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **spellfinder:** fixed several standard spellbook sprites ([4e7bca3](https://github.com/Torwent/SRL-T/commit/4e7bca32c021b6bfafd8ea7c15adb56d94af01cf))
-
-
-
-## [2.6.3](https://github.com/Torwent/SRL-T/compare/v2.6.2...v2.6.3) (2023-09-27)
-
-
-### Bug Fixes
-
-* **Magic:** more magic tweaks ([f12f090](https://github.com/Torwent/SRL-T/commit/f12f0909bb4d74da85b890e664412a24f2a463f2))
 
 
 
