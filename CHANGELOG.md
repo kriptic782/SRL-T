@@ -1,3 +1,12 @@
+## [2.7.1](https://github.com/Torwent/SRL-T/compare/v2.7.0...v2.7.1) (2023-10-04)
+
+
+### Bug Fixes
+
+* read notes ([8c7973f](https://github.com/Torwent/SRL-T/commit/8c7973f82328fbfb32c01df6f7ef2d810296b20b))
+
+
+
 # [2.7.0](https://github.com/Torwent/SRL-T/compare/v2.6.7...v2.7.0) (2023-10-03)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **iteminterface:** occupied slot counting was not accurate with certain items ([f267b5a](https://github.com/Torwent/SRL-T/commit/f267b5ad95e1d2f447c5e20023846505dc204dd1))
-
-
-
-## [2.6.4](https://github.com/Torwent/SRL-T/compare/v2.6.3...v2.6.4) (2023-09-28)
-
-
-### Bug Fixes
-
-* **spellfinder:** fixed several standard spellbook sprites ([4e7bca3](https://github.com/Torwent/SRL-T/commit/4e7bca32c021b6bfafd8ea7c15adb56d94af01cf))
 
 
 
