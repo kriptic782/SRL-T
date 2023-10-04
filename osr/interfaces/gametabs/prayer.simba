@@ -89,16 +89,16 @@ end;
 (*
 Prayer.GetPrayerLevel
 ~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSPrayer.GetPrayerLevel: Int32;
+.. pascal:: function TRSPrayer.GetPrayerLevel(): Int32;
 
 **Prayer.GetPrayerLevel** is used to retrieve the prayer level from the prayer tab.
 
 Example
 -------
 
-  Writeln Prayer.GetPrayerLevel;
+  Writeln Prayer.GetPrayerLevel();
 *)
-function TRSPrayer.GetPrayerLevel: Int32;
+function TRSPrayer.GetPrayerLevel(): Int32;
 var
   Text: String;
 begin
@@ -115,11 +115,11 @@ end;
 (*
 Prayer.IsOpen
 ~~~~~~~~~~~~~
-.. pascal:: function TRSPrayer.IsOpen: Boolean;
+.. pascal:: function TRSPrayer.IsOpen(): Boolean;
 
 Returns true if the Prayer tab is open.
 *)
-function TRSPrayer.IsOpen: Boolean;
+function TRSPrayer.IsOpen(): Boolean;
 begin
   Result := (GameTabs.GetCurrentTab() = ERSGameTab.PRAYER) and (Self.GetPrayerLevel <> -1);
 end;
@@ -127,7 +127,7 @@ end;
 (*
 Prayer.Open
 ~~~~~~~~~~~
-.. pascal:: function TRSPrayer.Open: Boolean;
+.. pascal:: function TRSPrayer.Open(): Boolean;
 
 Attempts to open the prayer tab.
 
@@ -136,7 +136,7 @@ Example
 
   Prayer.Open;
 *)
-function TRSPrayer.Open: Boolean;
+function TRSPrayer.Open(): Boolean;
 begin
   Result := Self.IsOpen() or GameTabs.Open(ERSGameTab.PRAYER);
 end;
@@ -144,12 +144,12 @@ end;
 (*
 Prayer.GetPrayerBoxes
 ~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSPrayer.GetPrayerBoxes: TBoxArray;
+.. pascal:: function TRSPrayer.GetPrayerBoxes(): TBoxArray;
 .. pascal:: function TRSPrayer.GetPrayerBoxes(Prayers: array of ERSPrayer): TBoxArray; overload;
 
 Internal function to get the bounds of all or the specified prayers.
 *)
-function TRSPrayer.GetPrayerBoxes: TBoxArray;
+function TRSPrayer.GetPrayerBoxes(): TBoxArray;
 begin
   Result := Grid(5, 6, 33, 33, [4, 4], [Self.X1 + 1, Self.Y1 + 10])
 end;
@@ -602,110 +602,6 @@ var QuickPrayer
 *)
 var
   QuickPrayer: TRSQuickPrayer;
-
-(*
-Minimap
-=======
-Methods to handle the minimap prayer orb.
-*)
-
-(*
-Minimap.GetPrayerLevel
-~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMinimap.GetPrayerLevel: Int32;
-
-**Minimap.GetPrayerLevel** is used to retrieve the prayer level from the minimap orb.
-
-Example
--------
-
-  Writeln Minimap.GetPrayerLevel;
-*)
-function TRSMinimap.GetPrayerLevel: Int32;
-begin
-  Result := Self.GetOrbLevel(Self.GetPrayerCircle);
-end;
-
-(*
-Minimap.IsPrayerEnabled
-~~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMinimap.IsPrayerEnabled: Boolean;
-
-**Minimap.IsPrayerEnabled** is used to retrieve the quick prayer state (enabled or disabled).
-
-Example
--------
-
-  Writeln Minimap.IsPrayerEnabled;
-*)
-function TRSMinimap.IsPrayerEnabled: Boolean;
-begin
-  Result := SRL.CountColor(CTS0(1168105, 33), Self.GetPrayerCircle().Bounds) > 20;
-end;
-
-(*
-Minimap.EnablePrayer
-~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMinimap.EnablePrayer: Boolean;
-
-**Minimap.EnablePrayer** is used to enable quick prayers.
-
-Example
--------
-
-  Minimap.EnablePrayer;
-*)
-function TRSMinimap.EnablePrayer: Boolean;
-var
-  T: UInt64;
-begin
-  if not Self.IsPrayerEnabled() then
-  begin
-    Mouse.Click(Self.GetPrayerCircle(), MOUSE_LEFT);
-
-    T := GetTickCount() + Round(SRL.TruncatedGauss(1000, 2000));
-    while (T > GetTickCount()) do
-    begin
-      if Self.IsPrayerEnabled() then
-        Exit(True);
-
-      Wait(0, 1000, wdLeft);
-    end;
-  end;
-end;
-
-(*
-Minimap.DisablePrayer
-~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMinimap.DisablePrayer: Boolean;
-
-**Minimap.DisablePrayer** is used to disable quick prayers.
-
-Example
--------
-
-  Minimap.DisablePrayer;
-*)
-function TRSMinimap.DisablePrayer: Boolean;
-var
-  T: UInt64;
-begin
-  if Self.IsPrayerEnabled() then
-  begin
-    Mouse.Click(Self.GetPrayerCircle(), MOUSE_LEFT);
-
-    T := GetTickCount() + Round(SRL.TruncatedGauss(1000, 2000));
-    while (T > GetTickCount()) do
-    begin
-      if not Self.IsPrayerEnabled() then
-        Exit(True);
-
-      Wait(0, 1000, wdLeft);
-    end;
-  end;
-end;
-
-
 
 (*
 Prayer.Open

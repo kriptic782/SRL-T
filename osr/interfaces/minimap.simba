@@ -1,3 +1,9 @@
+(*
+Minimap
+=======
+Methods to interact with the minimap.
+*)
+
 {$DEFINE SRL_MINIMAP_INCLUDED}
 {$IFNDEF SRL_OSR}
   {$I SRL-T/osr.simba}
@@ -12,6 +18,10 @@ type
   ERSMinimapDots = set of ERSMinimapDot;
 
 type
+(*
+type TRSMinimap
+~~~~~~~~~~~~~~~
+.. pascal::
   TRSMinimap = record(TRSInterface)
     CompassCircleOffset: TPoint;
     XPCircleOffset: TPoint;
@@ -23,77 +33,308 @@ type
     FlagBitmap: Int32;
   end;
 
-function TRSMinimap.GetCompassCircle: TCircle;
+TRSMinimap type used to interact with the minimap
+*)
+  TRSMinimap = record(TRSInterface)
+    CompassCircleOffset: TPoint;
+    XPCircleOffset: TPoint;
+    HitpointsCircleOffset: TPoint;
+    PrayerCircleOffset: TPoint;
+    RunCircleOffset: TPoint;
+    SpecAttackCircleOffset: TPoint;
+    PolygonOffset: TPointArray;
+    FlagBitmap: Int32;
+  end;
+
+(*
+Minimap.GetCompassCircle
+~~~~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.GetCompassCircle(): TCircle;
+
+Returns the compass circle.
+
+Example
+-------
+
+  circle := Minimap.GetCompassCircle();
+  Debug(circle.ToTPA());
+*)
+function TRSMinimap.GetCompassCircle(): TCircle;
 begin
   Result := [Self.X1 + Self.CompassCircleOffset.X, Self.Y1 + Self.CompassCircleOffset.Y, 17];
 end;
 
-function TRSMinimap.GetXPCircle: TCircle;
+(*
+Minimap.GetXPCircle
+~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.GetXPCircle(): TCircle;
+
+Returns the xp bar circle.
+
+Example
+-------
+
+  circle := Minimap.GetXPCircle();
+  Debug(circle.ToTPA());
+*)
+function TRSMinimap.GetXPCircle(): TCircle;
 begin
   Result := [Self.X1 + Self.XPCircleOffset.X + 10, Self.Y1 + Self.XPCircleOffset.Y, 11];
 end;
 
-function TRSMinimap.GetHPCircle: TCircle;
+(*
+Minimap.GetHPCircle
+~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.GetHPCircle(): TCircle;
+
+Returns the hp circle.
+
+Example
+-------
+
+  circle := Minimap.GetHPCircle();
+  Debug(circle.ToTPA());
+*)
+function TRSMinimap.GetHPCircle(): TCircle;
 begin
   Result := [Self.X1 + Self.HitpointsCircleOffset.X, Self.Y1 + Self.HitpointsCircleOffset.Y, 12];
 end;
 
-function TRSMinimap.GetPrayerCircle: TCircle;
+(*
+Minimap.GetPrayerCircle
+~~~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.GetPrayerCircle(): TCircle;
+
+Returns the prayer circle.
+
+Example
+-------
+
+  circle := Minimap.GetPrayerCircle();
+  Debug(circle.ToTPA());
+*)
+function TRSMinimap.GetPrayerCircle(): TCircle;
 begin
   Result := [Self.X1 + Self.PrayerCircleOffset.X, Self.Y1 + Self.PrayerCircleOffset.Y, 12];
 end;
 
-function TRSMinimap.GetRunCircle: TCircle;
+(*
+Minimap.GetRunCircle
+~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.GetRunCircle(): TCircle;
+
+Returns the run energy circle.
+
+Example
+-------
+
+  circle := Minimap.GetRunCircle();
+  Debug(circle.ToTPA());
+*)
+function TRSMinimap.GetRunCircle(): TCircle;
 begin
   Result := [Self.X1 + Self.RunCircleOffset.X, Self.Y1 + Self.RunCircleOffset.Y, 12];
 end;
 
-function TRSMinimap.GetSpecAttackCircle: TCircle;
+(*
+Minimap.GetSpecAttackCircle
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.GetSpecAttackCircle(): TCircle;
+
+Returns the special attack circle.
+
+Example
+-------
+
+  circle := Minimap.GetSpecAttackCircle();
+  Debug(circle.ToTPA());
+*)
+function TRSMinimap.GetSpecAttackCircle(): TCircle;
 begin
   Result := [Self.X1 + Self.SpecAttackCircleOffset.X, Self.Y1 + Self.SpecAttackCircleOffset.Y, 12];
 end;
 
+(*
+Minimap.GetOrbLevel
+~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.GetOrbLevel(Orb: TCircle): Int32;
+
+Returns the level of the specified orb.
+
+Example
+-------
+
+  WriteLn Minimap.GetOrbLevel(Minimap.GetSpecAttackCircle());
+*)
 function TRSMinimap.GetOrbLevel(Orb: TCircle): Int32;
 begin
   Result := OCR.RecognizeNumber([Orb.X-35, Orb.Y-1, Orb.X-15, Orb.Y+9], TOCRShadowFilter.Create(), RS_FONT_PLAIN_11);
 end;
 
-function TRSMinimap.GetRunEnergy: Int32;
+(*
+Minimap.GetRunEnergy
+~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.GetRunEnergy(): Int32;
+
+Returns the run energy level.
+
+Example
+-------
+
+  WriteLn Minimap.GetRunEnergy();
+*)
+function TRSMinimap.GetRunEnergy(): Int32;
 begin
   Result := Self.GetOrbLevel(GetRunCircle());
 end;
 
-function TRSMinimap.GetPolygon: TPointArray;
+(*
+Minimap.GetHPLevel
+~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.GetHPLevel(): Int32;
+
+Returns the current hp level.
+
+Example
+-------
+
+  WriteLn Minimap.GetHPLevel();
+*)
+function TRSMinimap.GetHPLevel(): Int32;
+begin
+  Result := Self.GetOrbLevel(Self.GetHPCircle());
+end;
+
+(*
+Minimap.GetHPPercent
+~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.GetHPPercent(): Int32;
+
+Returns the current hp percentage level.
+
+Example
+-------
+
+  WriteLn Minimap.GetHPPercent();
+*)
+function TRSMinimap.GetHPPercent(): Int32;
+var
+  TPA: TPointArray;
+  Circle: TCircle;
+begin
+  Circle := Self.GetHPCircle();
+  if SRL.FindColors(TPA, CTS1(1250067, 20), Circle.Bounds) > 0 then
+    TPA := TPA.FilterDist(0, Circle.Radius, Circle.X, Circle.Y);
+
+  with TPA.Bounds() do
+    Result := 100 - Ceil((Y2 - Y1) / (Circle.Bounds.Y2 - Circle.Bounds.Y1) * 100);
+end;
+
+(*
+Minimap.GetPrayerLevel
+~~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.GetPrayerLevel(): Int32;
+
+Returns the current prayer level.
+
+Example
+-------
+
+  WriteLn Minimap.GetPrayerLevel();
+*)
+function TRSMinimap.GetPrayerLevel(): Int32;
+begin
+  Result := Self.GetOrbLevel(Self.GetPrayerCircle);
+end;
+
+(*
+Minimap.GetSpecLevel
+~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.GetSpecLevel(): Int32;
+
+Returns the current special attack level.
+
+Example
+-------
+
+  WriteLn Minimap.GetSpecLevel();
+*)
+function TRSMinimap.GetSpecLevel(): Int32;
+begin
+  Result := Self.GetOrbLevel(Self.GetSpecAttackCircle);
+end;
+
+
+(*
+Minimap.GetPolygon
+~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.GetPolygon(): TPointArray;
+
+Returns the minimap polygon which is not a perfect circle.
+
+Example
+-------
+
+  Debug(Minimap.GetPolygon().Connect());
+*)
+function TRSMinimap.GetPolygon(): TPointArray;
 begin
   Result := Self.PolygonOffset.Offset(Self.Center);
 end;
 
-function TRSMinimap.GetCompassAngle(AsDegrees: Boolean = True): Double;
+
+(*
+Minimap.GetCompassAngle
+~~~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.GetCompassAngle(asDegrees: Boolean = True): Double;
+
+Returns the current compass angle as degrees or radians.
+
+.. note:: Credits to Slacky
+
+Example
+-------
+
+  WriteLn Minimap.GetCompassAngle();
+*)
+function TRSMinimap.GetCompassAngle(asDegrees: Boolean = True): Double;
 var
-  TPA: TPointArray;
-  ATPA: T2DPointArray;
-  South: Vector2;
+  dotpts: TPointArray;
+  g: T2DPointArray;
 begin
-  with GetCompassCircle() do
-    if SRL.FindColors(TPA, CTS1(2565532, 50), Bounds()) then // red
+  with Self.GetCompassCircle() do
+  begin
+    if SRL.FindColors(dotpts, CTS1(2565532, 50), Bounds()) then // red
     begin
-      FilterPointsDist(TPA, 0, Radius, X,Y);
-      ATPA := TPA.Split(5);
-      ATPA.SortByMiddle(ATPA.Biggest().Mean());
-    
-      South := ATPA[High(ATPA)].MeanEx;
-    
-      Result := FixRad(ArcTan2(South.Y - Y, South.X - X) - (PI / 2));
-      if (Result <> 0) then
-      begin
-	      Result += 0.0333; // compass dial is floored.. this makes us more accurate.
-        if AsDegrees then
-          Result := Degrees(Result);
-      end;
+      FilterPointsDist(dotpts, 12, Radius, X,Y);
+      g := dotpts.Cluster(4);
+
+      if (g[0].Mean().DistanceTo(g[1].Mean()) > 25) then Swap(g[0], g[2]);
+      if (g[0].Mean().DistanceTo(g[2].Mean()) > 25) then Swap(g[0], g[1]);
+
+      if Abs(srl.DeltaAngle(ArcTan2(g[1][0].Y - Y, g[1][0].X - X)+PI/2, ArcTan2(g[0][0].Y - Y, g[0][0].X - X), 2*PI)) > PI/2 then
+        Swap(g[1], g[2]);
+
+      Result := FixRad(ArcTan2(g[1].MeanEx().Y - g[2].MeanEx().Y, g[1].MeanEx().X - g[2].MeanEx().X));
+
+      if asDegrees then
+        Result := Degrees(Result);
     end;
+  end;
 end;
 
+(*
+Minimap.SetCompassAngle
+~~~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: procedure TRSMinimap.SetCompassAngle(Degrees: Double; Accuracy: Double = 5);
 
+Sets the current compass angle.
+
+Example
+-------
+
+  Minimap.SetCompassAngle(180);
+*)
 procedure TRSMinimap.SetCompassAngle(Degrees: Double; Accuracy: Double = 5);
 const
   DEG_PER_PIXEL = 2.83;
@@ -164,6 +405,8 @@ begin
   end;
 end;
 
+
+
 procedure TRSMinimap.Draw(Bitmap: TMufasaBitmap); override;
 begin
   inherited;
@@ -186,12 +429,12 @@ begin
   Bitmap.SetPixel(Self.Center.X, Self.Center.Y, $0000FF);
 end;
 
-procedure TRSMinimap.Free;
+procedure TRSMinimap.Free();
 begin
   FreeBitmap(Self.FlagBitmap);
 end;
 
-procedure TRSMinimap.Setup; override;
+procedure TRSMinimap.Setup(); override;
 begin
   inherited;
 
@@ -240,23 +483,163 @@ begin
   end;
 end;
 
-function TRSMinimap.IsPointOn(P: TPoint): Boolean; overload;
+
+(*
+Minimap.IsPointOn
+~~~~~~~~~~~~~~~~~
+.. pascal::
+  function TRSMinimap.IsPointOn(P: TPoint): Boolean;
+  function TRSMinimap.IsPointOn(P: TPoint; Expand: Int32): Boolean; overload;
+
+Checks if a point is on the minimap.
+*)
+function TRSMinimap.IsPointOn(p: TPoint): Boolean;
 begin
-  Result := SRL.PointInPoly(P, Self.GetPolygon());
+  Result := SRL.PointInPoly(p, Self.GetPolygon());
 end;
 
-function TRSMinimap.IsPointOn(P: TPoint; Expand: Int32): Boolean; overload;
+function TRSMinimap.IsPointOn(p: TPoint; expand: Int32): Boolean; overload;
 begin
-  Result := SRL.PointInPoly(P, ExpandPolygon(Self.GetPolygon(), Expand));
+  Result := SRL.PointInPoly(p, ExpandPolygon(Self.GetPolygon(), expand));
 end;
 
 
-function TRSMinimap.IsPoisoned: Boolean;
+(*
+Minimap.IsPoisoned
+~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.IsPoisoned(): Boolean;
+
+Returns whether the player is poisoned or not.
+
+Example
+-------
+
+  Writeln Minimap.IsPoisoned();
+*)
+function TRSMinimap.IsPoisoned(): Boolean;
 begin
   Result := SRL.CountColor(CTS0(16391, 3), Self.GetHPCircle().Bounds()) > 0;
 end;
 
-function TRSMinimap.CurePoison: Boolean;
+(*
+Minimap.IsEnvenomed
+~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.IsEnvenomed();
+
+Returns true if we are envenomed.
+
+Example
+-------
+
+  WriteLn Minimap.IsEnvenomed();
+*)
+function TRSMinimap.IsEnvenomed(): Boolean;
+begin
+  Result := SRL.CountColor(CTS0(1515790, 9), Self.GetHPCircle().Bounds()) > 0;
+end;
+
+(*
+Minimap.IsRunEnabled
+~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.IsRunEnabled(): Boolean;
+
+Returns whether the player has run enabled or not.
+
+Example
+-------
+
+  Writeln Minimap.IsRunEnabled();
+*)
+function TRSMinimap.IsRunEnabled(): Boolean;
+begin
+  Result := SRL.CountColor(CTS2(4211520, 6, 2.84, 0.14), Self.GetRunCircle().Bounds) = 0;
+end;
+
+(*
+Minimap.IsPrayerEnabled
+~~~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.IsPrayerEnabled(): Boolean;
+
+Returns whether the player has quick prayers enabled or not.
+
+Example
+-------
+
+  Writeln Minimap.IsPrayerEnabled();
+*)
+function TRSMinimap.IsPrayerEnabled(): Boolean;
+begin
+  Result := SRL.CountColor(CTS0(1168105, 33), Self.GetPrayerCircle().Bounds()) > 20;
+end;
+
+(*
+Minimap.HasStamina
+~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.HasStamina();
+
+Returns true if we are stamina boosted.
+
+Example
+-------
+
+  WriteLn Minimap.HasStamina();
+*)
+function TRSMinimap.HasStamina(): Boolean;
+begin
+  Result := SRL.CountColor(CTS0(2709951, 38), Self.GetRunCircle().Bounds()) > 0;
+end;
+
+(*
+Minimap.IsSpecEnabled
+~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.IsSpecEnabled(): Boolean;
+
+Returns whether the special attack is enabled or not.
+
+Example
+-------
+
+  Writeln Minimap.IsPrayerEnabled();
+*)
+function TRSMinimap.IsSpecEnabled(): Boolean;
+begin
+  Result := SRL.CountColor(CTS2(8682326, 16, 0.03, 1.15), Self.GetSpecAttackCircle.Bounds) > 1;
+end;
+
+(*
+Minimap.IsSpecWeapon
+~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.IsSpecWeapon();
+
+Returns true if the current weapon has a special attack.
+Returns false if the special attack level is at 0 or if the weapon doesn't have a special attack.
+
+Example
+-------
+
+  Writeln Minimap.IsSpecWeapon();
+*)
+function TRSMinimap.IsSpecWeapon(): Boolean;
+begin
+  Result := ((SRL.CountColor(CTS2(8480786, 19, 0.05, 1.36), Self.GetSpecAttackCircle.Bounds) > 0) or
+            Self.IsSpecEnabled);
+end;
+
+
+(*
+Minimap.CurePoison
+~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.CurePoison(): Boolean;
+
+Attempts to cure poison by clicking the HP orb.
+This only works if you have a source of anti-poison.
+
+Example
+-------
+
+  Writeln Minimap.CurePoison();
+*)
+function TRSMinimap.CurePoison(): Boolean;
 var
   T: UInt64;
 begin
@@ -276,13 +659,19 @@ begin
 end;
 
 
+(*
+Minimap.EnableRun
+~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.EnableRun(): Boolean;
 
-function TRSMinimap.IsRunEnabled: Boolean;
-begin
-  Result := SRL.CountColor(CTS2(4211520, 6, 2.84, 0.14), Self.GetRunCircle().Bounds) = 0;
-end;
+Attempts to enable the run energy by clicking the run orb.
 
-function TRSMinimap.EnableRun: Boolean;
+Example
+-------
+
+  Writeln Minimap.EnableRun();
+*)
+function TRSMinimap.EnableRun(): Boolean;
 var
   T: UInt64;
 begin
@@ -301,7 +690,19 @@ begin
   end;
 end;
 
-function TRSMinimap.DisableRun: Boolean;
+(*
+Minimap.DisableRun
+~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.DisableRun(): Boolean;
+
+Attempts to disable the run energy by clicking the run orb.
+
+Example
+-------
+
+  Writeln Minimap.DisableRun();
+*)
+function TRSMinimap.DisableRun(): Boolean;
 var
   T: UInt64;
 begin
@@ -320,19 +721,180 @@ begin
   end;
 end;
 
-function TRSMinimap.FindFlag(out P: TPoint): Boolean;
+
+(*
+Minimap.EnablePrayer
+~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.EnablePrayer(): Boolean;
+
+Attempts to enable quick prayers by clicking the prayer orb.
+
+Example
+-------
+
+  Writeln Minimap.EnablePrayer();
+*)
+function TRSMinimap.EnablePrayer(): Boolean;
+var
+  T: UInt64;
+begin
+  if not Self.IsPrayerEnabled() then
+  begin
+    Mouse.Click(Self.GetPrayerCircle(), MOUSE_LEFT);
+
+    T := GetTickCount() + Round(SRL.TruncatedGauss(1000, 2000));
+    while (T > GetTickCount()) do
+    begin
+      if Self.IsPrayerEnabled() then
+        Exit(True);
+
+      Wait(0, 1000, wdLeft);
+    end;
+  end;
+end;
+
+(*
+Minimap.DisablePrayer
+~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.DisablePrayer(): Boolean;
+
+Attempts to disable quick prayers by clicking the prayer orb.
+
+Example
+-------
+
+  Writeln Minimap.DisablePrayer();
+*)
+function TRSMinimap.DisablePrayer(): Boolean;
+var
+  T: UInt64;
+begin
+  if Self.IsPrayerEnabled() then
+  begin
+    Mouse.Click(Self.GetPrayerCircle(), MOUSE_LEFT);
+
+    T := GetTickCount() + Round(SRL.TruncatedGauss(1000, 2000));
+    while (T > GetTickCount()) do
+    begin
+      if not Self.IsPrayerEnabled() then
+        Exit(True);
+
+      Wait(0, 1000, wdLeft);
+    end;
+  end;
+end;
+
+
+(*
+Minimap.EnableSpec
+~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.EnableSpec(minSpec: Int32): Boolean;
+
+Attempts to enable the special attack if we have at leas **minSpec** special attack level.
+
+Example
+-------
+
+  WriteLn Minimap.EnableSpec(25);
+*)
+function TRSMinimap.EnableSpec(minSpec: Int32): Boolean;
+var
+  T: UInt64;
+begin
+  if not Self.IsSpecWeapon or (Self.GetSpecLevel < MinSpec) then
+    Exit(False);
+
+  Result := Self.IsSpecEnabled;
+  if not Result then
+  begin
+    Mouse.Click(Self.GetSpecAttackCircle, MOUSE_LEFT);
+
+    T := GetTickCount() + Round(SRL.TruncatedGauss(1000, 2000));
+    while (T > GetTickCount()) do
+    begin
+      if Self.IsSpecEnabled() then
+        Exit(True);
+
+      Wait(0, 1000, wdLeft);
+    end;
+  end;
+end;
+
+(*
+Minimap.DisableSpec
+~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.DisableSpec();
+
+Attempts to disable the special attack.
+
+Example
+-------
+
+  WriteLn Minimap.DisableSpec();
+*)
+function TRSMinimap.DisableSpec(): Boolean;
+var
+  T: UInt64;
+begin
+  Result := not Self.IsSpecEnabled;
+
+  if Result then
+  begin
+    Mouse.Click(Self.GetSpecAttackCircle, MOUSE_LEFT);
+
+    T := GetTickCount() + Round(SRL.TruncatedGauss(1000, 2000));
+    while (T > GetTickCount()) do
+    begin
+      if not Self.IsSpecEnabled() then
+        Exit(True);
+
+      Wait(0, 1000, wdLeft);
+    end;
+  end;
+end;
+
+
+
+(*
+Minimap.FindFlag
+~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.FindFlag(out p: TPoint): Boolean;
+
+Find the red flag when you are walking somewhere on the minimap.
+
+Example
+-------
+
+  if Minimap.FindFlag(p) then
+    Debug(Box(p, 3, 3));
+*)
+function TRSMinimap.FindFlag(out p: TPoint): Boolean;
 begin
   Result := FindBitmapToleranceIn(Self.FlagBitmap, P.X, P.Y, Self.Bounds, 5);
 end;
 
-function TRSMinimap.HasFlag: Boolean; overload;
+(*
+Minimap.HasFlag
+~~~~~~~~~~~~~~~
+.. pascal::
+  function TRSMinimap.HasFlag(): Boolean;
+  function TRSMinimap.HasFlag(waitTime: Int32): Boolean; overload;
+
+Returns whether the minimap has a red flag or not.
+
+Example
+-------
+
+  WriteLn Minimap.HasFlag();
+*)
+function TRSMinimap.HasFlag(): Boolean;
 var
   P: TPoint;
 begin
   Result := FindFlag(P);
 end;
 
-function TRSMinimap.HasFlag(WaitTime: Int32): Boolean; overload;
+function TRSMinimap.HasFlag(waitTime: Int32): Boolean; overload;
 var
   P: TPoint;
   T: UInt64;
@@ -348,6 +910,13 @@ begin
   end;
 end;
 
+(*
+Minimap.WaitFlag
+~~~~~~~~~~~~~~~~
+.. pascal:: procedure TRSMinimap.WaitFlag(UntilDistance: Int32 = 0);
+
+Waits until we reach the red flag on the minimap when we are walking.
+*)
 procedure TRSMinimap.WaitFlag(UntilDistance: Int32 = 0);
 var
   Current: TPoint;
@@ -372,6 +941,14 @@ begin
   end;
 end;
 
+
+(*
+Minimap.GetDotsBitmap
+~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.GetDotsBitmap(BMP: TMufasaBitmap; Dots: ERSMinimapDots): TPointArray;
+
+Returns the ERSMinimapDots found in a bitmap of the minimap.
+*)
 function TRSMinimap.GetDotsBitmap(BMP: TMufasaBitmap; Dots: ERSMinimapDots): TPointArray;
 var
   Blacks: TPointArray;
@@ -465,7 +1042,17 @@ begin
   end;
 end;
 
-function TRSMinimap.GetDots(Dots: ERSMinimapDots): TPointArray; overload;
+
+(*
+Minimap.GetDots
+~~~~~~~~~~~~~~~
+.. pascal::
+  function TRSMinimap.GetDots(Dots: ERSMinimapDots): TPointArray;
+  function TRSMinimap.GetDots(Dot: ERSMinimapDot): TPointArray; overload;
+
+Returns a TPointArray with the coordinates of the ERSMinimapDots found on the minimap.
+*)
+function TRSMinimap.GetDots(Dots: ERSMinimapDots): TPointArray;
 var
   BMP: TMufasaBitmap;
 begin
@@ -482,12 +1069,37 @@ begin
   Result := GetDots([Dot]);
 end;
 
+
+(*
+Minimap.IsPlayerMoving
+~~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.IsPlayerMoving(MinShift: Integer = 500): Boolean;
+
+Returns whether the player is moving or not according to the specified minimum pixel shift.
+
+Example
+-------
+
+  WriteLn Minimap.IsPlayerMoving();
+*)
 function TRSMinimap.IsPlayerMoving(MinShift: Integer = 500): Boolean;
 begin
   with Self.Center do
     Result := SRL.GetPixelShift([X - 40, Y - 40, X + 40, Y + 40], 300) >= MinShift;
 end;
 
+(*
+Minimap.WaitPlayerMoving
+~~~~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: procedure TRSMinimap.WaitPlayerMoving(MinShift: Integer = 500; Timeout: Int32 = 20000);
+
+Waits for the player to stop moving.
+
+Example
+-------
+
+  Minimap.WaitPlayerMoving();
+*)
 procedure TRSMinimap.WaitPlayerMoving(MinShift: Integer = 500; Timeout: Int32 = 20000);
 var
   T: UInt64;
@@ -497,28 +1109,10 @@ begin
     ;
 end;
 
-function TRSMinimap.GetHPLevel: Int32;
-begin
-  Result := Self.GetOrbLevel(Self.GetHPCircle());
-end;
-
-function TRSMinimap.GetHPPercent: Int32;
-var
-  TPA: TPointArray;
-  Circle: TCircle;
-begin
-  Circle := Self.GetHPCircle();
-  if SRL.FindColors(TPA, CTS1(1250067, 20), Circle.Bounds) > 0 then
-    TPA := TPA.FilterDist(0, Circle.Radius, Circle.X, Circle.Y);
-
-  with TPA.Bounds() do
-    Result := 100 - Ceil((Y2 - Y1) / (Circle.Bounds.Y2 - Circle.Bounds.Y1) * 100);
-end;
-
 var
   Minimap: TRSMinimap;
 
-procedure TRSClient.ClientModeChanged; override;
+procedure TRSClient.ClientModeChanged(); override;
 begin
   inherited;
 
