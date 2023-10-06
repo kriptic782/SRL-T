@@ -454,7 +454,7 @@ type
 function TRSGrandExchange.GetHistory: TRSGEHistory;
 const
   BG_DARK := CTS1(3621708, 5);
-  BG_LIGHT := CTS1(4016466, 5);
+  BG_LIGHT := CTS1(4016466, 6);
 var
   RowDark, RowLight: TPointArray;
   Row: TBox;
@@ -470,7 +470,7 @@ begin
 
   for Row in Rows do
   begin
-    if (Row.Width < 10) or (Row.Height < 10) then
+    if (Row.Width < 350) or (Row.Height < 35) then
       Continue;
 
     Columns := Row.Partition(1, 4);
