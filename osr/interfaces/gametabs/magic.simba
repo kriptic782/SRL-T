@@ -497,6 +497,16 @@ begin
   searchBox.Y2 -= 18;
 
   Result := SRL.FindColors(tpa, $FFFFFF, searchBox) > 10;
+
+  if not Result then
+    Exit;
+
+  for tpa in tpa.Cluster(8) do
+    if tpa.Density < 0.3 then
+      Exit;
+
+  Result := False;
+  tpa := [];
 end;
 
 (*
@@ -514,6 +524,7 @@ Example
 function TRSMagic.ContainsSelected(openTab: Boolean = False): Boolean;
 var
   searchBox: TBox;
+  tpa: TPointArray;
 begin
   if not openTab and not Self.IsOpen() then
     Exit(MainScreen.IsUpText('Cast'));
@@ -521,7 +532,16 @@ begin
   searchBox := GameTab.Bounds();
   searchBox.Y2 -= 18;
 
-  Result := SRL.CountColor($FFFFFF, searchBox) > 10;
+  Result := SRL.FindColors(tpa, $FFFFFF, searchBox) > 10;
+
+  if not Result then
+    Exit;
+
+  for tpa in tpa.Cluster(10) do
+    if tpa.Density < 0.3 then
+      Exit;
+
+  Result := False;
 end;
 
 (*
