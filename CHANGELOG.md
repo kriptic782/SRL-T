@@ -1,3 +1,12 @@
+## [2.7.2](https://github.com/Torwent/SRL-T/compare/v2.7.1...v2.7.2) (2023-10-09)
+
+
+### Bug Fixes
+
+* **magic:** fixed .FindSelected() and .ContainsSelected() ([ff4d4e6](https://github.com/Torwent/SRL-T/commit/ff4d4e67e544adb1adfd22cda702591b0bc5750a))
+
+
+
 ## [2.7.1](https://github.com/Torwent/SRL-T/compare/v2.7.0...v2.7.1) (2023-10-04)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **Magic:** read notes ([1811a91](https://github.com/Torwent/SRL-T/commit/1811a91dde415842f1854deb7330cab8897320d5))
-
-
-
-## [2.6.5](https://github.com/Torwent/SRL-T/compare/v2.6.4...v2.6.5) (2023-09-28)
-
-
-### Bug Fixes
-
-* **iteminterface:** occupied slot counting was not accurate with certain items ([f267b5a](https://github.com/Torwent/SRL-T/commit/f267b5ad95e1d2f447c5e20023846505dc204dd1))
 
 
 
