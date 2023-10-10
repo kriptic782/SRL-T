@@ -196,7 +196,6 @@ begin
 
   ATPA := Self.FindNPC(Self.FINDER_CLERK);
 
-  //debug(ATPA);
   if Length(ATPA) > 2 then
     SetLength(ATPA, 2);
 
@@ -235,11 +234,9 @@ function TRSGrandExchange.GetCurrentInterface: ERSGEInterface;
 var
   tabText : String;
 begin
-  //if Self.GetSetupOfferButton(ERSGESetupOfferButton.HISTORY).Visible() then
   if (Pos('Set up', self.GetTitleText()) > 0) then
     Result := ERSGEInterface.OFFER_SETUP
   else
-  //if Self.GetOfferStatusButton(ERSGEOfferStatusButton.HISTORY).Visible() then
   if (Pos('status', self.GetTitleText()) > 0) then
     Result := ERSGEInterface.OFFER_STATUS
   else
@@ -505,16 +502,10 @@ function TRSGrandExchange.ReturnToMain() : Boolean;
 
     ATPA := TPA.Cluster(1);
 
-    //debug(ATPA);
     for TPA in ATPA do
     begin
-      //if Length(TPA) > 75 then
-      //  Continue;
-
       B := TPA.Bounds();
       B.GetDimensions(W, H);
-      //Writeln(W, ', ', H);
-      //Writeln(length(TPA));
 
       if inRange(W, 20, 30) and inRange(H, 10, 20) then
         exit(B);
@@ -529,7 +520,6 @@ begin
   if Result then wait(800,1200); // Previously was returning too quickly and allowing GE lag to interrupt the next functions
 end;
 
-// Get the next empty slot
 function TRSGrandExchange.nextEmptySlot() : Int32;
 
   function GetStatus() : array of ERSGEOfferType;
@@ -563,9 +553,9 @@ begin
   exit(-1);
 end;
 
-// Read the available cash stack
 function TRSGrandExchange.readCash() : Int32;
 begin
+  // Due to flashing inventory, count stack can fail - this tries several times
   waitUntil((result := Inventory.CountItemStack('Coins')) > 0, 400, 2000);
 end;
 
@@ -642,7 +632,6 @@ begin
   result := SRL.CountColor(18944, self.GetOfferSlots()[slotNumber]) > 0;
 end;
 
-// Get status and return regular TRSGEOfferStatus
 function TRSGrandExchange.GetStatus(slotNumber : Int32; out status : TRSGEOfferStatus) : ERSGEOfferStatus;
 begin
   if Self.GetCurrentInterface() = ERSGEInterface.OFFER_STATUS then exit(self.GetStatus());
@@ -698,7 +687,6 @@ var
   currentQuantity : Int32;
 begin
   currentQuantity := self.GetItemQuantity();
-  //writeln('Current Quantity: ', currentQuantity);
   if currentQuantity = quantity then exit(True);
 
   case quantity of
@@ -848,8 +836,6 @@ begin
       self.DebugLn('TRSGrandExchange.createBuyOffer: Failed to click confirm button');
       exit(False);
     end;
-
-    //self.DebugLn('TRSGrandExchange.createBuyOffer: Result = '  + toStr(Result));
   end else
   begin
     self.DebugLn('TRSGrandExchange.createBuyOffer: Could not enter Quantity properly');
@@ -862,7 +848,6 @@ function TRSGrandExchange.CreateSellOffer(invSlot : Int32; price : String = '-1'
 begin
   if not self.IsOpen() then Exit(False);
 
-  //writeln('Slot Number: ', slotNumber);
   if slotNumber > -1 then
   begin
     if (not Self.GetOfferCreateButton(ERSGEOfferCreateButton.SELL, slotNumber).Visible()) and self.FindProgressPopup() then
@@ -921,10 +906,6 @@ begin
 
   if self._clickConfirm() then
     result := waitUntil(self.GetStatus(slotNumber) = ERSGEOfferStatus.ACTIVE, 250, 4000);
-
-  //if result then Result := self.GetStatus(slotNumber) = ERSGEOfferStatus.ACTIVE;
-
-  //self.DebugLn('TRSGrandExchange.createSellOffer: Result = ' + toStr(Result));
 end;
 
 function TRSGrandExchange.CreateSellOffer(itemName : String; price : String = '-1'; quantity: Int32 = -1; slotNumber : Int32 = -1) : Boolean; overload;
@@ -1017,8 +998,6 @@ begin
 
   if not (self.GetCurrentInterface() = ERSGEInterface.OFFER_STATUS) then
   begin
-    //writeln('Slot was specified, trying to open');
-
     if not self.OpenActiveOffer(slotNumber) then
     begin
       self.DebugLn('CollectOffer: Could not open the offer for slot ' + toStr(slotNumber));
@@ -1027,7 +1006,6 @@ begin
   end;
 
   // Interface buttons can't locate the collection boxes easily within this interface
-  // TBD if grids are the best option
   cBoxes := self.GetCollectionBoxes();
 
   //writeln('Trying to collect from collection boxes');
@@ -1059,8 +1037,6 @@ function TRSGrandExchange.AbortOffer(slotNumber : Int32) : Boolean;
     if length(TPA) = 0 then Exit();
 
     ATPA := TPA.Cluster(1);
-
-    //debug(ATPA);
     for TPA in ATPA do
     begin
       if Length(TPA) > 75 then
@@ -1068,8 +1044,6 @@ function TRSGrandExchange.AbortOffer(slotNumber : Int32) : Boolean;
 
       B := TPA.Bounds();
       B.GetDimensions(W, H);
-      //Writeln(W, ', ', H);
-      //Writeln(length(TPA));
 
       if (W = 20) and (H = 20) then
         exit(B);
