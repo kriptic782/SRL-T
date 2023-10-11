@@ -18,8 +18,8 @@ begin
 
   boxes := Self.GetSearchBoxesFunction();
   for i := 0 to High(slots) do
-    if InRange(i, 0, High(boxes)) then
-      Result += boxes[i];
+    if InRange(slots[i], 0, High(boxes)) then
+      Result += boxes[slots[i]];
 end;
 
 function TRSItemInterface.GetSlotBox(slot: Int32): TBox;
