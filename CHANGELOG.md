@@ -1,3 +1,12 @@
+## [2.7.3](https://github.com/Torwent/SRL-T/compare/v2.7.2...v2.7.3) (2023-10-11)
+
+
+### Bug Fixes
+
+* **ItemInterface:** GetSlotBoxes now returns the right boxes ([fc1751e](https://github.com/Torwent/SRL-T/commit/fc1751e8af3ca037f281acfc49c113273af084d6))
+
+
+
 ## [2.7.2](https://github.com/Torwent/SRL-T/compare/v2.7.1...v2.7.2) (2023-10-09)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([f5eff2f](https://github.com/Torwent/SRL-T/commit/f5eff2f1a30e10a719b1bac87d7416cbcfe18fc1))
-
-
-
-## [2.6.6](https://github.com/Torwent/SRL-T/compare/v2.6.5...v2.6.6) (2023-09-28)
-
-
-### Bug Fixes
-
-* **Magic:** read notes ([1811a91](https://github.com/Torwent/SRL-T/commit/1811a91dde415842f1854deb7330cab8897320d5))
 
 
 
