@@ -1,3 +1,12 @@
+## [2.7.4](https://github.com/Torwent/SRL-T/compare/v2.7.3...v2.7.4) (2023-10-13)
+
+
+### Bug Fixes
+
+* compatibility tweaks with simba1500 ([28c9600](https://github.com/Torwent/SRL-T/commit/28c9600c708a25f23439ffdeff15e592d6175c5b))
+
+
+
 ## [2.7.3](https://github.com/Torwent/SRL-T/compare/v2.7.2...v2.7.3) (2023-10-11)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **Magic:** added a method to deselect spells ([deccb08](https://github.com/Torwent/SRL-T/commit/deccb08ed6e34b9a4aaacdd214961c43e471d713))
-
-
-
-## [2.6.7](https://github.com/Torwent/SRL-T/compare/v2.6.6...v2.6.7) (2023-09-29)
-
-
-### Bug Fixes
-
-* read notes ([f5eff2f](https://github.com/Torwent/SRL-T/commit/f5eff2f1a30e10a719b1bac87d7416cbcfe18fc1))
 
 
 
