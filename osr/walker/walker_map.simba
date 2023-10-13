@@ -72,7 +72,7 @@ var
 begin
   if ExtractFileExt(FileName) <> '.bmp' then
   begin
-    Result := DATAPATH + 'SRL' + DirectorySeparator + 'walker' +
+    Result := SIMBA_DATA_DIR + 'SRL' + DirectorySeparator + 'walker' +
               DirectorySeparator + 'map_' + SHA1File(FileName) + '.bmp';
 
     if not FileExists(Result) then
@@ -140,7 +140,7 @@ var
 begin
   if ExtractFileExt(FileName) <> '.bmp' then
   begin
-    CacheFileName := DATAPATH + 'SRL' + DirectorySeparator + 'walker' +
+    CacheFileName := SIMBA_DATA_DIR + 'SRL' + DirectorySeparator + 'walker' +
                      DirectorySeparator + 'map_' + SHA1String(FileName) + '.bmp';
     if not FileExists(CacheFileName) then
     begin

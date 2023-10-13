@@ -82,10 +82,10 @@ begin
   end;
 end; 
 
-function TPointArray.Find(const Value: TPoint): Integer; constref;
+function TPointArray.Find(const value: TPoint): Integer; constref;
 begin
   for Result := 0 to High(Self) do
-    if (Value.X = Self[Result].X) and (Value.Y = Self[Result].Y) then
+    if value = Self[Result] then
       Exit;
 
   Result := -1;

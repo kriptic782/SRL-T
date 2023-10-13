@@ -16,7 +16,7 @@ var
   SRL_GAUSS_CUTOFF: Double = 4.0;
 
 //none-zero random
-function nzRandom(): Extended;
+function nzRandom(): Double;
 begin
   if SizeOf(Extended) = 10 then
     Result := Max(Random(), 1.0e-4900) //10^-4900 seems to be our safe limit

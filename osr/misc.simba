@@ -23,7 +23,7 @@ SRL.GetXPAtLevel
 
 Given a level it returns the minimum XP needed for it.
 *)
-function TSRL.GetXPAtLevel(level:Int32): Int32; constref;
+function TSRL.GetXPAtLevel(level: Int32): Int32; constref;
 var
   total:Double;
   i:Int32;
@@ -40,7 +40,7 @@ SRL.GetLevelAtXP
 
 Given some XP, it returns what level that is.
 *)
-function TSRL.GetLevelAtXP(XP:UInt32): Int32; constref;
+function TSRL.GetLevelAtXP(XP: UInt32): Int32; constref;
 var 
   total:Double;
 begin
@@ -119,10 +119,10 @@ begin
   BMP.Free();
 end;
 
-function TSRL.FormatNumber(n:Extended; dec:Byte = 3): String; constref;
+function TSRL.FormatNumber(n: Double; dec:Byte = 3): String; constref;
 var
   i: Int32;
-  f: Extended := n;
+  f: Double := n;
 begin
   while (Abs(f) >= 1000) do
   begin

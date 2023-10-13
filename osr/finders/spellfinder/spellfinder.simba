@@ -258,7 +258,7 @@ end;
 procedure TRSSpellFinder.Setup();
 begin
   Self.IMAGES_ZIP  := {$macro CURRENT_DIRECTORY} + DirectorySeparator + 'images.zip';
-  Self.IMAGES_PATH := DATAPATH + 'SRL' + DirectorySeparator + 'spellfinder' +
+  Self.IMAGES_PATH := SIMBA_DATA_DIR + 'SRL' + DirectorySeparator + 'spellfinder' +
                       DirectorySeparator + SHA1File(Self.IMAGES_ZIP) +
                       DirectorySeparator;
   ForceDirectories(Self.IMAGES_PATH);
