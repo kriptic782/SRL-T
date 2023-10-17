@@ -1,3 +1,12 @@
+## [2.7.6](https://github.com/Torwent/SRL-T/compare/v2.7.5...v2.7.6) (2023-10-17)
+
+
+### Bug Fixes
+
+* **ge:** fixing garrett's noob code ([e19fc38](https://github.com/Torwent/SRL-T/commit/e19fc38a3bbb1e9a8d05db3fc7e8d50eab5e1952))
+
+
+
 ## [2.7.5](https://github.com/Torwent/SRL-T/compare/v2.7.4...v2.7.5) (2023-10-16)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **magic:** fixed .FindSelected() and .ContainsSelected() ([ff4d4e6](https://github.com/Torwent/SRL-T/commit/ff4d4e67e544adb1adfd22cda702591b0bc5750a))
-
-
-
-## [2.7.1](https://github.com/Torwent/SRL-T/compare/v2.7.0...v2.7.1) (2023-10-04)
-
-
-### Bug Fixes
-
-* read notes ([8c7973f](https://github.com/Torwent/SRL-T/commit/8c7973f82328fbfb32c01df6f7ef2d810296b20b))
 
 
 
