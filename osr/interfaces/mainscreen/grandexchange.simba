@@ -686,18 +686,19 @@ var
   button : ERSGESetupOfferButton;
   currentQuantity : Int32;
 begin
-  currentQuantity := self.GetItemQuantity();
-  if currentQuantity = quantity then exit(True);
+  currentQuantity := Self.GetItemQuantity();
+  if currentQuantity = quantity then
+    Exit(True);
 
   case quantity of
-    1: button := ERSGESetupOfferButton.QUANTITY_1;
-    10: button := ERSGESetupOfferButton.QUANTITY_1;
-    100: button := ERSGESetupOfferButton.QUANTITY_1;
+    1:        button := ERSGESetupOfferButton.QUANTITY_1;
+    10:       button := ERSGESetupOfferButton.QUANTITY_10;
+    100:      button := ERSGESetupOfferButton.QUANTITY_100;
     1000, -1: button := ERSGESetupOfferButton.QUANTITY_ALL;
-    else button := ERSGESetupOfferButton.QUANTITY_ENTER;
+    else      button := ERSGESetupOfferButton.QUANTITY_ENTER;
   end;
 
-  if self.GetSetupOfferButton(button).Click() then
+  if Self.GetSetupOfferButton(button).Click() then
     if button = ERSGESetupOfferButton.QUANTITY_ENTER then
     begin
       if waitUntil(OCR.Recognize(Chat.Bounds,  TOCRColorFilter.Create([$000000]), RS_FONT_BOLD_12) = 'How many do you wish to buy?', 250, 4000) then
@@ -708,9 +709,9 @@ begin
     end;
 
   if quantity > -1 then
-    result := waitUntil((self.GetItemQuantity() = quantity), 200, 2000)
+    Result := waitUntil((Self.GetItemQuantity() = quantity), 200, 2000)
   else
-    result := waitUntil((self.GetItemQuantity() > 0), 200, 2000);
+    Result := waitUntil((Self.GetItemQuantity() > 0), 200, 2000);
 end;
 
 procedure TRSGrandExchange._EnterPrice(price : String);
