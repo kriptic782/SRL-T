@@ -77,7 +77,7 @@ procedure TRSItemFinder.Setup();
 begin
   Self.IMAGES_ZIP  := {$macro CURRENT_DIRECTORY} + '/item-images.zip';
   Self.ITEM_NAMES  := {$macro CURRENT_DIRECTORY} + '/item-names';
-  Self.IMAGES_PATH := DATAPATH + 'SRL' + DirectorySeparator + 'itemfinder' +
+  Self.IMAGES_PATH := SIMBA_DATA_DIR + 'SRL' + DirectorySeparator + 'itemfinder' +
                       DirectorySeparator + SHA1File(Self.IMAGES_ZIP) +
                       DirectorySeparator;
 

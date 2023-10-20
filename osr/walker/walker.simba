@@ -1101,7 +1101,7 @@ end;
 (*
 TRSWalker.WebWalk
 ~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSWalker.WebWalk(Destination: TPoint; WaitUntilDistance: Int32 = 0; PathRandomness: Extended = 0): Boolean;
+.. pascal:: function TRSWalker.WebWalk(Destination: TPoint; WaitUntilDistance: Int32 = 0; PathRandomness: Double = 0): Boolean;
 
 Web walks to the destination point on the loaded map. Does **not** handle any obstacles.
 Please run ``webber.simba`` to see how webgraphs are built.
@@ -1134,7 +1134,7 @@ Example
   // Or use a location from the webgraph
   Walker.WebWalk(WorldWeb.LOCATION_LUMBRIDGE);
 *)
-function TRSWalker.WebWalk(Destination: TPoint; WaitUntilDistance: Int32 = 0; PathRandomness: Extended = 0): Boolean;
+function TRSWalker.WebWalk(Destination: TPoint; WaitUntilDistance: Int32 = 0; PathRandomness: Double = 0): Boolean;
 var
   Path: TPointArray;
 begin

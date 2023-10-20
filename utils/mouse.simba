@@ -99,7 +99,7 @@ var
   p: TPoint;
   i,x,y,wid,hei: Int32;
   clr, tol,heat: Int32;
-  hue,sat: Extended;
+  hue,sat: Double;
   m: TSingleMatrix;
   mats: array of TSingleMatrix;
   tmp,ClientBitmap, DebugBitmap: TMufasaBitmap;

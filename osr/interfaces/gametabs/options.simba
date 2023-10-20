@@ -157,7 +157,7 @@ end;
 
 function TRSOptions.IsHouseOptionsOpen: Boolean;
 begin
-  Result := Self.GetHouseOptionsButton(ERSHouseOptionsButton.CLOSE).Visible;
+  Result := SRL.CountColor(CTS2(4630611, 23, 0.04, 0.79), Self.Bounds()) > 115;
 end;
 
 function TRSOptions.OpenHouseOptions: Boolean;
