@@ -824,12 +824,6 @@ begin
 
     wait(random(400,800));
 
-    if self.GetItemTotalPrice() > self.readCash() then
-    begin
-      self.DebugLn('TRSGrandExchange.createBuyOffer: Cash is not sufficient to cover this offer');
-      exit(False);
-    end;
-
     if self._clickConfirm() then
       result := waitUntil(self.GetStatus(slotNumber) = ERSGEOfferStatus.ACTIVE, 250, 4000)
     else
