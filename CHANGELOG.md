@@ -1,3 +1,12 @@
+## [2.7.7](https://github.com/Torwent/SRL-T/compare/v2.7.6...v2.7.7) (2023-10-22)
+
+
+### Bug Fixes
+
+* **options:** cut emeralds in the inventory were coming out as true for TRSOptions.IsHouseOptionsOpen() ([27dd6de](https://github.com/Torwent/SRL-T/commit/27dd6dee92b3a82ee76692e6a170e115a28488b1))
+
+
+
 ## [2.7.6](https://github.com/Torwent/SRL-T/compare/v2.7.5...v2.7.6) (2023-10-17)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **ItemInterface:** GetSlotBoxes now returns the right boxes ([fc1751e](https://github.com/Torwent/SRL-T/commit/fc1751e8af3ca037f281acfc49c113273af084d6))
-
-
-
-## [2.7.2](https://github.com/Torwent/SRL-T/compare/v2.7.1...v2.7.2) (2023-10-09)
-
-
-### Bug Fixes
-
-* **magic:** fixed .FindSelected() and .ContainsSelected() ([ff4d4e6](https://github.com/Torwent/SRL-T/commit/ff4d4e67e544adb1adfd22cda702591b0bc5750a))
 
 
 
