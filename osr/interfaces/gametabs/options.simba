@@ -155,9 +155,9 @@ begin
     Result := Buttons[Button];
 end;
 
-function TRSOptions.IsHouseOptionsOpen: Boolean;
+function TRSOptions.IsHouseOptionsOpen(): Boolean;
 begin
-  Result := SRL.CountColor(CTS2(4630611, 23, 0.04, 0.79), Self.Bounds()) > 115;
+  Result := SRL.CountColor(CTS2(4630611, 23, 0.04, 0.79), Self.Bounds()) = 148;
 end;
 
 function TRSOptions.OpenHouseOptions: Boolean;
@@ -243,7 +243,7 @@ function TRSGameTabs.GetCurrentTab: ERSGameTab; override;
 begin
   Result := inherited;
 
-  if (Result = ERSGameTab.UNKNOWN) and Options.IsHouseOptionsOpen then
+  if (Result = ERSGameTab.UNKNOWN) and Options.IsHouseOptionsOpen() then
     Result := ERSGameTab.OPTIONS;
 end;
 

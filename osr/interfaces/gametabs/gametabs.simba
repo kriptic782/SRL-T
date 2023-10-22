@@ -115,7 +115,7 @@ function TRSGameTabs.Open(Tab: ERSGameTab): Boolean;
 var
   i: Int32;
 begin
-  if GetCurrentTab() = Tab then
+  if Self.GetCurrentTab() = Tab then
     Exit(True);
 
   for i := 1 to 3 do
