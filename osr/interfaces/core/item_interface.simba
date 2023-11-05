@@ -103,6 +103,23 @@ begin
 end;
 
 
+function TRSItemInterface.SlotUsed(slot: Int32): Boolean;
+var
+  slots: TBoxArray;
+begin
+  if (@Self.GetSearchBoxesFunction = nil) then
+    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+
+  slots := Self.GetSearchBoxesFunction();
+  Result := SRL.CountColor(CTS1(1118740, 35), slots[slot]) > 0;
+end;
+
+function TRSItemInterface.SlotEmpty(slot: Int32): Boolean;
+begin
+  Result := not Self.SlotUsed(slot);
+end;
+
+
 function TRSItemInterface.GetPixelShift(slot: TBox; waitTime: Int32): Int32;
 begin
   Result := SRL.GetPixelShift(slot, waitTime);
