@@ -1,3 +1,12 @@
+## [2.7.8](https://github.com/Torwent/SRL-T/compare/v2.7.7...v2.7.8) (2023-11-05)
+
+
+### Bug Fixes
+
+* **iteminterface:** add slot used/empty function ([11119de](https://github.com/Torwent/SRL-T/commit/11119deda58f45725671f97358a19b65ae19950d))
+
+
+
 ## [2.7.7](https://github.com/Torwent/SRL-T/compare/v2.7.6...v2.7.7) (2023-10-22)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * compatibility tweaks with simba1500 ([28c9600](https://github.com/Torwent/SRL-T/commit/28c9600c708a25f23439ffdeff15e592d6175c5b))
-
-
-
-## [2.7.3](https://github.com/Torwent/SRL-T/compare/v2.7.2...v2.7.3) (2023-10-11)
-
-
-### Bug Fixes
-
-* **ItemInterface:** GetSlotBoxes now returns the right boxes ([fc1751e](https://github.com/Torwent/SRL-T/commit/fc1751e8af3ca037f281acfc49c113273af084d6))
 
 
 
