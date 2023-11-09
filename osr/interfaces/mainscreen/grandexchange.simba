@@ -1079,7 +1079,9 @@ begin
     self.DebugLn('GrandExchange: Abort Slot ' + toStr(slotNumber) + ': ' + toStr(result));
 end;
 
-function tRSGrandExchange.CreateBuyOffer(itemName : String; price : String = '-1'; quantity: Int32 = 1; slotNumber : Int32 = -1; loops : Int32) : Boolean; overload;
+function TRSGrandExchange.CreateBuyOffer(itemName : String; price : String = '-1'; quantity: Int32 = 1; slotNumber : Int32 = -1; loops : Int32) : Boolean; overload;
+var
+  i: Int32;
 begin
   if slotNumber = -1 then
     slotNumber := self.NextEmptySlot();
@@ -1090,7 +1092,7 @@ begin
     exit(False);
   end;
 
-  for 1 to loops do
+  for i := 1 to loops do
   begin
     if self.CreateBuyOffer(itemName, price, quantity, slotNumber) then exit(True);
 
