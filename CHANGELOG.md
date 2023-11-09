@@ -1,3 +1,12 @@
+## [2.7.9](https://github.com/Torwent/SRL-T/compare/v2.7.8...v2.7.9) (2023-11-09)
+
+
+### Bug Fixes
+
+* **GE:** simba codetools shouldn't complain again the GE file anymore ([50bc69e](https://github.com/Torwent/SRL-T/commit/50bc69ea85056ee2421128b4acfe3fc812d11caa))
+
+
+
 ## [2.7.8](https://github.com/Torwent/SRL-T/compare/v2.7.7...v2.7.8) (2023-11-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **house options:** fixed issues caused byy button artefacts ([4c84aef](https://github.com/Torwent/SRL-T/commit/4c84aefd01d2700b435372fc1db43074ac98f315))
-
-
-
-## [2.7.4](https://github.com/Torwent/SRL-T/compare/v2.7.3...v2.7.4) (2023-10-13)
-
-
-### Bug Fixes
-
-* compatibility tweaks with simba1500 ([28c9600](https://github.com/Torwent/SRL-T/commit/28c9600c708a25f23439ffdeff15e592d6175c5b))
 
 
 
