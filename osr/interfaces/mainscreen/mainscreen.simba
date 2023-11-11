@@ -630,9 +630,9 @@ function TRSMainScreen.FindHitsplats(area: TBox): TRSHitsplatArray;
   end;
 
 begin
-  //Known red hits used: 957,186,240,243
-  //Known blue hits used: 16530749, 16728128
-  Result := Find(CTS2(726, 6, 0.03, 0.01), True) +
+  //Known red hits used: 957,186,240,243, 659, 189,
+  //Known blue hits used: 16530749, 16728128, 13054514
+  Result := Find(CTS2(707, 10, 0.02, 0.01), True) +
             Find(CTS2(4079358, 1, 33.34, 2.02), False);
 end;
 
