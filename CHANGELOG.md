@@ -1,3 +1,12 @@
+## [2.7.10](https://github.com/Torwent/SRL-T/compare/v2.7.9...v2.7.10) (2023-11-11)
+
+
+### Bug Fixes
+
+* FindHitsplats added iowerth dungeon hitsplats colors ([c53adb6](https://github.com/Torwent/SRL-T/commit/c53adb658d7f74b850b0cbf1ac138a6cdc18597b))
+
+
+
 ## [2.7.9](https://github.com/Torwent/SRL-T/compare/v2.7.8...v2.7.9) (2023-11-09)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **ge:** fixing garrett's noob code ([e19fc38](https://github.com/Torwent/SRL-T/commit/e19fc38a3bbb1e9a8d05db3fc7e8d50eab5e1952))
-
-
-
-## [2.7.5](https://github.com/Torwent/SRL-T/compare/v2.7.4...v2.7.5) (2023-10-16)
-
-
-### Bug Fixes
-
-* **house options:** fixed issues caused byy button artefacts ([4c84aef](https://github.com/Torwent/SRL-T/commit/4c84aefd01d2700b435372fc1db43074ac98f315))
 
 
 
