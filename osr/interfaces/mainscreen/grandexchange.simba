@@ -1115,10 +1115,11 @@ begin
 end;
 
 function tRSGrandExchange.CreateSellOffer(invSlot : Int32; price : String = '-1'; quantity: Int32 = -1; slotNumber : Int32 = -1; uptextCheck: String = ''; loops : Int32) : Boolean; overload;
-var internalSlotNumber : Int32;
+var
+  internalSlotNumber, i: Int32;
 begin
   if slotNumber = -1 then internalSlotNumber := self.NextEmptySlot() else internalSlotNumber := slotNumber;
-  for 1 to loops do
+  for i := 1 to loops do
   begin
     if self.CreateSellOffer(invSlot, price, quantity, slotNumber, uptextCheck) then exit(True);
 

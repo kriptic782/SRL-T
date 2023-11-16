@@ -191,8 +191,8 @@ end;
 (*
 TRSWalkerMap.Load
 ~~~~~~~~~~~~~~~~~
-.. pascal:: procedure TRSWalkerMap.Load(FileName: String; Scaling: Integer); overload;
-.. pascal:: procedure TRSWalkerMap.Load(FileName: String; ARegions: TBoxArray; Scaling: Integer; Padding: Integer = 50); overload;
+.. pascal:: procedure TRSWalkerMap.Load(fileName: String; scaling: Integer); overload;
+.. pascal:: procedure TRSWalkerMap.Load(fileName: String; aRegions: TBoxArray; scaling: Integer; Padding: Integer = 50); overload;
 
 Internal function responsible for setting up TRSWalkerMap.
 This is where we load our bitmaps and store them in a TRSWalkerMap variable.
@@ -211,36 +211,36 @@ Example
     map.ScaledMap.Debug();
   end;
 *)
-procedure TRSWalkerMap.Load(FileName: String; Scaling: Integer);
+procedure TRSWalkerMap.Load(fileName: String; scaling: Integer);
 begin
   Self.ScaledMap.Init();
-  Self.Map := Self.InternalLoadMap(FileName);
-  Self.Map.Downsample(Scaling, Self.ScaledMap);
+  Self.Map := Self.InternalLoadMap(fileName);
+  Self.Map.Downsample(scaling, Self.ScaledMap);
   AddOnTerminate(@Self.Free);
 
   Self.Regions := [[0, 0, Self.Map.getWidth()-1, Self.Map.getHeight()-1]];
 end;
 
-procedure TRSWalkerMap.Load(FileName: String; ARegions: TBoxArray; Scaling: Integer; Padding: Integer = 50); overload;
+procedure TRSWalkerMap.Load(fileName: String; aRegions: TBoxArray; scaling: Integer; padding: Integer = 50); overload;
 var
   Bitmaps: TMufasaBitmapArray;
   I: Integer;
 begin
-  SetLength(Self.Regions, Length(ARegions));
-  SetLength(Self.RegionOffsets, Length(ARegions));
+  SetLength(Self.Regions, Length(aRegions));
+  SetLength(Self.RegionOffsets, Length(aRegions));
 
   SetLength(Bitmaps, Length(Self.Regions));
   for I := 0 to High(Bitmaps) do
   begin
-    Self.RegionOffsets[I] := Point(ARegions[I].X1, ARegions[I].Y1);
+    Self.RegionOffsets[I] := Point(aRegions[I].X1, aRegions[I].Y1);
 
-    Bitmaps[I] := Self.InternalLoadMap(FileName, ARegions[I]);
-    if (ARegions[I] <> RSWalkerRegions.WORLD) then
+    Bitmaps[I] := Self.InternalLoadMap(fileName, aRegions[I]);
+    if (aRegions[I] <> RSWalkerRegions.WORLD) then
     begin
-      Self.RegionOffsets[I].X -= Padding;
-      Self.RegionOffsets[I].Y -= Padding;
+      Self.RegionOffsets[I].X -= padding;
+      Self.RegionOffsets[I].Y -= padding;
 
-      Bitmaps[I].Pad(Padding);
+      Bitmaps[I].Pad(padding);
     end;
 
     Self.Regions[I] := Box(0, 0, Bitmaps[I].GetWidth(), Bitmaps[I].GetHeight());
