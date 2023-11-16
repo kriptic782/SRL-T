@@ -1,3 +1,12 @@
+## [2.7.11](https://github.com/Torwent/SRL-T/compare/v2.7.10...v2.7.11) (2023-11-16)
+
+
+### Bug Fixes
+
+* **ge:** codetools bug shouldn't complain anymore ([e69d39a](https://github.com/Torwent/SRL-T/commit/e69d39a46c4a3a7c07653a6682b0976a598750fb))
+
+
+
 ## [2.7.10](https://github.com/Torwent/SRL-T/compare/v2.7.9...v2.7.10) (2023-11-11)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **options:** cut emeralds in the inventory were coming out as true for TRSOptions.IsHouseOptionsOpen() ([27dd6de](https://github.com/Torwent/SRL-T/commit/27dd6dee92b3a82ee76692e6a170e115a28488b1))
-
-
-
-## [2.7.6](https://github.com/Torwent/SRL-T/compare/v2.7.5...v2.7.6) (2023-10-17)
-
-
-### Bug Fixes
-
-* **ge:** fixing garrett's noob code ([e19fc38](https://github.com/Torwent/SRL-T/commit/e19fc38a3bbb1e9a8d05db3fc7e8d50eab5e1952))
 
 
 
