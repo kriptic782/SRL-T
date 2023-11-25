@@ -1,5 +1,55 @@
 {$loadlib ../plugins/libremoteinput}
 
+function EIOS_GetClientPIDs(): TIntegerArray;
+var
+  I: Int32;
+begin
+  for I := 0 to EIOS_GetClients(True) - 1 do
+    Result += EIOS_GetClientPID(I);
+end;
+
+function EIOS_PairClient(Pid: Int32): Pointer; override;
+begin
+  Result := inherited();
+  if (Result = nil) then
+    raise 'Failed to pair client';
+end;
+
+
+function EIOS_IsInputEnabled(eios: Pointer): Boolean;
+begin
+  Result := EIOS_IsMouseInputEnabled(eios) and EIOS_IsKeyboardInputEnabled(eios);
+end;
+
+procedure EIOS_SetInputEnabled(eios: Pointer; enabled: Boolean);
+begin
+  EIOS_SetMouseInputEnabled(eios, enabled);
+  EIOS_SetKeyboardInputEnabled(eios, enabled);
+end;
+
+
+procedure RIInject(PID: Int32); override;
+var
+  PIDs: TIntegerArray;
+begin
+  inherited();
+
+  if (not WaitUntil(Length(PIDs := EIOS_GetClientPIDs()) > 0, 100, 1000) and (Pids.Find(Pid) > -1)) then
+    raise 'Failed to inject into pid ' + ToString(pid);
+end;
+
+procedure RIInject(ProcessName: String; out PID: Int32); overload;
+var
+  PIDs: TIntegerArray;
+begin
+  RIInject(ProcessName);
+
+  if (not WaitUntil(Length(PIDs := EIOS_GetClientPIDs()) > 0, 100, 1000)) then
+    raise 'Failed to inject into "' + ProcessName + '"';
+
+  PID := PIDs[0];
+end;
+
 type
   TRemoteInput = record(TSRLBaseRecord)
     Image: TMufasaBitmap;
@@ -7,7 +57,53 @@ type
     PID: Int32;
   end;
 
-procedure TRemoteInput.Setup;
+
+function TRemoteInput.IsSetup(): Boolean;
+begin
+  Result := Self.PID > 0;
+end;
+
+procedure TRemoteInput.DisableRealInput();
+begin
+  EIOS_SetInputEnabled(Self.EIOS, False);
+end;
+
+procedure TRemoteInput.EnableRealInput();
+begin
+  EIOS_SetInputEnabled(Self.EIOS, True);
+end;
+
+procedure TRemoteInput.ReleaseClient();
+begin
+  EIOS_ReleaseClient(Self.EIOS);
+end;
+
+function TRemoteInput.GetImage(): TMufasaBitmap;
+begin
+  if (Self.Image = nil) then
+  begin
+    EIOS_SetGraphicsDebugging(Self.EIOS, True);
+
+    Self.Image.Init();
+    Self.Image.SetPersistentMemory(
+       PtrUInt(EIOS_GetDebugImageBuffer(Self.EIOS)),
+       GetClientBounds().Width(), GetClientBounds().Height()
+    );
+
+    Self.Image.Clear();
+  end;
+
+  Result := Self.Image;
+end;
+
+procedure TRemoteInput.Free();
+begin
+  Self.GetImage().DrawClear(0);
+  Self.EnableRealInput();
+  Self.ReleaseClient();
+end;
+
+procedure TRemoteInput.Setup();
 const
   RS_EXECUTABLE = {$IFDEF WINDOWS}'JagexLauncher.exe'{$ELSE}'java'{$ENDIF};
 begin
@@ -34,32 +130,12 @@ begin
   except
     Self.Fatal(GetExceptionMessage());
   end;
+
+  AddOnTerminate(@Self.Free);
 end;
 
-function TRemoteInput.IsSetup: Boolean;
-begin
-  Result := (Self.PID > 0);
-end;
 
-function TRemoteInput.GetImage: TMufasaBitmap;
-begin
-  if (Self.Image = nil) then
-  begin
-    EIOS_SetGraphicsDebugging(Self.EIOS, True);
-      
-    Self.Image.Init();
-    Self.Image.SetPersistentMemory(
-       PtrUInt(EIOS_GetDebugImageBuffer(Self.EIOS)),
-       GetClientBounds().Width(), GetClientBounds().Height()
-    );
-    
-    Self.Image.Clear();
-  end;
-  
-  Result := Self.Image;
-end;
-
-procedure TRemoteInput.LoseFocus;
+procedure TRemoteInput.LoseFocus();
 var
   Space: TBoxArray;
 begin
@@ -73,39 +149,4 @@ begin
   end;
 end;
 
-function EIOS_GetClientPIDs: TIntegerArray;
-var
-  I: Int32;
-begin
-  for I := 0 to EIOS_GetClients(True) - 1 do
-    Result += EIOS_GetClientPID(I); 
-end;
 
-function EIOS_PairClient(Pid: Int32): Pointer; override;
-begin
-  Result := inherited();
-  if (Result = nil) then
-    raise 'Failed to pair client';
-end;
-
-procedure RIInject(PID: Int32); override;
-var
-  PIDs: TIntegerArray;
-begin
-  inherited();
-
-  if (not WaitUntil(Length(PIDs := EIOS_GetClientPIDs()) > 0, 100, 1000) and (Pids.Find(Pid) > -1)) then
-    raise 'Failed to inject into pid ' + ToString(pid);  
-end;
-
-procedure RIInject(ProcessName: String; out PID: Int32); overload;
-var
-  PIDs: TIntegerArray;
-begin
-  RIInject(ProcessName);
-  
-  if (not WaitUntil(Length(PIDs := EIOS_GetClientPIDs()) > 0, 100, 1000)) then
-    raise 'Failed to inject into "' + ProcessName + '"'; 
-    
-  PID := PIDs[0];
-end;
