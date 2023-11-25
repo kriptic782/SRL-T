@@ -1,3 +1,17 @@
+# [3.0.0](https://github.com/Torwent/SRL-T/compare/v2.7.11...v3.0.0) (2023-11-25)
+
+
+### Bug Fixes
+
+* **RemoteInput:** read notes ([56cdb6f](https://github.com/Torwent/SRL-T/commit/56cdb6fc3090aeabbaa2f38088e9c108c140432c))
+
+
+### BREAKING CHANGES
+
+* **RemoteInput:** moving WaspLib remote input methods to SRL is a breaking change, WaspLib will also require an update
+
+
+
 ## [2.7.11](https://github.com/Torwent/SRL-T/compare/v2.7.10...v2.7.11) (2023-11-16)
 
 
@@ -31,15 +45,6 @@
 ### Bug Fixes
 
 * **iteminterface:** add slot used/empty function ([11119de](https://github.com/Torwent/SRL-T/commit/11119deda58f45725671f97358a19b65ae19950d))
-
-
-
-## [2.7.7](https://github.com/Torwent/SRL-T/compare/v2.7.6...v2.7.7) (2023-10-22)
-
-
-### Bug Fixes
-
-* **options:** cut emeralds in the inventory were coming out as true for TRSOptions.IsHouseOptionsOpen() ([27dd6de](https://github.com/Torwent/SRL-T/commit/27dd6dee92b3a82ee76692e6a170e115a28488b1))
 
 
 
