@@ -1,3 +1,12 @@
+## [3.0.1](https://github.com/Torwent/SRL-T/compare/v3.0.0...v3.0.1) (2023-11-28)
+
+
+### Bug Fixes
+
+* read notes ([7f78206](https://github.com/Torwent/SRL-T/commit/7f78206a66175b9590f94a168d2b25446cde9784))
+
+
+
 # [3.0.0](https://github.com/Torwent/SRL-T/compare/v2.7.11...v3.0.0) (2023-11-25)
 
 
@@ -36,15 +45,6 @@
 ### Bug Fixes
 
 * **GE:** simba codetools shouldn't complain again the GE file anymore ([50bc69e](https://github.com/Torwent/SRL-T/commit/50bc69ea85056ee2421128b4acfe3fc812d11caa))
-
-
-
-## [2.7.8](https://github.com/Torwent/SRL-T/compare/v2.7.7...v2.7.8) (2023-11-05)
-
-
-### Bug Fixes
-
-* **iteminterface:** add slot used/empty function ([11119de](https://github.com/Torwent/SRL-T/commit/11119deda58f45725671f97358a19b65ae19950d))
 
 
 
