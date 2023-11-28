@@ -173,7 +173,6 @@ begin
   Result := FindText(Text, _);
 end;
 
-
 (*
 Login.IsReady
 ~~~~~~~~~~~~~
@@ -557,19 +556,23 @@ Example
 function TRSLogin.EnterGame(): Boolean;
 var
   t: UInt64;
-  i: Int32;
 begin
-  t := GetTickCount() + 15000;
-  repeat
-    //Ensure we hover the box if the player hovered the game.
-    if GetTickCount() > (t - 10000) then
+  t := GetTickCount();
+  Self.DebugLn('Handling lobby screen.');
+
+  while not Self.ClickText('CLICK HERE TO PLAY') do
+  begin
+    if GetTickCount() > (t + 15000) then
+    begin
+      Self.DebugLn('Lobby screen timed out.');
+      Exit;
+    end;
+
+    if GetTickCount() > (t + 5000) then
       Mouse.Move(Box(Mouse.Position(), 10, 10), True);
 
-    if Self.ClickText('CLICK HERE TO PLAY') then
-      Break;
-
     Wait(500);
-  until t < GetTickCount();
+  end;
 
   Result := RSClient.IsLoggedIn(5000);
 end;
@@ -651,7 +654,7 @@ var
   timeout: UInt64;
 begin
   timeout := GetTickCount() + 80000; //80 seconds.
-
+  Self.DebugLn('Waiting for login message.');
   while Self.IsOpen() do
   begin
     message := Self.GetLoginMessage();
@@ -660,7 +663,11 @@ begin
       Break;
 
     if GetTickCount() >= timeout then
+    begin
+      Self.DebugLn('Login attempt timed out.');
       Exit;
+    end;
+
     Wait(500);
   end;
 
@@ -684,18 +691,32 @@ Example
 function TRSLogin.LoginPlayer(): Boolean;
 var
   attempts, world: Int32;
+  timeout: UInt64;
   player: TRSLoginPlayer;
   isLauncher: Boolean;
 begin
   Self.DebugLn('Logging in player');
 
+  timeout := GetTickCount() + 40000;
   while not Self.IsReady() do
+  begin
     if Self.HandleDialogs() then
       Wait(500);
 
+    if GetTickCount() > timeout then
+    begin
+      Self.DebugLn('Timed out waiting for the loginscreen to be ready.');
+      Exit;
+    end;
+  end;
+
   isLauncher := Self.UsingLauncher();
-  if not isLauncher then
+
+  if isLauncher then
+    Self.DebugLn('Jagex Launcher login detected.')
+  else
   begin
+    Self.DebugLn('Legacy login detected.');
     player := Self.GetPlayer();
     if (player.User = '') or (player.Password = '') then
       Self.Fatal('Player has no username or password');
@@ -706,14 +727,12 @@ begin
     Self.DebugLn('Attempt ' + ToString(attempts + 1));
 
     if player.Worlds <> [] then
-    begin
       if not (Self.GetCurrentWorld() in player.Worlds) or SRL.Dice(30) then
       begin
         world := Player.Worlds[Random(Length(Player.Worlds))];
         if (not Self.SwitchToWorld(world)) then
           Exit;
       end;
-    end;
 
     if Self.HandleDialogs() then
       Wait(500);
