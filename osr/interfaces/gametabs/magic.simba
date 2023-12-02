@@ -502,7 +502,6 @@ begin
     Exit;
 
   for tpa in tpa.Cluster(8) do
-    if tpa.Density < 0.3 then
     if tpa.Density < 0.28 then
       Exit;
 
