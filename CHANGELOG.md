@@ -1,3 +1,12 @@
+## [3.0.4](https://github.com/Torwent/SRL-T/compare/v3.0.3...v3.0.4) (2023-12-02)
+
+
+### Bug Fixes
+
+* **ItemFinder:** updated itemfinder with the latest items ([6325781](https://github.com/Torwent/SRL-T/commit/6325781a175311da0dab51fa131a3179659d305c))
+
+
+
 ## [3.0.3](https://github.com/Torwent/SRL-T/compare/v3.0.2...v3.0.3) (2023-12-02)
 
 
@@ -36,15 +45,6 @@
 ### BREAKING CHANGES
 
 * **RemoteInput:** moving WaspLib remote input methods to SRL is a breaking change, WaspLib will also require an update
-
-
-
-## [2.7.11](https://github.com/Torwent/SRL-T/compare/v2.7.10...v2.7.11) (2023-11-16)
-
-
-### Bug Fixes
-
-* **ge:** codetools bug shouldn't complain anymore ([e69d39a](https://github.com/Torwent/SRL-T/commit/e69d39a46c4a3a7c07653a6682b0976a598750fb))
 
 
 
