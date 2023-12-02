@@ -1,3 +1,12 @@
+## [3.0.2](https://github.com/Torwent/SRL-T/compare/v3.0.1...v3.0.2) (2023-12-02)
+
+
+### Bug Fixes
+
+* **Magic:** Arceuus cemetery teleport should no longer come out a selected spell ([a20cb16](https://github.com/Torwent/SRL-T/commit/a20cb16911a15c0c01299db3b194705af2a850e0))
+
+
+
 ## [3.0.1](https://github.com/Torwent/SRL-T/compare/v3.0.0...v3.0.1) (2023-11-28)
 
 
@@ -36,15 +45,6 @@
 ### Bug Fixes
 
 * FindHitsplats added iowerth dungeon hitsplats colors ([c53adb6](https://github.com/Torwent/SRL-T/commit/c53adb658d7f74b850b0cbf1ac138a6cdc18597b))
-
-
-
-## [2.7.9](https://github.com/Torwent/SRL-T/compare/v2.7.8...v2.7.9) (2023-11-09)
-
-
-### Bug Fixes
-
-* **GE:** simba codetools shouldn't complain again the GE file anymore ([50bc69e](https://github.com/Torwent/SRL-T/commit/50bc69ea85056ee2421128b4acfe3fc812d11caa))
 
 
 
