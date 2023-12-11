@@ -98,6 +98,14 @@ begin
   Self.ItemNames.Add(item + '=' + id);
 end;
 
+procedure TRSItemFinder.AddItemNames(constref items: TStringArray; constref id: String);
+var
+  item: String;
+begin
+  for item in items do
+    Self.ItemNames.Add(item + '=' + id);
+end;
+
 procedure TRSItemFinder.AddItemFilter(item: String; filter: TRSItemFinderCustomFilter);
 begin
   Self.ItemFilters += [item, @filter];
@@ -443,5 +451,4 @@ begin
   ItemFinder.AddItemFilter('Lava scale', @TRSItemFinderCustomFilter.LavaScales);
   ItemFinder.AddItemFilter('Lava scale shard', @TRSItemFinderCustomFilter.LavaScales);
   ItemFinder.AddItemFilter('Dark essence block', @TRSItemFinderCustomFilter.DarkEss);
-
 end;
