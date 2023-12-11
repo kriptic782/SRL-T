@@ -1,3 +1,12 @@
+# [3.1.0](https://github.com/Torwent/SRL-T/compare/v3.0.4...v3.1.0) (2023-12-11)
+
+
+### Features
+
+* **ItemFinder:** Multiple name adding method ([aa9a7f1](https://github.com/Torwent/SRL-T/commit/aa9a7f19b8d2ef4c757576b4f2d805cd6cba8e74))
+
+
+
 ## [3.0.4](https://github.com/Torwent/SRL-T/compare/v3.0.3...v3.0.4) (2023-12-02)
 
 
@@ -31,20 +40,6 @@
 ### Bug Fixes
 
 * read notes ([7f78206](https://github.com/Torwent/SRL-T/commit/7f78206a66175b9590f94a168d2b25446cde9784))
-
-
-
-# [3.0.0](https://github.com/Torwent/SRL-T/compare/v2.7.11...v3.0.0) (2023-11-25)
-
-
-### Bug Fixes
-
-* **RemoteInput:** read notes ([56cdb6f](https://github.com/Torwent/SRL-T/commit/56cdb6fc3090aeabbaa2f38088e9c108c140432c))
-
-
-### BREAKING CHANGES
-
-* **RemoteInput:** moving WaspLib remote input methods to SRL is a breaking change, WaspLib will also require an update
 
 
 
