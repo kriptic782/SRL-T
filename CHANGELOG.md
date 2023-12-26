@@ -1,3 +1,12 @@
+## [3.1.1](https://github.com/Torwent/SRL-T/compare/v3.1.0...v3.1.1) (2023-12-26)
+
+
+### Bug Fixes
+
+* read notes ([e51eb34](https://github.com/Torwent/SRL-T/commit/e51eb342ee15d4bcca6beecb20940eeba442c4c8))
+
+
+
 # [3.1.0](https://github.com/Torwent/SRL-T/compare/v3.0.4...v3.1.0) (2023-12-11)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **Magic:** Arceuus cemetery teleport should no longer come out a selected spell ([a20cb16](https://github.com/Torwent/SRL-T/commit/a20cb16911a15c0c01299db3b194705af2a850e0))
-
-
-
-## [3.0.1](https://github.com/Torwent/SRL-T/compare/v3.0.0...v3.0.1) (2023-11-28)
-
-
-### Bug Fixes
-
-* read notes ([7f78206](https://github.com/Torwent/SRL-T/commit/7f78206a66175b9590f94a168d2b25446cde9784))
 
 
 
