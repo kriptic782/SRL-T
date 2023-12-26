@@ -225,7 +225,7 @@ end;
 (*
 Inventory.GetSelectedSlot
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSInventory.GetSelectedSlot: Int32;
+.. pascal:: function TRSInventory.GetSelectedSlot(): Int32;
 
 Returns the index of the selected slot (white outline).
 **-1** is returned if no slot is selected.
@@ -235,18 +235,23 @@ Example
 
   WriteLn(Inventory.GetSelectedSlot());
 *)
-function TRSInventory.GetSelectedSlot(): Int32; //CAN BE OPTIMIZED WITH TPAs
+function TRSInventory.GetSelectedSlot(): Int32;
 var
-  I: Int32;
+  tpa: TPointArray;
+  atpa: T2DPointArray;
 begin
   if not Self.Open() then
     Exit(-1);
+  if SRL.FindColors(tpa, $FFFFFF, Self.Bounds()) = 0 then
+    Exit(-1);
 
-  for I := Self.LOW_SLOT to Self.HIGH_SLOT do
-    if Self.IsSlotSelected(I) then
-      Exit(I);
+  atpa := tpa.Cluster(1);
+  atpa.FilterSize(17, EComparator.__GT__); //17 seems good
 
-  Result := -1;
+  if atpa = [] then
+    Exit(-1);
+
+  Result := Self.PointToSlot(atpa[0][0]);
 end;
 
 (*
@@ -262,7 +267,7 @@ Example
 
   WriteLn(Inventory.GetSelectedSlot());
 *)
-function TRSInventory.SetSelectedSlot(slot: Int32): Boolean;
+function TRSInventory.SetSelectedSlot(slot: Int32; skipConfirmation: Boolean = False): Boolean;
 var
   selected: Int32;
 begin
@@ -284,7 +289,7 @@ begin
   else
     Mouse.Click(Self.GetSlotBox(selected), MOUSE_LEFT);
 
-  Result := WaitUntil(Self.GetSelectedSlot() = slot, 50, SRL.TruncatedGauss(1000, 2000));
+  Result := skipConfirmation or WaitUntil(Self.GetSelectedSlot() = slot, 50, SRL.TruncatedGauss(1000, 2000));
 end;
 
 (*
@@ -310,7 +315,7 @@ begin
   Result := Self.SetSelectedSlot(slot);
   if Result then
   begin
-    Wait(0, 1000, wdLeft);
+    Wait(0, 500, wdLeft);
     Mouse.Click(b, MOUSE_LEFT);
   end;
 end;

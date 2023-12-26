@@ -40,13 +40,8 @@ Variables for users to tweak:
   {$I SRL-T/osr.simba}
 {$ENDIF}
 
-const
-  SRL_WALKER_DIR = {$MACRO CURRENT_DIRECTORY};
-  SRL_WALKER_MAP = {$MACRO CURRENT_DIRECTORY} + 'map.png';
-
 {$I webgraph.simba}
 {$I world.graph}
-{$I zeah.graph}
 
 // not a const, allow people to edit.
 var
@@ -112,6 +107,7 @@ TRSWalker is the record responsbile for walking and position.
 *)
   TRSWalker = record(TSRLBaseRecord)
     Region: TBox;
+    Regions: TBoxArray;
     RegionIndex: Integer;
 
     Map: TRSWalkerMap;
@@ -154,17 +150,17 @@ You probably will never need to call this directly.
 *)
 procedure TRSWalker.InternalSetup();
 var
-  MinimapImage, MinimapSample: TMufasaBitmap;
+  minimapImage, minimapSample: TMufasaBitmap;
 begin
   Self.Name := 'Walker';
 
-  MinimapImage := Self.GetCleanMinimap();
-  MinimapSample := Self.ScaleMinimap(MinimapImage, Self.Scaling);
+  minimapImage := Self.GetCleanMinimap();
+  minimapSample := Self.ScaleMinimap(minimapImage, Self.Scaling);
 
   Self.Cache := TMatchTemplateRGBCache.Create(Self.Map.ScaledMap.ToMatrix(), MinimapSample.ToMatrix());
 
-  MinimapSample.Free();
-  MinimapImage.Free();
+  minimapSample.Free();
+  minimapImage.Free();
 end;
 
 (*
@@ -175,7 +171,7 @@ Walker.Free
 Internal walker method automatically called on script termination.
 You probably will never need to call this directly. If you do, you won't be able to use your walker until you set it up again.
 *)
-procedure TRSWalker.Free;
+procedure TRSWalker.Free();
 begin
   if Assigned(Self.Map) then
     Self.Map.Free();
@@ -185,13 +181,18 @@ end;
 Walker.Setup
 ~~~~~~~~~~~~
 .. pascal::
-  procedure TRSWalker.Setup(Scaling: Integer = 8);
-  procedure TRSWalker.Setup(Map: String; Scaling: Int32 = 8);
-  procedure TRSWalker.Setup(Map: String; Regions: TBoxArray; Scaling: Integer = 8); overload;
-  procedure TRSWalker.Setup(Regions: TBoxArray; Scaling: Integer = 8); overload;
+  procedure TRSWalker.Setup(map: String; Scaling: Int32 = 8);
+  procedure TRSWalker.Setup(scaling: Int32 = 8); overload;
+  procedure TRSWalker.SetupRegions(map: String; aRegions: TBoxArray; scaling: Int32 = 8);
+  procedure TRSWalker.SetupRegions(aRegions: TBoxArray; scaling: Int32 = 8); overload;
+  procedure TRSWalker.SetupRegion(map: String; aRegion: TBox; scaling: Int32 = 8);
+  procedure TRSWalker.SetupRegion(aRegion: TBox; scaling: Int32 = 8); overload;
+  procedure TRSWalker.SetupFromURL(url: String; map: String = ''; scaling: Int32 = 8; force: Boolean = False); overload;
+  procedure TRSWalker.Setup(map: String; aRegions: TBoxArray; scaling: Int32 = 8); overload; deprecated;
+  procedure TRSWalker.Setup(aRegions: TBoxArray; scaling: Int32 = 8); overload; deprecated;
 
 Setup method to be called in scripts.
-There's 4 versions of the method you can call depending on the parameters you pass in.
+There's several versions of the method you can call depending on the features you want to use.
 All of them have a scaling parameter in common that defaults to 8.
 This is used to adjust the downscaling of the map used, lower downscaling makes walker more accurate at the cost of speed.
 The speed difference is more or less porportional to the scaling, higher being faster. Unless you have issues with wrong positions you should probably not touch it.
@@ -214,40 +215,170 @@ Example
     rsw.Setup('world.png');
     rsw.Setup('world', 6);
     rsw.Setup();
-    rsw.Setup([[4460, 1900, 4800, 2250], [75, 75, 1000, 1000]]); //loads GE and lunar isle.
+    rsw.SetupRegions([[4460, 1900, 4800, 2250], [75, 75, 1000, 1000]]); //loads GE and lunar isle.
   end;
 *)
-procedure TRSWalker.Setup(Scaling: Integer = 8);
+procedure TRSWalker.Setup(map: String; scaling: Int32 = 8);
 begin
-  Self.Scaling := Scaling;
-  Self.Map.Load(SRL_WALKER_MAP, Scaling);
-
+  Self.Scaling := scaling;
+  Self.Map.Load(map, scaling);
   Self.InternalSetup();
 end;
 
-procedure TRSWalker.Setup(Map: String; Scaling: Int32 = 8); overload;
+procedure TRSWalker.Setup(scaling: Int32 = 8); overload;
 begin
-  Self.Scaling := Scaling;
-  Self.Map.Load(Map, Scaling);
+  Self.Setup(WALKER_MAP, scaling);
+end;
 
+procedure TRSWalker.SetupRegions(map: String; aRegions: TBoxArray; scaling: Int32 = 8);
+begin
+  Self.Scaling := scaling;
+  Self.Map.Load(map, aRegions, scaling);
+  Self.Regions := aRegions;
   Self.InternalSetup();
 end;
 
-procedure TRSWalker.Setup(Map: String; Regions: TBoxArray; Scaling: Integer = 8); overload;
+procedure TRSWalker.SetupRegions(aRegions: TBoxArray; scaling: Int32 = 8); overload;
 begin
-  Self.Scaling := Scaling;
-  Self.Map.Load(Map, Regions, Scaling);
+  Self.SetupRegions(WALKER_MAP, aRegions, scaling);
+end;
 
+procedure TRSWalker.SetupRegion(map: String; aRegion: TBox; scaling: Int32 = 8);
+begin
+  Self.SetupRegions(map, [aRegion], scaling);
+end;
+
+procedure TRSWalker.SetupRegion(aRegion: TBox; scaling: Int32 = 8); overload;
+begin
+  Self.SetupRegion(WALKER_MAP, aRegion, scaling);
+end;
+
+procedure TRSWalker.SetupFromURL(url: String; map: String = ''; scaling: Int32 = 8; force: Boolean = False); overload;
+var
+  client: Int32;
+  fileName, path: String;
+  tmp: TStringArray;
+begin
+  if map = '' then
+  begin
+    tmp := url.Explode('/');
+    map := tmp[High(tmp)];
+  end;
+
+  fileName := WALKER_MAPS + map;
+
+  if FileExists(fileName) then
+  begin
+    if not force then
+      Exit;
+
+    if not DeleteFile(fileName) then
+      RaiseException('Failed to delete: ' + fileName);
+  end;
+
+  WriteLn 'Downloading file: ' + url + ' > ' + fileName;
+  path := ExtractFileDir(fileName);
+  if not ForceDirectories(path) then
+    TerminateScript('Failed to create path: ' + path);
+
+  client := InitializeHTTPClient(False);
+  try
+    GetHTTPPageEx(client, url, fileName);
+  finally
+    FreeHTTPClient(client);
+  end;
+
+  Self.Setup(map, scaling);
+end;
+
+procedure TRSWalker.Setup(map: String; aRegions: TBoxArray; scaling: Int32 = 8); overload; deprecated 'Use TRSWalker.SetupRegions() instead.';
+begin
+  Self.Scaling := scaling;
+  Self.Map.Load(map, aRegions, scaling);
+  Self.Regions := aRegions;
   Self.InternalSetup();
 end;
 
-procedure TRSWalker.Setup(Regions: TBoxArray; Scaling: Integer = 8); overload;
+procedure TRSWalker.Setup(aRegions: TBoxArray; scaling: Int32 = 8); overload; deprecated 'Use TRSWalker.SetupRegions() instead.';
 begin
-  Self.Scaling := Scaling;
-  Self.Map.Load(SRL_WALKER_MAP, Regions, Scaling);
-
-  Self.InternalSetup();
+  Self.SetupRegions(WALKER_MAP, aRegions, scaling);
 end;
+
+
+(*
+Walker.AddRegion
+~~~~~~~~~~~~~~~~
+.. pascal::
+  procedure TRSWalker.AddRegion(map: String; start: TPoint);
+  procedure TRSWalker.AddRegion(map: String; aRegion: TBox); overload;
+  procedure TRSWalker.AddRegion(aRegion: TBox); overload;
+  procedure TRSWalker.AddRegionFromURL(url: String; start: TPoint; map: String = ''; force: Boolean = False); overload;
+
+Add a region to walker on the fly after it is already setup.
+*)
+procedure TRSWalker.AddRegion(map: String; start: TPoint);
+var
+  aRegion: TBox;
+begin
+  if Self = [] then
+    Self.Fatal('Walker has to be setup already to add a single region');
+  Self.Map.Load(map, start, Self.Scaling, aRegion);
+  Self.InternalSetup();
+  Self.Regions += aRegion;
+end;
+
+procedure TRSWalker.AddRegion(map: String; aRegion: TBox); overload;
+begin
+  if Self = [] then
+    Self.Fatal('Walker has to be setup already to add a single region');
+  Self.Map.Load(map, aRegion, Self.Scaling);
+  Self.InternalSetup();
+  Self.Regions += aRegion;
+end;
+
+procedure TRSWalker.AddRegion(aRegion: TBox); overload;
+begin
+  Self.AddRegion(WALKER_MAP, aRegion);
+end;
+
+procedure TRSWalker.AddRegionFromURL(url: String; start: TPoint; map: String = ''; force: Boolean = False); overload;
+var
+  client: Int32;
+  fileName, path: String;
+  tmp: TStringArray;
+begin
+  if map = '' then
+  begin
+    tmp := url.Explode('/');
+    map := tmp[High(tmp)];
+  end;
+
+  fileName := WALKER_MAPS + map;
+
+  if FileExists(fileName) then
+  begin
+    if not force then
+      Exit;
+
+    if not DeleteFile(fileName) then
+      RaiseException('Failed to delete: ' + fileName);
+  end;
+
+  WriteLn 'Downloading file: ' + url + ' > ' + fileName;
+  path := ExtractFileDir(fileName);
+  if not ForceDirectories(path) then
+    TerminateScript('Failed to create path: ' + path);
+
+  client := InitializeHTTPClient(False);
+  try
+    GetHTTPPageEx(client, url, fileName);
+  finally
+    FreeHTTPClient(client);
+  end;
+
+  Self.AddRegion(map, start);
+end;
+
 
 (*
 Walker.CleanMinimap
@@ -257,7 +388,7 @@ Walker.CleanMinimap
 Internal walker method used to clear minimap dots from the minimap.
 You probably don't need to use this.
 *)
-procedure TRSWalker.CleanMinimap(Bitmap: TMufasaBitmap);
+procedure TRSWalker.CleanMinimap(bitmap: TMufasaBitmap);
 
   procedure Find(P: TPoint);
   var
@@ -269,25 +400,25 @@ procedure TRSWalker.CleanMinimap(Bitmap: TMufasaBitmap);
 
     for Y := Area.Y1 to Area.Y2 do
       for X := Area.X1 to Area.X2 do
-        if Bitmap.PointInBitmap(X, Y) then
+        if bitmap.PointInBitmap(X, Y) then
         begin
-          Pixel := Bitmap.GetPixel(X, Y);
+          Pixel := bitmap.GetPixel(X, Y);
 
           SetToleranceSpeed2Modifiers(0.001, 0.001);
           if SimilarColors($FFFFFF, Pixel, 30) then
-            Bitmap.SetPixel(X, Y, 0);
+            bitmap.SetPixel(X, Y, 0);
 
           SetToleranceSpeed2Modifiers(0.05, 1);
           if SimilarColors($00FFFF, Pixel, 30) then
-            Bitmap.SetPixel(X, Y, 0);
+            bitmap.SetPixel(X, Y, 0);
 
           SetToleranceSpeed2Modifiers(0.05, 1);
           if SimilarColors($0000FF, Pixel, 30) then
-            Bitmap.SetPixel(X, Y, 0);
+            bitmap.SetPixel(X, Y, 0);
 
           SetToleranceSpeed2Modifiers(50, 100);
           if SimilarColors($000000, Pixel, 1) then
-            Bitmap.SetPixel(X, Y, 0);
+            bitmap.SetPixel(X, Y, 0);
         end;
   end;
 
@@ -296,27 +427,27 @@ var
   Dot: TPoint;
   TPA: TPointArray;
 begin
-  Dots := Minimap.GetDotsBitmap(Bitmap, [ERSMinimapDot.NPC, ERSMinimapDot.ITEM, ERSMinimapDot.PLAYER]);
+  Dots := Minimap.GetDotsBitmap(bitmap, [ERSMinimapDot.NPC, ERSMinimapDot.ITEM, ERSMinimapDot.PLAYER]);
 
   SetColorToleranceSpeed(2);
 
   for Dot in Dots do
     Find(Dot);
-  Find([Bitmap.GetWidth() div 2, Bitmap.GetHeight() div 2]); // our own player
+  Find([bitmap.GetWidth() div 2, bitmap.GetHeight() div 2]); // our own player
 
   SetColorToleranceSpeed(1);
   SetToleranceSpeed2Modifiers(0.2, 0.2);
 
   // TODO: account for tolerance
-  Bitmap.ReplaceColor(255,0);
-  Bitmap.ReplaceColor(284358,0);
-  Bitmap.ReplaceColor(1127261,0);
+  bitmap.ReplaceColor(255,0);
+  bitmap.ReplaceColor(284358,0);
+  bitmap.ReplaceColor(1127261,0);
 
-  Bitmap.DrawPolyFilled(Minimap.GetPolygon().Offset(-Minimap.X1, -Minimap.Y1), True, 0);
+  bitmap.DrawPolyFilled(Minimap.GetPolygon().Offset(-Minimap.X1, -Minimap.Y1), True, 0);
 
-  Bitmap.FindColors(TPA, 0);
-  Bitmap.Blend(TPA.Sorted(Bitmap.GetCenter()), 5);
-  Bitmap.Pad(10);
+  bitmap.FindColors(TPA, 0);
+  bitmap.Blend(TPA.Sorted(bitmap.GetCenter()), 5);
+  bitmap.Pad(10);
 end;
 
 (*
@@ -480,7 +611,7 @@ end;
 (*
 Walker.GetMyPos
 ~~~~~~~~~~~~~~~
-function TRSWalker.GetMyPos: TPoint;
+.. pascal:: function TRSWalker.GetMyPos(): TPoint;
 
 Returns the players current position on the loaded map.
 
@@ -534,12 +665,14 @@ end;
 (*
 Walker.WorldToMM
 ~~~~~~~~~~~~~~~~
-.. pascal:: function TRSWalker.WorldToMM(PlayerPoint, WorldPoint: TPoint; Radians: Double): TPoint;
-.. pascal:: function TRSWalker.WorldToMM(WorldPoint: TPoint): TPoint; overload;
+.. pascal::
+  function TRSWalker.WorldToMM(PlayerPoint, WorldPoint: TPoint; Radians: Double): TPoint;
+  function TRSWalker.WorldToMM(WorldPoint: TPoint): TPoint; overload;
 
 Converts a walker coordinate to a point in the minimap.
 
-Example::
+Example
+-------
 
   var
     rsw: TRSWalker;
