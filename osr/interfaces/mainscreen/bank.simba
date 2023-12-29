@@ -1265,7 +1265,7 @@ begin
   Result := Self.WithdrawItem(tmp, useQuantityButtons);
 end;
 
-function TRSBank.WithdrawItem(Item: TRSBankWithdrawItem; useQuantityButtons: Boolean): Boolean; overload; deprecated 'User the TRSBankItem version instead';
+function TRSBank.WithdrawItem(Item: TRSBankWithdrawItem; useQuantityButtons: Boolean): Boolean; overload; deprecated 'Use the TRSBankItem version instead';
 var
   b: TBox;
 begin
