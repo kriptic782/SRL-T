@@ -1,3 +1,12 @@
+## [3.1.2](https://github.com/Torwent/SRL-T/compare/v3.1.1...v3.1.2) (2023-12-31)
+
+
+### Bug Fixes
+
+* <[@98208249412620288](https://github.com/98208249412620288)> was right and releasing remote input serves no purpose ([40c55ec](https://github.com/Torwent/SRL-T/commit/40c55ece68a38fa2af328c2cf963b85c3d64e254))
+
+
+
 ## [3.1.1](https://github.com/Torwent/SRL-T/compare/v3.1.0...v3.1.1) (2023-12-26)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * typo in previous commit, sorry ([12254bb](https://github.com/Torwent/SRL-T/commit/12254bbcc0587b850bafcae6ee3d04c0e88a9a7f))
-
-
-
-## [3.0.2](https://github.com/Torwent/SRL-T/compare/v3.0.1...v3.0.2) (2023-12-02)
-
-
-### Bug Fixes
-
-* **Magic:** Arceuus cemetery teleport should no longer come out a selected spell ([a20cb16](https://github.com/Torwent/SRL-T/commit/a20cb16911a15c0c01299db3b194705af2a850e0))
 
 
 
