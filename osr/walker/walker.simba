@@ -222,6 +222,7 @@ procedure TRSWalker.Setup(map: String; scaling: Int32 = 8);
 begin
   Self.Scaling := scaling;
   Self.Map.Load(map, scaling);
+  Self.Regions := [[0, 0, Self.Map.Map.getWidth()-1, Self.Map.Map.getHeight()-1]];
   Self.InternalSetup();
 end;
 
