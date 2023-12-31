@@ -79,17 +79,16 @@ begin
 end;
 
 function TRemoteInput.GetImage(): TMufasaBitmap;
+var
+  w,h: Int32;
 begin
   if (Self.Image = nil) then
   begin
     EIOS_SetGraphicsDebugging(Self.EIOS, True);
 
     Self.Image.Init();
-    Self.Image.SetPersistentMemory(
-       PtrUInt(EIOS_GetDebugImageBuffer(Self.EIOS)),
-       GetClientBounds().Width(), GetClientBounds().Height()
-    );
-
+    client.GetIOManager().GetDimensions(w,h);
+    Self.Image.SetPersistentMemory(PtrUInt(EIOS_GetDebugImageBuffer(Self.EIOS)), w, h);
     Self.Image.Clear();
   end;
 
@@ -100,7 +99,6 @@ procedure TRemoteInput.Free();
 begin
   Self.GetImage().DrawClear(0);
   Self.EnableRealInput();
-  Self.ReleaseClient();
 end;
 
 procedure TRemoteInput.Setup();
@@ -130,7 +128,6 @@ begin
   except
     Self.Fatal(GetExceptionMessage());
   end;
-
   AddOnTerminate(@Self.Free);
 end;
 
