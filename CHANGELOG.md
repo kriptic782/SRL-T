@@ -1,3 +1,12 @@
+## [3.1.3](https://github.com/Torwent/SRL-T/compare/v3.1.2...v3.1.3) (2023-12-31)
+
+
+### Bug Fixes
+
+* make sure regular TRSWalker.Setup() set a regions TBox for the whole world map ([79727df](https://github.com/Torwent/SRL-T/commit/79727df27eab66110e36ebf2da46673527bd5349))
+
+
+
 ## [3.1.2](https://github.com/Torwent/SRL-T/compare/v3.1.1...v3.1.2) (2023-12-31)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **ItemFinder:** updated itemfinder with the latest items ([6325781](https://github.com/Torwent/SRL-T/commit/6325781a175311da0dab51fa131a3179659d305c))
-
-
-
-## [3.0.3](https://github.com/Torwent/SRL-T/compare/v3.0.2...v3.0.3) (2023-12-02)
-
-
-### Bug Fixes
-
-* typo in previous commit, sorry ([12254bb](https://github.com/Torwent/SRL-T/commit/12254bbcc0587b850bafcae6ee3d04c0e88a9a7f))
 
 
 
