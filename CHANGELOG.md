@@ -1,3 +1,12 @@
+## [3.1.5](https://github.com/Torwent/SRL-T/compare/v3.1.4...v3.1.5) (2024-01-02)
+
+
+### Bug Fixes
+
+* minor oversight that caused white item stacks to come out as a selected item ([862487f](https://github.com/Torwent/SRL-T/commit/862487f4ce152788482c542aedd7c8f96f85d7fa))
+
+
+
 ## [3.1.4](https://github.com/Torwent/SRL-T/compare/v3.1.3...v3.1.4) (2023-12-31)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([e51eb34](https://github.com/Torwent/SRL-T/commit/e51eb342ee15d4bcca6beecb20940eeba442c4c8))
-
-
-
-# [3.1.0](https://github.com/Torwent/SRL-T/compare/v3.0.4...v3.1.0) (2023-12-11)
-
-
-### Features
-
-* **ItemFinder:** Multiple name adding method ([aa9a7f1](https://github.com/Torwent/SRL-T/commit/aa9a7f19b8d2ef4c757576b4f2d805cd6cba8e74))
 
 
 
