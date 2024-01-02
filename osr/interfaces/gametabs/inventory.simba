@@ -239,6 +239,8 @@ function TRSInventory.GetSelectedSlot(): Int32;
 var
   tpa: TPointArray;
   atpa: T2DPointArray;
+  p: TPoint;
+  slot: TBox;
 begin
   if not Self.Open() then
     Exit(-1);
@@ -251,7 +253,15 @@ begin
   if atpa = [] then
     Exit(-1);
 
-  Result := Self.PointToSlot(atpa[0][0]);
+  tpa := atpa[0];
+  p := tpa[0];
+  Result := Self.PointToSlot(p);
+
+  slot := Self.GetSlotBox(Result);
+  slot.Y1 += 8;
+
+  if tpa.FilterBox(slot) = [] then
+    Exit(-1);;
 end;
 
 (*
