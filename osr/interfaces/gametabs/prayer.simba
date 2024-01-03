@@ -366,6 +366,31 @@ begin
   Result := Prayers = Self.GetActivePrayers;
 end;
 
+(*
+Prayer.DisablePrayer
+~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSPrayer.DisablePrayer(Prayer: ERSPrayer): Boolean;
+
+Attempts to disable the specified prayer.
+
+Example
+-------
+
+  Prayer.DisablePrayer(ERSPrayer.PROTECT_FROM_MELEE);
+*)
+function TRSPrayer.DisablePrayer(Prayer: ERSPrayer): Boolean;
+begin
+  if not Self.Open or not Self.CanActivate(Prayer) then
+    Exit(False);
+
+  if not Self.IsPrayerActive(Prayer) then
+    Exit(True);
+
+  Mouse.Click(Self.GetPrayerBox(Prayer), MOUSE_LEFT);
+
+  Result := WaitUntil(not Self.IsPrayerActive(Prayer), 50, SRL.TruncatedGauss(1000, 2000));
+end;
+
 procedure TRSPrayer.Draw(Bitmap: TMufasaBitmap); override;
 begin
   if not Self.IsOpen() then
