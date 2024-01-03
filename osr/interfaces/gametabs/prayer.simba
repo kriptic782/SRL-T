@@ -359,9 +359,10 @@ Example
 function TRSPrayer.ActivatePrayer(Prayers: array of ERSPrayer): Boolean; overload;
 var
   Prayer: ERSPrayer;
+  i : int32;
 begin
-  for Prayer in Prayers do
-    Self.ActivatePrayer(Prayer);
+  for i := 0 to High(Prayers) do
+  Self.ActivatePrayer(Prayers[i]);
 
   Result := Prayers = Self.GetActivePrayers;
 end;
@@ -389,6 +390,29 @@ begin
   Mouse.Click(Self.GetPrayerBox(Prayer), MOUSE_LEFT);
 
   Result := WaitUntil(not Self.IsPrayerActive(Prayer), 50, SRL.TruncatedGauss(1000, 2000));
+end;
+
+(*
+Prayer.DisablePrayer
+~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSPrayer.DisablePrayer(Prayers: array of ERSPrayer): Boolean; overload;
+
+Attempts to disable the several prayers.
+
+Example
+-------
+
+  Prayer.DisablePrayer([ERSPrayer.PROTECT_FROM_MELEE, ERSPrayer.PIETY]);
+*)
+function TRSPrayer.DisablePrayer(Prayers: array of ERSPrayer): Boolean; overload;
+var
+  Prayer: ERSPrayer;
+  i : int32;
+begin
+  for I := 0 to High(Prayers) do
+  Self.DisablePrayer(Prayers[I]);
+
+  Result := Prayers = Self.GetActivePrayers;
 end;
 
 procedure TRSPrayer.Draw(Bitmap: TMufasaBitmap); override;
