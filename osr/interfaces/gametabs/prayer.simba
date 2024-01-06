@@ -358,13 +358,12 @@ Example
 *)
 function TRSPrayer.ActivatePrayer(Prayers: array of ERSPrayer): Boolean; overload;
 var
-  Prayer: ERSPrayer;
   i : int32;
 begin
   for i := 0 to High(Prayers) do
   Self.ActivatePrayer(Prayers[i]);
 
-  Result := Prayers = Self.GetActivePrayers;
+  Result := Prayers = Self.GetActivePrayers();
 end;
 
 (*
@@ -406,13 +405,12 @@ Example
 *)
 function TRSPrayer.DisablePrayer(Prayers: array of ERSPrayer): Boolean; overload;
 var
-  Prayer: ERSPrayer;
   i : int32;
 begin
   for I := 0 to High(Prayers) do
   Self.DisablePrayer(Prayers[I]);
 
-  Result := Prayers = Self.GetActivePrayers;
+  Result := Prayers = Self.GetActivePrayers();
 end;
 
 procedure TRSPrayer.Draw(Bitmap: TMufasaBitmap); override;
