@@ -1,3 +1,12 @@
+## [3.1.6](https://github.com/Torwent/SRL-T/compare/v3.1.5...v3.1.6) (2024-01-06)
+
+
+### Bug Fixes
+
+* remove unused variables ([af24894](https://github.com/Torwent/SRL-T/commit/af24894f5ad13f747f39cca19f603b6afdb7b75b))
+
+
+
 ## [3.1.5](https://github.com/Torwent/SRL-T/compare/v3.1.4...v3.1.5) (2024-01-02)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * <[@98208249412620288](https://github.com/98208249412620288)> was right and releasing remote input serves no purpose ([40c55ec](https://github.com/Torwent/SRL-T/commit/40c55ece68a38fa2af328c2cf963b85c3d64e254))
-
-
-
-## [3.1.1](https://github.com/Torwent/SRL-T/compare/v3.1.0...v3.1.1) (2023-12-26)
-
-
-### Bug Fixes
-
-* read notes ([e51eb34](https://github.com/Torwent/SRL-T/commit/e51eb342ee15d4bcca6beecb20940eeba442c4c8))
 
 
 
