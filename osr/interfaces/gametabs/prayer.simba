@@ -622,9 +622,10 @@ end;
 function TRSQuickPrayer.SelectPrayer(QPrayers: array of ERSPrayer): Boolean; overload;
 var
   QPrayer: ERSPrayer;
+  i : int32;
 begin
-  for QPrayer in QPrayers do
-    Self.SelectPrayer(QPrayer);
+  for i := 0 to High(QPrayers) do
+  Self.SelectPrayer(QPrayers[i]);
 
   Result := QPrayers = Self.GetSelectedPrayers;
 end;
