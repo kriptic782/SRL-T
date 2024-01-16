@@ -621,7 +621,6 @@ end;
 
 function TRSQuickPrayer.SelectPrayer(QPrayers: array of ERSPrayer): Boolean; overload;
 var
-  QPrayer: ERSPrayer;
   i : int32;
 begin
   for i := 0 to High(QPrayers) do
@@ -631,19 +630,19 @@ begin
 end;
 
 (*
-QuickPrayer.UnselectPrayer
+QuickPrayer.DeselectPrayer
 ~~~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function QuickPrayer.UnselectPrayer(QPrayer: ERSPrayer): Boolean;
-.. pascal:: function QuickPrayer.UnselectPrayer(QPrayers: array of ERSPrayer): Boolean; overload;
+.. pascal:: function QuickPrayer.DeselectPrayer(QPrayer: ERSPrayer): Boolean;
+.. pascal:: function QuickPrayer.DeselectPrayer(QPrayers: array of ERSPrayer): Boolean; overload;
 
-Attempts to Unselect the specified quick prayer/prayers.
+Attempts to Deselect the specified quick prayer/prayers.
 
 Example
 -------
 
-  QuickPrayers.UnselectPrayer(ERSPrayer.PROTECT_ITEM);
+  QuickPrayers.DeselectPrayer(ERSPrayer.PROTECT_ITEM);
 *)
-function TRSQuickPrayer.UnselectPrayer(QPrayer: ERSPrayer): Boolean;
+function TRSQuickPrayer.DeselectPrayer(QPrayer: ERSPrayer): Boolean;
 begin
   if not Self.Open then
     Exit;
@@ -656,12 +655,12 @@ begin
   Result := WaitUntil(not Self.IsPrayerSelected(QPrayer), 50, SRL.TruncatedGauss(1000, 2000));
 end;
 
-function TRSQuickPrayer.UnselectPrayer(QPrayers: array of ERSPrayer): Boolean; overload;
+function TRSQuickPrayer.DeselectPrayer(QPrayers: array of ERSPrayer): Boolean; overload;
 var
   i: Integer;
 begin
   for i := 0 to High(QPrayers) do
-    Self.UnselectPrayer(QPrayers[i]);  // You need to implement UnselectPrayer function
+    Self.DeselectPrayer(QPrayers[i]);
 
   Result := not (QPrayers = Self.GetSelectedPrayers);
 end;
