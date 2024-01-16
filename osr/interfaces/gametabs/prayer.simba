@@ -621,12 +621,48 @@ end;
 
 function TRSQuickPrayer.SelectPrayer(QPrayers: array of ERSPrayer): Boolean; overload;
 var
-  QPrayer: ERSPrayer;
+  i : int32;
 begin
-  for QPrayer in QPrayers do
-    Self.SelectPrayer(QPrayer);
+  for i := 0 to High(QPrayers) do
+  Self.SelectPrayer(QPrayers[i]);
 
   Result := QPrayers = Self.GetSelectedPrayers;
+end;
+
+(*
+QuickPrayer.DeselectPrayer
+~~~~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function QuickPrayer.DeselectPrayer(QPrayer: ERSPrayer): Boolean;
+.. pascal:: function QuickPrayer.DeselectPrayer(QPrayers: array of ERSPrayer): Boolean; overload;
+
+Attempts to Deselect the specified quick prayer/prayers.
+
+Example
+-------
+
+  QuickPrayers.DeselectPrayer(ERSPrayer.PROTECT_ITEM);
+*)
+function TRSQuickPrayer.DeselectPrayer(QPrayer: ERSPrayer): Boolean;
+begin
+  if not Self.Open then
+    Exit;
+
+  if not Self.IsPrayerSelected(QPrayer) then
+    Exit(True);
+
+  Mouse.Click(Prayer.GetPrayerBox(QPrayer), MOUSE_LEFT);
+
+  Result := WaitUntil(not Self.IsPrayerSelected(QPrayer), 50, SRL.TruncatedGauss(1000, 2000));
+end;
+
+function TRSQuickPrayer.DeselectPrayer(QPrayers: array of ERSPrayer): Boolean; overload;
+var
+  i : int32;
+begin
+  for i := 0 to High(QPrayers) do
+    Self.DeselectPrayer(QPrayers[i]);
+
+  Result := not (QPrayers = Self.GetSelectedPrayers);
 end;
 
 procedure TRSQuickPrayer.Draw(Bitmap: TMufasaBitmap); override;
