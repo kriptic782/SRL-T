@@ -630,6 +630,42 @@ begin
   Result := QPrayers = Self.GetSelectedPrayers;
 end;
 
+(*
+QuickPrayer.UnselectPrayer
+~~~~~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function QuickPrayer.UnselectPrayer(QPrayer: ERSPrayer): Boolean;
+.. pascal:: function QuickPrayer.UnselectPrayer(QPrayers: array of ERSPrayer): Boolean; overload;
+
+Attempts to Unselect the specified quick prayer/prayers.
+
+Example
+-------
+
+  QuickPrayers.UnselectPrayer(ERSPrayer.PROTECT_ITEM);
+*)
+function TRSQuickPrayer.UnselectPrayer(QPrayer: ERSPrayer): Boolean;
+begin
+  if not Self.Open then
+    Exit;
+
+  if not Self.IsPrayerSelected(QPrayer) then
+    Exit(True);
+
+  Mouse.Click(Prayer.GetPrayerBox(QPrayer), MOUSE_LEFT);
+
+  Result := WaitUntil(not Self.IsPrayerSelected(QPrayer), 50, SRL.TruncatedGauss(1000, 2000));
+end;
+
+function TRSQuickPrayer.UnselectPrayer(QPrayers: array of ERSPrayer): Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := 0 to High(QPrayers) do
+    Self.UnselectPrayer(QPrayers[i]);  // You need to implement UnselectPrayer function
+
+  Result := not (QPrayers = Self.GetSelectedPrayers);
+end;
+
 procedure TRSQuickPrayer.Draw(Bitmap: TMufasaBitmap); override;
 begin
   if not Self.IsOpen() then
