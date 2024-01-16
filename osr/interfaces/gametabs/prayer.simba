@@ -657,7 +657,7 @@ end;
 
 function TRSQuickPrayer.DeselectPrayer(QPrayers: array of ERSPrayer): Boolean; overload;
 var
-  i: Integer;
+  i : int32;
 begin
   for i := 0 to High(QPrayers) do
     Self.DeselectPrayer(QPrayers[i]);
