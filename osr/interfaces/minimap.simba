@@ -248,6 +248,31 @@ begin
 end;
 
 (*
+Minimap.GetPrayerPercent
+~~~~~~~~~~~~~~~~~~~~
+.. pascal:: function TRSMinimap.GetPrayerPercent(): Int32;
+
+Returns the current Prayer percentage level.
+
+Example
+-------
+
+  WriteLn Minimap.GetPrayerPercent();
+*)
+function TRSMinimap.GetPrayerPercent(): Int32;
+var
+  TPA: TPointArray;
+  Circle: TCircle;
+begin
+  Circle := Self.GetPrayerCircle();
+  if SRL.FindColors(TPA, CTS2(1250067, 4, 0, 0), Circle.Bounds) > 0 then
+    TPA := TPA.FilterDist(0, Circle.Radius, Circle.X, Circle.Y);
+
+  with TPA.Bounds() do
+    Result := 100 - Ceil((Y2 - Y1) / (Circle.Bounds.Y2 - Circle.Bounds.Y1) * 100);
+end;
+
+(*
 Minimap.GetSpecLevel
 ~~~~~~~~~~~~~~~~~~~~
 .. pascal:: function TRSMinimap.GetSpecLevel(): Int32;
