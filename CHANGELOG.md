@@ -1,3 +1,12 @@
+## [3.1.7](https://github.com/Torwent/SRL-T/compare/v3.1.6...v3.1.7) (2024-01-18)
+
+
+### Bug Fixes
+
+* force bump ([cd8f5f7](https://github.com/Torwent/SRL-T/commit/cd8f5f7631c9d24a7b55dc127043120f0bc373ed))
+
+
+
 ## [3.1.6](https://github.com/Torwent/SRL-T/compare/v3.1.5...v3.1.6) (2024-01-06)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * make sure regular TRSWalker.Setup() set a regions TBox for the whole world map ([79727df](https://github.com/Torwent/SRL-T/commit/79727df27eab66110e36ebf2da46673527bd5349))
-
-
-
-## [3.1.2](https://github.com/Torwent/SRL-T/compare/v3.1.1...v3.1.2) (2023-12-31)
-
-
-### Bug Fixes
-
-* <[@98208249412620288](https://github.com/98208249412620288)> was right and releasing remote input serves no purpose ([40c55ec](https://github.com/Torwent/SRL-T/commit/40c55ece68a38fa2af328c2cf963b85c3d64e254))
 
 
 
