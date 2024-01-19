@@ -315,26 +315,30 @@ Example
 *)
 function TRSBank.FindItemBoundaries(): TBoxArray;
 var
-  TPA: TPointArray;
-  ATPA: T2DPointArray;
-  Area, B: TBox;
+  tpa: TPointArray;
+  atpa: T2DPointArray;
+  area, b: TBox;
+  i: Int32;
 begin
-  Area := Self.GetSlotBoxes().Merge();
+  area.X1 := Self.X1() + 57;
+  area.Y1 := Self.Y1() + 77;
+  area.X2 := Self.X2() - 63;
+  area.Y2 := Self.Y2() - 44;
 
-  if SRL.FindColors(TPA, RS_ITEM_BORDER, Area) > 0 then
+  if SRL.FindColors(tpa, RS_ITEM_BORDER, area) = 0 then
+    Exit;
+
+  atpa := tpa.Cluster(200, 3);
+
+  for i := 0 to High(atpa) do
   begin
-    ATPA := TPA.Cluster(50, 3);
+    b := atpa[i].Bounds();
+    if b.Height() <= 5 then
+      Continue;
 
-    for B in ATPA.ToTBA() do
-    begin
-      if B.Height() <= 5 then
-        Continue;
-
-      Result += Grid(8, 1, 32, B.Height(), [16], [Area.X1, B.Y1 - 1]);
-    end;
+    Result += Grid(8, 1, 32, b.Height(), [16], [area.X1, b.Y1 - 1]);
   end;
 end;
-
 
 function TRSBank.ScrollAreaFunction(): TBox;
 begin
