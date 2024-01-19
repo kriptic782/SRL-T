@@ -1,3 +1,12 @@
+## [3.1.8](https://github.com/Torwent/SRL-T/compare/v3.1.7...v3.1.8) (2024-01-19)
+
+
+### Bug Fixes
+
+* **Bank:** TRSBank.FindItemBoundaries() ([39ca7d5](https://github.com/Torwent/SRL-T/commit/39ca7d596e453a507421f813302c1d0b5865a34c))
+
+
+
 ## [3.1.7](https://github.com/Torwent/SRL-T/compare/v3.1.6...v3.1.7) (2024-01-18)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **walker:** small oversight on the last walker update ([a963402](https://github.com/Torwent/SRL-T/commit/a963402585155a6c1d65fc63116b29a72cb64f90))
-
-
-
-## [3.1.3](https://github.com/Torwent/SRL-T/compare/v3.1.2...v3.1.3) (2023-12-31)
-
-
-### Bug Fixes
-
-* make sure regular TRSWalker.Setup() set a regions TBox for the whole world map ([79727df](https://github.com/Torwent/SRL-T/commit/79727df27eab66110e36ebf2da46673527bd5349))
 
 
 
