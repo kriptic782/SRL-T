@@ -1,3 +1,12 @@
+## [3.1.9](https://github.com/Torwent/SRL-T/compare/v3.1.8...v3.1.9) (2024-01-19)
+
+
+### Bug Fixes
+
+* **itemfinder:** add new items ([e371923](https://github.com/Torwent/SRL-T/commit/e371923a7701811e5db5d502fca8bce9acc38583))
+
+
+
 ## [3.1.8](https://github.com/Torwent/SRL-T/compare/v3.1.7...v3.1.8) (2024-01-19)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * minor oversight that caused white item stacks to come out as a selected item ([862487f](https://github.com/Torwent/SRL-T/commit/862487f4ce152788482c542aedd7c8f96f85d7fa))
-
-
-
-## [3.1.4](https://github.com/Torwent/SRL-T/compare/v3.1.3...v3.1.4) (2023-12-31)
-
-
-### Bug Fixes
-
-* **walker:** small oversight on the last walker update ([a963402](https://github.com/Torwent/SRL-T/commit/a963402585155a6c1d65fc63116b29a72cb64f90))
 
 
 
