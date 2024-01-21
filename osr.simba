@@ -57,10 +57,10 @@ end;
 {$IFNDEF SRL_ITEM_INTERFACE_INCLUDED}       {$I osr/interfaces/core/item_interface.simba}
 {$IFNDEF SRL_SPELLFINDER_INCLUDED}          {$I osr/finders/spellfinder/spellfinder.simba}
 {$IFNDEF SRL_INTERFACE_INCLUDED}            {$I osr/interfaces/core/interface.simba}
-{$IFNDEF SRL_CHATBUTTONS_INCLUDED}          {$I osr/interfaces/chatbuttons.simba}
+{$IFNDEF SRL_CHATBUTTONS_INCLUDED}          {$I osr/interfaces/chat/chatbuttons.simba}
 {$IFNDEF SRL_LOGIN_INCLUDED}                {$I osr/interfaces/login.simba}
-{$IFNDEF SRL_CHAT_INCLUDED}                 {$I osr/interfaces/chat.simba}
-{$IFNDEF SRL_MAKE_INCLUDED}                 {$I osr/interfaces/make.simba}
+{$IFNDEF SRL_CHAT_INCLUDED}                 {$I osr/interfaces/chat/chat.simba}
+{$IFNDEF SRL_MAKE_INCLUDED}                 {$I osr/interfaces/chat/make.simba}
 {$IFNDEF SRL_GAMETABS_INCLUDED}             {$I osr/interfaces/gametabs/gametabs.simba}
 {$IFNDEF SRL_GAMETAB_INCLUDED}              {$I osr/interfaces/gametabs/gametab.simba}
 {$IFNDEF SRL_OPTIONS_INCLUDED}              {$I osr/interfaces/gametabs/options.simba}

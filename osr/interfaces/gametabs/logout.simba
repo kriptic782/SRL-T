@@ -15,7 +15,7 @@ type
 
   TRSLogout = type TRSInterface;
 
-procedure TRSLogout.Setup; override;
+procedure TRSLogout.Setup(); override;
 begin
   inherited;
   
