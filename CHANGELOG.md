@@ -1,3 +1,12 @@
+## [3.1.10](https://github.com/Torwent/SRL-T/compare/v3.1.9...v3.1.10) (2024-01-21)
+
+
+### Bug Fixes
+
+* refactor really but need to bump version ([98812a7](https://github.com/Torwent/SRL-T/commit/98812a79e113a952250a6a40977699e5c892d1fe))
+
+
+
 ## [3.1.9](https://github.com/Torwent/SRL-T/compare/v3.1.8...v3.1.9) (2024-01-19)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * remove unused variables ([af24894](https://github.com/Torwent/SRL-T/commit/af24894f5ad13f747f39cca19f603b6afdb7b75b))
-
-
-
-## [3.1.5](https://github.com/Torwent/SRL-T/compare/v3.1.4...v3.1.5) (2024-01-02)
-
-
-### Bug Fixes
-
-* minor oversight that caused white item stacks to come out as a selected item ([862487f](https://github.com/Torwent/SRL-T/commit/862487f4ce152788482c542aedd7c8f96f85d7fa))
 
 
 
