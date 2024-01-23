@@ -19,7 +19,7 @@ procedure TRSLogout.Setup(); override;
 begin
   inherited;
   
-  Self.Name := 'Options';
+  Self.Name := 'Logout';
 end;
 
 procedure TRSLogout.SetupAlignment(Mode: ERSClientMode); override;
