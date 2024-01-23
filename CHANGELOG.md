@@ -1,3 +1,12 @@
+## [3.1.11](https://github.com/Torwent/SRL-T/compare/v3.1.10...v3.1.11) (2024-01-23)
+
+
+### Bug Fixes
+
+* **logout:** TRSLogout.Name change ([156dec4](https://github.com/Torwent/SRL-T/commit/156dec4f1b8a8d96373c562441b260415de2df9a))
+
+
+
 ## [3.1.10](https://github.com/Torwent/SRL-T/compare/v3.1.9...v3.1.10) (2024-01-21)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * force bump ([cd8f5f7](https://github.com/Torwent/SRL-T/commit/cd8f5f7631c9d24a7b55dc127043120f0bc373ed))
-
-
-
-## [3.1.6](https://github.com/Torwent/SRL-T/compare/v3.1.5...v3.1.6) (2024-01-06)
-
-
-### Bug Fixes
-
-* remove unused variables ([af24894](https://github.com/Torwent/SRL-T/commit/af24894f5ad13f747f39cca19f603b6afdb7b75b))
 
 
 
