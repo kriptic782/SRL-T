@@ -1,3 +1,12 @@
+## [3.2.1](https://github.com/Torwent/SRL-T/compare/v3.2.0...v3.2.1) (2024-01-25)
+
+
+### Bug Fixes
+
+* **walker:** Minimap bitmap methods are now static, should always have been ([df9d9ee](https://github.com/Torwent/SRL-T/commit/df9d9ee54b56ca0ad5f70fd347a88d0e99634ee2))
+
+
+
 # [3.2.0](https://github.com/Torwent/SRL-T/compare/v3.1.11...v3.2.0) (2024-01-25)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **itemfinder:** add new items ([e371923](https://github.com/Torwent/SRL-T/commit/e371923a7701811e5db5d502fca8bce9acc38583))
-
-
-
-## [3.1.8](https://github.com/Torwent/SRL-T/compare/v3.1.7...v3.1.8) (2024-01-19)
-
-
-### Bug Fixes
-
-* **Bank:** TRSBank.FindItemBoundaries() ([39ca7d5](https://github.com/Torwent/SRL-T/commit/39ca7d596e453a507421f813302c1d0b5865a34c))
 
 
 
