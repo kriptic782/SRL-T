@@ -1,3 +1,12 @@
+# [3.2.0](https://github.com/Torwent/SRL-T/compare/v3.1.11...v3.2.0) (2024-01-25)
+
+
+### Features
+
+* **TRSChooseOption:** read notes ([dbcb235](https://github.com/Torwent/SRL-T/commit/dbcb2359182a174a2cbf60b535b3aef6adb28675))
+
+
+
 ## [3.1.11](https://github.com/Torwent/SRL-T/compare/v3.1.10...v3.1.11) (2024-01-23)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **Bank:** TRSBank.FindItemBoundaries() ([39ca7d5](https://github.com/Torwent/SRL-T/commit/39ca7d596e453a507421f813302c1d0b5865a34c))
-
-
-
-## [3.1.7](https://github.com/Torwent/SRL-T/compare/v3.1.6...v3.1.7) (2024-01-18)
-
-
-### Bug Fixes
-
-* force bump ([cd8f5f7](https://github.com/Torwent/SRL-T/commit/cd8f5f7631c9d24a7b55dc127043120f0bc373ed))
 
 
 
