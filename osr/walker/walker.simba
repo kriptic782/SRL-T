@@ -384,12 +384,12 @@ end;
 (*
 Walker.CleanMinimap
 ~~~~~~~~~~~~~~~~~~~
-.. pascal:: procedure TRSWalker.CleanMinimap(Bitmap: TMufasaBitmap);
+.. pascal:: procedure TRSWalker.CleanMinimap(Bitmap: TMufasaBitmap); static;
 
 Internal walker method used to clear minimap dots from the minimap.
 You probably don't need to use this.
 *)
-procedure TRSWalker.CleanMinimap(bitmap: TMufasaBitmap);
+procedure TRSWalker.CleanMinimap(bitmap: TMufasaBitmap); static;
 
   procedure Find(P: TPoint);
   var
@@ -454,7 +454,7 @@ end;
 (*
 Walker.GetCleanMinimap
 ~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSWalker.GetCleanMinimap(): TMufasaBitmap;
+.. pascal:: function TRSWalker.GetCleanMinimap(): TMufasaBitmap; static;
 
 Internal walker method used to "screenshot" the minimap and clean it with Walker.CleanMinimap().
 You probably don't need to use this directly but you can see what it does in the following example.
@@ -469,14 +469,14 @@ Example
     rsw.GetCleanMinimap().Debug();
   end;
 *)
-function TRSWalker.GetCleanMinimap(): TMufasaBitmap;
+function TRSWalker.GetCleanMinimap(): TMufasaBitmap; static;
 var
   Bitmap: TMufasaBitmap;
 begin
   Bitmap := GetMufasaBitmap(BitmapFromClient(Minimap.Bounds()));
   Bitmap.ReplaceColor(0, 1); // We need zero to be unique
 
-  Self.CleanMinimap(Bitmap);
+  TRSWalker.CleanMinimap(Bitmap);
 
   Result.Init();
 
