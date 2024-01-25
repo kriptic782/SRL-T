@@ -38,6 +38,8 @@ type
     Alignment: TRSInterfaceAlignment;
   end;
 
+  PRSInterface = ^TRSInterface;
+
 procedure TRSInterface.Setup();
 begin
   Self.Name := 'Unnamed';
@@ -45,6 +47,7 @@ begin
   Self.ButtonEnabledColors := [CTS1(2369440, 5), CTS1(2700350, 5)];
   Self.Cache.Enabled := True;
 end;
+
 
 procedure TRSInterface.SetupAlignment(Mode: ERSClientMode);
 begin

@@ -7,6 +7,7 @@ type
   TRSChooseOption_Option = record
     Text: String;
     Bounds: TBox;
+    StringIndex, OptionIndex: Int32;
   end;
 
   TRSChooseOption_OptionArray = array of TRSChooseOption_Option;
@@ -19,7 +20,7 @@ type
     Bounds: TBox;
   end;
 
-function TRSChooseOption.Find: Boolean;
+function TRSChooseOption.Find(): Boolean;
 var
   TPA: TPointArray;
   ATPA: T2DPointArray;
@@ -68,139 +69,174 @@ begin
   end;
 end;
 
-procedure TRSChooseOption.Free;
+procedure TRSChooseOption.Free();
 begin
   FreeBitmap(Self.Bitmap);
 end;
 
-procedure TRSChooseOption.Setup;
+procedure TRSChooseOption.Setup();
 begin
   Self.Bitmap := BitmapFromString(20, 18, 'meJxzD4l1pwAxkAsGj15Mv+DyGpogXBmyemL04lEzgHqxhgPxehkwwoEkN9NCLwMRcYRHL5rvSNVLPBhAvWQjAO6IcGE=');
-
   GetBitmapSize(Self.Bitmap, Self.BitmapWidth, Self.BitmapHeight);
-
   AddOnTerminate(@Self.Free);
 end;
 
-function TRSChooseOption.GetOptions: TRSChooseOption_OptionArray;
+function TRSChooseOption.GetOptions(): TRSChooseOption_OptionArray;
 var
-  I: Int32;
-  B: TBox;
+  i: Int32;
+  b: TBox;
 begin
   if Self.Open() then
   begin
-    if (Bounds.Height() < 15) then
+    if (Self.Bounds.Height() < 15) then
       Exit;
 
-    SetLength(Result, Bounds.Height() div 15);
-    for I := 0 to High(Result) do
+    SetLength(Result, Self.Bounds.Height() div 15);
+    for i := 0 to High(Result) do
     begin
-      B := [Bounds.X1, Bounds.Y1 + (I * 15), Bounds.X2, Bounds.Y1 + (I * 15) + 15];
-      if (B.Y2 > Bounds.Y2) then
+      b := [Self.Bounds.X1, Self.Bounds.Y1 + (i * 15), Self.Bounds.X2, Self.Bounds.Y1 + (i * 15) + 15];
+      if (b.Y2 > Self.Bounds.Y2) then
         Exit;
 
-      Result[I].Text := OCR.RecognizeStatic(B, TOCRThresholdFilter.Create(-1), RS_FONT_BOLD_12_SHADOW);
-      Result[I].Bounds := B;
+      Result[i].Text := OCR.RecognizeStatic(b, TOCRThresholdFilter.Create(-1), RS_FONT_BOLD_12_SHADOW);
+      Result[i].Bounds := b;
+      Result[i].OptionIndex := i;
     end;
   end;
 end;
 
-function TRSChooseOption.Close: Boolean;
+function TRSChooseOption.Close(): Boolean;
 var
-  Boxes: TBoxArray;
-  Space: TBox;
-  T: UInt64;
+  boxes: TBoxArray;
+  space: TBox;
 begin
   if not Self.IsOpen() then
     Exit(True);
 
-  Space := Self.Bounds.Expand(100);
-  Space.LimitTo(GetClientBounds());
+  space := Self.Bounds.Expand(100);
+  space.LimitTo(GetClientBounds());
 
-  Boxes := Self.Bounds.Expand(50).Invert(Space);
-  if Length(Boxes) = 0 then
+  boxes := Self.Bounds.Expand(50).Invert(space);
+  if Length(boxes) = 0 then
     raise 'No space found to move mouse';
 
-  Mouse.Move(Boxes[Random(Length(Boxes))], False, MOUSE_DISTRIBUTION_RANDOM);
-
-  T := GetTickCount() + 1000;
-  while (T > GetTickCount()) do
-  begin
-    if not Self.IsOpen() then
-      Exit(True);
-
-    Wait(0, 100, wdLeft);
-  end;
+  Mouse.Move(boxes[Random(Length(boxes))], False, MOUSE_DISTRIBUTION_RANDOM);
+  Result := WaitUntil(not Self.IsOpen(), 100, 1000);
 end;
 
-procedure TRSChooseOption.Select(Option: TRSChooseOption_Option; MouseAction: Int32 = MOUSE_LEFT);
+
+function TRSChooseOption.HasOption(text: TStringArray; out option: TRSChooseOption_Option; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean;
 var
-  From: TPoint;
-  B: TBox;
-  CustomMouse: TMouse;
+  choices: TRSChooseOption_OptionArray;
+  i, j: Int32;
 begin
-  B := Option.Bounds;
-  B := B.Expand(-1);
+  if not Self.Open() then
+    Exit;
 
-  From.X := B.X1;
-  From.Y := B.Y1 + (B.Height div 3);
+  Wait(0, 1000, wdLeft);
+  choices := Self.GetOptions();
 
-  CustomMouse := Mouse;
-  CustomMouse.MissChance := 0;
-  CustomMouse.IdleInterval := 0;
-  CustomMouse.Move(SRL.RandomPointEx(From, B));
-
-  if (MouseAction <> MOUSE_MOVE) then
-    CustomMouse.Click(MouseAction);
-end;
-
-function TRSChooseOption.Select(Text: TStringArray; MouseAction: Int32 = MOUSE_LEFT; CaseSensitive: Boolean = True; CloseIfNotFound: Boolean = True): Boolean; overload;
-var
-  Choices: TRSChooseOption_OptionArray;
-  I, J: Int32;
-begin
-  if Self.Open() then
-  begin
-    Wait(0, 1000, wdLeft);
-
-    Choices := GetOptions();
-
-    for I := 0 to High(Choices) do
-      for J := 0 to High(Text) do
-        if (CaseSensitive and (Text[J] in Choices[I].Text)) or ((not CaseSensitive) and (Lowercase(Text[J]) in Lowercase(Choices[I].Text))) then
-        begin
-          Self.Select(Choices[I], MouseAction);
-
-          Exit(True);
-        end;
-
-    if CloseIfNotFound then
+  for i := 0 to High(text) do
+    for j := 0 to High(choices) do
     begin
-      WaitEx(500, 250);
+      if not caseSensitive then
+      begin
+        text[i] := Lowercase(text[i]);
+        choices[j].Text := Lowercase(choices[j].Text);
+      end;
 
-      Self.Close();
+      if text[i] in choices[j].Text then
+      begin
+        option := choices[j];
+        option.StringIndex := i;
+        Exit(True);
+      end;
     end;
+
+  if closeIfNotFound then
+  begin
+    WaitEx(500, 250);
+    Self.Close();
   end;
 end;
 
-function TRSChooseOption.Select(Text: String; MouseAction: Int32 = MOUSE_LEFT; CaseSensitive: Boolean = True; CloseIfNotFound: Boolean = True): Boolean; overload;
+function TRSChooseOption.HasOption(text: TStringArray; out index: Int32; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; overload;
+var
+  option: TRSChooseOption_Option;
 begin
-  Result := Select([Text], MouseAction, CaseSensitive, CloseIfNotFound);
+  Result := Self.HasOption(text, option, caseSensitive, closeIfNotFound);
+  if Result then
+    index := option.StringIndex
+  else
+    index := -1;
 end;
 
-function TRSChooseOption.Hover(Text: TStringArray; CaseSensitive: Boolean = True; CloseIfNotFound: Boolean = True): Boolean; overload;
+function TRSChooseOption.HasOption(text: TStringArray; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; overload;
+var
+  i: Int32;
 begin
-  Result := Select(Text, MOUSE_MOVE, CaseSensitive, CloseIfNotFound);
+  Result := Self.HasOption(text, i, caseSensitive, closeIfNotFound);
 end;
 
-function TRSChooseOption.Hover(Text: String; CaseSensitive: Boolean = True; CloseIfNotFound: Boolean = True): Boolean; overload;
+function TRSChooseOption.HasOption(text: String; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; overload;
 begin
-  Result := Select([Text], MOUSE_MOVE, CaseSensitive, CloseIfNotFound);
+  Result := Self.HasOption([text], caseSensitive, closeIfNotFound);
+end;
+
+
+procedure TRSChooseOption.Select(option: TRSChooseOption_Option; mouseAction: Int32 = MOUSE_LEFT);
+var
+  from: TPoint;
+  b: TBox;
+  tmpMouse: TMouse;
+begin
+  b := option.Bounds;
+  b := b.Expand(-1);
+
+  from.X := b.X1;
+  from.Y := b.Y1 + (b.Height() div 3);
+
+  tmpMouse := Mouse;
+  tmpMouse.MissChance := 0;
+  tmpMouse.IdleInterval := 0;
+  tmpMouse.Move(SRL.RandomPointEx(from, b));
+
+  if (mouseAction <> MOUSE_MOVE) then
+    tmpMouse.Click(mouseAction);
+end;
+
+function TRSChooseOption.Select(text: TStringArray; mouseAction: Int32 = MOUSE_LEFT; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; overload;
+var
+  option: TRSChooseOption_Option;
+begin
+  Result := Self.HasOption(text, option, caseSensitive, closeIfNotFound);
+  if Result then
+    Self.Select(option, mouseAction);
+end;
+
+function TRSChooseOption.Select(text: String; mouseAction: Int32 = MOUSE_LEFT; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; overload;
+begin
+  Result := Select([text], mouseAction, caseSensitive, closeIfNotFound);
+end;
+
+
+function TRSChooseOption.Hover(text: TStringArray; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; overload;
+begin
+  Result := Select(text, MOUSE_MOVE, caseSensitive, closeIfNotFound);
+end;
+
+function TRSChooseOption.Hover(text: String; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; overload;
+begin
+  Result := Select([text], MOUSE_MOVE, caseSensitive, closeIfNotFound);
 end;
 
 var
   ChooseOption: TRSChooseOption;
 
+procedure TSRL.Setup(); override;
 begin
+  inherited;
+
   ChooseOption.Setup();
 end;
+
