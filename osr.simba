@@ -88,8 +88,6 @@ end;
 {$IFNDEF SRL_PRAYER_INCLUDED}               {$I osr/interfaces/gametabs/prayer.simba}
 {$IFNDEF SRL_KEYBINDINGS_INCLUDED}          {$I osr/keybindings.simba}
 
-{$SCOPEDENUMS OFF}
-
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
@@ -138,3 +136,5 @@ begin
     
   inherited;
 end;
+
+{$SCOPEDENUMS OFF}

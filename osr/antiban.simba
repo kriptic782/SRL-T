@@ -79,7 +79,7 @@ begin
   Result := Max(0, Result);
 end;
 
-function TAntiban.GetActiveTasks: PAntibanTaskArray;
+function TAntiban.GetActiveTasks(): PAntibanTaskArray;
 var
   I: Int32;
 begin
@@ -441,7 +441,7 @@ Example
 
   Antiban.AddTask(15 * ONE_MINUTE, @Antiban.HoverSkills);
 *)
-procedure TAntiban.SmallRandomMouse;
+procedure TAntiban.SmallRandomMouse();
 var
   B: TBox;
   P: TPoint;
@@ -749,7 +749,7 @@ begin
   Result := SRL.MsToTime(Max(0, Round(Task.NextAtTime - GetTimeRunning())), TIME_BARE);
 end;
 
-procedure TAntiban.SimulateBreaks;
+procedure TAntiban.SimulateBreaks();
 const
   TEST_DAYS: UInt64 = 1000;
 var

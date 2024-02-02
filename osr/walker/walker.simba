@@ -154,7 +154,7 @@ var
 begin
   Self.Name := 'Walker';
 
-  minimapImage := Self.GetCleanMinimap();
+  minimapImage := TRSWalker.GetCleanMinimap();
   minimapSample := Self.ScaleMinimap(minimapImage, Self.Scaling);
 
   Self.Cache := TMatchTemplateRGBCache.Create(Self.Map.ScaledMap.ToMatrix(), MinimapSample.ToMatrix());
@@ -637,7 +637,7 @@ begin
   Self.Region := [];
   Self.Similarity := 0;
 
-  Bitmap := Self.GetCleanMinimap();
+  Bitmap := TRSWalker.GetCleanMinimap();
 
   TPA := Self.ScaledSearch(Bitmap, SAMPLES);
   for I := 0 to High(TPA) do
@@ -1329,7 +1329,7 @@ begin
   WorldBitmap.LineTo(Point(X, 0), Point(X, Y2 - Y1), $00FF00);
   WorldBitmap.DrawBox([X - 2, Y - 2, X + 2, Y + 2], $FFFFFF);
 
-  MinimapBitmap := Self.ScaleMinimap(Self.GetCleanMinimap(), 1);
+  MinimapBitmap := Self.ScaleMinimap(TRSWalker.GetCleanMinimap(), 1);
 
   P := MinimapBitmap.GetCenter();
   if RSClient.Mode = ERSClientMode.FIXED then

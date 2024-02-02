@@ -5,10 +5,8 @@ type
     IsSetup: Boolean;
   end;
 
-{$IFDEF SIMBA1400}
 const
   SIMBA_DATA_DIR = AppPath + 'Data' + DirectorySeparator; //missing this const and walker1500 needs it.
-{$ENDIF}
 
 var
   SRL: TSRL;
