@@ -1,3 +1,12 @@
+## [3.2.2](https://github.com/Torwent/SRL-T/compare/v3.2.1...v3.2.2) (2024-02-02)
+
+
+### Bug Fixes
+
+* very minor tweak to how scoped enums are enforced inside of the SRL include ([c7e8baf](https://github.com/Torwent/SRL-T/commit/c7e8baf764d080d32e290e4cafc905b9716f1874))
+
+
+
 ## [3.2.1](https://github.com/Torwent/SRL-T/compare/v3.2.0...v3.2.1) (2024-01-25)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * refactor really but need to bump version ([98812a7](https://github.com/Torwent/SRL-T/commit/98812a79e113a952250a6a40977699e5c892d1fe))
-
-
-
-## [3.1.9](https://github.com/Torwent/SRL-T/compare/v3.1.8...v3.1.9) (2024-01-19)
-
-
-### Bug Fixes
-
-* **itemfinder:** add new items ([e371923](https://github.com/Torwent/SRL-T/commit/e371923a7701811e5db5d502fca8bce9acc38583))
 
 
 
