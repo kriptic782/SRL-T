@@ -1,6 +1,5 @@
 (*
-Random
-=======
+# Random
 Random related methods.
 *)
 
@@ -25,9 +24,10 @@ begin
 end;
 
 (*
-SRL.GaussRand
-~~~~~~~~~~~~~
-.. pascal:: function TSRL.GaussRand(Mean, Dev: Double): Double;
+## SRL.GaussRand
+```pascal
+function TSRL.GaussRand(Mean, Dev: Double): Double;
+```
 
 Generates a random gaussian/normal number.
 *)
@@ -40,9 +40,10 @@ begin
 end;
 
 (*
-SRL.TruncatedGauss
-~~~~~~~~~~~~~~~~~~
-.. pascal:: function TSRL.TruncatedGauss(Left:Double=0; Right:Double=1): Double;
+## SRL.TruncatedGauss
+```pascal
+function TSRL.TruncatedGauss(Left:Double=0; Right:Double=1): Double;
+```
 
 Generates a random gaussian/normal number which is truncated and mapped within then 
 given range ``[left..right]`` weighted towards ``left``
@@ -58,8 +59,7 @@ begin
 end;
 
 (*
-SRL.TruncatedGauss
-~~~~~~~~~~~~~~~~~~
+## SRL.TruncatedGauss
 .. pascal function TSRL.TruncatedGauss(Left:Int64=0; Right:Int64=1; CUTOFF:Single=0): Int64;
 
 Generates a random gaussian/normal number which is truncated and mapped within then
@@ -71,9 +71,10 @@ begin
 end;
 
 (*
-SRL.SkewedRand
-~~~~~~~~~~~~~~~
-.. pascal:: function TSRL.SkewedRand(Mode, Lo, Hi: Double): Double; static;
+## SRL.SkewedRand
+```pascal
+function TSRL.SkewedRand(Mode, Lo, Hi: Double): Double; static;
+```
 
 Random skewed distribution generation. `Mode` is a number between `Lo` and `Hi` which is 
 where the most of the generated numbers will land.
@@ -92,9 +93,10 @@ begin
 end;
 
 (*
-SRL.SkewedRand
-~~~~~~~~~~~~~~~
-.. pascal:: function TSRL.SkewedRand(Mode, Lo, Hi: Double): Double; static;
+## SRL.SkewedRand
+```pascal
+function TSRL.SkewedRand(Mode, Lo, Hi: Double): Double; static;
+```
 
 Integer overload.
 *)
@@ -104,9 +106,10 @@ begin
 end;
 
 (*
-SRL.NormalRange
-~~~~~~~~~~~~~~~
-.. pascal:: function TSRL.NormalRange(Min, Max: Double): Double;
+## SRL.NormalRange
+```pascal
+function TSRL.NormalRange(Min, Max: Double): Double;
+```
 
 Generates a random float in the given range, weighted towards the mean.
 *)
@@ -120,9 +123,10 @@ begin
 end;
 
 (*
-SRL.NormalRange
-~~~~~~~~~~~~~~~
-.. pascal:: function TSRL.NormalRange(min, max: Int64): Int64;
+## SRL.NormalRange
+```pascal
+function TSRL.NormalRange(min, max: Int64): Int64;
+```
 
 Integer overload.
 *)
@@ -136,9 +140,10 @@ begin
 end;
 
 (*
-SRL.RandomPoint
-~~~~~~~~~~~~~~~
-.. pascal:: function TSRL.RandomPoint(Mean: TPoint; MaxRad: Int32): TPoint;
+## SRL.RandomPoint
+```pascal
+function TSRL.RandomPoint(Mean: TPoint; MaxRad: Int32): TPoint;
+```
 
 Generates a random TPoint which weights around ``Mean``, with a max distance 
 from mean defined by ``MaxRad``.
@@ -150,9 +155,10 @@ begin
 end;
 
 (*
-SRL.RandomPoint
-~~~~~~~~~~~~~~~
-.. pascal:: function TSRL.RandomPoint(Bounds: TBox): TPoint; overload;
+## SRL.RandomPoint
+```pascal
+function TSRL.RandomPoint(Bounds: TBox): TPoint; overload;
+```
 
 Generates a random TPoint in the bounds of the given box ``Bounds``, 
 the point weights towards the middle of the box.
@@ -164,9 +170,10 @@ begin
 end;
 
 (*
-SRL.RandomPoint
-~~~~~~~~~~~~~~~
-.. pascal:: function TSRL.RandomPoint(Rect: TRectangle): TPoint; overload;
+## SRL.RandomPoint
+```pascal
+function TSRL.RandomPoint(Rect: TRectangle): TPoint; overload;
+```
 
 Generates a random TPoint in the given rectangle ``Rect``,
 The point weights towards the middle of the rectangle.
@@ -192,9 +199,10 @@ begin
 end;
 
 (*
-SRL.RandonPointEx
-~~~~~~~~~~~~~~~~~
-.. pascal:: function TSRL.RandonPointEx(From: TPoint; B: TBox; Force: Double=0.35): TPoint; constref;
+## SRL.RandonPointEx
+```pascal
+function TSRL.RandonPointEx(From: TPoint; B: TBox; Force: Double=0.35): TPoint; constref;
+```
 
 Generates a random point within the bounds of the given box `B`, the point generated is skewed towards towards the `From`-point.
 The last parameter `Force` defines how much the generated point is to be skewed towards or away from `From` - Expects value in the range 0..2
@@ -221,11 +229,11 @@ begin
 end;
 
 (*
-SRL.rowp
-~~~~~~~~
-.. pascal::
-  function TSRL.rowp(From: TPoint; Rect: TRectangle; Force: Double=-0.9; Smoothness: Double=PI/12): TPoint;
-  function TSRL.rowp(From: TPoint; Box: TBox; Force: Double=-0.9; Smoothness: Double=PI/12): TPoint;
+## SRL.rowp
+```pascal
+function TSRL.rowp(From: TPoint; Rect: TRectangle; Force: Double=-0.9; Smoothness: Double=PI/12): TPoint;
+function TSRL.rowp(From: TPoint; Box: TBox; Force: Double=-0.9; Smoothness: Double=PI/12): TPoint;
+```
 
 rowp, short for `Random Olly Weighted Point`. Generates a random point based on
 a rough formula that Olly came up with for weighting points towards "From" point.
@@ -265,19 +273,20 @@ begin
 end;
 
 (*
-SRL.Dice
-~~~~~~~~
-.. pascal:: function TSRL.Dice(ChancePercent: Double): Boolean; static;
+## SRL.Dice
+```pascal
+function TSRL.Dice(ChancePercent: Double): Boolean; static;
+```
 
 Generates a random number and returns ``True`` whenever the value generated is within the chance (in percentage).
 
-Example
--------
-
-  if SRL.Dice(10.5) then
-    WriteLn('This has a 10.5 percent chance of writing')
-  else
-    WriteLn('No dice');
+### Example
+```pascal
+if SRL.Dice(10.5) then
+  WriteLn('This has a 10.5 percent chance of writing')
+else
+  WriteLn('No dice');
+```
 *)
 function TSRL.Dice(ChancePercent: Double): Boolean; static;
 begin
@@ -302,9 +311,10 @@ begin
 end;
 
 (*
-Wait
-~~~~
-.. pascal:: procedure Wait(Min, Max: Double; Weight: EWaitDir=wdMean); overload;
+## Wait
+```pascal
+procedure Wait(Min, Max: Double; Weight: EWaitDir=wdMean); overload;
+```
 
 Waits ... Weighted towards the mean of `Min` and `Max`
 *)
@@ -318,9 +328,10 @@ begin
 end;
 
 (*
-WaitEx
-~~~~~~
-.. pascal:: procedure WaitEx(Mean, Dev: Double);
+## WaitEx
+```pascal
+procedure WaitEx(Mean, Dev: Double);
+```
 
 Waits ... Regular gauss random
 *)

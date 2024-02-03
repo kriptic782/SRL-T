@@ -4,9 +4,10 @@
 {$ENDIF}
 
 (*
-Mouse.Setup
-~~~~~~~~~~~
-.. pascal:: procedure TSingleMatrix.Smoothen;
+## Mouse.Setup
+```pascal
+procedure TSingleMatrix.Smoothen;
+```
 
 Smoothens the matrix
 

@@ -4,8 +4,7 @@
 {$ENDIF}
 
 (*
-TExtendedArray
-==============
+# TExtendedArray
 TExtendedArray related methods
 *)
 

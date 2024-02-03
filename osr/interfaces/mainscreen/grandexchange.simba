@@ -1,6 +1,5 @@
 (*
-GrandExchange
-=============
+# GrandExchange
 Methods to interact with the grand exchange.
 *)
 {$DEFINE SRL_GRANDEXCHANGE_INCLUDED}
@@ -1330,9 +1329,10 @@ var
   GrandExchange: TRSGrandExchange;
 
 (*
-Bank.Open
-~~~~~~~~~
-.. pascal:: function TRSBank.Open(Location: ERSBankLocation): Boolean; override;
+## Bank.Open
+```pascal
+function TRSBank.Open(Location: ERSBankLocation): Boolean; override;
+```
 
 Overrides **Bank.Open** to support opening the grand exchange.
 *)

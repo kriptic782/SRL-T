@@ -1,6 +1,5 @@
 (*
-DepositBox
-==========
+# DepositBox
 Methods to interact with the deposit box interface.
 *)
 
@@ -267,9 +266,10 @@ begin
 end;
 
 (*
-DepositBox.DepositAll
-~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSDepositBox.DepositAll(): Boolean;
+## DepositBox.DepositAll
+```pascal
+function TRSDepositBox.DepositAll(): Boolean;
+```
 
 Depositis your inventory by clicking the deposit inventory button
 *)
@@ -284,9 +284,10 @@ var
   DepositBox: TRSDepositBox;
 
 (*
-GameTabs.GetCurrentTab
-~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSGameTabs.GetCurrentTab(): ERSGametab; override;
+## GameTabs.GetCurrentTab
+```pascal
+function TRSGameTabs.GetCurrentTab(): ERSGametab; override;
+```
 
 Overrides **GameTabs.GetCurrentTab** to return the inventory tab if bank or depositbox is open.
 *)

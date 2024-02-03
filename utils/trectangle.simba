@@ -4,8 +4,7 @@
 {$ENDIF}
 
 (*
-TRectangle
-===========
+# TRectangle
 TRectangle related methods
 
 Type definition is found in shared/globals.simba
@@ -16,9 +15,10 @@ type
   ESplitDirection = (rpTopLeft, rpBtmRight);
 
 (*
-TRectangle.ToTPA
-~~~~~~~~~~~~~~~~~
-.. pascal:: function TRectangle.ToTPA(): TPointArray; constref;
+## TRectangle.ToTPA
+```pascal
+function TRectangle.ToTPA(): TPointArray; constref;
+```
 
 TPA from the rectangle.
 *)
@@ -29,9 +29,10 @@ end;
 
 
 (*
-TRectangle.Bounds
-~~~~~~~~~~~~~~~~~
-.. pascal:: function TRectangle.Bounds(): TBox; constref;
+## TRectangle.Bounds
+```pascal
+function TRectangle.Bounds(): TBox; constref;
+```
 
 Returns the minimum bounding box covering the rectangle
 *)
@@ -41,9 +42,10 @@ begin
 end;
 
 (*
-TRectangle.Radius
-~~~~~~~~~~~~~~~~~
-.. pascal:: function TRectangle.Radius(): Double; constref;
+## TRectangle.Radius
+```pascal
+function TRectangle.Radius(): Double; constref;
+```
 
 Returns the radius of the shortest side, for the maximum see MaxRadius
 *)
@@ -56,9 +58,10 @@ begin
 end;
 
 (*
-TRectangle.MaxRadius
-~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRectangle.MaxRadius(): Double; constref;
+## TRectangle.MaxRadius
+```pascal
+function TRectangle.MaxRadius(): Double; constref;
+```
 
 Returns the radius of the longest side, for minimum see Radius
 *)
@@ -71,9 +74,10 @@ begin
 end;
 
 (*
-TRectangle.Mean
-~~~~~~~~~~~~~~~~
-.. pascal:: function TRectangle.Mean(): TPoint; constref;
+## TRectangle.Mean
+```pascal
+function TRectangle.Mean(): TPoint; constref;
+```
 
 Middle of the rectangle
 
@@ -87,9 +91,10 @@ end;
 
 
 (*
-TRectangle.FixOrder
-~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRectangle.FixOrder(): TRectangle; constref;
+## TRectangle.FixOrder
+```pascal
+function TRectangle.FixOrder(): TRectangle; constref;
+```
 
 As long as the order of the points are clockwise, this will shift the points so that
 ``Top``, is the topmost,``Right`` is the right-most etc... 
@@ -112,9 +117,10 @@ begin
 end;
 
 (*
-TRectangle.Rotate
-~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRectangle.Rotate(Angle: Double): TRectangle; constref;
+## TRectangle.Rotate
+```pascal
+function TRectangle.Rotate(Angle: Double): TRectangle; constref;
+```
     
 Returns a rotated copy of the rectangle
 *)
@@ -131,9 +137,10 @@ begin
 end;
 
 (*
-TRectangle.Contains
-~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRectangle.Contains(Pt: TPoint): Boolean; constref;
+## TRectangle.Contains
+```pascal
+function TRectangle.Contains(Pt: TPoint): Boolean; constref;
+```
   
 Returns true if the point `Pt` is inside the rectangle.
 .. note:: by slacky
@@ -155,9 +162,10 @@ begin
 end;
 
 (*
-TRectangle.DirByLen
-~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRectangle.DirByLen(Longest: Boolean=True): ESplitDirection; constref;
+## TRectangle.DirByLen
+```pascal
+function TRectangle.DirByLen(Longest: Boolean=True): ESplitDirection; constref;
+```
   
 Returns the direction which is the longest or shortest.
 
@@ -173,9 +181,10 @@ end;
 
 
 (*
-TRectangle.Partition
-~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRectangle.Partition(m,n:Int32; dir:ESplitDirection=rpTopLeft): TRectArray; constref;
+## TRectangle.Partition
+```pascal
+function TRectangle.Partition(m,n:Int32; dir:ESplitDirection=rpTopLeft): TRectArray; constref;
+```
     
 Break the rectangle into smaller rectangles. Goes well along with `DirByLen`
 
@@ -228,9 +237,10 @@ end;
 
 
 (*
-TRectangle.Offset
-~~~~~~~~~~~~~~~~~
-.. pascal:: function TRectangle.Offset(pt: TPoint): TRectangle; constref;
+## TRectangle.Offset
+```pascal
+function TRectangle.Offset(pt: TPoint): TRectangle; constref;
+```
 
 Offset the rectangle.
 *)
@@ -242,9 +252,10 @@ end;
 
 
 (*
-TRectangle.Filter
-~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRectangle.Filter(TestSet: TPointArray): TPointArray; constref;
+## TRectangle.Filter
+```pascal
+function TRectangle.Filter(TestSet: TPointArray): TPointArray; constref;
+```
     
 Extract all the points from `TestSet` that fits within this rectangle.
 *)
@@ -270,9 +281,10 @@ end;
 
 
 (*
-TRectangle.Expand
-~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRectangle.Expand(Inc: Int32): TRectangle; constref;
+## TRectangle.Expand
+```pascal
+function TRectangle.Expand(Inc: Int32): TRectangle; constref;
+```
   
 Increase or decrease the dimensions of the rectangle.
 *)
@@ -296,9 +308,10 @@ end;
 
 
 (*
-TRectangle.NearestEdge
-~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRectangle.NearestEdge(P: TPoint): TPoint; constref;
+## TRectangle.NearestEdge
+```pascal
+function TRectangle.NearestEdge(P: TPoint): TPoint; constref;
+```
 
 Returns the closest edge point (think Rect.ToTPA.Connect) to the TPoint `P`.
 *)

@@ -1,6 +1,5 @@
 (*
-Item Finder
-===========
+# Item Finder
 *)
 
 {$DEFINE SRL_ITEMFINDER_INCLUDED}
@@ -13,9 +12,10 @@ type
   TRSItemArray = array of TRSItem;
 
 (*
-ItemArray.Find
-~~~~~~~~~~~~~~
-.. pascal:: function TRSItemArray.Find(const value: TRSItem): Int32; constref;
+## ItemArray.Find
+```pascal
+function TRSItemArray.Find(const value: TRSItem): Int32; constref;
+```
 
 Find a TRSItem in a TRSItemArray and return it's index.
 *)
@@ -29,9 +29,10 @@ begin
 end;
 
 (*
-ItemArray.Contains
-~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSItemArray.Contains(const value: TRSItem): Boolean; constref;
+## ItemArray.Contains
+```pascal
+function TRSItemArray.Contains(const value: TRSItem): Boolean; constref;
+```
 
 Find a TRSItem in a TRSItemArray and return true or false.
 *)

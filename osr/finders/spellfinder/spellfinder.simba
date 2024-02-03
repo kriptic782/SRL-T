@@ -1,6 +1,5 @@
 (*
-Spell Finder
-============
+# Spell Finder
 *)
 
 {$DEFINE SRL_SPELLFINDER_INCLUDED}

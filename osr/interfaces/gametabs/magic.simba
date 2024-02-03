@@ -1,6 +1,5 @@
 (*
-Magic
-=====
+# Magic
 Methods to interact with the magic tab.
 *)
 
@@ -87,9 +86,10 @@ type
   end;
 
 (*
-Magic.Setup
-~~~~~~~~~~~
-.. pascal:: procedure TRSMagic.Setup; override;
+## Magic.Setup
+```pascal
+procedure TRSMagic.Setup; override;
+```
 
 Initializes **Magic** variables.
 
@@ -103,9 +103,10 @@ begin
 end;
 
 (*
-Magic.SetupAlignment
-~~~~~~~~~~~~~~~~~~~~
-.. pascal:: procedure TRSMagic.SetupAlignment(Mode: ERSClientMode); override;
+## Magic.SetupAlignment
+```pascal
+procedure TRSMagic.SetupAlignment(Mode: ERSClientMode); override;
+```
 
 Setups up the interface aligment for the current client mode.
 
@@ -122,16 +123,17 @@ begin
 end;
 
 (*
-Magic.IsOpen
-~~~~~~~~~~~~
-.. pascal:: function TRSMagic.IsOpen(): Boolean;
+## Magic.IsOpen
+```pascal
+function TRSMagic.IsOpen(): Boolean;
+```
 
 Returns true if the Magic tab is open.
 
-Example
--------
-
-  WriteLn Magic.IsOpen();
+### Example
+```pascal
+WriteLn Magic.IsOpen();
+```
 *)
 function TRSMagic.IsOpen(): Boolean;
 begin
@@ -139,16 +141,17 @@ begin
 end;
 
 (*
-Magic.Open
-~~~~~~~~~~
-.. pascal:: function TRSMagic.Open(): Boolean;
+## Magic.Open
+```pascal
+function TRSMagic.Open(): Boolean;
+```
 
 Attempts to open the magic tab.
 
-Example
--------
-
-  Magic.Open();
+### Example
+```pascal
+Magic.Open();
+```
 *)
 function TRSMagic.Open(): Boolean;
 begin
@@ -156,16 +159,17 @@ begin
 end;
 
 (*
-Magic.GetSpellBook
-~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.GetSpellBook(): ERSSpellBook;
+## Magic.GetSpellBook
+```pascal
+function TRSMagic.GetSpellBook(): ERSSpellBook;
+```
 
 Returns the current spell book.
 
-Example
--------
-
-  WriteLn Magic.GetSpellBook();
+### Example
+```pascal
+WriteLn Magic.GetSpellBook();
+```
 *)
 function TRSMagic.GetSpellBook(): ERSSpellBook;
 const
@@ -182,16 +186,17 @@ begin
 end;
 
 (*
-Magic.IsSpellBook
-~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.IsSpellBook(book: ERSSpellBook): Boolean;
+## Magic.IsSpellBook
+```pascal
+function TRSMagic.IsSpellBook(book: ERSSpellBook): Boolean;
+```
 
 Returns true if we are using the specified spell book.
 
-Example
--------
-
-  WriteLn Magic.IsSpellBook(ERSSpellBook.LUNAR);
+### Example
+```pascal
+WriteLn Magic.IsSpellBook(ERSSpellBook.LUNAR);
+```
 *)
 function TRSMagic.IsSpellBook(book: ERSSpellBook): Boolean;
 begin
@@ -199,16 +204,17 @@ begin
 end;
 
 (*
-Magic.InfoIsOpen
-~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.InfoIsOpen(): Boolean;
+## Magic.InfoIsOpen
+```pascal
+function TRSMagic.InfoIsOpen(): Boolean;
+```
 
 Returns true if the info black box about a spell is open.
 
-Example
--------
-
-  WriteLn Magic.IsSpellBook(ERSSpellBook.LUNAR);
+### Example
+```pascal
+WriteLn Magic.IsSpellBook(ERSSpellBook.LUNAR);
+```
 *)
 function TRSMagic.InfoIsOpen(): Boolean;
 begin
@@ -216,9 +222,10 @@ begin
 end;
 
 (*
-Magic._CloseInfoMouseCallback
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: procedure TRSMagic._CloseInfoMouseCallback(sender: PMouse; var x, y: Double; var done: Boolean);
+## Magic._CloseInfoMouseCallback
+```pascal
+procedure TRSMagic._CloseInfoMouseCallback(sender: PMouse; var x, y: Double; var done: Boolean);
+```
 
 Mouse movement callback to stop mouse movement when the spell info box closes.
 Do not touch this if you don't understand it.
@@ -229,18 +236,18 @@ begin
 end;
 
 (*
-Magic.CloseInfo
-~~~~~~~~~~~~~~~
-.. pascal::
-  function TRSMagic.CloseInfo(): Boolean;
-  function TRSMagic.CloseInfo(spell: ERSSpell): Boolean; overload;
+## Magic.CloseInfo
+```pascal
+function TRSMagic.CloseInfo(): Boolean;
+function TRSMagic.CloseInfo(spell: ERSSpell): Boolean; overload;
+```
 
 Returns true if the info black box about a spell is open.
 
-Example
--------
-
-  WriteLn Magic.CloseInfo();
+### Example
+```pascal
+WriteLn Magic.CloseInfo();
+```
 *)
 function TRSMagic.CloseInfo(): Boolean;
 var
@@ -268,9 +275,10 @@ end;
 
 
 (*
-Magic.GetSpellBoxes
-~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.GetSpellBoxes(out book: ERSSpellBook): TBoxArray;
+## Magic.GetSpellBoxes
+```pascal
+function TRSMagic.GetSpellBoxes(out book: ERSSpellBook): TBoxArray;
+```
 
 Internal function to get the bounds of the spells of the current spell book.
 *)
@@ -287,9 +295,10 @@ end;
 
 
 (*
-Magic.FindSpell
-~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.FindSpell(spell: ERSSpell; out box: TBox): Boolean;
+## Magic.FindSpell
+```pascal
+function TRSMagic.FindSpell(spell: ERSSpell; out box: TBox): Boolean;
+```
 
 Return true or false wether we found a spell or not and return it's bounds if found.
 *)
@@ -321,9 +330,10 @@ begin
 end;
 
 (*
-Magic.GetSpellBox
-~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.GetSpellBox(spell: ERSSpell; out box: TBox): Boolean;
+## Magic.GetSpellBox
+```pascal
+function TRSMagic.GetSpellBox(spell: ERSSpell; out box: TBox): Boolean;
+```
 
 Internal function to get the specified spell bounds.
 *)
@@ -367,9 +377,10 @@ end;
 
 
 (*
-Magic.ContainsSpell
-~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.ContainsSpell(spell: ERSSpell): Boolean;
+## Magic.ContainsSpell
+```pascal
+function TRSMagic.ContainsSpell(spell: ERSSpell): Boolean;
+```
 
 Return true or false wether we found a spell or not.
 *)
@@ -382,16 +393,17 @@ end;
 
 
 (*
-Magic.MouseSpell
-~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.MouseSpell(spell: ERSSpell): Boolean;
+## Magic.MouseSpell
+```pascal
+function TRSMagic.MouseSpell(spell: ERSSpell): Boolean;
+```
 
 Used to move the mouse to the specified spell.
 
-Example
--------
-
-  Magic.MouseSpell(ERSSpell.HIGH_LEVEL_ALCHEMY);
+### Example
+```pascal
+Magic.MouseSpell(ERSSpell.HIGH_LEVEL_ALCHEMY);
+```
 *)
 function TRSMagic.MouseSpell(spell: ERSSpell): Boolean;
 var
@@ -421,16 +433,17 @@ begin
 end;
 
 (*
-Magic.ClickSpell
-~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.ClickSpell(spell: ERSSpell; option: String = ''): Boolean;
+## Magic.ClickSpell
+```pascal
+function TRSMagic.ClickSpell(spell: ERSSpell; option: String = ''): Boolean;
+```
 
 Used to interact with the specified spell.
 
-Example
--------
-
-  Magic.ClickSpell(ERSSpell.HIGH_LEVEL_ALCHEMY);
+### Example
+```pascal
+Magic.ClickSpell(ERSSpell.HIGH_LEVEL_ALCHEMY);
+```
 *)
 function TRSMagic.ClickSpell(spell: ERSSpell; option: String = ''): Boolean;
 begin
@@ -447,16 +460,17 @@ begin
 end;
 
 (*
-Magic.MouseSpell
-~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.MouseSpell(spell: ERSSpell; button: Int32 = MOUSE_MOVE): Boolean;
+## Magic.MouseSpell
+```pascal
+function TRSMagic.MouseSpell(spell: ERSSpell; button: Int32 = MOUSE_MOVE): Boolean;
+```
 
 Used to interact with the specified spell.
 
-Example
--------
-
-  Magic.MouseSpell(ERSSpell.HIGH_LEVEL_ALCHEMY, MOUSE_LEFT);
+### Example
+```pascal
+Magic.MouseSpell(ERSSpell.HIGH_LEVEL_ALCHEMY, MOUSE_LEFT);
+```
 *)
 function TRSMagic.MouseSpell(spell: ERSSpell; button: Int32): Boolean; overload; deprecated 'Use Magic.MouseSpell() and Magic.ClickSpell() instead!';
 var
@@ -474,17 +488,18 @@ end;
 
 
 (*
-Magic.FindSelected
-~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.FindSelected(out tpa: TPointArray): Boolean;
+## Magic.FindSelected
+```pascal
+function TRSMagic.FindSelected(out tpa: TPointArray): Boolean;
+```
 
 Returns the true if we have a selected spell and returns it's tpa.
 
-Example
--------
-
-  if Magic.FindSelected(tpa) then
-    Debug(tpa);
+### Example
+```pascal
+if Magic.FindSelected(tpa) then
+  Debug(tpa);
+```
 *)
 function TRSMagic.FindSelected(out tpa: TPointArray): Boolean;
 var
@@ -510,16 +525,17 @@ begin
 end;
 
 (*
-Magic.ContainsSelected
-~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.ContainsSelected(): Boolean;
+## Magic.ContainsSelected
+```pascal
+function TRSMagic.ContainsSelected(): Boolean;
+```
 
 Returns the true if we have a selected spell.
 
-Example
--------
-
-  WriteLn Magic.ContainsSelected();
+### Example
+```pascal
+WriteLn Magic.ContainsSelected();
+```
 *)
 function TRSMagic.ContainsSelected(openTab: Boolean = False): Boolean;
 var
@@ -545,16 +561,17 @@ begin
 end;
 
 (*
-Magic.GetSelectedSpell
-~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.GetSelectedspell: ERSSpell;
+## Magic.GetSelectedSpell
+```pascal
+function TRSMagic.GetSelectedspell: ERSSpell;
+```
 
 Returns the currently selected spell.
 
-Example
--------
-
-  WriteLn Magic.GetSelectedSpell;
+### Example
+```pascal
+WriteLn Magic.GetSelectedSpell;
+```
 *)
 function TRSMagic.GetSelectedSpell(): ERSSpell; deprecated 'Use Magic.FindSelected() or Magic.ContainsSelected() instead!';
 var
@@ -579,18 +596,18 @@ end;
 
 
 (*
-Magic.IsSelected
-~~~~~~~~~~~~~~~~
-.. pascal::
-  function TRSMagic.IsSelected(spell: ERSSpell): Boolean;
-  function TRSMagic.IsSelected(spell: ERSSpell; selected: TPointArray): Boolean; overload;
+## Magic.IsSelected
+```pascal
+function TRSMagic.IsSelected(spell: ERSSpell): Boolean;
+function TRSMagic.IsSelected(spell: ERSSpell; selected: TPointArray): Boolean; overload;
+```
 
 Returns true if the specified spell is currently active (with white outline).
 
-Example
--------
-
-  Magic.IsSpellSelected(ERSSpell.ICE_BARRAGE);
+### Example
+```pascal
+Magic.IsSpellSelected(ERSSpell.ICE_BARRAGE);
+```
 *)
 function TRSMagic.IsSelected(spell: ERSSpell): Boolean;
 var
@@ -637,16 +654,17 @@ begin
 end;
 
 (*
-Magic.CanActivate
-~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.CanActivate(spell: ERSSpell): Boolean;
+## Magic.CanActivate
+```pascal
+function TRSMagic.CanActivate(spell: ERSSpell): Boolean;
+```
 
 Returns true if we can activate the spell (we have runes, level and the spell unlocked).
 
-Example
--------
-
-  Magic.CanActivate(ERSSpell.HIGH_LEVEL_ALCHEMY);
+### Example
+```pascal
+Magic.CanActivate(ERSSpell.HIGH_LEVEL_ALCHEMY);
+```
 *)
 function TRSMagic.CanActivate(spell: ERSSpell): Boolean;
 begin
@@ -655,16 +673,17 @@ end;
 
 
 (*
-Magic.SpellWasCast
-~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.SpellWasCast(spell: ERSSpell): Boolean;
+## Magic.SpellWasCast
+```pascal
+function TRSMagic.SpellWasCast(spell: ERSSpell): Boolean;
+```
 
 Returns true if we are in a state that casting a spell would leave you.
 
-Example
--------
-
-  Magic.SpellWasCast(ERSSpell.ICE_BARRAGE);
+### Example
+```pascal
+Magic.SpellWasCast(ERSSpell.ICE_BARRAGE);
+```
 *)
 function TRSMagic.SpellWasCast(spell: ERSSpell): Boolean;
 begin
@@ -676,16 +695,17 @@ begin
 end;
 
 (*
-Magic.CastSpell
-~~~~~~~~~~~~~~~
-.. pascal:: function TRSMagic.CastSpell(spell: ERSSpell): Boolean;
+## Magic.CastSpell
+```pascal
+function TRSMagic.CastSpell(spell: ERSSpell): Boolean;
+```
 
 Attempts to cast the specified spell.
 
-Example
--------
-
-  Magic.CastSpell(ERSSpell.LOW_LEVEL_ALCHEMY);
+### Example
+```pascal
+Magic.CastSpell(ERSSpell.LOW_LEVEL_ALCHEMY);
+```
 *)
 function TRSMagic.CastSpell(spell: ERSSpell; option: String = ''): Boolean;
 var
@@ -730,8 +750,7 @@ begin
 end;
 
 (*
-var Magic
-~~~~~~~~~
+## var Magic
   Global Magic variable.
 *)
 var

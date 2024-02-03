@@ -1,6 +1,5 @@
 (*
-Misc
-====
+# Misc
 *)
 
 {$DEFINE SRL_MISC_INCLUDED}
@@ -17,9 +16,10 @@ const
   RS_ITEM_GREEN_STACK  = $80FF00;
 
 (*
-SRL.GetXPAtLevel
-~~~~~~~~~~~~~~~~
-.. pascal:: function TSRL.GetXPAtLevel(level:Int32): Int32;
+## SRL.GetXPAtLevel
+```pascal
+function TSRL.GetXPAtLevel(level:Int32): Int32;
+```
 
 Given a level it returns the minimum XP needed for it.
 *)
@@ -34,9 +34,10 @@ begin
 end;
 
 (*
-SRL.GetLevelAtXP
-~~~~~~~~~~~~~~~~
-.. pascal:: function TSRL.GetLevelAtXP(XP:UInt32): Int32;
+## SRL.GetLevelAtXP
+```pascal
+function TSRL.GetLevelAtXP(XP:UInt32): Int32;
+```
 
 Given some XP, it returns what level that is.
 *)
@@ -52,9 +53,10 @@ begin
 end;
 
 (*
-SRL.GetItemAmountBox
-~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TSRL.GetItemAmountBox(constref area: TBox): TBox;
+## SRL.GetItemAmountBox
+```pascal
+function TSRL.GetItemAmountBox(constref area: TBox): TBox;
+```
 
 Returns the correct text box of an item's amount text based on the item box.
 *)
@@ -66,9 +68,10 @@ begin
 end;
 
 (*
-SRL.GetItemAmount
-~~~~~~~~~~~~~~~~~
-.. pascal:: function TSRL.GetItemAmount(area: TBox): Int32;
+## SRL.GetItemAmount
+```pascal
+function TSRL.GetItemAmount(area: TBox): Int32;
+```
 
 For use with items in like bankscreen, inventory, shops and so on to
 get the number of stacked items there are.
@@ -86,9 +89,10 @@ begin
 end;
 
 (*
-SRL.AvgBrightness
-~~~~~~~~~~~~~~~~~
-.. pascal:: function TSRL.AvgBrightness(B: TBox): Int32;
+## SRL.AvgBrightness
+```pascal
+function TSRL.AvgBrightness(B: TBox): Int32;
+```
 
 Returns the average brightness of a area on the screen. 
 Returns a value between ``0`` and ``100``, ``0`` being black.
@@ -103,9 +107,10 @@ begin
 end;
 
 (*
-SRL.PeakBrightness
-~~~~~~~~~~~~~~~~~~
-.. pascal:: function TSRL.PeakBrightness(B: TBox): Int32;
+## SRL.PeakBrightness
+```pascal
+function TSRL.PeakBrightness(B: TBox): Int32;
+```
 
 Returns the peak brightness of a area on the screen. 
 Returns a value between ``0`` and ``100``, ``0`` being black.

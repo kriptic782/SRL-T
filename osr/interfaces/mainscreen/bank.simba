@@ -1,6 +1,5 @@
 (*
-Bank
-====
+# Bank
 Methods to interact with the Bank.
 *)
 
@@ -223,9 +222,10 @@ begin
 end;
 
 (*
-Bank.IsOpen
-~~~~~~~~~~~
-.. pascal:: function TRSBank.IsOpen(waitForItems: Boolean = True): Boolean;
+## Bank.IsOpen
+```pascal
+function TRSBank.IsOpen(waitForItems: Boolean = True): Boolean;
+```
 
 Returns true if the Bank is visible.
 
@@ -267,17 +267,18 @@ begin
 end;
 
 (*
-Bank.Close
-~~~~~~~~~~
-.. pascal:: function TRSBank.Close(PressEscape: Boolean = False): Boolean;
+## Bank.Close
+```pascal
+function TRSBank.Close(PressEscape: Boolean = False): Boolean;
+```
 
 Closes the bank, Depending on `PressEscape` the function will either click the button
 or press backspace.
 
-Example
--------
-
+### Example
+```pascal
  WriteLn Bank.Close();
+```
 *)
 function TRSBank.Close(PressEscape: Boolean = False): Boolean; 
 begin
@@ -300,18 +301,19 @@ begin
 end;
 
 (*
-Bank.FindItemBoundaries
-~~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSBank.FindItemBoundaries(): TBoxArray;
+## Bank.FindItemBoundaries
+```pascal
+function TRSBank.FindItemBoundaries(): TBoxArray;
+```
 
 Finds item boundaries. This is an internal function used to retrieve the boxes we
 search for items in.
 
-Example
--------
-
-  Boxes := Self.FindItemBoundaries();
-  WriteLn ItemInterface.Find(Item, Boxes);
+### Example
+```pascal
+Boxes := Self.FindItemBoundaries();
+WriteLn ItemInterface.Find(Item, Boxes);
+```
 *)
 function TRSBank.FindItemBoundaries(): TBoxArray;
 var
@@ -351,9 +353,10 @@ end;
 
 
 (*
-Bank.Setup
-~~~~~~~~~~
-.. pascal:: procedure Bank.Setup;
+## Bank.Setup
+```pascal
+procedure Bank.Setup;
+```
 
 Initializes Bank variables.
 
@@ -422,16 +425,17 @@ begin
 end;
 
 (*
-Bank.Search
-~~~~~~~~~~~
-.. pascal:: function TRSBank.Search(item: String): Boolean;
+## Bank.Search
+```pascal
+function TRSBank.Search(item: String): Boolean;
+```
 
 Searches for an item.
 
-Example
--------
-
-  Bank.Search('logs'); // Search for logs
+### Example
+```pascal
+Bank.Search('logs'); // Search for logs
+```
 *)
 function TRSBank.Search(item: String): Boolean;
 begin
@@ -445,18 +449,19 @@ begin
 end;
 
 (*
-Bank.CloseSearch
-~~~~~~~~~~~~~~~~
-.. pascal:: function TRSBank.CloseSearch(): Boolean;
+## Bank.CloseSearch
+```pascal
+function TRSBank.CloseSearch(): Boolean;
+```
 
 Closes the bank search if it's open.
 
-Example
--------
-  
-  Bank.Search('logs'); // Search for logs
-  Wait(1000);
-  Bank.CloseSearch();
+### Example
+```pascal
+Bank.Search('logs'); // Search for logs
+Wait(1000);
+Bank.CloseSearch();
+```
 *)
 function TRSBank.CloseSearch(): Boolean;
 begin
@@ -466,18 +471,19 @@ end;
 
 
 (*
-Bank.Open
-~~~~~~~~~
-.. pascal:: function TRSBank.Open(P: TPoint): Boolean;
+## Bank.Open
+```pascal
+function TRSBank.Open(P: TPoint): Boolean;
+```
 
 Function to open a bank at a specified **P** TPoint.
 This function will move the mouse to **P** and if the uptext matches the bank or a banker uptext it will open the bank.
 
-Example
--------
-  
-  P := CustomBankFinderFunction();
-  Bank.Open(P);
+### Example
+```pascal
+P := CustomBankFinderFunction();
+Bank.Open(P);
+```
 *)
 function TRSBank.Open(P: TPoint): Boolean;
 begin
@@ -584,9 +590,10 @@ begin
 end;
 
 (*
-Bank._SimplifyItemName
-~~~~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSBank._SimplifyItemName(Item: TRSItem): String;
+## Bank._SimplifyItemName
+```pascal
+function TRSBank._SimplifyItemName(Item: TRSItem): String;
+```
 
 Internal function to get a human like search term for an item.
 This could be improved for better antiban but I decided to keep it simple since it's not used very frequently.
@@ -595,10 +602,10 @@ Once that's done wee crop some characters from the final string, because humans 
 
 .. note:: Could be improved to in the future for only using the relevant part of the string. For example, an human searching for 'Amulet of glory(6)' would probably search for 'glory' instead of 'amulet of gl'.
 
-Example
--------
-  
-  WriteLn Bank._SimplifyItemName('Amulet of glory(6)');
+### Example
+```pascal
+WriteLn Bank._SimplifyItemName('Amulet of glory(6)');
+```
 *)
 function TRSBank._SimplifyItemName(Item: TRSItem): String;
 var
@@ -614,9 +621,10 @@ begin
 end;
 
 (*
-Bank.FindItemTab
-~~~~~~~~~~~~~~~~
-.. pascal:: function TRSBank.FindItemTab(Item: TRSItem; OpenTab: Boolean = True): Int32;
+## Bank.FindItemTab
+```pascal
+function TRSBank.FindItemTab(Item: TRSItem; OpenTab: Boolean = True): Int32;
+```
 
 Find the bank tab of an item just by knowing it's name.
 This is very useful when you want to support people having items in any tab they want without much hassle for people to setup.
@@ -625,10 +633,10 @@ The result will be the BankTab of the item. **-1** means we didn't find a BankTa
 
 .. note:: A known limitation of this is that if several items match the sprite of the item (for example multiple charged jewlry) the tab retrieved will be the first one found. If you have 'Games necklace(1)' in tab 1 and 'Games necklace(8)' in tab 5 and search for the latter, you will get tab 1.
 
-Example
--------
-  
-  WriteLn Bank.FindItemTab('Molten glass');
+### Example
+```pascal
+WriteLn Bank.FindItemTab('Molten glass');
+```
 *)
 function TRSBank.FindItemTab(item: TRSItem; openTab: Boolean = True): Int32;
 var
@@ -946,16 +954,17 @@ begin
 end;
 
 (*
-Bank.CountTabs
-~~~~~~~~~~~
-.. pascal:: function TRSBank.CountTabs: Int32;
+## Bank.CountTabs
+```pascal
+function TRSBank.CountTabs: Int32;
+```
 
 Counts the existing bank tabs.
 
-Example
--------
-
-  WriteLn Bank.CountTabs;
+### Example
+```pascal
+WriteLn Bank.CountTabs;
+```
 *)
 function TRSBank.CountTabs(): Int32;
 var
@@ -970,16 +979,17 @@ begin
 end;
 
 (*
-Bank.GetCurrentTab
-~~~~~~~~~~~
-.. pascal:: function TRSBank.GetCurrentTab(): Int32;
+## Bank.GetCurrentTab
+```pascal
+function TRSBank.GetCurrentTab(): Int32;
+```
 
 Get the current active bank tab.
 
-Example
--------
-
-  WriteLn Bank.GetCurrentTab;
+### Example
+```pascal
+WriteLn Bank.GetCurrentTab;
+```
 *)
 function TRSBank.GetCurrentTab(): Int32;
 var
@@ -998,16 +1008,17 @@ begin
 end;
 
 (*
-Bank.OpenTab
-~~~~~~~~~~~~
-.. pascal:: function TRSBank.OpenTab(Tab: Int32): Boolean;
+## Bank.OpenTab
+```pascal
+function TRSBank.OpenTab(Tab: Int32): Boolean;
+```
 
 Open the specified bank tab.
 
-Example
--------
-
-  Bank.OpenTab(0);
+### Example
+```pascal
+Bank.OpenTab(0);
+```
 *)
 function TRSBank.OpenTab(Tab: Int32): Boolean;
 var
@@ -1033,20 +1044,20 @@ begin
 end;
 
 (*
-Bank.FindItem
-~~~~~~~~~~~~~
-.. pascal::
-  function TRSBank.FindItem(Item: TRSItem; out box: TBox): Boolean;
-  function TRSBank.FindItem(out item: TRSBankItem; out box: TBox; attempts: Int32 = 0): Boolean; overload;
+## Bank.FindItem
+```pascal
+function TRSBank.FindItem(Item: TRSItem; out box: TBox): Boolean;
+function TRSBank.FindItem(out item: TRSBankItem; out box: TBox; attempts: Int32 = 0): Boolean; overload;
+```
 
 Finds and returns the bounds of an item in the bank
 The TRSBankItem version of the method will actually search the bank for the item while the TRSItem will not.
 
-Example
--------
-
-  Bank.FindItem('Coins', Box);
-  Debug(Box);
+### Example
+```pascal
+Bank.FindItem('Coins', Box);
+Debug(Box);
+```
 *)
 function TRSBank.FindItem(item: TRSItem; out box: TBox): Boolean;
 begin
@@ -1094,19 +1105,19 @@ end;
 
 
 (*
-Bank.ContainsItem
-~~~~~~~~~~~~~~~~~
-.. pascal::
-  function TRSBank.ContainsItem(Item: TRSItem): Boolean;
-  function TRSBank.ContainsItem(out item: TRSBankItem): Boolean; overload;
+## Bank.ContainsItem
+```pascal
+function TRSBank.ContainsItem(Item: TRSItem): Boolean;
+function TRSBank.ContainsItem(out item: TRSBankItem): Boolean; overload;
+```
 
 Returns true/false whether a item is found in the bank or not.
 The TRSBankItem version of the method will actually search the bank for the item while the TRSItem will not.
 
-Example
--------
-
-  WriteLn Bank.ContainsItem('Coins');
+### Example
+```pascal
+WriteLn Bank.ContainsItem('Coins');
+```
 *)
 function TRSBank.ContainsItem(item: TRSItem): Boolean;
 begin
@@ -1122,9 +1133,10 @@ end;
 
 
 (*
-Bank.ContainsItem
-~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSBank.ContainsAny(items: TRSItemArray): Boolean;
+## Bank.ContainsItem
+```pascal
+function TRSBank.ContainsAny(items: TRSItemArray): Boolean;
+```
 
 Returns true/false whether any item in **items** is visible in the bank.
 *)
@@ -1135,17 +1147,18 @@ end;
 
 
 (*
-Bank.CountItem
-~~~~~~~~~~~~~~
-.. pascal:: function TRSBank.CountItem(Item: TRSItem): Int32;
+## Bank.CountItem
+```pascal
+function TRSBank.CountItem(Item: TRSItem): Int32;
+```
 
 Counts the amount of items that share the same sprite in the bank.
 This are extremely rare but do exist, e.g.: Edible seaweed, seaweed, giant seaweed.
 
-Example
--------
-
-  WriteLn Bank.CountItem('Seaweed');
+### Example
+```pascal
+WriteLn Bank.CountItem('Seaweed');
+```
 *)
 function TRSBank.CountItem(item: TRSItem): Int32;
 begin
@@ -1161,16 +1174,17 @@ begin
 end;
 
 (*
-Bank.CountItemStack
-~~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSBank.CountItemStack(Item: TRSItem): Int32;
+## Bank.CountItemStack
+```pascal
+function TRSBank.CountItemStack(Item: TRSItem): Int32;
+```
 
 Counts the stack amount of a item in the bank.
 
-Example
--------
-
-  WriteLn Bank.CountItemStack('Coins');
+### Example
+```pascal
+WriteLn Bank.CountItemStack('Coins');
+```
 *)
 function TRSBank.CountItemStack(item: TRSItem): Int32;
 begin
@@ -1178,16 +1192,17 @@ begin
 end;
 
 (*
-Bank.MouseItem
-~~~~~~~~~~~~~~
-.. pascal:: function TRSBank.MouseItem(Item: TRSItem): Boolean;
+## Bank.MouseItem
+```pascal
+function TRSBank.MouseItem(Item: TRSItem): Boolean;
+```
 
 Moves the mouse to an item.
 
-Example
--------
-
-  Bank.MouseItem('Coins');
+### Example
+```pascal
+Bank.MouseItem('Coins');
+```
 *)
 function TRSBank.MouseItem(item: TRSItem): Boolean;
 begin
@@ -1198,16 +1213,17 @@ begin
 end;
 
 (*
-Bank.ClickItem
-~~~~~~~~~~~~~~
-.. pascal:: function TRSBank.ClickItem(Item: TRSItem; Option: String = ''): Boolean;
+## Bank.ClickItem
+```pascal
+function TRSBank.ClickItem(Item: TRSItem; Option: String = ''): Boolean;
+```
 
 Clicks an item in the bank. If an **Option** is specified and it's not in the uptext it will right click the item and look for the **Option**.
 
-Example
--------
-
-  Bank.ClickItem('Coins', 'All');
+### Example
+```pascal
+Bank.ClickItem('Coins', 'All');
+```
 *)
 function TRSBank.ClickItem(item: TRSItem; Option: String = ''): Boolean;
 begin
@@ -1218,40 +1234,39 @@ begin
 end;
 
 (*
-Bank.WithdrawItem
-~~~~~~~~~~~~~~~~~
-.. pascal::
-  function TRSBank.WithdrawItem(out item: TRSBankItem; useQuantityButtons: Boolean): Boolean;
-  function TRSBank.WithdrawItem(out item: TRSBankItem; useQuantityButtons: Boolean): Boolean; overload;
-  function TRSBank.WithdrawItem(item: TRSItem; useQuantityButtons: Boolean): Boolean; overload;
+## Bank.WithdrawItem
+```pascal
+function TRSBank.WithdrawItem(out item: TRSBankItem; useQuantityButtons: Boolean): Boolean;
+function TRSBank.WithdrawItem(out item: TRSBankItem; useQuantityButtons: Boolean): Boolean; overload;
+function TRSBank.WithdrawItem(item: TRSItem; useQuantityButtons: Boolean): Boolean; overload;
+```
 
 Finds and withdraws an item.
 
-Parameters
-----------
+### Parameters
 
 Item
 	TRSBankWithdrawItem or TRSBankItem variable to withdraw.
-  TRSBankItem caches the bank tab and scroll position the item is at for next uses.
+TRSBankItem caches the bank tab and scroll position the item is at for next uses.
 
 useQuantityButtons  
-  Determines if to use the 1,5,10,X,ALL `Quantity` buttons.
+Determines if to use the 1,5,10,X,ALL `Quantity` buttons.
 
-Example
--------
+### Example
+```pascal
+var
+  ItemToWithdraw: TRSBankWithdrawItem;
+  
+ItemToWithdraw.Item := 'Iron full helm'; 
+ItemToWithdraw.Quantity := 5;
+ItemToWithdraw.Noted := False;  
 
-  var
-    ItemToWithdraw: TRSBankWithdrawItem;
-    
-  ItemToWithdraw.Item := 'Iron full helm'; 
-  ItemToWithdraw.Quantity := 5;
-  ItemToWithdraw.Noted := False;  
-  
-  Bank.WithdrawItem(ItemToWithdraw, True);  
-  
-  // OR you can shorthand by passing an open array.
-  
-  Bank.WithdrawItem(['Iron full helm', 5, False], True);  
+Bank.WithdrawItem(ItemToWithdraw, True);  
+
+// OR you can shorthand by passing an open array.
+
+Bank.WithdrawItem(['Iron full helm', 5, False], True);  
+```
 *)
 function TRSBank.WithdrawItem(out item: TRSBankItem; useQuantityButtons: Boolean): Boolean;
 var
@@ -1284,18 +1299,18 @@ begin
 end;
 
 (*
-Bank.DepositItem
-~~~~~~~~~~~~~~~~
-.. pascal::
-  function TRSBank.DepositItem(Item: TRSBankDepositItem; useQuantityButtons: Boolean): Boolean; deprecated 'Use the TRSBankItem version instead';
-  function TRSBank.DepositItem(item: TRSBankItem; useQuantityButtons: Boolean): Boolean; overload
+## Bank.DepositItem
+```pascal
+function TRSBank.DepositItem(Item: TRSBankDepositItem; useQuantityButtons: Boolean): Boolean; deprecated 'Use the TRSBankItem version instead';
+function TRSBank.DepositItem(item: TRSBankItem; useQuantityButtons: Boolean): Boolean; overload
+```
 
 Deposits the specified **item** into the bank.
 
-Example
--------
-
-  WriteLn BankDepositItem(['Coins', TRSBank.QUANTITY_ALL]);
+### Example
+```pascal
+WriteLn BankDepositItem(['Coins', TRSBank.QUANTITY_ALL]);
+```
 *)
 function TRSBank.DepositItem(item: TRSBankItem; useQuantityButtons: Boolean): Boolean;
 var
@@ -1366,9 +1381,10 @@ begin
 end;
 
 (*
-Bank.DepositAll
-~~~~~~~~~~~~~~~
-.. pascal:: function TRSBank.DepositAll: Boolean;
+## Bank.DepositAll
+```pascal
+function TRSBank.DepositAll: Boolean;
+```
 
 Depositis your inventory by clicking the deposit inventory button
 *)
@@ -1378,17 +1394,17 @@ begin
 end;
 
 (*
-var Bank
-~~~~~~~~
+## var Bank
   Global Bank variable.
 *)
 var
   Bank: TRSBank;
 
 (*
-GameTabs.Open
-~~~~~~~~~~~~~
-.. pascal:: function TRSGameTabs.Open(Tab: ERSGameTab): Boolean; override;
+## GameTabs.Open
+```pascal
+function TRSGameTabs.Open(Tab: ERSGameTab): Boolean; override;
+```
 
 Overrides **GameTabs.Open** to close the bank if the bank open.
 *)

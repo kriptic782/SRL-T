@@ -1,6 +1,5 @@
 (*
-XPBar
-=====
+# XPBar
 Methods to interact with the XP bar.
 *)
 {$DEFINE SRL_XPBAR_INCLUDED}
@@ -16,9 +15,10 @@ type
   end;
 
 (*
-XPBar.Setup
-~~~~~~~~~~~
-.. pascal:: procedure TRSXPBar.Setup(); override;
+## XPBar.Setup
+```pascal
+procedure TRSXPBar.Setup(); override;
+```
 
 Initializes **XPBar** variables.
 
@@ -59,16 +59,17 @@ begin
 end;
 
 (*
-XPBar.IsEnabled
-~~~~~~~~~~~~~~~
-.. pascal:: function TRSXPBar.IsEnabled(): Boolean;
+## XPBar.IsEnabled
+```pascal
+function TRSXPBar.IsEnabled(): Boolean;
+```
 
 Checks if the XPBar circle is enabled.
 
-Example
--------
-
-  WriteLn XPBar.IsEnabled();
+### Example
+```pascal
+WriteLn XPBar.IsEnabled();
+```
 *)
 function TRSXPBar.IsEnabled(): Boolean;
 var
@@ -79,17 +80,18 @@ begin
 end;
 
 (*
-XPBar.Enable
-~~~~~~~~~~~~
-.. pascal:: function TRSXPBar.Enable(): Boolean;
+## XPBar.Enable
+```pascal
+function TRSXPBar.Enable(): Boolean;
+```
 
 Enables the XPBar by clicking the XPBar circle.
 
-Example
--------
-
-  if not XPBar.IsEnabled() then
-    WriteLn XPBar.Enable();
+### Example
+```pascal
+if not XPBar.IsEnabled() then
+  WriteLn XPBar.Enable();
+```
 *)
 function TRSXPBar.Enable(): Boolean;
 begin
@@ -102,9 +104,10 @@ begin
 end;
 
 (*
-XPBar._Setup
-~~~~~~~~~~~~
-.. pascal:: procedure TRSXPBar._Setup();
+## XPBar._Setup
+```pascal
+procedure TRSXPBar._Setup();
+```
 
 Internal method automatically called by SRL once when attempting to read the XPBar.
 *)
@@ -148,16 +151,17 @@ begin
 end;
 
 (*
-XPBar.Read
-~~~~~~~~~~
-.. pascal:: function TRSXPBar.Read(): Int32;
+## XPBar.Read
+```pascal
+function TRSXPBar.Read(): Int32;
+```
 
 Reads the XP in the XPBar.
 
-Example
--------
-
-  WriteLn XPBar.Read();
+### Example
+```pascal
+WriteLn XPBar.Read();
+```
 *)
 function TRSXPBar.Read(): Int32;
 begin
@@ -172,17 +176,18 @@ begin
 end;
 
 (*
-XPBar.IsOpen
-~~~~~~~~~~~~
-.. pascal:: function TRSXPBar.IsOpen(): Boolean;
+## XPBar.IsOpen
+```pascal
+function TRSXPBar.IsOpen(): Boolean;
+```
 
 Checks if the XPBar is open.
 Keep in mind interfaces and things that cover the xp bar, might make this return false.
 
-Example
--------
-
-  WriteLn XPBar.IsOpen();
+### Example
+```pascal
+WriteLn XPBar.IsOpen();
+```
 *)
 function TRSXPBar.IsOpen(): Boolean;
 begin
@@ -190,16 +195,18 @@ begin
 end;
 
 (*
-XPBar.Open
-~~~~~~~~~~
-.. pascal:: function TRSXPBar.Open(): Boolean;
+## XPBar.Open
+```pascal
+function TRSXPBar.Open(): Boolean;
+```
 
 Attempts to open the XPBar if it's not open.
 
-Example
--------
-  if not XPBar.IsOpen() then
-    WriteLn XPBar.Open();
+### Example
+```pascal
+if not XPBar.IsOpen() then
+  WriteLn XPBar.Open();
+```
 *)
 function TRSXPBar.Open(): Boolean;
 begin
@@ -221,8 +228,7 @@ begin
 end;
 
 (*
-var XPBar
-~~~~~~~~~
+## var XPBar
   Global XPBar variable.
 *)
 var

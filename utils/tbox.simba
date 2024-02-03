@@ -4,8 +4,7 @@
 {$ENDIF}
 
 (*
-TBox
-=========
+# TBox
 TBox related methods
 *)
 
@@ -198,9 +197,10 @@ begin
 end;
 
 (*
-TBox.NearestEdge
-~~~~~~~~~~~~~~~~
-.. pascal:: function TBox.NearestEdge(P: TPoint): TPoint; constref;
+## TBox.NearestEdge
+```pascal
+function TBox.NearestEdge(P: TPoint): TPoint; constref;
+```
 
 Returns the closest edge point to the TPoint `P`.
 
@@ -233,9 +233,10 @@ begin
 end;
 
 (*
-TBox.Intersect
-~~~~~~~~~~~~~~
-.. pascal:: function TBox.Intersect(P: TPoint): TPoint; constref;
+## TBox.Intersect
+```pascal
+function TBox.Intersect(P: TPoint): TPoint; constref;
+```
 
 Returns the point on the edge where point `P` intersects with the edge when crossing to the mean of the box.
 *)
@@ -251,9 +252,10 @@ begin
 end;
 
 (*
-TBox.Invert
-~~~~~~~~~~~
-.. pascal:: function TBox.Invert(Area: TBox): TBoxArray; constref;
+## TBox.Invert
+```pascal
+function TBox.Invert(Area: TBox): TBoxArray; constref;
+```
 
 Returns the boxes which surround `Self` in the given `Area`.
 Typically there is eight surroudning boxes:

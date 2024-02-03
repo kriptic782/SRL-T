@@ -48,18 +48,18 @@ end;
 
 
 (*
-BankPin.IsOpen
-~~~~~~~~~~~~~~
-.. pascal::
-  function TRSBankPin.IsOpen(): Boolean;
-  function TRSBankPin.IsOpen(waitTime: Int32; interval: Int32 = -1): Boolean; overload;
+## BankPin.IsOpen
+```pascal
+function TRSBankPin.IsOpen(): Boolean;
+function TRSBankPin.IsOpen(waitTime: Int32; interval: Int32 = -1): Boolean; overload;
+```
 
 Returns true if the bank pin is open.
 
-Example
--------
-
-  WriteLn BankPin.IsOpen();
+### Example
+```pascal
+WriteLn BankPin.IsOpen();
+```
 *)
 function TRSBankPin.IsOpen(): Boolean;
 begin
@@ -76,9 +76,10 @@ end;
 
 
 (*
-BankPin.ClickDigit
-~~~~~~~~~~~~~~~~~~
-.. pascal:: function TRSBankPin.ClickDigit(digit: Char): Boolean; override;
+## BankPin.ClickDigit
+```pascal
+function TRSBankPin.ClickDigit(digit: Char): Boolean; override;
+```
 
 Clicks a bank pin digit.
 
@@ -114,16 +115,17 @@ begin
 end;
 
 (*
-BankPin.Enter
-~~~~~~~~~~~~~
-.. pascal:: function TRSBankPin.Enter(pin: String): Boolean;
+## BankPin.Enter
+```pascal
+function TRSBankPin.Enter(pin: String): Boolean;
+```
 
 Handles entering the bank pin. Will do 4 attempts before terminating with a fatal error.
 
-Example
--------
-
-  BankPin.Enter('0000');
+### Example
+```pascal
+BankPin.Enter('0000');
+```
 *)
 function TRSBankPin.Enter(pin: String): Boolean;
 

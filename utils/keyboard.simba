@@ -4,8 +4,7 @@
 {$ENDIF}
 
 (*
-Keyboard
-=========
+# Keyboard
 The Keyboard file holds functions and procedures that are related to the keyboard.
 *)
 type
@@ -18,9 +17,10 @@ const
   VK_ENTER = VK_RETURN;
 
 (*
-Keyboard.PressKey
-~~~~~~~~~~~~~~~~~
-.. pascal:: procedure TKeyboard.PressKey(Key: Integer);
+## Keyboard.PressKey
+```pascal
+procedure TKeyboard.PressKey(Key: Integer);
+```
 
 Presses the given virtual key. 
 
@@ -39,9 +39,10 @@ begin
 end;
 
 (*
-Keyboard.KeyDown
-~~~~~~~~~~~~~~~~
-.. pascal:: procedure TKeyboard.KeyDown(Key: Integer);
+## Keyboard.KeyDown
+```pascal
+procedure TKeyboard.KeyDown(Key: Integer);
+```
 
 Presses down the given virtual key. 
 
@@ -53,9 +54,10 @@ begin
 end;
 
 (*
-Keyboard.KeyUp
-~~~~~~~~~~~~~~~~
-.. pascal:: procedure TKeyboard.KeyUp(Key: Integer);
+## Keyboard.KeyUp
+```pascal
+procedure TKeyboard.KeyUp(Key: Integer);
+```
 
 Releases the given virtual key. 
 
@@ -67,9 +69,10 @@ begin
 end;
 
 (*
-Keyboard.IsKeyDown
-~~~~~~~~~~~~~~~~~~
-.. pascal:: procedure TKeyboard.IsKeyDown(Key: Integer);
+## Keyboard.IsKeyDown
+```pascal
+procedure TKeyboard.IsKeyDown(Key: Integer);
+```
 
 Returns True if the given virtual key is currently down. 
 
@@ -81,12 +84,12 @@ begin
 end;
 
 (*
-Keyboard.Send
-~~~~~~~~~~~~~
-.. pascal:: 
-  procedure TKeyboard.Send(const Text: String; const KeyWait, KeyModWait, KeyPressWait: UInt32); overload;
-  procedure TKeyboard.Send(const Text: String); overload;
-  procedure TKeyboard.Send(const Text: String; KeyPressAfter: Integer); overload;
+## Keyboard.Send
+```pascal
+procedure TKeyboard.Send(const Text: String; const KeyWait, KeyModWait, KeyPressWait: UInt32); overload;
+procedure TKeyboard.Send(const Text: String); overload;
+procedure TKeyboard.Send(const Text: String; KeyPressAfter: Integer); overload;
+```
   
 Writes the given text to whatever window is currently in focus. 
 
