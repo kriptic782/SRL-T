@@ -31,7 +31,6 @@ TRSObjectFinder is the record used in **MainScreen.FindObject**.
   An color array which will searched for. Use ACA to acquire color(s).
 
   .. pascal::
-
     Finder.Colors += CTS2(2503237, 20, 0.10, 0.14); // brown
     Finder.Colors += CTS2(5526875, 15, 0.19, 0.06); // grey
 
@@ -47,7 +46,6 @@ TRSObjectFinder is the record used in **MainScreen.FindObject**.
   When searched for only `primary` colors within `distance` of `secondary` colors are returned.
 
   .. pascal::
-
     Finder.ColorClusters += [
       CTS2(2503237, 20, 0.10, 0.14), // brown
       CTS2(5526875, 15, 0.19, 0.06), // grey
@@ -63,7 +61,6 @@ TRSObjectFinder is the record used in **MainScreen.FindObject**.
   The amount to erode before clustering. This is useful for removing small amounts of noise.
 
   .. pascal::
-
      Finder.Erode := 2;
 
   .. figure:: ../../images/erode.png
@@ -75,7 +72,6 @@ TRSObjectFinder is the record used in **MainScreen.FindObject**.
   The amount to grow **before** eroding. This is useful for filling gaps.
 
   .. pascal::
-
      Finder.Grow := 2;
 
   .. figure:: ../../images/grow.png
@@ -85,7 +81,6 @@ TRSObjectFinder is the record used in **MainScreen.FindObject**.
   Grow can also be paired with erode which is quite powerful.
 
   .. pascal::
-
    Finder.Grow := 3;
    Finder.Erode := 4;
 
@@ -98,7 +93,6 @@ TRSObjectFinder is the record used in **MainScreen.FindObject**.
   The distance to pass to *ClusterTPA*, this is how multiple objects are grouped up. `Distance=5` would mean that points that are closer than or equal to 5 pixels away are considered close enough to merge into a singular group.
 
   .. pascal::
-
      Finder.ClusterDistance := 5;
 
   .. figure:: ../../images/cluster_5.png
@@ -106,7 +100,6 @@ TRSObjectFinder is the record used in **MainScreen.FindObject**.
     Cluster distance **5** produces four individual chairs
 
   .. pascal::
-
      Finder.ClusterDistance := 20;
 
   .. figure:: ../../images/cluster_20.png
@@ -119,7 +112,6 @@ TRSObjectFinder is the record used in **MainScreen.FindObject**.
   The bounding rectangle is used which has a **long** and a **short** side measured in pixels.
 
   .. pascal::
-
     // Removes matches where the short side isn't within 10 and 20 pixels
     Finder.MinShortSide := 10;
     Finder.MaxShortSide := 20;

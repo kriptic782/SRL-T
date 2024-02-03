@@ -6,7 +6,6 @@
 (*
 Wrappers
 ========
-
 The wrappers include contains wrapper functions used throughout SRL, some of them to simplify coding while others are just fixes.
 
 The source for this file can be found `here <https://github.com/Olly-/SRL/blob/master/lib/utilities/wrappers.simba>`_.
@@ -21,9 +20,7 @@ end;
 (*
 GetClientBounds
 ~~~~~~~~~~~~~~~
-.. pascal::
-
-    function GetClientBounds(): TBox;
+.. pascal:: function GetClientBounds(): TBox;
 
 Returns the clients bounds.
 
@@ -31,7 +28,6 @@ Returns the clients bounds.
 
 Example
 -------
-
 
    b := GetClientBounds();
 *)
@@ -46,9 +42,7 @@ end;
 (*
 GetColor; overload
 ~~~~~~~~~~~~~~~~~~
-.. pascal::
-
-    function GetColor(const p: TPoint): Integer; overload;
+.. pascal:: function GetColor(const p: TPoint): Integer; overload;
 
 Takes a TPoint variable instead of x, y variables.
 
@@ -56,7 +50,6 @@ Takes a TPoint variable instead of x, y variables.
 
 Example
 -------
-
 
      p := Point(350, 200);
      WriteLn(GetColor(p));
@@ -69,9 +62,7 @@ end;
 (*
 GetColors; overload
 ~~~~~~~~~~~~~~~~~~~
-.. pascal::
-
-    function GetColors(const TPA: TPointArray; const ClearSame: boolean): TIntegerArray; overload;
+.. pascal:: function GetColors(const TPA: TPointArray; const ClearSame: boolean): TIntegerArray; overload;
 
 Takes an extra parameter, clearSame if true will clear the same integers in the result.
 
@@ -80,8 +71,7 @@ Takes an extra parameter, clearSame if true will clear the same integers in the 
 Example
 -------
 
-
-     Colors := GetColors(TPA, True);
+  Colors := GetColors(TPA, True);
 *)
 function GetColors(const TPA: TPointArray; const ClearSame:Boolean): TIntegerArray; overload;
 begin
@@ -94,9 +84,7 @@ end;
 (*
 FindColor; overload
 ~~~~~~~~~~~~~~~~~~~
-.. pascal::
-
-    function FindColor(var x, y: integer; const Color: integer; const SearchBox: TBox): Boolean; overload;
+.. pascal:: function FindColor(var x, y: integer; const Color: integer; const SearchBox: TBox): Boolean; overload;
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
@@ -104,7 +92,6 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
 Example
 -------
-
 
     FindColor(x, y, clRed, Box);
 *)
@@ -116,9 +103,7 @@ end;
 (*
 findColorTolerance; overload
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. pascal::
-
-    function FindColorTolerance(var x, y: Integer; const Color: Integer; const SearchBox: TBox; const Tolerance: Integer): Boolean; overload;
+.. pascal:: function FindColorTolerance(var x, y: Integer; const Color: Integer; const SearchBox: TBox; const Tolerance: Integer): Boolean; overload;
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
@@ -126,7 +111,6 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
 Example
 -------
-
 
     FindColorTolerance(x, y, 255, Box, 10);
 *)
@@ -138,9 +122,7 @@ end;
 (*
 FindColors; overload
 ~~~~~~~~~~~~~~~~~~~~
-.. pascal::
-
-    function FindColors(var Points: TPointArray; const Color: Integer; const SearchBox: TBox): Boolean; overload;
+.. pascal:: function FindColors(var Points: TPointArray; const Color: Integer; const SearchBox: TBox): Boolean; overload;
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
@@ -148,7 +130,6 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
 Example
 -------
-
 
     WriteLn(FindColors(TPA, 255, Box));
 *)
@@ -160,9 +141,7 @@ end;
 (*
 FindColorsTolerance; overload
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. pascal::
-
-    function FindColorsTolerance(var Points: TPointArray; const Color: Integer; const SearchBox: TBox; const Tolerance: Integer): Boolean; overload;
+.. pascal:: function FindColorsTolerance(var Points: TPointArray; const Color: Integer; const SearchBox: TBox; const Tolerance: Integer): Boolean; overload;
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
@@ -170,7 +149,6 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
 Example
 -------
-
 
     WriteLn(FindColorsTolerance(TPA, 255, Box, 10));
 *)
@@ -182,9 +160,7 @@ end;
 (*
 CountColor; overload
 ~~~~~~~~~~~~~~~~~~~~
-.. pascal::
-
-    function CountColor(const Color: Integer; const SearchBox: TBox): Integer; overload;
+.. pascal:: function CountColor(const Color: Integer; const SearchBox: TBox): Integer; overload;
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
@@ -192,7 +168,6 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
 Example
 -------
-
 
     WriteLn(CountColor(clRed, Box));
 *)
@@ -204,9 +179,7 @@ end;
 (*
 CountColorTolerance: overload;
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. pascal::
-
-    function CountColorTolerance(Color: integer; searchBox: TBox; tol: integer): Boolean; overload;
+.. pascal:: function CountColorTolerance(Color: integer; searchBox: TBox; tol: integer): Boolean; overload;
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
@@ -214,7 +187,6 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
 Example
 -------
-
 
     WriteLn(CountColorTolerance(clRed, 10, Box));
 *)
@@ -226,9 +198,7 @@ end;
 (*
 BitmapFromClient; overload
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. pascal::
-
-    function BitmapFromClient(const SearchBox: TBox): Integer; overload;
+.. pascal:: function BitmapFromClient(const SearchBox: TBox): Integer; overload;
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
@@ -236,7 +206,6 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
 Example
 -------
-
 
     BMP := BitmapFromClient(Box);
 *)
@@ -248,10 +217,7 @@ end;
 (*
 FindBitmapIn; overload
 ~~~~~~~~~~~~~~~~~~~~~~
-
-.. pascal::
-
-    function FindBitmapIn(const BMP: Integer; var x, y: integer; const SearchBox: TBox): Boolean; overload;
+.. pascal:: function FindBitmapIn(const BMP: Integer; var x, y: integer; const SearchBox: TBox): Boolean; overload;
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
@@ -259,7 +225,6 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
 Example
 -------
-
 
     Result := FindBitmap(bmp, x, y, Box);
 *)
@@ -271,9 +236,7 @@ end;
 (*
 FindBitmapToleranceIn; overload
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. pascal::
-
-    function FindBitmapToleranceIn(const BMP: Integer; var x, y: Integer; const SearchBox: TBox; const Tolerance: Integer): Boolean; overload;
+.. pascal:: function FindBitmapToleranceIn(const BMP: Integer; var x, y: Integer; const SearchBox: TBox; const Tolerance: Integer): Boolean; overload;
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
@@ -281,7 +244,6 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
 Example
 -------
-
 
     Result := FindBitmapToleranceIn(BMP, x, y, Box, 20);
 *)
@@ -294,9 +256,7 @@ end;
 (*
 FindDTMRotatedSE; overload
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. pascal::
-
-    function FindDTMRotatedSE(const DTM: Integer; var x, y: Integer; SearchBox: TBox; sAngle, eAngle, aStep, aFound: Extended): Boolean; overload;
+.. pascal:: function FindDTMRotatedSE(const DTM: Integer; var x, y: Integer; SearchBox: TBox; sAngle, eAngle, aStep, aFound: Extended): Boolean; overload;
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
@@ -304,7 +264,6 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
 Example
 -------
-
 
     if (FindDTMRotatedSE(aDTM, x, y, Box, -Pi/4, Pi/4, Pi/60, aFound)) then
       WriteLn('Found the dtm!');
@@ -317,9 +276,7 @@ end;
 (*
 FindDTMRotatedAlternating: overload;
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. pascal::
-
-    function FindDTMRotatedAlternating(DTM: Integer; var x, y: Integer; SearchBox: TBox; sAngle, eAngle, aStep, aFound: Extended): Boolean; overload;
+.. pascal:: function FindDTMRotatedAlternating(DTM: Integer; var x, y: Integer; SearchBox: TBox; sAngle, eAngle, aStep, aFound: Extended): Boolean; overload;
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
@@ -327,7 +284,6 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
 Example
 -------
-
 
     if (FindDTMRotatedAlternating(DTM, x, y, Box, -Pi/4, Pi/4, Pi/60, aFound)) then
       WriteLn('Found the dtm!');
@@ -340,9 +296,7 @@ end;
 (*
 FindDTMRotated
 ~~~~~~~~~~~~~~
-.. pascal::
-
-    function FindDTMRotated(const DTM: Integer; var x, y: Integer; const x1, y1, x2, y2: Integer; const sAngle, eAngle, aStep: Extended; out aFound: Extended): Boolean;
+.. pascal:: function FindDTMRotated(const DTM: Integer; var x, y: Integer; const x1, y1, x2, y2: Integer; const sAngle, eAngle, aStep: Extended; out aFound: Extended): Boolean;
 
 Searches for a rotated DTM, A legacy method commonly used in past SRL versions.
 
@@ -350,7 +304,6 @@ Searches for a rotated DTM, A legacy method commonly used in past SRL versions.
 
 Example
 -------
-
 
     if (FindDTMRotated(DTM, x, y, 100, 100, 400, 400, -Pi/4, Pi/4, Pi/60, aFound)) then
       WriteLn('Found the dtm!');
@@ -363,9 +316,7 @@ end;
 (*
 FindDTMRotated; overload
 ~~~~~~~~~~~~~~~~~~~~~~~~
-.. pascal::
-
-    function FindDTMRotated(const DTM: Integer; var x, y: Integer; const SearchBox: TBox; const sAngle, eAngle, aStep: extended; out aFound: Extended): Boolean; overload;
+.. pascal:: function FindDTMRotated(const DTM: Integer; var x, y: Integer; const SearchBox: TBox; const sAngle, eAngle, aStep: extended; out aFound: Extended): Boolean; overload;
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
@@ -373,7 +324,6 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
 Example
 -------
-
 
     if (FindDTMRotated(aDTM, x, y, Box, -Pi/4, Pi/4, Pi/60, aFound)) then
       WriteLn('found the dtm!');
@@ -386,9 +336,7 @@ end;
 (*
 FindDTMs; overload
 ~~~~~~~~~~~~~~~~~~
-.. pascal::
-
-    function FindDTMs(const DTM: Integer; var TPA: TPointArray; const SearchBox: TBox): Boolean; overload;
+.. pascal:: function FindDTMs(const DTM: Integer; var TPA: TPointArray; const SearchBox: TBox): Boolean; overload;
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
@@ -396,7 +344,6 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
 Example
 -------
-
 
     FindDTMs(DTM, TPA, Box);
     WriteLn('Matches' + toString(TPA));
@@ -409,9 +356,7 @@ end;
 (*
 FindDTM; overload
 ~~~~~~~~~~~~~~~~~
-.. pascal::
-
-    function FindDTM(const DTM: Integer; var x, y: Integer; const SearchBox: TBox): Boolean; overload;
+.. pascal:: function FindDTM(const DTM: Integer; var x, y: Integer; const SearchBox: TBox): Boolean; overload;
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
@@ -419,7 +364,6 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
 Example
 -------
-
 
     WriteLn(FindDTM(DTM, x, y, Box));
 *)
@@ -431,9 +375,7 @@ end;
 (*
 TPAFromText; overload
 ~~~~~~~~~~~~~~~~~~~~~
-.. pascal::
-
-     function TPAFromText(const Text, Font: string): TPointArray; overload;
+.. pascal:: function TPAFromText(const Text, Font: string): TPointArray; overload;
 
 Creates a TPA of the text without the need for the W and H params.
 
@@ -441,7 +383,6 @@ Creates a TPA of the text without the need for the W and H params.
 
 Example
 -------
-
 
   TPA := TPAFromText('Hello world', StatChars);
 
@@ -456,9 +397,7 @@ end;
 (*
 InRange; overload
 ~~~~~~~~~~~~~~~~~
-.. pascal::
-
-    function InRange(const Value, Min, Max: Extended): Boolean; overload;
+.. pascal:: function InRange(const Value, Min, Max: Extended): Boolean; overload;
 
 Takes a extended variable instead of an integer variable.
 
@@ -466,7 +405,6 @@ Takes a extended variable instead of an integer variable.
 
 Example
 -------
-
 
     WriteLn(InRange(15.0, 10.0, 20.0));
 *)
@@ -478,9 +416,7 @@ end;
 (*
 Distance; overload
 ~~~~~~~~~~~~~~~~~~
-.. pascal::
-
-    function Distance(const p1, p2: TPoint): Integer; overload;
+.. pascal:: function Distance(const p1, p2: TPoint): Integer; overload;
 
 Accepts two TPoints instead of x1, y1, x2 and y2 variables.
 
@@ -488,7 +424,6 @@ Accepts two TPoints instead of x1, y1, x2 and y2 variables.
 
 Example
 -------
-
 
     WriteLn(Distance(Point(100, 100), Point(200, 200)));
 *)

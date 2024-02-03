@@ -48,7 +48,6 @@ type
 type TMouse
 ~~~~~~~~~~~
 .. pascal::
-
   TMouse = record(TSRLBaseRecord)
     Speed: Double;                     // Overall mouse speed (Default: 12)
     Gravity, Wind: Double;             // Gravity & Wind for generating mouse path (Default: 9 & 5)

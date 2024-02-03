@@ -15,7 +15,6 @@ type definition is found in shared/globals.simba
 TCircle.ToTPA
 ~~~~~~~~~~~~~~
 .. pascal::
-
     function TCircle.ToTPA(): TPointArray; constref;
 
 Returns a full TPA of the circles circumference
@@ -31,7 +30,6 @@ end;
 TCircle.Bounds
 ~~~~~~~~~~~~~~
 .. pascal::
-
     function TCircle.Bounds(): TBox; constref;
 
 Return a TBox covering the circle
@@ -45,7 +43,6 @@ end;
 TCircle.Contains
 ~~~~~~~~~~~~~~~~~
 .. pascal::
-
     function TCircle.Contains(p: TPoint): Boolean; constref;
 
 Test if the point is within the circle
@@ -59,7 +56,6 @@ end;
 TCircle.CircumferenceTPA
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 .. pascal::
-
     function TCircle.CircumferenceTPA(): TPointArray; constref;
 
 Alias of `.ToTPA`
@@ -73,7 +69,6 @@ end;
 TCircle.Mean
 ~~~~~~~~~~~~
 .. pascal::
-
     function TCircle.Mean(): TPoint; constref;
 
 Middle of the circle, same as `Point(Circle.X, Circle.Y)`
@@ -88,7 +83,6 @@ end;
 TCircle.Circumference
 ~~~~~~~~~~~~~~~~~~~~~
 .. pascal::
-
     function TCircle.Circumference(): Double; constref;
 
 Returns the distance around the outside of a circle.
@@ -102,7 +96,6 @@ end;
 TCircle.Area
 ~~~~~~~~~~~~
 .. pascal::
-
     function TCircle.Area(): Double; constref;
 
 Returns the area the circle covers
@@ -117,7 +110,6 @@ end;
 TCircle.Filter
 ~~~~~~~~~~~~~~~~~~~
 .. pascal::
-
     function TCircle.Filter(TestSet: TPointArray): TPointArray; constref;
 
 Extract all the points from `TestSet` that fits within this circle.
@@ -148,7 +140,6 @@ end;
 TCircle.Expand
 ~~~~~~~~~~~~~~
 .. pascal::
-
     function TCircle.Expand(Inc: Int32): TCircle; constref;
 
 Increase or decrease the radius of the circle, same as `Circle.Radius + Incr`.
