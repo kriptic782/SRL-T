@@ -16,7 +16,7 @@ functionality to convert coordinates to & from the minimap to the mainscreen.
 (*
 type TMM2MS
 ~~~~~~~~~~~
-
+.. pascal::
   type
     TMM2MS = record
       BASE_W, BASE_H: Int32;        // the size of the area we project to (mainscreen size)
@@ -124,8 +124,7 @@ end;
 (*
 var MM2MS
 ~~~~~~~~~
-
-  var MM2MS: TMM2MS;
+var MM2MS: TMM2MS;
 
 The global variable which you would refer to.
 *)
@@ -138,7 +137,7 @@ end;
 
 (*
 Minimap
-------------------------------------------------------
+-------
 Extend the minimap-functionality with MM2MS functions
 *)
 
