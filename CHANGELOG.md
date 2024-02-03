@@ -1,3 +1,12 @@
+## [3.2.3](https://github.com/Torwent/SRL-T/compare/v3.2.2...v3.2.3) (2024-02-03)
+
+
+### Bug Fixes
+
+* **docs:** documentation migration to use markdown with sphinx myst parser ([3b0c00c](https://github.com/Torwent/SRL-T/commit/3b0c00c9c648a8c123f2c859389fa9511791070e))
+
+
+
 ## [3.2.2](https://github.com/Torwent/SRL-T/compare/v3.2.1...v3.2.2) (2024-02-02)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **logout:** TRSLogout.Name change ([156dec4](https://github.com/Torwent/SRL-T/commit/156dec4f1b8a8d96373c562441b260415de2df9a))
-
-
-
-## [3.1.10](https://github.com/Torwent/SRL-T/compare/v3.1.9...v3.1.10) (2024-01-21)
-
-
-### Bug Fixes
-
-* refactor really but need to bump version ([98812a7](https://github.com/Torwent/SRL-T/commit/98812a79e113a952250a6a40977699e5c892d1fe))
 
 
 
