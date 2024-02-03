@@ -1,8 +1,3 @@
-{$DEFINE SRL_TCIRCLE_INCLUDED}
-{$IFNDEF SRL_UTILS}
-  {$I SRL-T/utils.simba}
-{$ENDIF}
-
 (*
 TCircle
 =======
@@ -10,6 +5,11 @@ TCircle related methods
 
 type definition is found in shared/globals.simba
 *)
+
+{$DEFINE SRL_TCIRCLE_INCLUDED}
+{$IFNDEF SRL_UTILS}
+  {$I SRL-T/utils.simba}
+{$ENDIF}
 
 (*
 TCircle.ToTPA
