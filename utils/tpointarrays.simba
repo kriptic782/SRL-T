@@ -200,7 +200,7 @@ end;
 (*
 TPointArray.Mean
 ~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TPointArray.Mean(): TPoint; constref;
 
@@ -215,7 +215,7 @@ end;
 (*
 TPointArray.MeanEx
 ~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TPointArray.MeanEx(): Vector2; constref;
 
@@ -242,7 +242,7 @@ end;
 (*
 TPointArray.Sort
 ~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     procedure TPointArray.Sort(From:TPoint=[0,0]);
 
@@ -256,7 +256,7 @@ end;
 (*
 TPointArray.Sorted
 ~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TPointArray.Sorted(From:TPoint=[0,0]): TPointArray;
 
@@ -272,7 +272,7 @@ end;
 (*
 TPointArray.SortByX
 ~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     procedure TPointArray.SortByX(LowToHi:Boolean=True);
 
@@ -286,7 +286,7 @@ end;
 (*
 TPointArray.SortByY
 ~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     procedure TPointArray.SortByY(LowToHi:Boolean=True);
 
@@ -301,7 +301,7 @@ end;
 (*
 TPointArray.SortByRow
 ~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     procedure TPointArray.SortByRow(reverse:Boolean=False);
 
@@ -327,7 +327,7 @@ end;
 (*
 TPointArray.SortByColumn
 ~~~~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     procedure TPointArray.SortByColumn(reverse:Boolean=False);
 
@@ -352,7 +352,7 @@ end;
 (*
 TPointArray.SortFromLine
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     procedure TPointArray.SortFromLine(p,q:TPoint; reverse:Boolean=False);
 
@@ -379,7 +379,7 @@ end;
 (*
 TPointArray.Bounds
 ~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TPointArray.Bounds(): TBox; constref;
 
@@ -396,7 +396,7 @@ end;
 (*
 TPointArray.Edges
 ~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TPointArray.Edges(): TPointArray; constref;
 
@@ -412,7 +412,7 @@ end;
 (*
 TPointArray.Cluster
 ~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TPointArray.Cluster(dist:Int32): T2DPointArray; constref;
     function TPointArray.Cluster(distX,distY:Int32): T2DPointArray; constref; overload;
@@ -438,7 +438,7 @@ end;
 (*
 TPointArray.Split
 ~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TPointArray.Split(dist:Int32): T2DPointArray; constref;
     function TPointArray.Split(distX,distY:Int32): T2DPointArray; constref; overload;
@@ -459,7 +459,7 @@ end;
 (*
 TPointArray.ToATPA
 ~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TPointArray.ToATPA(WH:Int32): T2DPointArray; constref;
     function TPointArray.ToATPA(W,H:Int32): T2DPointArray; constref; overload;
@@ -479,7 +479,7 @@ end;
 (*
 TPointArray.Offset
 ~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TPointArray.Offset(off: TPoint): TPointArray;
 
@@ -500,7 +500,7 @@ end;
 (*
 TPointArray.Invert
 ~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TPointArray.Invert(Area:TBox=[0,0,-1,-1]): TPointArray; constref;
 
@@ -517,7 +517,7 @@ end;
 (*
 TPointArray.FilterBox
 ~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TPointArray.FilterBox(Box: TBox): TPointArray; constref;
 
@@ -533,7 +533,7 @@ end;
 (*
 TPointArray.FilterBox
 ~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TPointArray.FilterDist(MinDist,MaxDist: Double; Mx,My: Int32): TPointArray; constref;
 
@@ -550,7 +550,7 @@ end;
 (*
 TPointArray.FilterDuplicates
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TPointArray.FilterDuplicates(): TPointArray;
 
@@ -565,7 +565,7 @@ end;
 (*
 TPointArray.ClearDuplicates
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     procedure TPointArray.ClearDuplicates();
 
@@ -579,7 +579,7 @@ end;
 (*
 TPointArray.Rotate
 ~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TPointArray.Rotate(AngleRad, MidX, MidY: Double): TPointArray;
 
@@ -594,7 +594,7 @@ end;
 (*
 TPointArray.SplitRows
 ~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TPointArray.SplitRows(dist:Int32): T2DPointArray; constref;
 
@@ -604,9 +604,9 @@ Same output as `SplitTPAEx(TPA,dist,0)`, but generally faster.
 
 .. note:: by slacky
 
-Example:
+Example
+-------
 
-.. code-block:: pascal
 
     ATPA := TPA.SplitRows(5);
 *)
@@ -647,7 +647,7 @@ end;
 (*
 TPointArray.Connect
 ~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TPointArray.Connect(): TPointArray; constref;
 
@@ -656,9 +656,9 @@ around a polygon
 
 .. note:: by slacky
 
-Example:
+Example
+-------
 
-.. code-block:: pascal
     
     edges := TPA.ConvexHull().Connect();
 *)
@@ -680,7 +680,7 @@ end;
 (*
 TPointArray.ConvexHull
 ~~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
      function TPointArray.ConvexHull(): TPointArray; constref;
 
@@ -691,9 +691,9 @@ See: http://en.wikipedia.org/wiki/Convex_hull for more information.
 
 .. note:: by slacky
 
-Example:
+Example
+-------
 
-.. code-block:: pascal
 
     Smart.Image.DrawTPA(TPA.ConvexHull());
 *)
@@ -731,7 +731,7 @@ end;
 (*
 TPointArray.MinAreaRect
 ~~~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TPointArray.MinAreaRect(): TRectangle;
 
@@ -742,9 +742,9 @@ See: http://en.wikipedia.org/wiki/Minimum_bounding_box for more information.
 
 .. note:: by slacky
 
-Example:
+Example
+-------
 
-.. code-block:: pascal
 
     WriteLn('The four box corners are: ', TPA.MinAreaRect());
 *)
@@ -830,7 +830,7 @@ end;
 (*
 TPointArray.MinAreaCircle
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TPointArray.MinAreaCircle(): TCircle;
 
@@ -956,7 +956,7 @@ end;
 (*
 TPointArray.Density
 ~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TPointArray.Density(): Double; constref;
 
@@ -981,7 +981,7 @@ end;
 ExpandPolygon
 ~~~~~~~~~~~~~~
 
-.. code-block:: pascal
+.. pascal::
 
     function ExpandPolygon(Poly:TPointArray; inc:Int32): TPointArray;
 

@@ -46,7 +46,7 @@ var
 (*
 TMufasaBitmap.FromClient
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     procedure TMufasaBitmap.FromClient(Area: TBox);
 
@@ -76,7 +76,7 @@ end;
 (*
 TMufasaBitmap.ClearAllBut
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     procedure TMufasaBitmap.ClearAllBut(Area: TBox);
 
@@ -90,7 +90,7 @@ end;
 (*
 TMufasaBitmap.AvgBrightness
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     procedure TMufasaBitmap.AvgBrightness(Area: TBox = [0,0,-1,-1]);
 
@@ -120,7 +120,7 @@ end;
 (*
 TMufasaBitmap.PeakBrightness
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     procedure TMufasaBitmap.PeakBrightness(Area: TBox = [0,0,-1,-1]);
 
@@ -152,7 +152,7 @@ end;
 (*
 TMufasaBitmap.DrawBox
 ~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     procedure TMufasaBitmap.DrawBox(Center:TPoint; Radius:UInt32; Fill: Boolean; Color: Int32);
 
@@ -189,7 +189,7 @@ end;
 (*
 TMufasaBitmap.DrawRect
 ~~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     procedure TMufasaBitmap.DrawRect(Rect: TRectangle; Color: Int32);
 
@@ -211,7 +211,7 @@ end;
 (*
 TMufasaBitmap.DrawPoly
 ~~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     procedure TMufasaBitmap.DrawPoly(Poly: TPointArray; Color: Int32);
 

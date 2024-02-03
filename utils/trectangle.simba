@@ -114,7 +114,7 @@ end;
 (*
 TRectangle.Rotate
 ~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TRectangle.Rotate(Angle: Double): TRectangle; constref;
     
@@ -135,7 +135,7 @@ end;
 (*
 TRectangle.Contains
 ~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TRectangle.Contains(Pt: TPoint): Boolean; constref;
   
@@ -161,7 +161,7 @@ end;
 (*
 TRectangle.DirByLen
 ~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TRectangle.DirByLen(Longest: Boolean=True): ESplitDirection; constref;
   
@@ -181,7 +181,7 @@ end;
 (*
 TRectangle.Partition
 ~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TRectangle.Partition(m,n:Int32; dir:ESplitDirection=rpTopLeft): TRectArray; constref;
     
@@ -238,7 +238,7 @@ end;
 (*
 TRectangle.Offset
 ~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TRectangle.Offset(pt: TPoint): TRectangle; constref;
 
@@ -254,7 +254,7 @@ end;
 (*
 TRectangle.Filter
 ~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TRectangle.Filter(TestSet: TPointArray): TPointArray; constref;
     
@@ -284,7 +284,7 @@ end;
 (*
 TRectangle.Expand
 ~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TRectangle.Expand(Inc: Int32): TRectangle; constref;
   
@@ -312,7 +312,7 @@ end;
 (*
 TRectangle.NearestEdge
 ~~~~~~~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TRectangle.NearestEdge(P: TPoint): TPoint; constref;
 

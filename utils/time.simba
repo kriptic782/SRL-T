@@ -105,9 +105,9 @@ TCountDown
 ~~~~~~~~~~
 A neat and simple timer type.
 
-Example:
+Example
+-------
 
-.. code-block:: pascal
 
   myTimer.Init(3000); //3000ms
   while not myTimer.IsFinished() do

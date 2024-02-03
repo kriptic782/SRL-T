@@ -200,7 +200,7 @@ end;
 (*
 TBox.NearestEdge
 ~~~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TBox.NearestEdge(P: TPoint): TPoint; constref;
 
@@ -237,7 +237,7 @@ end;
 (*
 TBox.Intersect
 ~~~~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TBox.Intersect(P: TPoint): TPoint; constref;
 
@@ -257,7 +257,7 @@ end;
 (*
 TBox.Invert
 ~~~~~~~~~~~
-.. code-block:: pascal
+.. pascal::
 
     function TBox.Invert(Area: TBox): TBoxArray; constref;
 
