@@ -9,7 +9,7 @@ Summary:
 - Login the current player with `Login.LoginPlayer`
 - Switch to the next player with `Login.NextPlayer`
 
-### Example
+Example:
 ```pascal
 Login.AddPlayer('myusername', 'mypassword');
 if not Login.LoginPlayer() then
