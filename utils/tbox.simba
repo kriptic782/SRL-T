@@ -204,7 +204,9 @@ function TBox.NearestEdge(P: TPoint): TPoint; constref;
 
 Returns the closest edge point to the TPoint `P`.
 
-.. note:: by slacky
+```{note}
+By slacky
+```
 *)
 function TBox.NearestEdge(P: TPoint): TPoint; constref;
 begin

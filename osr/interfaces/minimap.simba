@@ -328,7 +328,9 @@ function TRSMinimap.GetCompassAngle(asDegrees: Boolean = True): Double;
 
 Returns the current compass angle as degrees or radians.
 
-.. note:: Credits to Slacky
+```{note}
+Credits to Slacky
+```
 
 ### Example
 ```pascal

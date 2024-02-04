@@ -260,7 +260,9 @@ function TRSStats.GetCurrentLevel(skill: ERSSkill): Int32; deprecated 'Use Stats
 
 Get the level of the specified **skill**.
 
-.. note:: This method is deprecated. Use Stats.GetLevel() instead.
+```{note}
+This method is deprecated. Use Stats.GetLevel() instead.
+```
 
 ### Example
 ```pascal

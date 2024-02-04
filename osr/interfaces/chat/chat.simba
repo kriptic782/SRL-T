@@ -47,7 +47,9 @@ procedure TRSChat.Setup; override;
 
 Initializes **Chat** variables.
 
-.. note:: This is automatically called on the **Chat** variable.
+```{note}
+This is automatically called on the **Chat** variable.
+```
 *)
 procedure TRSChat.Setup(); override;
 begin
@@ -65,7 +67,9 @@ procedure TRSChat.SetupAlignment(Mode: ERSClientMode); override;
 
 Setups up the interface aligment for the current client mode.
 
-.. note:: This is automatically called on the **TRSClient.ClientModeChanged** function.
+```{note}
+This is automatically called on the **TRSClient.ClientModeChanged** function.
+```
 *)
 procedure TRSChat.SetupAlignment(Mode: ERSClientMode); override;
 begin

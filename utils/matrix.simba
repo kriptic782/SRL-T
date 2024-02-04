@@ -11,7 +11,9 @@ procedure TSingleMatrix.Smoothen;
 
 Smoothens the matrix
 
-.. note:: By slacky
+```{note}
+By slacky
+```
 *)
 procedure TSingleMatrix.Smoothen(block: Int32);
 var

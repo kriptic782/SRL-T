@@ -171,7 +171,9 @@ When called the following happens:
           - If it's not we don't do anything, we can't assume the FKey is a pair to the current tab without being 100% sure.
           - If it exists and is setup, then we set the FKey we pressed in **Keybindings.KeyTabPairs** as a pair to **ERSGameTab.UNKNOWN** so we know we check it again while also deleting it from **Keybindings.UncheckedKeyArray**.
 
-.. note:: {$DEFINE WL_KEYBINDINGS_DEBUG} can be used to debug already setup **Keybindings.KeyTabPairs**.
+```{note}
+{$DEFINE SRL_KEYBINDINGS_DEBUG} can be used to debug already setup **Keybindings.KeyTabPairs**.
+```
 
 ### Example
 ```pascal
@@ -187,12 +189,11 @@ var
   Key: UInt32;
   TabSwitched: Boolean;
 begin
-  {$IFDEF WL_KEYBINDINGS_DEBUG}
+  {$IFDEF SRL_KEYBINDINGS_DEBUG}
   for Idx := 0 to High(Keybindings.KeyTabPairs) do
     if KeyBindings.KeyTabPairs[Idx].IsSetup;
       WriteLn(Keybindings.KeyTabPairs[Idx].Key, ': ', Keybindings.KeyTabPairs[Idx].Tab);
   {$ENDIF}
-
 
   Idx := Keybindings.GetKeyIndex(Tab);
 

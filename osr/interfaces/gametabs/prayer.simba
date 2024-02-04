@@ -58,7 +58,9 @@ procedure TRSPrayer.Setup; override;
 
 Initializes **Prayer** variables.
 
-.. note:: This is automatically called on the **Prayer** variable.
+```{note}
+This is automatically called on the **Prayer** variable.
+```
 *)
 procedure TRSPrayer.Setup; override;
 begin
@@ -75,7 +77,9 @@ procedure TRSPrayer.SetupAlignment(Mode: ERSClientMode); override;
 
 Setups up the interface aligment for the current client mode.
 
-.. note:: This is automatically called on the **TRSClient.ClientModeChanged** function.
+```{note}
+This is automatically called on the **TRSClient.ClientModeChanged** function.
+```
 *)
 procedure TRSPrayer.SetupAlignment(Mode: ERSClientMode); override;
 begin
@@ -459,7 +463,9 @@ procedure QuickPrayer.Setup;
 
 Initializes **QuickPrayer** variables.
 
-.. note:: This is automatically called on the **QuickPrayer** variable.
+```{note}
+This is automatically called on the **QuickPrayer** variable.
+```
 *)
 procedure TRSQuickPrayer.Setup; override;
 begin
@@ -476,7 +482,9 @@ procedure QuickPrayer.SetupSetupAlignment(Mode: ERSClientMode); override;
 
 Setups up the interface aligment for the current client mode.
 
-.. note:: This is automatically called on the **TRSClient.ClientModeChanged** function.
+```{note}
+This is automatically called on the **TRSClient.ClientModeChanged** function.
+```
 *)
 procedure TRSQuickPrayer.SetupAlignment(Mode: ERSClientMode); override;
 begin

@@ -164,7 +164,9 @@ procedure TRSMainScreen.Setup(ClientMode: ERSClientMode);
 
 Setups the mainscreen.
 
-.. note:: This is automatically called on the **MainScreen** variable.
+```{note}
+This is automatically called on the **MainScreen** variable.
+```
 *)
 procedure TRSMainScreen.Setup(); override;
 var

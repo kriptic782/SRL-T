@@ -81,7 +81,9 @@ function TRectangle.Mean(): TPoint; constref;
 
 Middle of the rectangle
 
-.. note:: by slacky
+```{note}
+By slacky
+```
 *)
 function TRectangle.Mean(): TPoint; constref;
 begin
@@ -143,7 +145,9 @@ function TRectangle.Contains(Pt: TPoint): Boolean; constref;
 ```
   
 Returns true if the point `Pt` is inside the rectangle.
-.. note:: by slacky
+```{note}
+By slacky
+```
 *)
 function TRectangle.Contains(Pt: TPoint): Boolean; constref;
 var
@@ -169,7 +173,9 @@ function TRectangle.DirByLen(Longest: Boolean=True): ESplitDirection; constref;
   
 Returns the direction which is the longest or shortest.
 
-.. note:: by slacky
+```{note}
+By slacky
+```
 *)
 function TRectangle.DirByLen(Longest: Boolean=True): ESplitDirection; constref;
 begin
@@ -188,7 +194,9 @@ function TRectangle.Partition(m,n:Int32; dir:ESplitDirection=rpTopLeft): TRectAr
     
 Break the rectangle into smaller rectangles. Goes well along with `DirByLen`
 
-.. note:: by slacky
+```{note}
+By slacky
+```
 *)
 function TRectangle.Partition(m,n:Int32; dir:ESplitDirection=rpTopLeft): TRectArray; constref;
 var

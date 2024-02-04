@@ -236,7 +236,9 @@ function TSRL.PointInPoly(pt: TPoint; Poly: TPointArray): Boolean; static;
 Check if a point is within a polygon/shape by the given outline points (poly)
 The points must be in order, as if you would draw a line trough each point.
 
-.. note:: Uses winding number algorithm
+```{note}
+ Uses winding number algorithm
+```
 *)
 function TSRL.PointInPoly(pt: TPoint; Poly: TPointArray): Boolean; static; 
 var

@@ -22,7 +22,9 @@ procedure TRSXPBar.Setup(); override;
 
 Initializes **XPBar** variables.
 
-.. note:: This is automatically called on the **XPBar** variable.
+```{note}
+This is automatically called on the **XPBar** variable.
+```
 *)
 procedure TRSXPBar.Setup(); override;
 begin

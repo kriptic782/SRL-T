@@ -172,7 +172,9 @@ procedure TMouse.Setup;
 
 Initializes mouse variables.
 
-.. note:: This is automatically called on the **Mouse** variable.
+```{note}
+This is automatically called on the **Mouse** variable.
+```
 *)
 procedure TMouse.Setup;
 begin

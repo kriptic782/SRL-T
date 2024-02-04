@@ -24,7 +24,9 @@ function GetClientBounds(): TBox;
 
 Returns the clients bounds.
 
-.. note:: by Olly
+```{note}
+By Olly
+```
 
 ### Example
 ```pascal
@@ -47,7 +49,9 @@ function GetColor(const p: TPoint): Integer; overload;
 
 Takes a TPoint variable instead of x, y variables.
 
-.. note:: by Olly
+```{note}
+By Olly
+```
 
 ### Example
 ```pascal
@@ -68,7 +72,9 @@ function GetColors(const TPA: TPointArray; const ClearSame: boolean): TIntegerAr
 
 Takes an extra parameter, clearSame if true will clear the same integers in the result.
 
-.. note:: by Olly
+```{note}
+By Olly
+```
 
 ### Example
 ```pascal
@@ -91,7 +97,9 @@ function FindColor(var x, y: integer; const Color: integer; const SearchBox: TBo
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
-.. note:: by Coh3n
+```{note}
+By Coh3n
+```
 
 ### Example
 ```pascal
@@ -111,7 +119,9 @@ function FindColorTolerance(var x, y: Integer; const Color: Integer; const Searc
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
-.. note:: by Olly
+```{note}
+By Olly
+```
 
 ### Example
 ```pascal
@@ -131,7 +141,9 @@ function FindColors(var Points: TPointArray; const Color: Integer; const SearchB
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
-.. note:: by Coh3n
+```{note}
+By Coh3n
+```
 
 ### Example
 ```pascal
@@ -151,7 +163,9 @@ function FindColorsTolerance(var Points: TPointArray; const Color: Integer; cons
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
-.. note:: by Zyt3x
+```{note}
+By Zyt3x
+```
 
 ### Example
 ```pascal
@@ -171,7 +185,9 @@ function CountColor(const Color: Integer; const SearchBox: TBox): Integer; overl
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
-.. note:: by Coh3n
+```{note}
+By Coh3n
+```
 
 ### Example
 ```pascal
@@ -191,7 +207,9 @@ function CountColorTolerance(Color: integer; searchBox: TBox; tol: integer): Boo
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
-.. note:: by Coh3n
+```{note}
+By Coh3n
+```
 
 ### Example
 ```pascal
@@ -211,7 +229,9 @@ function BitmapFromClient(const SearchBox: TBox): Integer; overload;
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
-.. note:: by Olly
+```{note}
+By Olly
+```
 
 ### Example
 ```pascal
@@ -231,7 +251,9 @@ function FindBitmapIn(const BMP: Integer; var x, y: integer; const SearchBox: TB
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
-.. note:: by Olly
+```{note}
+By Olly
+```
 
 ### Example
 ```pascal
@@ -251,7 +273,9 @@ function FindBitmapToleranceIn(const BMP: Integer; var x, y: Integer; const Sear
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
-.. note:: by Olly
+```{note}
+By Olly
+```
 
 ### Example
 ```pascal
@@ -272,7 +296,9 @@ function FindDTMRotatedSE(const DTM: Integer; var x, y: Integer; SearchBox: TBox
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
-.. note:: by Olly
+```{note}
+By Olly
+```
 
 ### Example
 ```pascal
@@ -293,7 +319,9 @@ function FindDTMRotatedAlternating(DTM: Integer; var x, y: Integer; SearchBox: T
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
-.. note:: by Olly
+```{note}
+By Olly
+```
 
 ### Example
 ```pascal
@@ -314,7 +342,9 @@ function FindDTMRotated(const DTM: Integer; var x, y: Integer; const x1, y1, x2,
 
 Searches for a rotated DTM, A legacy method commonly used in past SRL versions.
 
-.. note:: by Olly
+```{note}
+By Olly
+```
 
 ### Example
 ```pascal
@@ -335,7 +365,9 @@ function FindDTMRotated(const DTM: Integer; var x, y: Integer; const SearchBox: 
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
-.. note:: by Olly
+```{note}
+By Olly
+```
 
 ### Example
 ```pascal
@@ -356,7 +388,9 @@ function FindDTMs(const DTM: Integer; var TPA: TPointArray; const SearchBox: TBo
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
-.. note:: by Olly
+```{note}
+By Olly
+```
 
 ### Example
 ```pascal
@@ -377,7 +411,9 @@ function FindDTM(const DTM: Integer; var x, y: Integer; const SearchBox: TBox): 
 
 Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 
-.. note:: by Olly
+```{note}
+By Olly
+```
 
 ### Example
 ```pascal
@@ -397,7 +433,9 @@ function TPAFromText(const Text, Font: string): TPointArray; overload;
 
 Creates a TPA of the text without the need for the W and H params.
 
-.. note:: by Olly
+```{note}
+By Olly
+```
 
 ### Example
 ```pascal
@@ -420,7 +458,9 @@ function InRange(const Value, Min, Max: Extended): Boolean; overload;
 
 Takes a extended variable instead of an integer variable.
 
-.. note:: by Olly
+```{note}
+By Olly
+```
 
 ### Example
 ```pascal
@@ -440,7 +480,9 @@ function Distance(const p1, p2: TPoint): Integer; overload;
 
 Accepts two TPoints instead of x1, y1, x2 and y2 variables.
 
-.. note:: by Olly
+```{note}
+By Olly
+```
 
 ### Example
 ```pascal

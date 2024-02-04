@@ -83,7 +83,9 @@ function TRSBankPin.ClickDigit(digit: Char): Boolean; override;
 
 Clicks a bank pin digit.
 
-.. note:: Original method by Olly, fixed by INeedBot.
+```{note}
+Original method by Olly, fixed by INeedBot.
+```
 *)
 function TRSBankPin.ClickDigit(digit: Char): Boolean;
 var

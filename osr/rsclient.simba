@@ -169,7 +169,9 @@ procedure TRSClient.Setup;
 
 Setup method.
 
-.. note:: This is automatically called on the **RSClient** variable.
+```{note}
+This is automatically called on the **RSClient** variable.
+```
 *)
 procedure TRSClient.Setup;
 begin

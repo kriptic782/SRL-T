@@ -360,7 +360,9 @@ procedure Bank.Setup;
 
 Initializes Bank variables.
 
-.. note:: This is automatically called on the **Bank** variable.
+```{note}
+This is automatically called on the **Bank** variable.
+```
 *)
 procedure TRSBank.Setup(); override;
 begin
@@ -600,7 +602,9 @@ This could be improved for better antiban but I decided to keep it simple since 
 This basically strips the item name from things humans won't usually type when searching, like brackets. It also makes the string lower case because people searching don't usually care about casing.
 Once that's done wee crop some characters from the final string, because humans don't usually search the full item name, but just enough until it's seen on screen.
 
-.. note:: Could be improved to in the future for only using the relevant part of the string. For example, an human searching for 'Amulet of glory(6)' would probably search for 'glory' instead of 'amulet of gl'.
+```{note}
+Could be improved to in the future for only using the relevant part of the string. For example, an human searching for 'Amulet of glory(6)' would probably search for 'glory' instead of 'amulet of gl'.
+```
 
 ### Example
 ```pascal
@@ -631,7 +635,9 @@ This is very useful when you want to support people having items in any tab they
 By default it will open the banktab if the item is found. This can be changed by setting **OpenTab** to false.
 The result will be the BankTab of the item. **-1** means we didn't find a BankTab.
 
-.. note:: A known limitation of this is that if several items match the sprite of the item (for example multiple charged jewlry) the tab retrieved will be the first one found. If you have 'Games necklace(1)' in tab 1 and 'Games necklace(8)' in tab 5 and search for the latter, you will get tab 1.
+```{note}
+A known limitation of this is that if several items match the sprite of the item (for example multiple charged jewlry) the tab retrieved will be the first one found. If you have 'Games necklace(1)' in tab 1 and 'Games necklace(8)' in tab 5 and search for the latter, you will get tab 1.
+```
 
 ### Example
 ```pascal

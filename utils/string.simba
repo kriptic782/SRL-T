@@ -12,7 +12,6 @@ const
   STR_WHITESPACE = #9#10#11#12#13#32;
   STR_NEW_LINE = #13#10;
 
-
 function String.Contains(SubString: String): Boolean;
 begin
   Result := Self.Pos(SubString) > 0;
@@ -102,7 +101,7 @@ end;
 function String.Startswith(Prefix: String): Boolean; constref;
 ```
 
-Returns ``True`` if the string starts with the given string ``Prefix``
+Returns `True` if the string starts with the given string `Prefix`
 *)
 function String.StartsWith(Prefix: String): Boolean; constref;
 begin
@@ -115,7 +114,7 @@ end;
 function String.Endswith(Suffix: String): Boolean; constref;
 ```
 
-Returns ``True`` if the string ends with the given string ``Suffix``
+Returns `True` if the string ends with the given string `Suffix`
 *)
 function String.EndsWith(Suffix: String): Boolean; constref;
 var
@@ -245,9 +244,10 @@ begin
 end;
 
 {*
-String.Strip
-~~~~~~~~~~~~~~~~~
-.. pascal:: function String.Strip(Chars:String = STR_WHITESPACE): String; constref;
+## String.Strip
+```pascal
+function String.Strip(Chars:String = STR_WHITESPACE): String; constref;
+```
 
 Return a copy of the string with leading and trailing characters removed.
 *}
@@ -262,9 +262,10 @@ end;
 
 
 {*
-String.StripL
-~~~~~~~~~~~~~~~~~
-.. pascal:: function String.StripL(Chars:String = STR_WHITESPACE): String; constref;
+## String.StripL
+```pascal
+function String.StripL(Chars:String = STR_WHITESPACE): String; constref;
+```
 
 Return a copy of the string with leading characters removed.
 *}
@@ -278,9 +279,10 @@ end;
 
 
 {*
-String.StripR
-~~~~~~~~~~~~~~~~~
-.. pascal:: function String.StripR(Chars:String = STR_WHITESPACE): String; constref;
+## String.StripR
+```pascal
+function String.StripR(Chars:String = STR_WHITESPACE): String; constref;
+```
 
 Return a copy of the string with trailing characters removed.
 *}
@@ -513,7 +515,7 @@ end;
 
 //---| operator overloads bellow this |---------------------------------------\\
 (*
-## string * int32
+## operator string * int32
 ```pascal
 operator * (left:String; Right:Int32): String;
 ```
@@ -539,7 +541,7 @@ begin
 end;
 
 (*
-## string in string
+## operator string in string
 ```pascal
 operator in (left:String; Right:String): Boolean;
 ```

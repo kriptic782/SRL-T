@@ -579,7 +579,9 @@ Splits a TPA `Arr` into TPAs of each row, it then proceeds to further split the 
 in to separate TPAs when the given distance ``dist`` is less than the distance between the points
 Same output as `SplitTPAEx(TPA,dist,0)`, but generally faster.
 
-.. note:: by slacky
+```{note}
+By slacky
+```
 
 ### Example
 ```pascal
@@ -629,7 +631,9 @@ function TPointArray.Connect(): TPointArray; constref;
 Fills a line between all the points (by their order), can be used to get the edges
 around a polygon
 
-.. note:: by slacky
+```{note}
+By slacky
+```
 
 ### Example
 ```pascal
@@ -662,7 +666,9 @@ points, the points which strech the band are the points returned by this functio
 
 See: http://en.wikipedia.org/wiki/Convex_hull for more information.
 
-.. note:: by slacky
+```{note}
+By slacky
+```
 
 ### Example
 ```pascal
@@ -711,7 +717,9 @@ Four points (which are in order) are always returned.
 
 See: http://en.wikipedia.org/wiki/Minimum_bounding_box for more information.
 
-.. note:: by slacky
+```{note}
+By slacky
+```
 
 ### Example
 ```pascal
@@ -953,7 +961,9 @@ function ExpandPolygon(Poly:TPointArray; inc:Int32): TPointArray;
 
 A method for increasing the size of any convex polygon.
 
-.. note:: by slacky
+```{note}
+By slacky
+```
 *)
 function ExpandPolygon(Poly: TPointArray; inc: Int32): TPointArray;
 type
