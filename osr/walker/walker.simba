@@ -449,7 +449,7 @@ begin
 end;
 
 (*
-## Walker.GetCleanMinimap
+## Walker.GetCleanMinimap()
 ```pascal
 function TRSWalker.GetCleanMinimap(): TMufasaBitmap; static;
 ```

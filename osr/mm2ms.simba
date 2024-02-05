@@ -1,4 +1,5 @@
 (*
+(MM2MS)=
 # Minimap to Mainscreen
 The core for our minimap to mainscreen projection.
 Supports rotation, and zoom, and resizable client.
@@ -16,14 +17,9 @@ functionality to convert coordinates to & from the minimap to the mainscreen.
 ## type TMM2MS
 ```pascal
 type
-TMM2MS = record
-BASE_W, BASE_H: Int32;        // the size of the area we project to (mainscreen size)
-MainScreen.Middle.X, MainScreen.Middle.Y: Int32;            // the center of the area we project to (mainscreen center)
-MMCX, MMCY: Int32;            // the center of the area we project from (minimap center)
-SCALE_MIN, SCALE_MAX: Double; // direct zoom (relates to BASE)
-ZOOM: Double;                 // current zoom
-YSHIFT: Double;               // zooming may cause mid-Y to shift
-end;
+  TMM2MS = record(TSRLBaseRecord)
+    ZoomLevel: Int32;
+  end;
 ```
 
 The comments explains it. This is the datastructure MM2MS uses.
@@ -122,8 +118,9 @@ end;
 
 (*
 ## var MM2MS
+```pascal
 var MM2MS: TMM2MS;
-
+```
 The global variable which you would refer to.
 *)
 var
