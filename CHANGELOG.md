@@ -1,3 +1,12 @@
+## [3.2.4](https://github.com/Torwent/SRL-T/compare/v3.2.3...v3.2.4) (2024-02-06)
+
+
+### Bug Fixes
+
+* **inventory:** small logic flaw in `Inventory.GetSelectedSlot()` that could cause selected items to be msised ([0fe2fd7](https://github.com/Torwent/SRL-T/commit/0fe2fd7fb29d7f72fe66ff3944d482c26784243a))
+
+
+
 ## [3.2.3](https://github.com/Torwent/SRL-T/compare/v3.2.2...v3.2.3) (2024-02-03)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **TRSChooseOption:** read notes ([dbcb235](https://github.com/Torwent/SRL-T/commit/dbcb2359182a174a2cbf60b535b3aef6adb28675))
-
-
-
-## [3.1.11](https://github.com/Torwent/SRL-T/compare/v3.1.10...v3.1.11) (2024-01-23)
-
-
-### Bug Fixes
-
-* **logout:** TRSLogout.Name change ([156dec4](https://github.com/Torwent/SRL-T/commit/156dec4f1b8a8d96373c562441b260415de2df9a))
 
 
 
