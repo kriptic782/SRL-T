@@ -707,21 +707,11 @@ end;
 ```pascal
 procedure TRSWalker.CheckRunEnergy();
 ```
-
 Internal method used to check and enable the player run.
 You will probably never need to call this directly.
 
 The values used are hardcoded and if you don't like them, it's recommended you override the method.
 The following example shows how one could override the function to enable run at 50% energy everytime, keep in mind though, you shouldn't do this, you should add randomness to it!
-
-### Example
-```pascal
-procedure TRSWalker.CheckRunEnergy(); override;
-begin
-  if Minimap.IsRunEnabled() or (Minimap.GetRunEnergy() < 50) then
-    Exit;
-  Minimap.EnableRun();
-end;
 ```
 *)
 procedure TRSWalker.CheckRunEnergy();
@@ -730,7 +720,6 @@ begin
     Exit;
 
   Self.EnableRunAtEnergy := SRL.SkewedRand(40, 10, 100);
-
   Minimap.EnableRun();
 end;
 
@@ -1060,23 +1049,16 @@ You will probably never need to call this directly.
 function TRSWalker.IsWalkable(walkerPoint: TPoint; playerPoint: TPoint; Angle: Double): Boolean;
 var
   minimapPoint: TPoint;
-  B: TBox;
+  b: TBox;
 begin
   minimapPoint := Self.WorldToMM(playerPoint, walkerPoint, Angle);
 
-  case Self.ScreenWalk of
-    True:
-      begin
-        B := Minimap.PointToMSRect(minimapPoint, 1, 1, Angle).Bounds();
-        if MainScreen.IsVisible(B.Middle) then
-          Result := CountColor($000000, B.Expand(0, MainScreen.Bounds())) = 0; // Client doesn't always render everything when zoomed out
-      end;
+  if not Self.ScreenWalk then
+    Exit(Minimap.IsPointOn(minimapPoint, -1));
 
-    False:
-      begin
-        Result := Minimap.IsPointOn(minimapPoint, -1);
-      end;
-  end;
+  b := Minimap.PointToMSRect(minimapPoint, 1, 1, Angle).Bounds();
+  if MainScreen.IsVisible(B.Middle) then
+    Result := CountColor($000000, B.Expand(0, MainScreen.Bounds())) = 0; // Client doesn't always render everything when zoomed out
 end;
 
 

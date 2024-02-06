@@ -260,15 +260,18 @@ begin
   if atpa = [] then
     Exit(-1);
 
-  tpa := atpa[0];
-  p := tpa[0];
-  Result := Self.PointToSlot(p);
+  for tpa in atpa do
+  begin
+    Result := Self.PointToSlot(tpa[0]);
 
-  slot := Self.GetSlotBox(Result);
-  slot.Y1 += 8;
+    slot := Self.GetSlotBox(Result);
+    slot.Y1 += 8;
 
-  if tpa.FilterBox(slot) = [] then
-    Exit(-1);;
+    if tpa.FilterBox(slot) <> [] then
+      Exit;
+  end;
+
+  Result := -1;
 end;
 
 (*
