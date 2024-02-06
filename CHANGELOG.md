@@ -1,3 +1,12 @@
+## [3.2.5](https://github.com/Torwent/SRL-T/compare/v3.2.4...v3.2.5) (2024-02-06)
+
+
+### Bug Fixes
+
+* minor docs fixes ([653b0e8](https://github.com/Torwent/SRL-T/commit/653b0e8c5ba29c56105442c055b1c40a7e7c67b0))
+
+
+
 ## [3.2.4](https://github.com/Torwent/SRL-T/compare/v3.2.3...v3.2.4) (2024-02-06)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **walker:** Minimap bitmap methods are now static, should always have been ([df9d9ee](https://github.com/Torwent/SRL-T/commit/df9d9ee54b56ca0ad5f70fd347a88d0e99634ee2))
-
-
-
-# [3.2.0](https://github.com/Torwent/SRL-T/compare/v3.1.11...v3.2.0) (2024-01-25)
-
-
-### Features
-
-* **TRSChooseOption:** read notes ([dbcb235](https://github.com/Torwent/SRL-T/commit/dbcb2359182a174a2cbf60b535b3aef6adb28675))
 
 
 
