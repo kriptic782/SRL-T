@@ -143,7 +143,7 @@ function TRSChat.GetDisplayName(Colors: TIntegerArray = [$FFFFFF, $000000]): Str
 
 Get the user displayed name.
 
-### Example
+Example:
 ```pascal
 WriteLn('The user name is: ', Chat.GetDisplayName);
 ```
@@ -171,7 +171,7 @@ function TRSChat.IsTransparent: Boolean;
 
 Returns true if the chat box is in transparent mode.
 
-### Example
+Example:
 ```pascal
 WriteLn Chat.IsTransparent;
 ```
@@ -189,7 +189,7 @@ function TRSChat.IsOpen: Boolean;
 
 Returns true if the chat box is open.
 
-### Example
+Example:
 ```pascal
 WriteLn Chat.IsOpen;
 ```
@@ -208,7 +208,7 @@ function TRSChat.GetQuery: String;
 
 Returns the query question.
 
-### Example
+Example:
 ```pascal
 WriteLn Chat.GetQuery;
 ```
@@ -226,7 +226,7 @@ function TRSChat.GetQueryAnswer: String;
 
 Returns the currently typed answer.
 
-### Example
+Example:
 ```pascal
 WriteLn Chat.GetQueryAnswer;
 ```
@@ -244,7 +244,7 @@ function TRSChat.FindQuery(Query: String; WaitTime: Int32; Interval: Int32 = -1)
 
 Returns true if the specified **Query** is currently open or opens up within **WaitTime**.
 
-### Example
+Example:
 ```pascal
 WriteLn Chat.FindQuery('How many doses', 2000); //Example query of NMZ Potion Barrels.
 ```
@@ -265,7 +265,7 @@ function TRSChat.AnswerQuery(Query, Answer: String; WaitTime: Int32; Interval: I
 
 Replies with **Answer** to the specified **Query**.
 
-### Example
+Example:
 ```pascal
 Chat.AnswerQuery('How many doses', '20', 2000); //Example query of NMZ Potion Barrels.
 ```
@@ -326,7 +326,7 @@ function TRSChat.FindOption(Text: String; Colors: TIntegerArray = [CHAT_COLOR_WH
 
 Returns true if the specified **Text** is an available option.
 
-### Example
+Example:
 ```pascal
 Chat.FindOption('Yes'); //Common chat option in several instances as an example where you are asked Yes or No.
 ```
@@ -348,7 +348,7 @@ function TRSChat.ClickOption(Text: String; UseKeyboard: Boolean = True; Colors: 
 
 Attempts to click the specied chat option. If **UseKeyboard** is true, the keyboard will be used.
 
-### Example
+Example:
 ```pascal
 Chat.ClickOption('Yes', True); //Common chat option in several instances as an example where you are asked Yes or No.
 ```
@@ -377,7 +377,7 @@ function TRSChat.ClickContinue(UseKeyboard: Boolean = True): Boolean;
 
 Attempts to click the continue chat option. If **UseKeyboard** is true, the keyboard will be used.
 
-### Example
+Example:
 ```pascal
 Chat.ClickContinue(True);
 ```
@@ -399,7 +399,7 @@ function TRSChat.ChatToOption(Option: String): Boolean;
 
 Continuously advances the chat with **TRSChat.ClickContinue** until the specified **Option** appears.
 
-### Example
+Example:
 ```pascal
 Chat.ChatToOption('Yes');
 ```
@@ -423,7 +423,7 @@ function TRSChat.GetMessage(Line: Int32; Colors: TIntegerArray = CHAT_MESSAGE_CO
 
 Get the message in the specified **Line**.
 
-### Example
+Example:
 ```pascal
 WriteLn Chat.GetMessage(5);
 ```
@@ -467,7 +467,7 @@ function TRSChat.FindMessage(Message: String; Colors: TIntegerArray = CHAT_MESSA
 
 Returns true if **Message** is found in any chat line.
 
-### Example
+Example:
 ```pascal
 WriteLn Chat.FindMessage('Buying gf');
 ```
@@ -489,7 +489,7 @@ function TRSChat.GetChat: String;
 
 Returns the message displayed in a chat when we are talking with an NPC or interacting with something.
 
-### Example
+Example:
 ```pascal
 WriteLn Chat.GetChat;
 ```
@@ -515,7 +515,7 @@ function TRSChat.GetChatTitle: String;
 
 Returns the chat title if available. This is usually a red text and sometimes has 2 swords pointing to it.
 
-### Example
+Example:
 ```pascal
 if 'Select an Option' = Chat.GetChatTitle then
   Chat.ClickOption('access my bank');
@@ -539,7 +539,7 @@ function TRSChat.LeveledUp(): Boolean;
 Returns true if we have the level up message on the chat box.
 Declared here and overriden in stats.simba
 
-### Example
+Example:
 ```pascal
 if Chat.LeveledUp then
   Chat.ClickContinue(True);

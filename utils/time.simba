@@ -94,7 +94,7 @@ end;
 ## TCountDown
 A neat and simple timer type.
 
-### Example
+Example:
 ```pascal
 myTimer.Init(3000); //3000ms
 while not myTimer.IsFinished() do
@@ -177,7 +177,7 @@ end;
 ## TStopWatch
 A neat and simple stopwatch type.
 
-### Example
+Example:
 ```pascal
 var StopWatch: TStopWatch;
 

@@ -99,7 +99,7 @@ function TRSPrayer.GetPrayerLevel(): Int32;
 
 **Prayer.GetPrayerLevel** is used to retrieve the prayer level from the prayer tab.
 
-### Example
+Example:
 ```pascal
 Writeln Prayer.GetPrayerLevel();
 ```
@@ -139,7 +139,7 @@ function TRSPrayer.Open(): Boolean;
 
 Attempts to open the prayer tab.
 
-### Example
+Example:
 ```pascal
 Prayer.Open;
 ```
@@ -195,7 +195,7 @@ function TRSPrayer.PointToPrayer(P: TPoint): Int32;
 Returns the prayer number that **P** is part of.
 -1 is returned if there's no result.
 
-### Example
+Example:
 ```pascal
 WriteLn('Mouse is hovering prayer ', Prayer.PointToPrayer(Mouse.Position));
 ```
@@ -221,7 +221,7 @@ function TRSPrayer.MouseOver(Prayer: ERSPrayer): Boolean;
 
 Hovers the specified prayer.
 
-### Example
+Example:
 ```pascal
 Prayer.MouseOver(ERSPrayer.PROTECT_FROM_MELEE);
 ```
@@ -243,7 +243,7 @@ function TRSPrayer.CanActivate(Prayer: ERSPrayer): Boolean;
 
 Returns true if we have enough level and have unlocked the specified prayer.
 
-### Example
+Example:
 ```pascal
 WriteLn Prayer.CanActivate(ERSPrayer.PROTECT_FROM_MELEE);
 ```
@@ -285,7 +285,7 @@ function TRSPrayer.IsPrayerActive(Prayer: ERSPrayer): Boolean;
 
 Returns true if the specified prayer is active right now.
 
-### Example
+Example:
 ```pascal
 WriteLn Prayer.IsPrayerActive(ERSPrayer.SMITE);
 ```
@@ -346,7 +346,7 @@ function TRSPrayer.ActivatePrayer(Prayer: ERSPrayer): Boolean;
 
 Attempts to activate the specified prayer.
 
-### Example
+Example:
 ```pascal
 Prayer.ActivatePrayer(ERSPrayer.PROTECT_FROM_MELEE);
 ```
@@ -372,7 +372,7 @@ function TRSPrayer.ActivatePrayer(Prayers: array of ERSPrayer): Boolean; overloa
 
 Attempts to activate the several prayers.
 
-### Example
+Example:
 ```pascal
 Prayer.ActivatePrayer([ERSPrayer.PROTECT_FROM_MELEE, ERSPrayer.PIETY]);
 ```
@@ -395,7 +395,7 @@ function TRSPrayer.DisablePrayer(Prayer: ERSPrayer): Boolean;
 
 Attempts to disable the specified prayer.
 
-### Example
+Example:
 ```pascal
 Prayer.DisablePrayer(ERSPrayer.PROTECT_FROM_MELEE);
 ```
@@ -421,7 +421,7 @@ function TRSPrayer.DisablePrayer(Prayers: array of ERSPrayer): Boolean; overload
 
 Attempts to disable the several prayers.
 
-### Example
+Example:
 ```pascal
 Prayer.DisablePrayer([ERSPrayer.PROTECT_FROM_MELEE, ERSPrayer.PIETY]);
 ```
@@ -528,7 +528,7 @@ function QuickPrayer.Open: Boolean;
 
 Attempts to open the quick prayers.
 
-### Example
+Example:
 ```pascal
 QuickPrayer.Open;
 ```
@@ -565,7 +565,7 @@ function QuickPrayer.Close: Boolean;
 
 Attempts to close the quick prayers.
 
-### Example
+Example:
 ```pascal
 QuickPrayers.Close;
 ```
@@ -588,7 +588,7 @@ function QuickPrayer.IsPrayerSelected(QPrayer: ERSPrayer): Boolean;
 
 Returns true if the specified quick prayer is selected.
 
-### Example
+Example:
 ```pascal
 WriteLn QuickPrayers.IsPrayerSelected(ERSPrayer.PROTECT_FROM_MAGIC);
 ```
@@ -611,7 +611,7 @@ function QuickPrayer.GetSelectedPrayers: array of ERSPrayer;
 
 Returns an array of all selected quick prayers
 
-### Example
+Example:
 ```pascal
 WriteLn QuickPrayers.GetSelectedPrayers;
 ```
@@ -640,7 +640,7 @@ function QuickPrayer.SelectPrayer(QPrayers: array of ERSPrayer): Boolean; overlo
 
 Attempts to select the specified quick prayer/prayers.
 
-### Example
+Example:
 ```pascal
 QuickPrayers.SelectPrayer(ERSPrayer.PROTECT_ITEM);
 ```
@@ -679,7 +679,7 @@ function QuickPrayer.DeselectPrayer(QPrayers: array of ERSPrayer): Boolean; over
 
 Attempts to Deselect the specified quick prayer/prayers.
 
-### Example
+Example:
 ```pascal
 QuickPrayers.DeselectPrayer(ERSPrayer.PROTECT_ITEM);
 ```

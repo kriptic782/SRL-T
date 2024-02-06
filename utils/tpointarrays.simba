@@ -583,7 +583,7 @@ Same output as `SplitTPAEx(TPA,dist,0)`, but generally faster.
 By slacky
 ```
 
-### Example
+Example:
 ```pascal
   ATPA := TPA.SplitRows(5);
 ```
@@ -635,7 +635,7 @@ around a polygon
 By slacky
 ```
 
-### Example
+Example:
 ```pascal
   edges := TPA.ConvexHull().Connect();
 ```
@@ -670,7 +670,7 @@ See: http://en.wikipedia.org/wiki/Convex_hull for more information.
 By slacky
 ```
 
-### Example
+Example:
 ```pascal
   Smart.Image.DrawTPA(TPA.ConvexHull());
 ```
@@ -721,7 +721,7 @@ See: http://en.wikipedia.org/wiki/Minimum_bounding_box for more information.
 By slacky
 ```
 
-### Example
+Example:
 ```pascal
   WriteLn('The four box corners are: ', TPA.MinAreaRect());
 ```

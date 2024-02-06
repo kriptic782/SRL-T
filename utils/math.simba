@@ -30,7 +30,7 @@ function TSRL.Modulo(X, Y: Int32): Int32; static; overload;
 This function returns the remainder from the division of the first argument by the second.
 It will always returns a result with the same sign as its second operand (or zero).
 
-### Example
+Example:
 ```pascal
   Writeln(SRL.Modulo(a, b));
 ```
@@ -176,7 +176,7 @@ function TSRL.PointInRect(const Pt: TPoint; const A, B, C, D: TPoint): Boolean; 
 
 Returns true if the TPoint 'Pt' is in a rect (defined by four points).
 
-### Example
+Example:
 ```pascal
   Writeln(SRL.PointInRect(Point(100, 100), [0,0], [200,1], [201,201], [0,225]));
 ```

@@ -446,7 +446,7 @@ function TRSMainScreen.NormalizeDistance(Dist: Int32; Accuracy: Single = 1.05): 
 Converts a distance acquired from the **fixed client* and **default zoom** to the
 current mainscreen.
 
-### Example
+Example:
 ```pascal
 // 20 pixels on the fixed client and default zoom(50) is currently x pixels at the current zoom & client size.
 WriteLn(MainScreen.TranslateDistance(20));

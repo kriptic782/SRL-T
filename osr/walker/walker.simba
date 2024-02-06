@@ -56,7 +56,7 @@ TRSWalker pointer.
 ## type TRSWalker_OnWalkEvent
 Callback method to use while walking. This can be used to perform custom tasks while walking.
 
-### Example
+Example:
 ```pascal
 procedure WalkerTasks(Walker: PRSWalker; Position: TPoint; Destination: TPoint);
 begin
@@ -77,7 +77,7 @@ end;
 ## type TRSWalker_OnWalkEventEx
 Callback object method to use while walking. This can be used to perform custom tasks while walking.
 
-### Example
+Example:
 ```pascal
 procedure TRSWalker.WalkerTasks(Walker: PRSWalker; Position: TPoint; Destination: TPoint);
 begin
@@ -199,7 +199,7 @@ You can optionally load only certain regions of the map. This is useful if there
 The regions are specified as a TBoxArray and they are cropped from the map you specify on setup and joined into a single map image. This type of setup retains the coordinates of the original map image.
 You can also optionally omit the Map name to make walker use the default SRL map which you can find in: Simba/Includes/SRL/osr/walker/map.png
 
-### Example
+Example:
 ```pascal
 //The following are several setup examples. Keep in mind that if the file doesn't exist in the maps folder, Walker will throw an error.
 var
@@ -457,7 +457,7 @@ function TRSWalker.GetCleanMinimap(): TMufasaBitmap; static;
 Internal walker method used to "screenshot" the minimap and clean it with Walker.CleanMinimap().
 You probably don't need to use this directly but you can see what it does in the following example.
 
-### Example
+Example:
 ```pascal
 var
   rsw: TRSWalker;
@@ -491,7 +491,7 @@ function TRSWalker.ScaleMinimap(Bitmap: TMufasaBitmap; Scaling: Int32): TMufasaB
 Internal walker method used to scale down the minimap to whatever TRSWalker.Scaling is.
 You probably don't need to use this directly but you can see what it does in the following example.
 
-### Example
+Example:
 ```pascal
 var
   rsw: TRSWalker;
@@ -674,7 +674,7 @@ function TRSWalker.WorldToMM(walkerPoint: TPoint): TPoint; overload;
 
 Converts a walker coordinate to a point in the minimap.
 
-### Example
+Example:
 ```pascal
 var
   rsw: TRSWalker;
@@ -877,7 +877,7 @@ You will probably never need to call this directly.
 If you wish to modify certain walker behaviors, it's a good approach to override this function.
 For example, if you are screenwalking and you don't like it right clicking > walk here when it hovers a tree you could use the following example.
 
-### Example
+Example:
 ```pascal
 function TRSWalker.Click(minimapPoint: TPoint; Randomness: Int32): Boolean; override;
 var
@@ -1081,7 +1081,7 @@ WaitUntilDistance
 	| *WaitUntilDistance=0* waits until the player has reached the final point.
 	| *WaitUntilDistance=20* waits until the player is within 20 pixels of the final point.
 
-### Example
+Example:
 ```pascal
 Walker.WalkPath([[100,100],[120,120],[140,140],[160,160],[180,180]]);
 ```
@@ -1215,7 +1215,7 @@ WaitUntilDistance
 	| *WaitUntilDistance=0* waits until the player has reached the final point.
 	| *WaitUntilDistance=20* waits until the player is within 20 pixels of the final point.
 
-### Example
+Example:
 ```pascal
 Walker.WalkBlind([300, 300]);
 ```
@@ -1250,7 +1250,7 @@ WaitUntilDistance
 PathRandomness
 	Randomness to add to the path so the absoulte shortest path isn't always taken. Must be between 0..1
 
-### Example
+Example:
 ```pascal
 var Walker: TRSWalker;
 
@@ -1280,7 +1280,7 @@ procedure TRSWalker.DebugPosition();
 
 Debugs the player position in the currently loaded map.
 
-### Example
+Example:
 ```pascal
 var
   rsw: TRSWalker;
@@ -1373,7 +1373,7 @@ function TRSWalker.GetTileMS(Loc: TPoint; Height:Double=0; Offx,Offy:Double=0): 
 
 Returns a tile on the mainscreen with the help of walker and mm2ms.
 
-### Example
+Example:
 ```pascal
 Debug(rsw.GetTileMS(rsw.GetMypos() + [10, 10]));
 ```

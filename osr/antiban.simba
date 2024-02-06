@@ -103,7 +103,7 @@ Schedule a sleep break. A sleep break is a large break, it can be any length but
 
 This sleep break will only occur when **TAntiban.DoAntiban** is called.
 
-### Example
+Example:
 ```pascal
 Antiban.AddSleep('01:30:00', 8 * ONE_HOUR, 0.1, 0.8); //ONE_HOUR constant holds the value 3600000 which is one hour in milliseconds.
 ```
@@ -134,7 +134,7 @@ Length, Randomness and LogoutChance are the same as **TAntiban.AddSleep**.
 
 This break will only occur when **TAntiban.DoAntiban** is called.
 
-### Example
+Example:
 ```pascal
 Antiban.AddBreak(30 * ONE_MINUTE, 5 * ONE_MINUTE); //Every 30 minutes the script will take a 5 minute break, subject to variance from the Randomness variable.
 ```
@@ -280,7 +280,7 @@ Schedule a antiban task. An antiban task can be any procedure but they are shoul
 
 This task will only occur when **TAntiban.DoAntiban** is called.
 
-### Example
+Example:
 ```pascal
 Antiban.AddTask(15 * ONE_MINUTE, @Antiban.HoverSkills); //Every 15 minutes the script will hover the skills.
 ```
@@ -355,7 +355,7 @@ function TAntiban.DoAntiban(CheckBreaks: Boolean = True; CheckSleeps: Boolean = 
 Antiban.DoAntiban should be called in your script when antiban sleeps, breaks or tasks won't break your script.
 When this is called, the setup sleep breaks, breaks and tasks will be checked, if enough time has passed to perform any of them (subject to the parameters you pass in too), they will be performed, otherwise, nothing will happen.
 
-### Example
+Example:
 ```pascal
 Antiban.AddTask(15 * ONE_MINUTE, @Antiban.HoverSkills);
 
@@ -429,7 +429,7 @@ procedure TAntiban.Swivel;
 
 SRL built in Antiban Tasks that can be added with **TAntiban.AddTask**.
 
-### Example
+Example:
 ```pascal
 Antiban.AddTask(15 * ONE_MINUTE, @Antiban.HoverSkills);
 ```

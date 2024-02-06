@@ -81,7 +81,7 @@ Internal method used to get the interface buttons.
 This is used by all other methods that interact with buttons.
 You will probably never need to call this directly.
 
-### Example
+Example:
 ```pascal
 Debug(Make.GetItemButtons());
 ```
@@ -109,7 +109,7 @@ Internal method used to get the interface quantity buttons.
 This is used by all other methods that interact with the quantity buttons.
 You will probably never need to call this directly.
 
-### Example
+Example:
 ```pascal
 Debug(Make.GetQuantityButtons());
 ```
@@ -132,7 +132,7 @@ function TRSMake.IsOpen(WaitTime: Int32; Interval: Int32 = -1): Boolean; overloa
 Checks if the make interface is open.
 You can optionally specify a **WaitTime** to wait for it to open.
 
-### Example
+Example:
 ```pascal
 WriteLn Make.IsOpen();
 ```
@@ -159,7 +159,7 @@ function TRSMake.FindHint(): TPointArray;
 
 Returns the hint tooltip has a TPointArray
 
-### Example
+Example:
 ```pascal
 Debug(Make.FindHint());
 ```
@@ -179,7 +179,7 @@ function TRSMake.GetFreeSpace(): TPointArray;
 
 Get a TPointArray of the chatbox that does not have a single point in any of the make item buttons.
 
-### Example
+Example:
 ```pascal
 Debug(Make.GetFreeSpace());
 ```
@@ -206,7 +206,7 @@ function TRSMake.SetQuantity(Amount: Int32): Boolean;
 
 Attempts to set a quantity.
 
-### Example
+Example:
 ```pascal
 WriteLn Make.SetQuantity(Make.QUANTITY_ALL);
 ```
@@ -334,7 +334,7 @@ function TRSMake.Select(Item: String; Quantity: Int32; UseKeyboard: Boolean = Tr
 
 Select a **Index** of the available buttons or the button with **Item** text on it when hovered.
 
-### Example
+Example:
 ```pascal
 WriteLn Make.Select('Maple longbow', Make.QUANTITY_ALL, True);
 ```
@@ -391,7 +391,7 @@ procedure TRSMake.Draw(Bitmap: TMufasaBitmap); override; overload;
 
 Internal debug method. Used by SRL.Debug().
 
-### Example
+Example:
 ```pascal
 SRL.Debug();
 ```

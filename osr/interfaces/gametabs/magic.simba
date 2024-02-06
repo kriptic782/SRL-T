@@ -134,7 +134,7 @@ function TRSMagic.IsOpen(): Boolean;
 
 Returns true if the Magic tab is open.
 
-### Example
+Example:
 ```pascal
 WriteLn Magic.IsOpen();
 ```
@@ -152,7 +152,7 @@ function TRSMagic.Open(): Boolean;
 
 Attempts to open the magic tab.
 
-### Example
+Example:
 ```pascal
 Magic.Open();
 ```
@@ -170,7 +170,7 @@ function TRSMagic.GetSpellBook(): ERSSpellBook;
 
 Returns the current spell book.
 
-### Example
+Example:
 ```pascal
 WriteLn Magic.GetSpellBook();
 ```
@@ -197,7 +197,7 @@ function TRSMagic.IsSpellBook(book: ERSSpellBook): Boolean;
 
 Returns true if we are using the specified spell book.
 
-### Example
+Example:
 ```pascal
 WriteLn Magic.IsSpellBook(ERSSpellBook.LUNAR);
 ```
@@ -215,7 +215,7 @@ function TRSMagic.InfoIsOpen(): Boolean;
 
 Returns true if the info black box about a spell is open.
 
-### Example
+Example:
 ```pascal
 WriteLn Magic.IsSpellBook(ERSSpellBook.LUNAR);
 ```
@@ -248,7 +248,7 @@ function TRSMagic.CloseInfo(spell: ERSSpell): Boolean; overload;
 
 Returns true if the info black box about a spell is open.
 
-### Example
+Example:
 ```pascal
 WriteLn Magic.CloseInfo();
 ```
@@ -404,7 +404,7 @@ function TRSMagic.MouseSpell(spell: ERSSpell): Boolean;
 
 Used to move the mouse to the specified spell.
 
-### Example
+Example:
 ```pascal
 Magic.MouseSpell(ERSSpell.HIGH_LEVEL_ALCHEMY);
 ```
@@ -444,7 +444,7 @@ function TRSMagic.ClickSpell(spell: ERSSpell; option: String = ''): Boolean;
 
 Used to interact with the specified spell.
 
-### Example
+Example:
 ```pascal
 Magic.ClickSpell(ERSSpell.HIGH_LEVEL_ALCHEMY);
 ```
@@ -471,7 +471,7 @@ function TRSMagic.MouseSpell(spell: ERSSpell; button: Int32 = MOUSE_MOVE): Boole
 
 Used to interact with the specified spell.
 
-### Example
+Example:
 ```pascal
 Magic.MouseSpell(ERSSpell.HIGH_LEVEL_ALCHEMY, MOUSE_LEFT);
 ```
@@ -499,7 +499,7 @@ function TRSMagic.FindSelected(out tpa: TPointArray): Boolean;
 
 Returns the true if we have a selected spell and returns it's tpa.
 
-### Example
+Example:
 ```pascal
 if Magic.FindSelected(tpa) then
   Debug(tpa);
@@ -536,7 +536,7 @@ function TRSMagic.ContainsSelected(): Boolean;
 
 Returns the true if we have a selected spell.
 
-### Example
+Example:
 ```pascal
 WriteLn Magic.ContainsSelected();
 ```
@@ -572,7 +572,7 @@ function TRSMagic.GetSelectedspell: ERSSpell;
 
 Returns the currently selected spell.
 
-### Example
+Example:
 ```pascal
 WriteLn Magic.GetSelectedSpell;
 ```
@@ -608,7 +608,7 @@ function TRSMagic.IsSelected(spell: ERSSpell; selected: TPointArray): Boolean; o
 
 Returns true if the specified spell is currently active (with white outline).
 
-### Example
+Example:
 ```pascal
 Magic.IsSpellSelected(ERSSpell.ICE_BARRAGE);
 ```
@@ -665,7 +665,7 @@ function TRSMagic.CanActivate(spell: ERSSpell): Boolean;
 
 Returns true if we can activate the spell (we have runes, level and the spell unlocked).
 
-### Example
+Example:
 ```pascal
 Magic.CanActivate(ERSSpell.HIGH_LEVEL_ALCHEMY);
 ```
@@ -684,7 +684,7 @@ function TRSMagic.SpellWasCast(spell: ERSSpell): Boolean;
 
 Returns true if we are in a state that casting a spell would leave you.
 
-### Example
+Example:
 ```pascal
 Magic.SpellWasCast(ERSSpell.ICE_BARRAGE);
 ```
@@ -706,7 +706,7 @@ function TRSMagic.CastSpell(spell: ERSSpell): Boolean;
 
 Attempts to cast the specified spell.
 
-### Example
+Example:
 ```pascal
 Magic.CastSpell(ERSSpell.LOW_LEVEL_ALCHEMY);
 ```

@@ -199,7 +199,7 @@ procedure TMouse.Teleport(X, Y: Int32);
 
 Teleport the mouse to the desired X,Y coordinates.
 
-### Example
+Example:
 ```pascal
 Mouse.Teleport(50, 50);
 ```
@@ -220,7 +220,7 @@ procedure TMouse.Teleport(P: TPoint);
 
 Teleport the mouse to the desired point.
 
-### Example
+Example:
 ```pascal
 Mouse.Teleport(50, 50);
 ```
@@ -238,7 +238,7 @@ function TMouse.Position: TPoint;
 
 Returns the mouse current position.
 
-### Example
+Example:
 ```pascal
 var P: TPoint;
 
@@ -268,7 +268,7 @@ Available buttons:
  - MOUSE_EXTRA_1
  - MOUSE_EXTRA_2
 
-### Example
+Example:
 ```pascal
 Mouse.Hold(MOUSE_LEFT); // The mouse is now holding down left click.
 ```
@@ -294,7 +294,7 @@ Available buttons:
  - MOUSE_EXTRA_1
  - MOUSE_EXTRA_2
 
-### Example
+Example:
 ```pascal
 Mouse.Release(MOUSE_LEFT); // The mouse is no holding left click.
 ```
@@ -429,7 +429,7 @@ procedure TMouse.Move(Destination: TPoint);
 
 Moves the mouse to the desired point.
 
-### Example
+Example:
 ```pascal
 var P: TPoint;
 
@@ -496,7 +496,7 @@ procedure TMouse.Move(P: TPoint);
 
 Moves the mouse to the desired X,Y coordinate.
 
-### Example
+Example:
 ```pascal
 Mouse.Move(50, 50); // The mouse is now at 50,50
 ```
@@ -516,7 +516,7 @@ Moves the mouse to a random point in an circle defined by **Center** and **Radiu
 
 - **ForcedMove** determines if the mouse should be moved if already inside the circle. By default this is **False**.
 
-### Example
+Example:
 ```pascal
 Mouse.Move([100, 100], 25); // The mouse is now randomly within 100,100 with a radius of 25.
 ```
@@ -540,7 +540,7 @@ Moves the mouse to a random point in the box.
 - **ForcedMove** determines if the mouse should be moved if already in the box. By default this is **False**
 - **Distribution** determines the method to generate a random point. By default this uses **Mouse.Distribution**
 
-### Example
+Example:
 ```pascal
 var B: TBox;
 
@@ -578,7 +578,7 @@ Moves the mouse to a random point in an circle.
 
 - **ForcedMove** determines if the mouse should be moved if already in the circle. By default this is **False**.
 
-### Example
+Example:
 ```pascal
 var C: TCircle;
 
@@ -604,7 +604,7 @@ Moves the mouse to a random point in an rectangle.
 
 - **ForcedMove** determines if the mouse should be moved if already in the rectangle. By default this is **False**.
 
-### Example
+Example:
 ```pascal
 var TPA: TPointArray;
 var R: TRectangle;
@@ -637,7 +637,7 @@ Available buttons:
  - MOUSE_EXTRA_1
  - MOUSE_EXTRA_2
 
-### Example
+Example:
 ```pascal
 Mouse.Click(MOUSE_LEFT); // Left click the current mouse position
 ```
@@ -677,7 +677,7 @@ Available buttons:
  - MOUSE_EXTRA_1
  - MOUSE_EXTRA_2
 
-### Example
+Example:
 ```pascal
 Mouse.Click(50, 50, MOUSE_LEFT); // Left click at 50,50
 ```
@@ -703,7 +703,7 @@ Available buttons:
  - MOUSE_EXTRA_1
  - MOUSE_EXTRA_2
 
-### Example
+Example:
 ```pascal
 var P: TPoint;
 
@@ -729,7 +729,7 @@ Moves the mouse to a random point in an circle defined by **Center** and **Radiu
 
  - **ForcedMove** determines if the mouse should be moved if already in the circle. By default this is **False**.
 
-### Example
+Example:
 ```pascal
 Mouse.Click([100, 100], 25, MOUSE_LEFT); // Left clicked somewhere nearby 100,100 with a radius of 25.
 ```
@@ -758,7 +758,7 @@ Available buttons:
  - MOUSE_EXTRA_1
  - MOUSE_EXTRA_2
 
-### Example
+Example:
 ```pascal
 var B: TBox;
 
@@ -786,7 +786,7 @@ Moves the mouse to a random point in an circle and clicks the desired button.
 
  - **ForcedMove** determines if the mouse should be moved if already in the circle. By default this is **False**.
 
-### Example
+Example:
 ```pascal
 var C: TCircle;
 
@@ -813,7 +813,7 @@ Moves the mouse to a random point in an rectangle then clicks the desired button
 
  - **ForcedMove** determines if the mouse should be moved if already in the rectangle. By default this is **False**.
 
-### Example
+Example:
 ```pascal
 var TPA: TPointArray;
 var R: TRectangle;
@@ -877,7 +877,7 @@ Holds the desired button and moves the mouse to X,Y coordinates.
 
  - **Button** by default is MOUSE_LEFT.
 
-### Example
+Example:
 ```pascal
 Mouse.DragTo(50, 50); // Moves the mouse to 50,50 while holding MOUSE_LEFT
 ```
@@ -901,7 +901,7 @@ Holds the desired button and moves the mouse to `P` coordinates.
 
  - **Button** by default is MOUSE_LEFT.
 
-### Example
+Example:
 ```pascal
 var P: TPoint;
 
@@ -924,7 +924,7 @@ procedure TMouse.Scroll(Amount: Int32; Down: Boolean);
 
 Scrolls the mouse X amount of times at the current mouse position.
 
-### Example
+Example:
 ```pascal
 Mouse.Scroll(5, True);  // Scroll 5 times down
 Mouse.Scroll(5, False); // Scroll 5 times up
@@ -964,7 +964,7 @@ procedure TMouse.Scroll(P: TPoint; Scrolls: Int32; Down: Boolean);
 
 Moves the mouse to desired position `P` then scrolls X amount of times.
 
-### Example
+Example:
 ```pascal
 var P: TPoint;
 
@@ -989,7 +989,7 @@ procedure TMouse.Scroll(Box: TBox; Amount: Int32; Down: Boolean);
 
 Moves the mouse to a random point in the box then scrolls X amount of times.
 
-### Example
+Example:
 ```pascal
 var B: TBox;
 

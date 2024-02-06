@@ -19,7 +19,6 @@ type
 ```pascal
 procedure TRSXPBar.Setup(); override;
 ```
-
 Initializes **XPBar** variables.
 
 ```{note}
@@ -68,7 +67,7 @@ function TRSXPBar.IsEnabled(): Boolean;
 
 Checks if the XPBar circle is enabled.
 
-### Example
+Example:
 ```pascal
 WriteLn XPBar.IsEnabled();
 ```
@@ -89,7 +88,7 @@ function TRSXPBar.Enable(): Boolean;
 
 Enables the XPBar by clicking the XPBar circle.
 
-### Example
+Example:
 ```pascal
 if not XPBar.IsEnabled() then
   WriteLn XPBar.Enable();
@@ -160,7 +159,7 @@ function TRSXPBar.Read(): Int32;
 
 Reads the XP in the XPBar.
 
-### Example
+Example:
 ```pascal
 WriteLn XPBar.Read();
 ```
@@ -186,7 +185,7 @@ function TRSXPBar.IsOpen(): Boolean;
 Checks if the XPBar is open.
 Keep in mind interfaces and things that cover the xp bar, might make this return false.
 
-### Example
+Example:
 ```pascal
 WriteLn XPBar.IsOpen();
 ```
@@ -204,7 +203,7 @@ function TRSXPBar.Open(): Boolean;
 
 Attempts to open the XPBar if it's not open.
 
-### Example
+Example:
 ```pascal
 if not XPBar.IsOpen() then
   WriteLn XPBar.Open();

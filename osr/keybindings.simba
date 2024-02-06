@@ -49,7 +49,7 @@ procedure TRSKeyTabPair.Setup(Gametab: ERSGameTab);
 
 Sets up a single FKey/Gametab pair.
 
-### Example
+Example:
 ```pascal
 var
   KeyTabPair: TRSKeyTabPair;
@@ -77,7 +77,7 @@ By default it's called with **SRL.Setup** but can be called again with a TIntege
 
 Note: This array of ints should be the **VK_** constants built into Simba that represent FKeys.
 
-### Example
+Example:
 ```pascal
 Keybindings.Setup([
   VK_F1, VK_ESCAPE, VK_F2, VK_F10, VK_F4, VK_F9, VK_F6,
@@ -175,7 +175,7 @@ When called the following happens:
 {$DEFINE SRL_KEYBINDINGS_DEBUG} can be used to debug already setup **Keybindings.KeyTabPairs**.
 ```
 
-### Example
+Example:
 ```pascal
 Gametabs.FKeyOpen(ERSGameTab.COMBAT);
 ```
@@ -256,7 +256,7 @@ function TRSGameTabs.Open(Tab: ERSGameTab): Boolean; override;
 
 Override to open gametabs with **GameTabs.FKeyOpen** if **Keybindings.UseKeybinds** is true.
 
-### Example
+Example:
 ```pascal
 Gametabs.Open(ERSGameTab.COMBAT);
 ```

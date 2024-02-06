@@ -28,7 +28,7 @@ Returns the clients bounds.
 By Olly
 ```
 
-### Example
+Example:
 ```pascal
  b := GetClientBounds();
 ```
@@ -53,7 +53,7 @@ Takes a TPoint variable instead of x, y variables.
 By Olly
 ```
 
-### Example
+Example:
 ```pascal
    p := Point(350, 200);
    WriteLn(GetColor(p));
@@ -76,7 +76,7 @@ Takes an extra parameter, clearSame if true will clear the same integers in the 
 By Olly
 ```
 
-### Example
+Example:
 ```pascal
 Colors := GetColors(TPA, True);
 ```
@@ -101,7 +101,7 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 By Coh3n
 ```
 
-### Example
+Example:
 ```pascal
   FindColor(x, y, clRed, Box);
 ```
@@ -123,7 +123,7 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 By Olly
 ```
 
-### Example
+Example:
 ```pascal
   FindColorTolerance(x, y, 255, Box, 10);
 ```
@@ -145,7 +145,7 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 By Coh3n
 ```
 
-### Example
+Example:
 ```pascal
   WriteLn(FindColors(TPA, 255, Box));
 ```
@@ -167,7 +167,7 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 By Zyt3x
 ```
 
-### Example
+Example:
 ```pascal
   WriteLn(FindColorsTolerance(TPA, 255, Box, 10));
 ```
@@ -189,7 +189,7 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 By Coh3n
 ```
 
-### Example
+Example:
 ```pascal
   WriteLn(CountColor(clRed, Box));
 ```
@@ -211,7 +211,7 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 By Coh3n
 ```
 
-### Example
+Example:
 ```pascal
   WriteLn(CountColorTolerance(clRed, 10, Box));
 ```
@@ -233,7 +233,7 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 By Olly
 ```
 
-### Example
+Example:
 ```pascal
   BMP := BitmapFromClient(Box);
 ```
@@ -255,7 +255,7 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 By Olly
 ```
 
-### Example
+Example:
 ```pascal
   Result := FindBitmap(bmp, x, y, Box);
 ```
@@ -277,7 +277,7 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 By Olly
 ```
 
-### Example
+Example:
 ```pascal
   Result := FindBitmapToleranceIn(BMP, x, y, Box, 20);
 ```
@@ -300,7 +300,7 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 By Olly
 ```
 
-### Example
+Example:
 ```pascal
   if (FindDTMRotatedSE(aDTM, x, y, Box, -Pi/4, Pi/4, Pi/60, aFound)) then
     WriteLn('Found the dtm!');
@@ -323,7 +323,7 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 By Olly
 ```
 
-### Example
+Example:
 ```pascal
   if (FindDTMRotatedAlternating(DTM, x, y, Box, -Pi/4, Pi/4, Pi/60, aFound)) then
     WriteLn('Found the dtm!');
@@ -346,7 +346,7 @@ Searches for a rotated DTM, A legacy method commonly used in past SRL versions.
 By Olly
 ```
 
-### Example
+Example:
 ```pascal
   if (FindDTMRotated(DTM, x, y, 100, 100, 400, 400, -Pi/4, Pi/4, Pi/60, aFound)) then
     WriteLn('Found the dtm!');
@@ -369,7 +369,7 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 By Olly
 ```
 
-### Example
+Example:
 ```pascal
   if (FindDTMRotated(aDTM, x, y, Box, -Pi/4, Pi/4, Pi/60, aFound)) then
     WriteLn('found the dtm!');
@@ -392,7 +392,7 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 By Olly
 ```
 
-### Example
+Example:
 ```pascal
   FindDTMs(DTM, TPA, Box);
   WriteLn('Matches' + toString(TPA));
@@ -415,7 +415,7 @@ Takes a TBox variable instead of x1, y1, x2 and y2 variables.
 By Olly
 ```
 
-### Example
+Example:
 ```pascal
   WriteLn(FindDTM(DTM, x, y, Box));
 ```
@@ -437,7 +437,7 @@ Creates a TPA of the text without the need for the W and H params.
 By Olly
 ```
 
-### Example
+Example:
 ```pascal
 TPA := TPAFromText('Hello world', StatChars);
 
@@ -462,7 +462,7 @@ Takes a extended variable instead of an integer variable.
 By Olly
 ```
 
-### Example
+Example:
 ```pascal
   WriteLn(InRange(15.0, 10.0, 20.0));
 ```
@@ -484,7 +484,7 @@ Accepts two TPoints instead of x1, y1, x2 and y2 variables.
 By Olly
 ```
 
-### Example
+Example:
 ```pascal
   WriteLn(Distance(Point(100, 100), Point(200, 200)));
 ```

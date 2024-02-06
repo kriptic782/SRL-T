@@ -113,7 +113,7 @@ function TRSStats.GetSkillBoxes(): TBoxArray;
 
 Internal method used to retrieve the skill boxes.
 
-### Example
+Example:
 ```pascal
 Debug(Stats.GetSkillBoxes());
 ```
@@ -131,7 +131,7 @@ function TRSStats.GetSkillBox(skill: ERSSkill): TBox;
 
 Method used to retrieve a skill box.
 
-### Example
+Example:
 ```pascal
 Debug(Stats.GetSkillBox(ERSSkill.AGILITY));
 ```
@@ -149,7 +149,7 @@ function TRSStats.IsOpen(): Boolean;
 
 Returns true/false if the gametab is open or not.
 
-### Example
+Example:
 ```pascal
 WriteLn Stats.IsOpen();
 ```
@@ -167,7 +167,7 @@ function TRSStats.Open(): Boolean;
 
 Attempts to open the gametab.
 
-### Example
+Example:
 ```pascal
 WriteLn Stats.Open();
 ```
@@ -185,7 +185,7 @@ function TRSStats.MouseOver(skill: ERSSkill): Boolean;
 
 Moves the mouse over to a skill box.
 
-### Example
+Example:
 ```pascal
 WriteLn Stats.MouseOver(ERSSkill.CONSTRUCTION);
 ```
@@ -205,7 +205,7 @@ function TRSStats.GetSkillInfo(skill: ERSSkill; waitTime: Int32 = 1000): TRSSkil
 
 Get the skill information about a skill when you hover it.
 
-### Example
+Example:
 ```pascal
 WriteLn Stats.GetSkillInfo(ERSSkill.CONSTRUCTION);
 ```
@@ -264,7 +264,7 @@ Get the level of the specified **skill**.
 This method is deprecated. Use Stats.GetLevel() instead.
 ```
 
-### Example
+Example:
 ```pascal
 WriteLn Stats.GetCurrentLevel(ERSSkill.HITPOINTS);
 ```
@@ -293,7 +293,7 @@ function TRSStats.GetLevel(skill: ERSSkill; useCache: Boolean = True): Int32;
 Get the level of the specified **skill**. By default uses the levels cached in the Stats.Levels array.
 When using the cached methods, it can be used to retrieve the level of a skill while the gametab is open assuming the level is already cached.
 
-### Example
+Example:
 ```pascal
 WriteLn Stats.GetLevel(ERSSkill.HITPOINTS);
 ```
@@ -347,7 +347,7 @@ procedure TRSStats.IncrementCachedLevel(skill: ERSSkill);
 
 Internal method to update cached levels. This is automatically called by Chat.LeveledUp().
 
-### Example
+Example:
 ```pascal
 WriteLn Stats.GetCurrentLevel(ERSSkill.PRAYER);
 Stats.IncrementLevel(ERSSkill.PRAYER);
@@ -404,7 +404,7 @@ function TRSChat.LeveledUp(): Boolean;
 Returns true if we have the level up message on the chat box and attempts
 to update Stats.Levels
 
-### Example
+Example:
 ```pascal
 if Chat.LeveledUp then
   Chat.ClickContinue(True);

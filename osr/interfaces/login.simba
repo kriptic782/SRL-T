@@ -179,7 +179,7 @@ function TRSLogin.IsReady(): Boolean;
 
 Checks if the login screen is ready to login. In other words, has no dialogs up.
 
-### Example
+Example:
 ```pascal
 WriteLn Login.IsReady();
 ```
@@ -198,7 +198,7 @@ function TRSLogin.UsingLauncher(): Boolean;
 
 Checks if the client was launched by a launcher (Steam/Jagex Launcher) or was manually ran by the user.
 
-### Example
+Example:
 ```pascal
 WriteLn Login.UsingLauncher();
 ```
@@ -265,7 +265,7 @@ function TRSLogin.IsOpen(): Boolean;
 
 TRSLogin method used to check if we are on the login screen.
 
-### Example
+Example:
 ```pascal
 WriteLn Login.IsOpen();
 ```
@@ -283,7 +283,7 @@ function TRSLogin.IsWorldSwitcherOpen(): Boolean;
 
 TRSLogin method used to check if the login world switcher is open.
 
-### Example
+Example:
 ```pascal
 WriteLn Login.IsWorldSwitcherOpen();
 ```
@@ -301,7 +301,7 @@ function TRSLogin.OpenWorldSwitcher(): Boolean;
 
 TRSLogin method used to open the login screen world switcher.
 
-### Example
+Example:
 ```pascal
 if not Login.IsWorldSwitcherOpen() then
   WriteLn Login.OpenWorldSwitcher();
@@ -320,7 +320,7 @@ function TRSLogin.CloseWorldSwitcher(): Boolean;
 
 TRSLogin method used to close the login screen world switcher.
 
-### Example
+Example:
 ```pascal
 if Login.IsWorldSwitcherOpen() then
   WriteLn Login.CloseWorldSwitcher();
@@ -339,7 +339,7 @@ function TRSLogin.GetCurrentWorld(): Int32;
 
 Returns the currently selected world.
 
-### Example
+Example:
 ```pascal
 WriteLn Login.GetCurrentWorld();
 ```
@@ -364,7 +364,7 @@ function TRSLogin.SwitchToWorld(World: Int32): Boolean;
 
 Attempts to switch the current world to the **World** specified.
 
-### Example
+Example:
 ```pascal
 WriteLn Login.SwitchToWorld(303);
 ```
@@ -431,7 +431,7 @@ function TRSLogin.EnterField(Field, Details: String): Boolean;
 Used to enter player details in the login screen.
 This is not an internal method but you probably will never need to call this directly.
 
-### Example
+Example:
 ```pascal
 WriteLn Login.EnterField('Login:', 'my user name') and
         Login.EnterField('Password:', 'my password');
@@ -478,7 +478,7 @@ function TRSLogin.GetLoginMessage(): String;
 Returns the login message that matches any of the messages stored in the constant **LOGIN_MESSAGES**.
 This is not an internal method but you probably will never need to call this directly.
 
-### Example
+Example:
 ```pascal
 WriteLn Login.GetLoginMessage();
 ```
@@ -507,7 +507,7 @@ function TRSLogin.HandleMessage(Message: String): Boolean;
 Attempts to handle the currently displayed login message.
 This is not an internal method but you probably will never need to call this directly.
 
-### Example
+Example:
 ```pascal
 WriteLn Login.HandleMessage(Login.GetLoginMessage());
 ```
@@ -561,7 +561,7 @@ Attempts to login into the game.
 This is not an internal method but you probably will never need to call this directly.
 This assumes that the player username and password are already filled in.
 
-### Example
+Example:
 ```pascal
 if Login.EnterField('Login:', 'my user name') and
    Login.EnterField('Password:', 'my password') then
@@ -602,7 +602,7 @@ Returns the currently selected TRSLoginPlayer.
 The currently selected TRSLoginPlayer is decided by TRSLogin.PlayerIndex which
 is an index of the TRSLogin.Players array.
 
-### Example
+Example:
 ```pascal
   WriteLn Login.GetPlayer().Username;
 ```
@@ -702,7 +702,7 @@ Attempts to login the current selected player into the game.
 The currently selected player is decided by TRSLogin.PlayerIndex which is an
 index of the TRSLogin.Players array.
 
-### Example
+Example:
 ```pascal
 WriteLn Login.LoginPlayer();
 ```
@@ -773,7 +773,7 @@ procedure TRSLogin.AddPlayer(user, pass: String; pin: String = ''; worlds: TInte
 
 Adds a TRSLoginPlayer to the TRSLogin.Players array.
 
-### Example
+Example:
 ```pascal
 Login.AddPlayer('my username', 'my password', '0000'); //Adds a player to TRSLogin.Players
 Login.PlayerIndex := High(Login.Players);              //Our added TRSLoginPlayer will be the last in the array.
@@ -794,7 +794,7 @@ procedure TRSLogin.NextPlayer(DisableCurrentPlayer: Boolean);
 This basically increments TRSLogin.PlayerIndex to the next TRSLoginPlayer that has the **Active** variable set to true.
 If TRSLogin.PlayerIndex is already set to our last TRSLoginPlayer, then it's reset to 0 and set to the first **Active** player.
 
-### Example
+Example:
 ```pascal
 WriteLn Login.PlayerIndex;
 Login.NextPlayer(True);        //Make sure you have a couple of players to run this example properly.
@@ -834,7 +834,7 @@ function TRSLogin.GetPlayerPin(): String;
 
 Get the current player bank pin.
 
-### Example
+Example:
 ```pascal
 if BankPin.IsOpen() then
   BankPin.Enter(Login.GetPlayerPin());
@@ -855,7 +855,7 @@ function TRSLogin.GetPlayerBioHash(): Double;
 
 Get the current player BioHash.
 
-### Example
+Example:
 ```pascal
 WriteLn Login.GetPlayerBioHash();
 ```
@@ -894,7 +894,7 @@ Internal TRSLogin method used for debugging.
 You probably will never need to call this directly but can be useful for debugging.
 This is automatically called with **SRL.Debug()**.
 
-### Example
+Example:
 ```pascal
 SRL.Debug();
 ```

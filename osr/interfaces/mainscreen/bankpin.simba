@@ -56,7 +56,7 @@ function TRSBankPin.IsOpen(waitTime: Int32; interval: Int32 = -1): Boolean; over
 
 Returns true if the bank pin is open.
 
-### Example
+Example:
 ```pascal
 WriteLn BankPin.IsOpen();
 ```
@@ -124,7 +124,7 @@ function TRSBankPin.Enter(pin: String): Boolean;
 
 Handles entering the bank pin. Will do 4 attempts before terminating with a fatal error.
 
-### Example
+Example:
 ```pascal
 BankPin.Enter('0000');
 ```

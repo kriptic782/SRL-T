@@ -122,7 +122,7 @@ function TRSCombat.IsOpen: Boolean;
 
 Returns true if the combat tab is open.
 
-### Example
+Example:
 ```pascal
 WriteLn Combat.IsOpen;
 ```
@@ -140,7 +140,7 @@ function TRSCombat.Open: Boolean;
 
 Attempts to open the combat tab.
 
-### Example
+Example:
 ```pascal
 Combat.Open;
 ```
@@ -171,7 +171,7 @@ function TRSCombat.GetCombatStyle: String;
 
 Get the current attack style.
 
-### Example
+Example:
 ```pascal
 WriteLn('The current combat style is: ', Combat.GetCombatStyle);
 
@@ -206,7 +206,7 @@ function TRSCombat.SetCombatStyle(Style: String): Boolean;
 
 Set the attack style to the **Style** specified.
 
-### Example
+Example:
 ```pascal
 Combat.SetCombatStyle(COMBAT_STYLE_SLASH);
 
@@ -234,7 +234,7 @@ function TRSCombat.GetAutoRetaliate(): Boolean;
 
 Get the current state of auto retaliate.
 
-### Example
+Example:
 ```pascal
 WriteLn Combat.GetAutoRetaliate;
 
@@ -260,7 +260,7 @@ function TRSCombat.SetAutoRetaliate(value: Boolean): Boolean;
 
 Set the state of auto retaliate on or off.
 
-### Example
+Example:
 ```pascal
 Combat.SetAutoRetaliate(True);
 
@@ -286,7 +286,7 @@ function TRSCombat.GetWeapon: String;
 
 Get the name of the current worn weapon.
 
-### Example
+Example:
 ```pascal
 WriteLn('The current weapon is: ', Combat.GetWeapon);
 
@@ -313,7 +313,7 @@ function TRSCombat.GetCombatLevel: Int32;
 
 Get the current combat level.
 
-### Example
+Example:
 ```pascal
 WriteLn('Current combat level is: ', Combat.GetCombatLevel);
 
