@@ -28,7 +28,7 @@ type
     LUMBRIDGE:      TBox;
     ISLE_OF_SOULS:  TBox;
   end;
-
+```
 Collection of pre-made boxes that can be used in TRSWalker.Setup();
 *)
   TRSWalkerRegions = record

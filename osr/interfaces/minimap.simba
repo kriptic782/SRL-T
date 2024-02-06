@@ -16,7 +16,6 @@ type
   );
   ERSMinimapDots = set of ERSMinimapDot;
 
-type
 (*
 ## type TRSMinimap
 ```pascal
@@ -30,19 +29,19 @@ type
     PolygonOffset: TPointArray;
     FlagBitmap: Int32;
   end;
-
+```
 TRSMinimap type used to interact with the minimap
 *)
-TRSMinimap = record(TRSInterface)
-  CompassCircleOffset: TPoint;
-  XPCircleOffset: TPoint;
-  HitpointsCircleOffset: TPoint;
-  PrayerCircleOffset: TPoint;
-  RunCircleOffset: TPoint;
-  SpecAttackCircleOffset: TPoint;
-  PolygonOffset: TPointArray;
-  FlagBitmap: Int32;
-end;
+  TRSMinimap = record(TRSInterface)
+    CompassCircleOffset: TPoint;
+    XPCircleOffset: TPoint;
+    HitpointsCircleOffset: TPoint;
+    PrayerCircleOffset: TPoint;
+    RunCircleOffset: TPoint;
+    SpecAttackCircleOffset: TPoint;
+    PolygonOffset: TPointArray;
+    FlagBitmap: Int32;
+  end;
 
 (*
 ## Minimap.GetCompassCircle
