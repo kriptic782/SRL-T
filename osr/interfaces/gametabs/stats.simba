@@ -1,9 +1,19 @@
+(*
+# Stats
+Methods responsible for dealing with the stats tab.
+*)
 {$DEFINE SRL_STATS_INCLUDED}
 {$IFNDEF SRL_OSR}
   {$I SRL-T/osr.simba}
 {$ENDIF}
 
 type
+(*
+## ERSSkill
+```pascal
+ERSSkill = (ATTACK, HITPOINTS, MINING, STRENGTH, AGILITY, SMITHING, DEFENCE, HERBLORE, FISHING, RANGE, THIEVING, COOKING, PRAYER, CRAFTING, FIREMAKING, MAGIC, FLETCHING, WOODCUTTING, RUNECRAFTING, SLAYER, FARMING, CONSTRUCTION, HUNTER, TOTAL);
+```
+*)
   ERSSkill = (
     ATTACK,
     HITPOINTS,
@@ -73,11 +83,10 @@ type
   end;
 
 (*
-## Stats.Setup
+## Stats.Setup()
 ```pascal
 procedure TRSStats.Setup(); override;
 ```
-
 Internal method automatically called by SRL.Setup()
 *)
 procedure TRSStats.Setup(); override;
@@ -88,11 +97,10 @@ begin
 end;
 
 (*
-## Stats.SetupAlignment
+## Stats.SetupAlignment()
 ```pascal
 procedure TRSStats.SetupAlignment(Mode: ERSClientMode); override;
 ```
-
 Internal method automatically called by RSClient.ClientModeChanged()
 *)
 procedure TRSStats.SetupAlignment(Mode: ERSClientMode); override;
@@ -396,17 +404,16 @@ begin
 end;
 
 (*
-## Chat.LeveledUp
+## Chat.LeveledUp() override
 ```pascal
-function TRSChat.LeveledUp(): Boolean;
+function TRSChat.LeveledUp(): Boolean; override;
 ```
-
 Returns true if we have the level up message on the chat box and attempts
 to update Stats.Levels
 
 Example:
 ```pascal
-if Chat.LeveledUp then
+if Chat.LeveledUp() then
   Chat.ClickContinue(True);
 ```
 *)

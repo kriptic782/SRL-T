@@ -1,5 +1,6 @@
 (*
 # Item Finder
+Tool to find item sprites (bitmaps) in boxes.
 *)
 
 {$DEFINE SRL_ITEMFINDER_INCLUDED}
@@ -16,7 +17,6 @@ type
 ```pascal
 function TRSItemArray.Find(const value: TRSItem): Int32; constref;
 ```
-
 Find a TRSItem in a TRSItemArray and return it's index.
 *)
 function TRSItemArray.Find(const value: TRSItem): Int32; constref;

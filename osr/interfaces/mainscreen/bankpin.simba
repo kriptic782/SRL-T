@@ -1,3 +1,8 @@
+(*
+# BankPin
+Methods to interact with the bank pin interface.
+*)
+
 {$DEFINE SRL_BANKPIN_INCLUDED}
 {$IFNDEF SRL_OSR}
   {$I SRL-T/osr.simba}

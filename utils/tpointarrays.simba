@@ -1,12 +1,13 @@
+(*
+# TPointArray
+TPointArray related methods
+*)
+
 {$DEFINE SRL_TPOINTARRAY_INCLUDED}
 {$IFNDEF SRL_UTILS}
   {$I SRL-T/utils.simba}
 {$ENDIF}
 
-(*
-# TPointArray
-TPointArray related methods
-*)
 procedure TPointArray.Append(const Value: TPoint);
 var top:Int32;
 begin
@@ -400,10 +401,9 @@ end;
 (*
 ## TPointArray.Cluster
 ```pascal
-function TPointArray.Cluster(dist:Int32): T2DPointArray; constref;
-function TPointArray.Cluster(distX,distY:Int32): T2DPointArray; constref; overload;
+function TPointArray.Cluster(dist: Int32): T2DPointArray; constref;
+function TPointArray.Cluster(distX,distY: Int32): T2DPointArray; constref; overload;
 ```
-
 Smart wrapper of Simba's `ClusterTPA` and `ClusterTPAEx` (fall backs to `SplitTPA` when it's better suited)
 *)
 function TPointArray.Cluster(dist: Int32): T2DPointArray; constref;
@@ -425,10 +425,9 @@ end;
 (*
 ## TPointArray.Split
 ```pascal
-function TPointArray.Split(dist:Int32): T2DPointArray; constref;
-function TPointArray.Split(distX,distY:Int32): T2DPointArray; constref; overload;
+function TPointArray.Split(dist: Int32): T2DPointArray; constref;
+function TPointArray.Split(distX,distY: Int32): T2DPointArray; constref; overload;
 ```
-
 Wraps Simba's `SplitTPA` and `SplitTPAEx`
 *)
 function TPointArray.Split(dist: Int32): T2DPointArray; constref;
@@ -448,7 +447,6 @@ end;
 function TPointArray.ToATPA(WH:Int32): T2DPointArray; constref;
 function TPointArray.ToATPA(W,H:Int32): T2DPointArray; constref; overload;
 ```
-
 Wraps Simba's `TPAToATPA` and `TPAToATPAEx`
 *)
 function TPointArray.ToATPA(WH:Int32): T2DPointArray; constref;
@@ -464,12 +462,13 @@ end;
 (*
 ## TPointArray.Offset
 ```pascal
-function TPointArray.Offset(off: TPoint): TPointArray;
+function TPointArray.Offset(X, Y: Int32): TPointArray; constref;
+function TPointArray.Offset(off: TPoint): TPointArray; constref; overload;
 ```
 
 Wraps Simba's `OffsetTPA`
 *)
-function TPointArray.Offset(X, Y: Int32): TPointArray; constref; overload;
+function TPointArray.Offset(X, Y: Int32): TPointArray; constref;
 begin
   Result := Copy(Self);
 
@@ -502,7 +501,6 @@ end;
 ```pascal
 function TPointArray.FilterBox(Box: TBox): TPointArray; constref;
 ```
-
 Returns a filtered version of the TPA.
 Same as Simba's `FilterPointsBox`
 *)
@@ -513,11 +511,10 @@ begin
 end;
 
 (*
-## TPointArray.FilterBox
+## TPointArray.FilterDist
 ```pascal
 function TPointArray.FilterDist(MinDist,MaxDist: Double; Mx,My: Int32): TPointArray; constref;
 ```
-
 Returns a filtered version of the TPA.
 Same as Simba's `FilterPointsDist`
 *)
@@ -1044,24 +1041,16 @@ end;
 ## TPointArray.PointsInRangeOf
 ```pascal
 function TPointArray.PointsInRangeOf(constref Other: TPointArray; MinDist, MaxDist: Double): TPointArray; constref;
+function TPointArray.PointsInRangeOf(constref Other: TPointArray; MinDistX, MinDistY, MaxDistX, MaxDistY: Double): TPointArray; constref; overload;
 ```
-
 Returns all the points from `self` that are within range of any point in `other`.
 The parameters `mindist` and `maxdist` determine what "within range" means.
 *)
-function TPointArray.PointsInRangeOf(constref Other: TPointArray; MinDist, MaxDist: Double): TPointArray; constref; overload;
+function TPointArray.PointsInRangeOf(constref Other: TPointArray; MinDist, MaxDist: Double): TPointArray; constref;
 begin
   Result := System.PointsInRangeOf(Self, Other, MinDist, MinDist, MaxDist, MaxDist);
 end;
 
-(*
-## TPointArray.PointsInRangeOf
-```pascal
-function TPointArray.PointsInRangeOf(constref Other: TPointArray; MinDistX, MinDistY, MaxDistX, MaxDistY: Double): TPointArray; constref; overload;
-```
-
-Same as the above but lets you specify X- and Y-wise min & max distance separately.
-*)
 function TPointArray.PointsInRangeOf(constref Other: TPointArray; MinDistX, MinDistY, MaxDistX, MaxDistY: Double): TPointArray; constref; overload;
 begin
   Result := System.PointsInRangeOf(Self, Other, MinDistX, MinDistY, MaxDistX, MaxDistY);

@@ -1,12 +1,12 @@
-{$DEFINE SRL_TPOINT_INCLUDED}
-{$IFNDEF SRL_UTILS}
-  {$I SRL-T/utils.simba}
-{$ENDIF}
-
 (*
 # TPoint
 TPoint related methods
 *)
+
+{$DEFINE SRL_TPOINT_INCLUDED}
+{$IFNDEF SRL_UTILS}
+  {$I SRL-T/utils.simba}
+{$ENDIF}
 
 function TPoint.InRect(Rect: TRectangle): Boolean; constref;
 begin

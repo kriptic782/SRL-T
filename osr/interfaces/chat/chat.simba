@@ -535,7 +535,6 @@ end;
 ```pascal
 function TRSChat.LeveledUp(): Boolean;
 ```
-
 Returns true if we have the level up message on the chat box.
 Declared here and overriden in stats.simba
 

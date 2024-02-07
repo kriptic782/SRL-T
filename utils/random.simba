@@ -10,11 +10,16 @@ Random related methods.
 
 type
   EWaitDir = (wdLeft,wdMean,wdRight);
-
 var
   SRL_GAUSS_CUTOFF: Double = 4.0;
 
-//none-zero random
+(*
+## nzRandom()
+```pascal
+function nzRandom(): Double;
+```
+Generates a random number that is never 0.
+*)
 function nzRandom(): Double;
 begin
   if SizeOf(Extended) = 10 then
@@ -28,7 +33,6 @@ end;
 ```pascal
 function TSRL.GaussRand(Mean, Dev: Double): Double;
 ```
-
 Generates a random gaussian/normal number.
 *)
 function TSRL.GaussRand(Mean, Dev: Double): Double; static;
@@ -42,13 +46,13 @@ end;
 (*
 ## SRL.TruncatedGauss
 ```pascal
-function TSRL.TruncatedGauss(Left:Double=0; Right:Double=1): Double;
+function TSRL.TruncatedGauss(Left:Double=0; Right:Double=1; CUTOFF:Single=0): Double; static;
+function TSRL.TruncatedGauss(Left:Int64=0; Right:Int64=1; CUTOFF:Single=0): Int64; static; overload;
 ```
-
 Generates a random gaussian/normal number which is truncated and mapped within then 
 given range ``[left..right]`` weighted towards ``left``
 *)
-function TSRL.TruncatedGauss(Left:Double=0; Right:Double=1; CUTOFF:Single=0): Double; static; overload;
+function TSRL.TruncatedGauss(Left:Double=0; Right:Double=1; CUTOFF:Single=0): Double; static;
 begin
   if CUTOFF <= 0 then CUTOFF := SRL_GAUSS_CUTOFF;
 
@@ -58,13 +62,6 @@ begin
   Result := Result / CUTOFF * (Right-Left) + Left;
 end;
 
-(*
-## SRL.TruncatedGauss
-.. pascal function TSRL.TruncatedGauss(Left:Int64=0; Right:Int64=1; CUTOFF:Single=0): Int64;
-
-Generates a random gaussian/normal number which is truncated and mapped within then
-given range ``[left..right]`` weighted towards ``left``
-*)
 function TSRL.TruncatedGauss(Left:Int64=0; Right:Int64=1; CUTOFF:Single=0): Int64; static; overload;
 begin
   Result := Round(SRL.TruncatedGauss(Left * 1.00, Right * 1.00, CUTOFF));
@@ -73,7 +70,8 @@ end;
 (*
 ## SRL.SkewedRand
 ```pascal
-function TSRL.SkewedRand(Mode, Lo, Hi: Double): Double; static;
+function TSRL.SkewedRand(Mode, Lo, Hi: Double; CUTOFF:Single=0): Double; static;
+function TSRL.SkewedRand(Mode, Lo, Hi: Int64; CUTOFF:Single=0): Int64; static; overload;
 ```
 
 Random skewed distribution generation. `Mode` is a number between `Lo` and `Hi` which is 
@@ -92,14 +90,6 @@ begin
   Result := Result / CUTOFF * (top-Mode) + Mode;
 end;
 
-(*
-## SRL.SkewedRand
-```pascal
-function TSRL.SkewedRand(Mode, Lo, Hi: Double): Double; static;
-```
-
-Integer overload.
-*)
 function TSRL.SkewedRand(Mode, Lo, Hi: Int64; CUTOFF:Single=0): Int64; static; overload;
 begin
   Result := Round(SRL.SkewedRand(Mode * 1.00, Lo * 1.00, Hi * 1.00, CUTOFF));
@@ -108,12 +98,12 @@ end;
 (*
 ## SRL.NormalRange
 ```pascal
-function TSRL.NormalRange(Min, Max: Double): Double;
+function TSRL.NormalRange(Min, Max: Double; CUTOFF:Single=0): Double; constref;
+function TSRL.NormalRange(Min, Max: Int64; CUTOFF:Single=0): Int64; constref; overload;
 ```
-
-Generates a random float in the given range, weighted towards the mean.
+Generates a random float or integer in the given range, weighted towards the mean.
 *)
-function TSRL.NormalRange(Min, Max: Double; CUTOFF:Single=0): Double; constref; overload;
+function TSRL.NormalRange(Min, Max: Double; CUTOFF:Single=0): Double; constref;
 begin
   if CUTOFF <= 0 then CUTOFF := SRL_GAUSS_CUTOFF;
   case Random(0,1) of
@@ -122,14 +112,6 @@ begin
   end;
 end;
 
-(*
-## SRL.NormalRange
-```pascal
-function TSRL.NormalRange(min, max: Int64): Int64;
-```
-
-Integer overload.
-*)
 function TSRL.NormalRange(Min, Max: Int64; CUTOFF:Single=0): Int64; constref; overload;
 begin
   if CUTOFF <= 0 then CUTOFF := SRL_GAUSS_CUTOFF;
@@ -143,10 +125,12 @@ end;
 ## SRL.RandomPoint
 ```pascal
 function TSRL.RandomPoint(Mean: TPoint; MaxRad: Int32): TPoint;
+function TSRL.RandomPoint(Bounds: TBox): TPoint; overload;
+function TSRL.RandomPoint(Rect: TRectangle): TPoint; overload;
 ```
-
 Generates a random TPoint which weights around ``Mean``, with a max distance 
 from mean defined by ``MaxRad``.
+If a `TBox` or a `TRectangle` are passed, the mean point of those will be used.
 *)
 function TSRL.RandomPoint(Mean: TPoint; MaxRad: Int32; CUTOFF:Single=0): TPoint; constref;
 begin
@@ -154,30 +138,12 @@ begin
   Result.Y := NormalRange(Mean.y-maxRad, Mean.y+MaxRad, CUTOFF);
 end;
 
-(*
-## SRL.RandomPoint
-```pascal
-function TSRL.RandomPoint(Bounds: TBox): TPoint; overload;
-```
-
-Generates a random TPoint in the bounds of the given box ``Bounds``, 
-the point weights towards the middle of the box.
-*)
 function TSRL.RandomPoint(Bounds: TBox; CUTOFF:Single=0): TPoint; constref; overload;
 begin
   Result.X := NormalRange(Bounds.x1, Bounds.x2, CUTOFF);
   Result.Y := NormalRange(Bounds.y1, Bounds.y2, CUTOFF);
 end;
 
-(*
-## SRL.RandomPoint
-```pascal
-function TSRL.RandomPoint(Rect: TRectangle): TPoint; overload;
-```
-
-Generates a random TPoint in the given rectangle ``Rect``,
-The point weights towards the middle of the rectangle.
-*)
 function TSRL.RandomPoint(Rect: TRectangle; CUTOFF:Single = 0): TPoint; constref; overload;
 var
   a,x,y,x1,y1,x2,y2: Double;
@@ -315,7 +281,6 @@ end;
 ```pascal
 procedure Wait(Min, Max: Double; Weight: EWaitDir=wdMean); overload;
 ```
-
 Waits ... Weighted towards the mean of `Min` and `Max`
 *)
 procedure Wait(Min, Max:Double; Weight:EWaitDir=wdMean); overload;
@@ -332,7 +297,6 @@ end;
 ```pascal
 procedure WaitEx(Mean, Dev: Double);
 ```
-
 Waits ... Regular gauss random
 *)
 procedure WaitEx(Mean, Dev: Double);

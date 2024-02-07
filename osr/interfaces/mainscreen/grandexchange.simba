@@ -1329,12 +1329,11 @@ var
   GrandExchange: TRSGrandExchange;
 
 (*
-## Bank.Open
+## Bank.Open() override
 ```pascal
 function TRSBank.Open(Location: ERSBankLocation): Boolean; override;
 ```
-
-Overrides **Bank.Open** to support opening the grand exchange.
+Overrides {ref}`Bank.Open()` to support opening the grand exchange.
 *)
 function TRSBank.Open(Location: ERSBankLocation): Boolean; override;
 begin

@@ -233,7 +233,6 @@ end;
 ```pascal
 function TRSInventory.GetSelectedSlot(): Int32;
 ```
-
 Returns the index of the selected slot (white outline).
 **-1** is returned if no slot is selected.
 
@@ -246,7 +245,6 @@ function TRSInventory.GetSelectedSlot(): Int32;
 var
   tpa: TPointArray;
   atpa: T2DPointArray;
-  p: TPoint;
   slot: TBox;
 begin
   if not Self.Open() then
@@ -311,35 +309,6 @@ begin
     Mouse.Click(Self.GetSlotBox(selected), MOUSE_LEFT);
 
   Result := skipConfirmation or WaitUntil(Self.GetSelectedSlot() = slot, 50, SRL.TruncatedGauss(1000, 2000));
-end;
-
-(*
-## Inventory.Use
-```pascal
-function TRSInventory.Use(Slot, OtherSlot: Int32): Boolean;
-```
-
-Selects **Slot** and uses with **OtherSlot**.
-
-Example:
-```pascal
-Inventory.Use(1, 5); // Use item in slot 1 on Item in slot 5
-```
-*)
-function TRSInventory.Use(slot, otherSlot: Int32): Boolean;
-var
-  b: TBox;
-begin
-  b := Self.GetSlotBox(otherSlot);
-  if b = [] then
-    Exit;
-
-  Result := Self.SetSelectedSlot(slot);
-  if Result then
-  begin
-    Wait(0, 500, wdLeft);
-    Mouse.Click(b, MOUSE_LEFT);
-  end;
 end;
 
 (*
@@ -411,85 +380,6 @@ begin
     end;
     Inc(i);
   end;
-end;
-
-(*
-## Inventory.ShiftDrop
-```pascal
-function TRSInventory.ShiftDrop(Slots: TIntegerArray): Boolean;
-```
-
-Shift drops the inventory items in the pattern specified.
-
-Example:
-```pascal
-Inventory.ShiftDrop(DROP_PATTERN_REGULAR);
-```
-*)
-function TRSInventory.ShiftDrop(slots: TIntegerArray): Boolean;
-var
-  boxes: TBoxArray;
-  box: TBox;
-  i, j, attempts: Int32;
-  selected: Int32;
-  circle: TCircle;
-begin
-  if (Length(slots) = 0) then
-    Exit(True);
-
-  IsKeyDown(VK_SHIFT); // Clear cache
-  boxes := Self.GetSlotBoxes();
-
-  try
-    for attempts := 1 to 5 do
-    begin
-      i := 0;
-
-      while (i < Length(slots)) do
-      begin
-        box := boxes[slots[i]];
-        selected := Self.GetSelectedSlot();
-        if (selected > -1) then
-        begin
-          Self.SetSelectedSlot(-1);
-          Break;
-        end;
-
-        if Self.IsSlotUsed(box) then
-        begin
-          if not IsKeyDown(VK_SHIFT) then
-          begin
-            KeyDown(VK_SHIFT);
-            Wait(95,170,wdLeft); //Wait for SHIFT to be registered before the click (important).
-          end; 
-
-          Mouse.Click(box, MOUSE_LEFT);
-
-          // Spam click a little
-          for j := 1 to SRL.TruncatedGauss(0, 3) do
-          begin
-            circle.X := Mouse.Position().X;
-            circle.Y := Mouse.Position().Y;
-            circle.Radius := 5;
-
-            Mouse.Click(circle, MOUSE_LEFT, True);
-          end;
-
-          Wait(0, 250, wdLeft);
-        end;
-
-        Inc(i);
-      end;
-
-      if (i = Length(slots)) then
-        Exit;
-    end;
-  finally
-    if IsKeyDown(VK_SHIFT) then
-      KeyUp(VK_SHIFT);
-  end;
-
-  Result := attempts <= 5;
 end;
 
 
@@ -802,18 +692,34 @@ begin
 end;
 
 (*
-## Inventory.Use
+## Inventory.Use()
 ```pascal
+function TRSInventory.Use(slot, otherSlot: Int32): Boolean;
 function TRSInventory.Use(Item, OtherItem: TRSItem): Boolean; overload;
 ```
-
-Use one item on another
+Use 2 slots or items on one another.
 
 Example:
 ```pascal
 WriteLn Inventory.Use('Knife', 'Oak logs');
 ```
 *)
+function TRSInventory.Use(slot, otherSlot: Int32): Boolean;
+var
+  b: TBox;
+begin
+  b := Self.GetSlotBox(otherSlot);
+  if b = [] then
+    Exit;
+
+  Result := Self.SetSelectedSlot(slot);
+  if Result then
+  begin
+    Wait(0, 500, wdLeft);
+    Mouse.Click(b, MOUSE_LEFT);
+  end;
+end;
+
 function TRSInventory.Use(item, otherItem: TRSItem): Boolean; overload;
 var
   slots, otherSlots: TIntegerArray;
@@ -832,12 +738,13 @@ begin
 end;
 
 (*
-## Inventory.ShiftDrop
+## Inventory.ShiftDrop()
 ```pascal
-function TRSInventory.ShiftDrop(Items: TStringArray; Pattern: TIntegerArray): Boolean;
+function TRSInventory.ShiftDrop(slots: TIntegerArray): Boolean;
+function TRSInventory.ShiftDrop(items: TRSItemArray; pattern: TIntegerArray): Boolean; overload;
 ```
-
-Shift drops items following the desired pattern.
+Shift drops `slots` or `items` specified.
+If `items` are passed in, you also have to specify a `pattern` to use.
 
 Example:
 ```pascal
@@ -845,6 +752,72 @@ Example:
 Inventory.ShiftDrop(['Maple logs', 'Willow logs'], DROP_PATTERN_SNAKE);
 ```
 *)
+function TRSInventory.ShiftDrop(slots: TIntegerArray): Boolean;
+var
+  boxes: TBoxArray;
+  box: TBox;
+  i, j, attempts: Int32;
+  selected: Int32;
+  circle: TCircle;
+begin
+  if (Length(slots) = 0) then
+    Exit(True);
+
+  IsKeyDown(VK_SHIFT); // Clear cache
+  boxes := Self.GetSlotBoxes();
+
+  try
+    for attempts := 1 to 5 do
+    begin
+      i := 0;
+
+      while (i < Length(slots)) do
+      begin
+        box := boxes[slots[i]];
+        selected := Self.GetSelectedSlot();
+        if (selected > -1) then
+        begin
+          Self.SetSelectedSlot(-1);
+          Break;
+        end;
+
+        if Self.IsSlotUsed(box) then
+        begin
+          if not IsKeyDown(VK_SHIFT) then
+          begin
+            KeyDown(VK_SHIFT);
+            Wait(95,170,wdLeft); //Wait for SHIFT to be registered before the click (important).
+          end;
+
+          Mouse.Click(box, MOUSE_LEFT);
+
+          // Spam click a little
+          for j := 1 to SRL.TruncatedGauss(0, 3) do
+          begin
+            circle.X := Mouse.Position().X;
+            circle.Y := Mouse.Position().Y;
+            circle.Radius := 5;
+
+            Mouse.Click(circle, MOUSE_LEFT, True);
+          end;
+
+          Wait(0, 250, wdLeft);
+        end;
+
+        Inc(i);
+      end;
+
+      if (i = Length(slots)) then
+        Exit;
+    end;
+  finally
+    if IsKeyDown(VK_SHIFT) then
+      KeyUp(VK_SHIFT);
+  end;
+
+  Result := attempts <= 5;
+end;
+
 function TRSInventory.ShiftDrop(items: TRSItemArray; pattern: TIntegerArray): Boolean; overload;
 var
   slots, order: TIntegerArray;

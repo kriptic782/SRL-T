@@ -277,15 +277,6 @@ begin
   Result := not Self.InfoIsOpen();
 end;
 
-
-(*
-## Magic.GetSpellBoxes
-```pascal
-function TRSMagic.GetSpellBoxes(out book: ERSSpellBook): TBoxArray;
-```
-
-Internal function to get the bounds of the spells of the current spell book.
-*)
 function TRSMagic.GetSpellBoxes(out book: ERSSpellBook): TBoxArray; deprecated 'Use Magic.FindSpell() instead!';
 begin
   book := Self.GetSpellBook();
@@ -401,7 +392,6 @@ end;
 ```pascal
 function TRSMagic.MouseSpell(spell: ERSSpell): Boolean;
 ```
-
 Used to move the mouse to the specified spell.
 
 Example:
@@ -436,6 +426,20 @@ begin
   end;
 end;
 
+function TRSMagic.MouseSpell(spell: ERSSpell; button: Int32): Boolean; overload; deprecated 'Use Magic.MouseSpell() and Magic.ClickSpell() instead!';
+var
+  box: TBox;
+begin
+  Result := Self.Open() and {$H-}Self.GetSpellBox(spell, box){$H+};
+
+  if Result then
+  begin
+    Mouse.Move(box);
+    if (button <> MOUSE_MOVE) then
+      Mouse.Click(button);
+  end;
+end;
+
 (*
 ## Magic.ClickSpell
 ```pascal
@@ -461,33 +465,6 @@ begin
   end;
 
   Result := ChooseOption.Select(option);
-end;
-
-(*
-## Magic.MouseSpell
-```pascal
-function TRSMagic.MouseSpell(spell: ERSSpell; button: Int32 = MOUSE_MOVE): Boolean;
-```
-
-Used to interact with the specified spell.
-
-Example:
-```pascal
-Magic.MouseSpell(ERSSpell.HIGH_LEVEL_ALCHEMY, MOUSE_LEFT);
-```
-*)
-function TRSMagic.MouseSpell(spell: ERSSpell; button: Int32): Boolean; overload; deprecated 'Use Magic.MouseSpell() and Magic.ClickSpell() instead!';
-var
-  box: TBox;
-begin
-  Result := Self.Open() and {$H-}Self.GetSpellBox(spell, box){$H+};
-
-  if Result then
-  begin
-    Mouse.Move(box);
-    if (button <> MOUSE_MOVE) then
-      Mouse.Click(button);
-  end;
 end;
 
 
@@ -564,19 +541,6 @@ begin
   Result := False;
 end;
 
-(*
-## Magic.GetSelectedSpell
-```pascal
-function TRSMagic.GetSelectedspell: ERSSpell;
-```
-
-Returns the currently selected spell.
-
-Example:
-```pascal
-WriteLn Magic.GetSelectedSpell;
-```
-*)
 function TRSMagic.GetSelectedSpell(): ERSSpell; deprecated 'Use Magic.FindSelected() or Magic.ContainsSelected() instead!';
 var
   i: Int32;
@@ -605,12 +569,11 @@ end;
 function TRSMagic.IsSelected(spell: ERSSpell): Boolean;
 function TRSMagic.IsSelected(spell: ERSSpell; selected: TPointArray): Boolean; overload;
 ```
-
 Returns true if the specified spell is currently active (with white outline).
 
 Example:
 ```pascal
-Magic.IsSpellSelected(ERSSpell.ICE_BARRAGE);
+WriteLn Magic.IsSpellSelected(ERSSpell.ICE_BARRAGE);
 ```
 *)
 function TRSMagic.IsSelected(spell: ERSSpell): Boolean;

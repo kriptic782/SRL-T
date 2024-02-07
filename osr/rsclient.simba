@@ -20,14 +20,16 @@ if `SRL_USE_REMOTEINPUT_DEBUG` is defined. Debug() calls will drawn on the RS cl
 {$ENDIF}
 
 (*
-## type ERSClientMode
-The modes of the client.
-
+## ERSClientMode
 ```pascal
-ERSClientMode.UNKNOWN            // Unable to detect mode (likely not logged in yet)
-ERSClientMode.FIXED              // Fixed mode
-ERSClientMode.RESIZABLE_CLASSIC  // Resizable with "classic" gametabs or "fixed mode gametabs"
-ERSClientMode.RESIZABLE_MODERN   // Resizable with gametabs being grouped together at the bottom
+ERSClientMode = (
+    UNKNOWN,            // Unable to detect mode (likely not logged in yet)
+    FIXED,              // Fixed mode
+    RESIZABLE_CLASSIC,  // Resizable with "classic" gametabs or "fixed mode gametabs"
+    RESIZABLE_MODERN    // Resizable with gametabs being grouped together at the bottom
+  );
+```
+The modes of the client.
 *)
 type
   ERSClientMode = (
@@ -56,11 +58,10 @@ begin
 end;
 
 (*
-## RSClient.DetectClientMode
+## RSClient.DetectClientMode()
 ```pascal
 function TRSClient.DetectClientMode(Update: Boolean): ERSClientMode;
 ```
-
 Detects the client mode. If **Update** is True ClientModeChanged will be called.
 Uses the music tab so will return RS_CLIENT_UNKNOWN when not logged in.
 Are there any other cases where music tab won't be visible?
@@ -91,11 +92,10 @@ begin
 end;
 
 (*
-## RSClient.ClientModeChanged
+## RSClient.ClientModeChanged()
 ```pascal
-procedure TRSClient.ClientModeChanged;
+procedure TRSClient.ClientModeChanged();
 ```
-
 Anything that needs an alert when the client mode changes should override this.
 *)
 procedure TRSClient.ClientModeChanged();
@@ -103,6 +103,19 @@ begin
   Self.DebugLn('Client mode changed: ' + ToString(Self.Mode));
 end;
 
+(*
+## RSClient.IsLoggedIn()
+```pascal
+function TRSClient.IsLoggedIn(): Boolean;
+function TRSClient.IsLoggedIn(waitTime: Int32; interval: Int32 = -1): Boolean; overload;
+```
+Returns true/false whether there's a player logged in or not.
+
+Example:
+```pascal
+WriteLn RSClient.IsLoggedIn();
+```
+*)
 function TRSClient.IsLoggedIn(): Boolean;
 var
   ClientMode: ERSClientMode := Self.DetectClientMode();
@@ -116,23 +129,24 @@ begin
   Result := ClientMode <> ERSClientMode.UNKNOWN;
 end;
 
-function TRSClient.IsLoggedIn(WaitTime: Int32; Interval: Int32 = -1): Boolean; overload;
+function TRSClient.IsLoggedIn(waitTime: Int32; interval: Int32 = -1): Boolean; overload;
 begin
-  if Interval = -1 then
-    Interval := SRL.TruncatedGauss(50, 1500);
+  if interval = -1 then
+    interval := SRL.TruncatedGauss(50, 1500);
 
-  Result := WaitUntil(Self.IsLoggedIn(), Interval, WaitTime);
+  Result := WaitUntil(Self.IsLoggedIn(), interval, waitTime);
 end;
 
 (*
-## RSClient.LoseFocus
+## RSClient.LoseFocus()
 ```pascal
-procedure TRSClient.LoseFocus;
+procedure TRSClient.LoseFocus();
+procedure TRSClient.LoseFocus(delay: Int32);
 ```
-
 Loses focus if available. Maybe useful for antiban.
+You can optionally delay losing focus by passing in a `delay`.
 *)
-procedure TRSClient.LoseFocus; overload;
+procedure TRSClient.LoseFocus();
 begin
   {$IFNDEF SRL_DISABLE_REMOTEINPUT}
   if RemoteInput.IsSetup() then
@@ -146,34 +160,24 @@ begin
   Self.DebugLn('Lose focus not yet implemented for this target!');
 end;
 
-(*
-## RSClient.LoseFocus
-```pascal
-procedure TRSClient.LoseFocus(Delay: Int32);
-```
-
-Waits `Delay` before losing focus.
-*)
-procedure TRSClient.LoseFocus(Delay: Int32); overload;
+procedure TRSClient.LoseFocus(delay: Int32); overload;
 begin
-  Wait(Delay);
-
+  Wait(delay);
   Self.LoseFocus();
 end;
 
 (*
-## RSClient.Setup
+## RSClient.Setup()
 ```pascal
-procedure TRSClient.Setup;
+procedure TRSClient.Setup();
 ```
-
-Setup method.
+RSClient setup method.
 
 ```{note}
 This is automatically called on the **RSClient** variable.
 ```
 *)
-procedure TRSClient.Setup;
+procedure TRSClient.Setup();
 begin
   Self.Name := 'RSClient';
 

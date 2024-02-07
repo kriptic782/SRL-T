@@ -21,7 +21,6 @@ type
     ZoomLevel: Int32;
   end;
 ```
-
 The comments explains it. This is the datastructure MM2MS uses.
 *)
 type
@@ -131,7 +130,7 @@ begin
 end;
 
 (*
-### Minimap
+# Minimap Extensions
 Extend the minimap-functionality with MM2MS functions
 *)
 function TRSMinimap.ArrToMs(Arr: Vector3Array; Roll:Single=$FFFF): TPointArray; overload;
@@ -197,7 +196,6 @@ begin
 
   Result := MM2MS.Run([Vec3(PT.x, PT.y)], Roll)[0];
 end;
-
 
 (*
 ## Minimap.VecToMsRect
@@ -383,8 +381,25 @@ end;
 
 
 (*
-### Mainscreen
+# Mainscreen Extensions
 Extend the mainscreen-functionality with MS2MM function
+*)
+
+(*
+## MainScreen.PointToMM() override
+```pascal
+function TRSMainScreen.PointToMM(MS: TPoint; Height: Int32=0; Accuracy:Double=0.2): Vector3; override;
+```
+Takes a mainscreen point and converts it to a point on the minimap.
+
+Returns a Vector3 which includes input height. Conversion to a TPoint if that's what you need is simply
+done by calling `.ToPoint` on the result.
+
+Example:
+```pascal
+WriteLn Mainscreen.PointToMM(Point(250,140), 2);           // as a vector (more accurate)
+WriteLn Mainscreen.PointToMM(Point(250,140), 2).ToPoint(); // as a TPoint (lost accuracy)
+```
 *)
 function TRSMainScreen.PointToMM(MS: TPoint; Height: Int32=0; Accuracy:Double=0.2): Vector3; override;
 var
@@ -438,11 +453,10 @@ begin
 end;
 
 (*
-## MainScreen.NormalizeDistance
+## MainScreen.NormalizeDistance() override
 ```pascal
-function TRSMainScreen.NormalizeDistance(Dist: Int32; Accuracy: Single = 1.05): Int32;
+function TRSMainScreen.NormalizeDistance(Dist: Int32; Accuracy: Single = 1.05): Int32; override;
 ```
-
 Converts a distance acquired from the **fixed client* and **default zoom** to the
 current mainscreen.
 
@@ -510,7 +524,7 @@ begin
 end;
 
 (*
-## MainScreen.GetPlayerBox
+## MainScreen.GetPlayerBox() override
 function TRSMainScreen.GetPlayerBox: TBox;
 
 Returns a box surrounding our player. Works at any zoom level.
@@ -528,7 +542,7 @@ begin
 end;
 
 (*
-## MainScreen.FacePoint
+## MainScreen.FacePoint() override
 function TRSMainScreen.FacePoint(P: TPoint; Randomness: Int32 = 0): Boolean;
 
 Rotates the camera to face point `P`.

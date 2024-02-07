@@ -1,20 +1,12 @@
+(*
+# Matrix
+Methods to interact with matrices.
+*)
 {$DEFINE SRL_MATRIX_INCLUDED}
 {$IFNDEF SRL_UTILS}
   {$I SRL-T/utils.simba}
 {$ENDIF}
 
-(*
-## Mouse.Setup
-```pascal
-procedure TSingleMatrix.Smoothen;
-```
-
-Smoothens the matrix
-
-```{note}
-By slacky
-```
-*)
 procedure TSingleMatrix.Smoothen(block: Int32);
 var
   wid,hei,x,y,mid,fx,fy,area: Int32;

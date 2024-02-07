@@ -47,13 +47,13 @@ var
 
 type
 (*
-## type PRSWalker
+## PRSWalker
 TRSWalker pointer.
 *)
   PRSWalker = ^TRSWalker;
 
 (*
-## type TRSWalker_OnWalkEvent
+## TRSWalker_OnWalkEvent
 Callback method to use while walking. This can be used to perform custom tasks while walking.
 
 Example:
@@ -74,7 +74,7 @@ end;
 *)
   TRSWalker_OnWalkEvent = procedure(Walker: PRSWalker; Position: TPoint; Destination: TPoint);
 (*
-## type TRSWalker_OnWalkEventEx
+## TRSWalker_OnWalkEventEx
 Callback object method to use while walking. This can be used to perform custom tasks while walking.
 
 Example:
@@ -96,7 +96,7 @@ end;
   TRSWalker_OnWalkEventEx = procedure(Walker: PRSWalker; Position: TPoint; Destination: TPoint) of object;
 
 (*
-## type TRSWalker
+## TRSWalker
 TRSWalker is the record responsbile for walking and position.
 *)
   TRSWalker = record(TSRLBaseRecord)
@@ -1067,17 +1067,13 @@ end;
 ```pascal
 function TRSWalker.WalkPath(Path: TPointArray; WaitUntilDistance: Int32 = 0): Boolean;
 ```
-
 Walks a path of points taken from the loaded map. We advice that WaitUntilDistance is not 0.
 
-### Parameters
-
-Path
+Parameters:
+- Path
 	Array of points taken from the loaded map to walk. Must be ordered from start to finish.
-
-WaitUntilDistance
+- WaitUntilDistance
 	Determines when the method returns once the final point has been clicked. Default value: 0.
-
 	| *WaitUntilDistance=0* waits until the player has reached the final point.
 	| *WaitUntilDistance=20* waits until the player is within 20 pixels of the final point.
 
@@ -1200,18 +1196,14 @@ end;
 ```pascal
 function TRSWalker.WalkBlind(Destination: TPoint; WaitUntilDistance: Int32 = 0): Boolean;
 ```
-
 "Blindly" walks to a point taken from the loaded map.
 A straight line is generated between the player's position and destination which is then walked.
 
-### Parameters
-
-Destination
-	Destination point taken from the loaded map.
-
-WaitUntilDistance
+Parameters:
+- Destination
+  Destination point taken from the loaded map.
+- WaitUntilDistance
 	Determines when the method returns once the final point has been clicked. Default value: 0.
-
 	| *WaitUntilDistance=0* waits until the player has reached the final point.
 	| *WaitUntilDistance=20* waits until the player is within 20 pixels of the final point.
 
@@ -1230,24 +1222,19 @@ end;
 ```pascal
 function TRSWalker.WebWalk(Destination: TPoint; WaitUntilDistance: Int32 = 0; PathRandomness: Double = 0): Boolean;
 ```
-
 Web walks to the destination point on the loaded map. Does **not** handle any obstacles.
 Please run ``webber.simba`` to see how webgraphs are built.
 
 Pre built webgraphs are available for "World" and "Zeah" when used.
 
-### Parameters
-
-Destination
+Parameters:
+- Destination
 	Destination point taken from the loaded map.
-
-WaitUntilDistance
+- WaitUntilDistance
 	Determines when the method returns once the final point has been clicked. Default value: 0.
-
 	| *WaitUntilDistance=0* waits until the player has reached the final point.
 	| *WaitUntilDistance=20* waits until the player is within 20 pixels of the final point.
-
-PathRandomness
+- PathRandomness
 	Randomness to add to the path so the absoulte shortest path isn't always taken. Must be between 0..1
 
 Example:

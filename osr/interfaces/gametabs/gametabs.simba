@@ -1,3 +1,7 @@
+(*
+# GameTabs
+Methods to interact with the gametabs.
+*)
 {$DEFINE SRL_GAMETABS_INCLUDED}
 {$IFNDEF SRL_OSR}
   {$I SRL-T/osr.simba}
@@ -111,6 +115,18 @@ begin
   Exit(ERSGameTab.UNKNOWN);
 end;
 
+(*
+## GameTabs.Open()
+```pascal
+function TRSGameTabs.Open(Tab: ERSGameTab): Boolean;
+```
+Opens the specified `Tab`.
+
+Example:
+```pascal
+WriteLn GameTabs.Open(ERSGameTab.INVENTORY);
+```
+*)
 function TRSGameTabs.Open(Tab: ERSGameTab): Boolean;
 var
   i: Int32;
