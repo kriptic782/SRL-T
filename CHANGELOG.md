@@ -1,3 +1,12 @@
+# [3.3.0](https://github.com/Torwent/SRL-T/compare/v3.2.5...v3.3.0) (2024-02-07)
+
+
+### Features
+
+* docs - read notes ([0082ca7](https://github.com/Torwent/SRL-T/commit/0082ca77a3ef8148008e1f5f067e45a0f43a9df3))
+
+
+
 ## [3.2.5](https://github.com/Torwent/SRL-T/compare/v3.2.4...v3.2.5) (2024-02-06)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * very minor tweak to how scoped enums are enforced inside of the SRL include ([c7e8baf](https://github.com/Torwent/SRL-T/commit/c7e8baf764d080d32e290e4cafc905b9716f1874))
-
-
-
-## [3.2.1](https://github.com/Torwent/SRL-T/compare/v3.2.0...v3.2.1) (2024-01-25)
-
-
-### Bug Fixes
-
-* **walker:** Minimap bitmap methods are now static, should always have been ([df9d9ee](https://github.com/Torwent/SRL-T/commit/df9d9ee54b56ca0ad5f70fd347a88d0e99634ee2))
 
 
 
