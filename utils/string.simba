@@ -156,14 +156,19 @@ begin
 end;
 
 (*
-## String.Lower
+## String.Lower()
 ```pascal
 function String.Lower(): String; constref;
+function String.ToLower(): String; constref;
 ```
-
 Returns the string with every character converted to lowercase
 *)
 function String.Lower(): String; constref;
+begin
+  Result := Lowercase(Self);
+end;
+
+function String.ToLower(): String; constref;
 begin
   Result := Lowercase(Self);
 end;
@@ -231,27 +236,40 @@ end;
 
 
 (*
-## String.Explode
+## String.Split
 ```pascal
-function String.Explode(Delimiter: String): TStringArray; constref;
+function String.Split(delimiter: String): TStringArray; constref;
 ```
-
-Blow up the string at each delimiter into smaller strings
+Split up the string at each delimiter into smaller strings
 *)
+function String.Split(delimiter: String): TStringArray; constref;
+begin
+  Result := System.Explode(delimiter, Self);
+end;
+
 function String.Explode(Delimiter: String): TStringArray; constref;
 begin
   Result := System.Explode(Delimiter, Self);
 end;
 
-{*
-## String.Strip
+(*
+## String.Trim
 ```pascal
-function String.Strip(Chars:String = STR_WHITESPACE): String; constref;
+function String.Trim(chars:String = STR_WHITESPACE): String; constref;
+function String.Strip(chars:String = STR_WHITESPACE): String; constref;
 ```
-
 Return a copy of the string with leading and trailing characters removed.
-*}
-function String.Strip(Chars:String = STR_WHITESPACE): String; constref;
+*)
+function String.Trim(chars:String = STR_WHITESPACE): String; constref;
+var Lo,Hi: UInt32 = 1;
+begin
+  Hi:=Length(Self);
+  while (Lo <= Hi) and (System.Pos(Self[Lo],Chars) <> 0) do Inc(Lo);
+  while (Hi >= 1)  and (System.Pos(Self[Hi],Chars) <> 0) do Dec(Hi);
+  Result := Copy(Self, Lo, Hi-Lo+1);
+end;
+
+function String.Strip(chars:String = STR_WHITESPACE): String; constref;
 var Lo,Hi: UInt32 = 1;
 begin
   Hi:=Length(Self);
@@ -420,6 +438,11 @@ begin
 end;
 
 function String.ExtractNumber(DefaultValue: Int64 = -1): Int64; constref;
+begin
+  Result := StrToIntDef(ExtractFromStr(Self, Numbers), DefaultValue);
+end;
+
+function String.ExtractInteger(DefaultValue: Int64 = -1): Int64; constref;
 begin
   Result := StrToIntDef(ExtractFromStr(Self, Numbers), DefaultValue);
 end;

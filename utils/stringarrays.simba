@@ -72,13 +72,10 @@ begin
     Self[len+i] := Arr[i];
 end;
 
+
 function TStringArray.Find(const Value: String): Integer; constref;
 begin
-  for Result := 0 to High(Self) do
-    if (Value = Self[Result]) then
-      Exit;
-
-  Result := -1;
+  Result := System.IndexOf(value, Self);
 end;
 
 function TStringArray.FindAll(const Value: String): TIntegerArray; constref;
@@ -89,6 +86,12 @@ begin
     if (Self[i] = Value) then
       Result += i;
 end;
+
+function TStringArray.Contains(const value: String): Boolean; constref;
+begin
+  Result := Self.Find(value) > -1;
+end;
+
 
 function TStringArray.Reversed(): TStringArray;
 var

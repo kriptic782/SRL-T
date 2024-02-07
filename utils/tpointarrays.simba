@@ -91,6 +91,12 @@ begin
   Result := -1;
 end;
 
+function TPointArray.Contains(const value: TPoint): Boolean; constref;
+begin
+  Result := Self.Find(value) > -1;
+end;
+
+
 function TPointArray.FindAll(const Value: TPoint): TIntegerArray; constref;
 var
   i,top: UInt32;
@@ -102,6 +108,8 @@ begin
       Result[Inc(top)-1] := i;
     end;
 end;
+
+
 
 function TPointArray.Reversed(): TPointArray;
 var
@@ -251,17 +259,23 @@ begin
 end;
 
 (*
-## TPointArray.Sorted
+## TPointArray.SortFrom
 ```pascal
-function TPointArray.Sorted(From:TPoint=[0,0]): TPointArray;
+function TPointArray.Sorted(from: TPoint = [0,0]): TPointArray;
+function TPointArray.SortFrom(from: TPoint = [0,0]): TPointArray; constref;
 ```
-
 Wraps Simba's `SortTPAFrom`, produces a sorted copy.
 *)
-function TPointArray.Sorted(From:TPoint=[0,0]): TPointArray;
+function TPointArray.Sorted(from: TPoint = [0,0]): TPointArray;
 begin
   Result := Copy(Self);
-  SortTPAFrom(Result, From);
+  SortTPAFrom(Result, from);
+end;
+
+function TPointArray.SortFrom(from:TPoint = [0,0]): TPointArray; constref;
+begin
+  Result := Copy(Self);
+  SortTPAFrom(Result, from);
 end;
 
 
@@ -552,19 +566,38 @@ begin
   ClearDoubleTPA(Self);
 end;
 
+function TPointArray.Unique(): TPointArray; constref;
+begin
+  Result := Copy(Self);
+  ClearDoubleTPA(Result);
+end;
+
 (*
 ## TPointArray.Rotate
 ```pascal
-function TPointArray.Rotate(AngleRad, MidX, MidY: Double): TPointArray;
+function TPointArray.Rotate(angleRad, x, y: Double): TPointArray;
+function TPointArray.Rotate(angleRad: Double; mid: TPoint): TPointArray; constref; overload;
+function TPointArray.Rotate(angleRad: Double; mid: Vector2): TPointArray; constref; overload;
 ```
 
-Returns a copy where all points are rotated around MidX, MidY.
+Returns a copy where all points are rotated around `x` and `y`, a `TPoint` or a `Vector2`.
 Same as Simba's `RotatePoints`.
 *)
-function TPointArray.Rotate(AngleRad, MidX, MidY: Double): TPointArray; constref;
+function TPointArray.Rotate(angleRad, MidX, MidY: Double): TPointArray; constref;
 begin
-  Result := RotatePoints(Self, AngleRad, MidX, MidY);
+  Result := RotatePoints(Self, angleRad, MidX, MidY);
 end;
+
+function TPointArray.Rotate(angleRad: Double; mid: TPoint): TPointArray; constref; overload;
+begin
+  Result := RotatePoints(Self, angleRad, mid.X, mid.Y);
+end;
+
+function TPointArray.Rotate(angleRad: Double; mid: Vector2): TPointArray; constref; overload;
+begin
+  Result := RotatePoints(Self, angleRad, mid.X, mid.Y);
+end;
+
 
 (*
 ## TPointArray.SplitRows
@@ -649,6 +682,12 @@ begin
   end;
   line := TPAFromLine(self[High(self)].x, self[High(self)].y, self[0].x, self[0].y);
   Result := Result.Combine(line);
+end;
+
+
+function TPointArray.CreateFromLine(start, stop: TPoint): TPointArray; static;
+begin
+  Result := TPAFromLine(start.X, start.Y, stop.X, stop.Y);
 end;
 
 
@@ -948,6 +987,33 @@ begin
 end;
 
 
+function TPointArray.RandomValue(): TPoint; constref;
+begin
+  if Length(Self) = 0 then
+    Exit;
+  Result := Self[Random(0, High(Self))];
+end;
+
+function TPointArray.RandomMean(): TPoint;
+var
+  sorted: TPointArray;
+begin
+  if Length(Self) = 0 then
+    Exit;
+  sorted := Self.Sorted(Self.Mean());
+  Result := sorted[SRL.TruncatedGauss(0, High(sorted))];
+end;
+
+
+function TPointArray.NearestPoint(other: TPoint): TPoint;
+begin
+  if Length(Self) <= 0 then
+    Exit;
+
+  Self.Sort(other);
+  Result := Self[0];
+end;
+
 //--| Other TPA methods |------------------------------------------------------>
 //----------------------------------------------------------------------------->
 (*
@@ -1022,10 +1088,18 @@ begin
   Result := TPA.MinAreaRectEx(LongSideLen, ShortSideLen).ToTPA();
 end;
 
+
 procedure TPointArray.Fill;
 begin
   FillEllipse(Self);
 end;
+
+function TPointArray.ShapeFill(): TPointArray; constref;
+begin
+  Result := Copy(Self);
+  FillEllipse(Result);
+end;
+
 
 function TPointArray.Grow(constref Amount: Int32): TPointArray; constref;
 begin
@@ -1243,6 +1317,34 @@ begin
   self := tmp;
 end;
 
+
+function T2DPointArray.ExcludeSize(MinLen:Int32; KeepIf:EComparator=__LT__): T2DPointArray; constref;
+var
+  tmp:T2DPointArray;
+  TPA:TPointArray;
+begin
+  for TPA in Self do
+    case KeepIf of
+      __LT__: if Length(TPA) < MinLen then tmp += TPA;
+      __GT__: if Length(TPA) > MinLen then tmp += TPA;
+      __EQ__: if Length(TPA) = MinLen then tmp += TPA;
+      __NE__: if Length(TPA)<> MinLen then tmp += TPA;
+    end;
+  Result := tmp;
+end;
+
+function T2DPointArray.ExcludeSize(MinLen,MaxLen:Int32): T2DPointArray; constref; overload;
+var
+  tmp:T2DPointArray;
+  TPA:TPointArray;
+begin
+  for TPA in Self do
+    if InRange(Length(TPA), MinLen, MaxLen) then
+      tmp += TPA;
+  Result := tmp;
+end;
+
+
 procedure T2DPointArray.FilterDimensions(MinW, MinH: Int32; MaxW: Int32 = $FFFFFF; MaxH: Int32 = $FFFFFF);
 var
   tmp:T2DPointArray;
@@ -1416,4 +1518,23 @@ begin
     if (Length(tpa) > Length(Result)) then
       Result := tpa;
   end;
+end;
+
+
+function T2DPointArray.Contains(const value: TPointArray): Boolean;
+begin
+  Result := Self.Find(value) > -1;
+end;
+
+
+function T2DPointArray.SortFrom(From: TPoint): T2DPointArray; constref;
+begin
+  Result := Self;
+  SortATPAFromMidPoint(Result, From);
+end;
+
+function T2DPointArray.RandomValue(): TPointArray; constref;
+begin
+  if Length(Self) > 0 then
+    Result := Self[Random(0, High(Self))];
 end;

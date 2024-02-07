@@ -342,9 +342,15 @@ begin
   Result := Length(Arr);
 end;
 
-procedure TIntegerArray.ClearDuplicates;
+procedure TIntegerArray.ClearDuplicates();
 begin
   ClearSameIntegers(Self);
+end;
+
+function TIntegerArray.Unique(): TIntegerArray;
+begin
+  Result := Self;
+  ClearSameIntegers(Result);
 end;
 
 operator in(Left: Int32; constref Right: TIntegerArray): Boolean;

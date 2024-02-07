@@ -47,7 +47,12 @@ begin
   Result := (Self.X2 - Self.X1 + 1) * (Self.Y2 - Self.Y1 + 1);
 end;
 
-function TBox.Middle(): TPoint; constref;
+function TBox.Center(): TPoint; constref;
+begin
+  Result := Point((Self.X2 + Self.X1+1) div 2, (Self.Y2 + Self.Y1+1) div 2);
+end;
+
+function TBox.Middle(): TPoint; constref; deprecated 'Use TBox.Center() instead.';
 begin
   Result := Point((Self.X2 + Self.X1+1) div 2, (Self.Y2 + Self.Y1+1) div 2);
 end;
