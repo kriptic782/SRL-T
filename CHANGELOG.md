@@ -1,3 +1,17 @@
+# [4.0.0](https://github.com/Torwent/SRL-T/compare/v3.3.0...v4.0.0) (2024-02-07)
+
+
+### Bug Fixes
+
+* moved a bunch of wasplib "compatibility layer" things here ([e5279a5](https://github.com/Torwent/SRL-T/commit/e5279a5fee961b75abd57bd73815ff309ded118e))
+
+
+### BREAKING CHANGES
+
+* This will require wasplib to be updated
+
+
+
 # [3.3.0](https://github.com/Torwent/SRL-T/compare/v3.2.5...v3.3.0) (2024-02-07)
 
 
@@ -31,15 +45,6 @@
 ### Bug Fixes
 
 * **docs:** documentation migration to use markdown with sphinx myst parser ([3b0c00c](https://github.com/Torwent/SRL-T/commit/3b0c00c9c648a8c123f2c859389fa9511791070e))
-
-
-
-## [3.2.2](https://github.com/Torwent/SRL-T/compare/v3.2.1...v3.2.2) (2024-02-02)
-
-
-### Bug Fixes
-
-* very minor tweak to how scoped enums are enforced inside of the SRL include ([c7e8baf](https://github.com/Torwent/SRL-T/commit/c7e8baf764d080d32e290e4cafc905b9716f1874))
 
 
 
