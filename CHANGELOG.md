@@ -1,3 +1,12 @@
+## [4.0.1](https://github.com/Torwent/SRL-T/compare/v4.0.0...v4.0.1) (2024-02-07)
+
+
+### Bug Fixes
+
+* correcting something on the previous commit ([e1790e2](https://github.com/Torwent/SRL-T/commit/e1790e27b0808df79f3e12f317f75bd5c1d8b17c))
+
+
+
 # [4.0.0](https://github.com/Torwent/SRL-T/compare/v3.3.0...v4.0.0) (2024-02-07)
 
 
@@ -36,15 +45,6 @@
 ### Bug Fixes
 
 * **inventory:** small logic flaw in `Inventory.GetSelectedSlot()` that could cause selected items to be msised ([0fe2fd7](https://github.com/Torwent/SRL-T/commit/0fe2fd7fb29d7f72fe66ff3944d482c26784243a))
-
-
-
-## [3.2.3](https://github.com/Torwent/SRL-T/compare/v3.2.2...v3.2.3) (2024-02-03)
-
-
-### Bug Fixes
-
-* **docs:** documentation migration to use markdown with sphinx myst parser ([3b0c00c](https://github.com/Torwent/SRL-T/commit/3b0c00c9c648a8c123f2c859389fa9511791070e))
 
 
 
