@@ -394,7 +394,7 @@ begin
   for i := 0 to High(prayers) do
   begin
     cantActivate := cantActivate or not Self.CanActivate(prayers[i]);
-    if not cantActivate then
+    if not cantActivate and not Self.IsPrayerActive(prayers[i]) then
       Mouse.Click(Self.GetPrayerBox(prayers[i]), MOUSE_LEFT);
   end;
 
