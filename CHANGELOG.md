@@ -1,3 +1,12 @@
+## [4.0.3](https://github.com/Torwent/SRL-T/compare/v4.0.2...v4.0.3) (2024-02-08)
+
+
+### Bug Fixes
+
+* **prayer:** `Prayer.ActivatePrayer()` doesn't click prayers that are already active anymore ([b49c3cf](https://github.com/Torwent/SRL-T/commit/b49c3cfc1cd920721fd2f3dbaf30330447ff50e8))
+
+
+
 ## [4.0.2](https://github.com/Torwent/SRL-T/compare/v4.0.1...v4.0.2) (2024-02-08)
 
 
@@ -36,15 +45,6 @@
 ### Features
 
 * docs - read notes ([0082ca7](https://github.com/Torwent/SRL-T/commit/0082ca77a3ef8148008e1f5f067e45a0f43a9df3))
-
-
-
-## [3.2.5](https://github.com/Torwent/SRL-T/compare/v3.2.4...v3.2.5) (2024-02-06)
-
-
-### Bug Fixes
-
-* minor docs fixes ([653b0e8](https://github.com/Torwent/SRL-T/commit/653b0e8c5ba29c56105442c055b1c40a7e7c67b0))
 
 
 
