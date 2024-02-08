@@ -130,7 +130,6 @@ TRSWalker is the record responsbile for walking and position.
 
     OnWalkEvent: TRSWalker_OnWalkEvent;
     OnWalkEventEx: TRSWalker_OnWalkEventEx;
-
     OnWalkingEvent: TRSWalker_OnWalkEvent;
   end;
 
@@ -920,21 +919,23 @@ var
   i: Int32;
 begin
   Result := True;
+  Self.CheckRunEnergy();
 
   if Self.ScreenWalk then
   begin
-    Mouse.Move(Minimap.PointToMsRect(minimapPoint).Mean());
-
+    p := Minimap.RandomPointInZoomRectangle(minimapPoint, randomness);
+    if p = [0, 0] then
+      Exit;
+    Mouse.Move(Minimap.PointToMsRect(p).Mean());
     if not MainScreen.IsUpText('Walk here') then
       Exit(ChooseOption.Select('Walk here'));
   end
   else
   begin
-    P := minimapPoint.Random(-Randomness, Randomness);
-    while not Minimap.IsPointOn(P) do
-      P := minimapPoint.Random(-Randomness, Randomness);
-
-    Mouse.Move(P);
+    p := Minimap.RandomPointOn(minimapPoint, randomness);
+    if p = [0, 0] then
+      Exit;
+    Mouse.Move(p);
   end;
 
   Mouse.Click(MOUSE_LEFT);

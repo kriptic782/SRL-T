@@ -320,7 +320,6 @@ end;
 ```pascal
 function TRectangle.NearestEdge(P: TPoint): TPoint; constref;
 ```
-
 Returns the closest edge point (think Rect.ToTPA.Connect) to the TPoint `P`.
 *)
 function TRectangle.NearestEdge(P: TPoint): TPoint; constref;

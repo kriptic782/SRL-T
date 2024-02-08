@@ -200,8 +200,7 @@ end;
 function TSRL.rowp(From: TPoint; Rect: TRectangle; Force: Double=-0.9; Smoothness: Double=PI/12): TPoint;
 function TSRL.rowp(From: TPoint; Box: TBox; Force: Double=-0.9; Smoothness: Double=PI/12): TPoint;
 ```
-
-rowp, short for `Random Olly Weighted Point`. Generates a random point based on
+ROWP, short for `Random Olly Weighted Point`. Generates a random point based on
 a rough formula that Olly came up with for weighting points towards "From" point.
 Final implementation and math done by slacky.
 
@@ -211,21 +210,9 @@ function TSRL.rowp(From: TPoint; Rect: TRectangle; Force: Double=-0.9; Smoothnes
 var
   p,e: TPoint;
   t, dist: Double;
-
-  function NearestEdgeTo(P: TPoint): TPoint;
-  var
-    best,dist: Double;
-    x: TPoint;
-  begin
-    best := SRL.DistToLineEx(p, Rect.Top,  Rect.Left, Result);
-    if (dist := SRL.DistToLineEx(p, Rect.Left, Rect.Btm,  x)) < best then begin Result := x; Best := dist; end;
-    if (dist := SRL.DistToLineEx(p, Rect.Btm,  Rect.Right,x)) < best then begin Result := x; Best := dist; end;
-    if (dist := SRL.DistToLineEx(p, Rect.Right,Rect.Top,  x)) < best then begin Result := x; Best := dist; end;
-  end;
-
 begin
   p := SRL.RandomPoint(rect, SRL_GAUSS_CUTOFF / 1.5);
-  e := NearestEdgeTo(P);
+  e := Rect.NearestEdge(P);
 
   dist := Hypot(p.X - e.X, p.Y - e.Y);
   t := ArcTan2(p.Y-From.Y, p.X-From.X) + (Random()-0.5) * Smoothness;
