@@ -1,3 +1,12 @@
+## [4.0.4](https://github.com/Torwent/SRL-T/compare/v4.0.3...v4.0.4) (2024-02-09)
+
+
+### Bug Fixes
+
+* **MM2MS:** Minimap.RandomPointInZoomRectangle() was failing always ([3fcb613](https://github.com/Torwent/SRL-T/commit/3fcb613dc888bace3359673e209f55aa36925f4a))
+
+
+
 ## [4.0.3](https://github.com/Torwent/SRL-T/compare/v4.0.2...v4.0.3) (2024-02-08)
 
 
@@ -36,15 +45,6 @@
 ### BREAKING CHANGES
 
 * This will require wasplib to be updated
-
-
-
-# [3.3.0](https://github.com/Torwent/SRL-T/compare/v3.2.5...v3.3.0) (2024-02-07)
-
-
-### Features
-
-* docs - read notes ([0082ca7](https://github.com/Torwent/SRL-T/commit/0082ca77a3ef8148008e1f5f067e45a0f43a9df3))
 
 
 
