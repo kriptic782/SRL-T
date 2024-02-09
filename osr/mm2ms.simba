@@ -410,12 +410,17 @@ function TRSMinimap.RandomPointInZoomRectangle(p: TPoint; randomness: Int32): TP
 var
   minDist: Double;
   best: TPoint;
+  rect: TRectangle;
 begin
-  best := Self.GetZoomRectangle().NearestEdge(p);
-  minDist := best.DistanceTo(p) - randomness;
+  rect := Self.GetZoomRectangle();
+  if not p.InRect(rect) then
+  begin
+    best := rect.NearestEdge(p);
+    minDist := best.DistanceTo(p) + 6; //some padding... or this loops for too long.
 
-  if minDist > 0 then
-    Exit(Point(0,0));
+    if minDist >= randomness then
+      Exit(Point(0,0));
+  end;
 
   while not Minimap.PointInZoomRectangle(Result) do
     Result := p.Random(-randomness, randomness);
