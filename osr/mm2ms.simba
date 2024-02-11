@@ -422,7 +422,7 @@ begin
       Exit(Point(0,0));
   end;
 
-  while not Minimap.PointInZoomRectangle(Result) do
+  while not Result.InRect(rect) do
     Result := p.Random(-randomness, randomness);
 end;
 

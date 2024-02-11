@@ -236,8 +236,6 @@ type
     SINISTER_OFFERING
   );
 
-  TRSSpellFinderCustomFilter = procedure(constref image, templ: TMufasaBitmap) of object;
-
   TRSSpellFinder = record(TSRLBaseRecord)
     IMAGES_ZIP: String;
     IMAGES_PATH: String;
