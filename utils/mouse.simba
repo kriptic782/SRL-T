@@ -603,7 +603,6 @@ end;
 ```pascal
 function TMouse.Miss(P: TPoint): TPoint;
 ```
-
 "Misses" the destination point **P**. Will stop somewhere along the path or overshoot.
 Returns the position the mouse was moved to.
 

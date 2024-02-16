@@ -169,7 +169,6 @@ end;
 ```pascal
 function TSRL.RandonPointEx(From: TPoint; B: TBox; Force: Double=0.35): TPoint; constref;
 ```
-
 Generates a random point within the bounds of the given box `B`, the point generated is skewed towards towards the `From`-point.
 The last parameter `Force` defines how much the generated point is to be skewed towards or away from `From` - Expects value in the range 0..2
 

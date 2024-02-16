@@ -209,6 +209,7 @@ begin
   AddOnTerminate(@Self.Free);
 
   Self.Regions := [[0, 0, Self.Map.getWidth()-1, Self.Map.getHeight()-1]];
+  Self.RegionOffsets := [[0, 0]];
 end;
 
 procedure TRSWalkerMap.Load(fileName: String; aRegions: TBoxArray; scaling: Int32; padding: Int32 = 50); overload;
