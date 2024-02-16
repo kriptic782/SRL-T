@@ -1383,18 +1383,39 @@ begin
 end;
 
 (*
+## TRSWalker.MMToWorld
+```pascal
+function TRSWalker.MMToWorldEx(me, loc: TPoint; roll: Single = $FFFF): TPoint;
+function TRSWalker.MMToWorld(loc: TPoint; roll: Single = $FFFF): TPoint;
+```
+Converts a point on the minimap to a walker point.
+*)
+function TRSWalker.MMToWorldEx(me, loc: TPoint; roll: Single = $FFFF): TPoint;
+begin
+  Result := Me + loc - Minimap.Center();
+  if (roll = $FFFF) then
+    roll := Minimap.GetCompassAngle(False);
+  Result := Result.Rotate(-roll, Me);
+end;
+
+function TRSWalker.MMToWorld(loc: TPoint; roll: Single = $FFFF): TPoint;
+begin
+  if (roll = $FFFF) then
+    roll := Minimap.GetCompassAngle(False);
+  Result := Self.MMToWorldEx(Self.GetMyPos(), loc, roll);
+end;
+
+(*
 ## TRSWalker.MSToWorld
 ```pascal
 function TRSWalker.MSToWorldEx(Me, Loc: TPoint; Height: Int32 = 0; Accuracy: Double = 0.2): TPoint;
 function TRSWalker.MSToWorld(Loc: TPoint; Height: Int32=0; Accuracy:Double=0.2): TPoint;
 ```
-
 Converts a point on the mainscreen to a walker point.
 *)
 function TRSWalker.MSToWorldEx(Me, Loc: TPoint; Height: Int32 = 0; Accuracy: Double = 0.2): TPoint;
 begin
-  Result := Me + (MainScreen.PointToMM(Loc, Height, Accuracy).ToPoint() - Minimap.Center);
-  Result := Result.Rotate(-Minimap.GetCompassAngle(False), Me);
+  Result := Self.MMToWorldEx(me, MainScreen.PointToMM(Loc, Height, Accuracy).ToPoint(), Minimap.GetCompassAngle(False));
 end;
 
 function TRSWalker.MSToWorld(Loc: TPoint; Height: Int32=0; Accuracy:Double=0.2): TPoint;
