@@ -1,3 +1,12 @@
+## [4.0.6](https://github.com/Torwent/SRL-T/compare/v4.0.5...v4.0.6) (2024-02-16)
+
+
+### Bug Fixes
+
+* **WalkerMap:** setting up walker without region won't crash walker anymore ([c2c0586](https://github.com/Torwent/SRL-T/commit/c2c0586ae364d383cfd016c5595f38c5e00ac03b))
+
+
+
 ## [4.0.5](https://github.com/Torwent/SRL-T/compare/v4.0.4...v4.0.5) (2024-02-11)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSWalker.Click:** endless loop ([37fa06b](https://github.com/Torwent/SRL-T/commit/37fa06be4e3cc979cb859c6e1cd677ca21b94df0))
-
-
-
-## [4.0.1](https://github.com/Torwent/SRL-T/compare/v4.0.0...v4.0.1) (2024-02-07)
-
-
-### Bug Fixes
-
-* correcting something on the previous commit ([e1790e2](https://github.com/Torwent/SRL-T/commit/e1790e27b0808df79f3e12f317f75bd5c1d8b17c))
 
 
 
