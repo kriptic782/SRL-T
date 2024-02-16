@@ -1,3 +1,12 @@
+## [4.0.7](https://github.com/Torwent/SRL-T/compare/v4.0.6...v4.0.7) (2024-02-16)
+
+
+### Bug Fixes
+
+* **walker:** add methods to convert coordinates from the minimap to the walker map ([c9832bf](https://github.com/Torwent/SRL-T/commit/c9832bf0fa51634c90ca627335ec8f26e2985bd0))
+
+
+
 ## [4.0.6](https://github.com/Torwent/SRL-T/compare/v4.0.5...v4.0.6) (2024-02-16)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **prayer:** `Prayer.ActivatePrayer()` doesn't click prayers that are already active anymore ([b49c3cf](https://github.com/Torwent/SRL-T/commit/b49c3cfc1cd920721fd2f3dbaf30330447ff50e8))
-
-
-
-## [4.0.2](https://github.com/Torwent/SRL-T/compare/v4.0.1...v4.0.2) (2024-02-08)
-
-
-### Bug Fixes
-
-* **TRSWalker.Click:** endless loop ([37fa06b](https://github.com/Torwent/SRL-T/commit/37fa06be4e3cc979cb859c6e1cd677ca21b94df0))
 
 
 
