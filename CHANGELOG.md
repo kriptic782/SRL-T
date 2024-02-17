@@ -1,3 +1,12 @@
+## [4.0.8](https://github.com/Torwent/SRL-T/compare/v4.0.7...v4.0.8) (2024-02-17)
+
+
+### Bug Fixes
+
+* **ri:** now shows a dialog box that links you to the official java client if the current client is not supported ([5acd588](https://github.com/Torwent/SRL-T/commit/5acd5886b317fefc4ba45aa6a2ee7ea10d50d81e))
+
+
+
 ## [4.0.7](https://github.com/Torwent/SRL-T/compare/v4.0.6...v4.0.7) (2024-02-16)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **MM2MS:** Minimap.RandomPointInZoomRectangle() was failing always ([3fcb613](https://github.com/Torwent/SRL-T/commit/3fcb613dc888bace3359673e209f55aa36925f4a))
-
-
-
-## [4.0.3](https://github.com/Torwent/SRL-T/compare/v4.0.2...v4.0.3) (2024-02-08)
-
-
-### Bug Fixes
-
-* **prayer:** `Prayer.ActivatePrayer()` doesn't click prayers that are already active anymore ([b49c3cf](https://github.com/Torwent/SRL-T/commit/b49c3cfc1cd920721fd2f3dbaf30330447ff50e8))
 
 
 
