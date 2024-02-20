@@ -1,3 +1,12 @@
+## [4.0.9](https://github.com/Torwent/SRL-T/compare/v4.0.8...v4.0.9) (2024-02-20)
+
+
+### Bug Fixes
+
+* read notes ([6256e76](https://github.com/Torwent/SRL-T/commit/6256e7691dcb8e670bcef259ce2c05c41e994f2a))
+
+
+
 ## [4.0.8](https://github.com/Torwent/SRL-T/compare/v4.0.7...v4.0.8) (2024-02-17)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **mm2ms:** RandomPointInZoomRectangle() was slugish and now is fast ([6e1bce5](https://github.com/Torwent/SRL-T/commit/6e1bce52434c28c413c1eedfc378288963c9fed3))
-
-
-
-## [4.0.4](https://github.com/Torwent/SRL-T/compare/v4.0.3...v4.0.4) (2024-02-09)
-
-
-### Bug Fixes
-
-* **MM2MS:** Minimap.RandomPointInZoomRectangle() was failing always ([3fcb613](https://github.com/Torwent/SRL-T/commit/3fcb613dc888bace3359673e209f55aa36925f4a))
 
 
 
