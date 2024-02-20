@@ -1,3 +1,12 @@
+## [4.0.10](https://github.com/Torwent/SRL-T/compare/v4.0.9...v4.0.10) (2024-02-20)
+
+
+### Bug Fixes
+
+* **walker:** some tweaks to fix issues with the latest commit on screenwalking ([4608a3c](https://github.com/Torwent/SRL-T/commit/4608a3cd116d8c3dca70e6d083d2239fb9468e77))
+
+
+
 ## [4.0.9](https://github.com/Torwent/SRL-T/compare/v4.0.8...v4.0.9) (2024-02-20)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **WalkerMap:** setting up walker without region won't crash walker anymore ([c2c0586](https://github.com/Torwent/SRL-T/commit/c2c0586ae364d383cfd016c5595f38c5e00ac03b))
-
-
-
-## [4.0.5](https://github.com/Torwent/SRL-T/compare/v4.0.4...v4.0.5) (2024-02-11)
-
-
-### Bug Fixes
-
-* **mm2ms:** RandomPointInZoomRectangle() was slugish and now is fast ([6e1bce5](https://github.com/Torwent/SRL-T/commit/6e1bce52434c28c413c1eedfc378288963c9fed3))
 
 
 
