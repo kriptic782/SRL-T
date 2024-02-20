@@ -178,7 +178,6 @@ end;
 ```pascal
 function String.After(SubStr: String): String; constref;
 ```
-
 Copy the string from after the first occurrence of SubStr
 *)
 function String.After(SubStr: String): String; constref;

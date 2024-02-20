@@ -553,18 +553,9 @@ Creates a random point that based on `randomness` and `p` that is on the minimap
 Returns `[0, 0]` if the point couldn't be generated, e.g. it's too far away from the minimap.
 *)
 function TRSMinimap.RandomPointOn(p: TPoint; randomness: Int32): TPoint;
-var
-  minDist: Double;
 begin
-  case RSClient.Mode of
-    ERSClientMode.FIXED: minDist := 59 + randomness;
-    ERSClientMode.RESIZABLE_CLASSIC, ERSClientMode.RESIZABLE_MODERN: minDist := 65 + randomness;
-    else
-      Exit(Point(0,0));
-  end;
-
-  if p.DistanceTo(Self.Center()) > minDist then
-    Exit(Point(0,0));
+  if not Self.IsPointOn(p) then
+    Self.Fatal(ToStr(p) + ' is not a valid point to generate a random point.');
 
   while not Self.IsPointOn(Result) do
     Result := p.Random(-randomness, randomness);

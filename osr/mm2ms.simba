@@ -408,19 +408,11 @@ Returns `[0, 0]` if the point couldn't be generated, e.g. it's too far away from
 *)
 function TRSMinimap.RandomPointInZoomRectangle(p: TPoint; randomness: Int32): TPoint;
 var
-  minDist: Double;
-  best: TPoint;
   rect: TRectangle;
 begin
   rect := Self.GetZoomRectangle();
   if not p.InRect(rect) then
-  begin
-    best := rect.NearestEdge(p);
-    minDist := best.DistanceTo(p) + 6; //some padding... or this loops for too long.
-
-    if minDist >= randomness then
-      Exit(Point(0,0));
-  end;
+    Self.Fatal(ToStr(p) + ' is not a valid point to generate a random point on the zoom rectangle.');
 
   while not Result.InRect(rect) do
     Result := p.Random(-randomness, randomness);

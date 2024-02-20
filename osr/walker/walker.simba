@@ -1047,19 +1047,19 @@ function TRSWalker.IsWalkable(walkerPoint: TPoint; playerPoint: TPoint; Angle: D
 Internal method used by walker to decide if the destination point is within 1 click reach.
 You will probably never need to call this directly.
 *)
-function TRSWalker.IsWalkable(walkerPoint: TPoint; playerPoint: TPoint; Angle: Double): Boolean;
+function TRSWalker.IsWalkable(worldPoint: TPoint; playerPoint: TPoint; Angle: Double): Boolean;
 var
-  minimapPoint: TPoint;
-  b: TBox;
+  mmPoint: TPoint;
+  r: TRectangle;
 begin
-  minimapPoint := Self.WorldToMM(playerPoint, walkerPoint, Angle);
+  mmPoint := Self.WorldToMM(playerPoint, worldPoint, Angle);
 
-  if not Self.ScreenWalk then
-    Exit(Minimap.IsPointOn(minimapPoint, -1));
+  Result := Minimap.IsPointOn(mmPoint, -1);
+  if not ScreenWalk or not Result then
+    Exit;
 
-  b := Minimap.PointToMSRect(minimapPoint, 1, 1, Angle).Bounds();
-  if MainScreen.IsVisible(B.Middle) then
-    Result := CountColor($000000, B.Expand(0, MainScreen.Bounds())) = 0; // Client doesn't always render everything when zoomed out
+  r := Minimap.PointToMSRect(mmPoint, 1, 1, Angle);
+  Result := MainScreen.IsVisible(r.mean()) and (CountColor($000000, r.Bounds.Expand(0, MainScreen.Bounds())) = 0);
 end;
 
 

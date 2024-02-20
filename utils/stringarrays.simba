@@ -73,9 +73,12 @@ begin
 end;
 
 
-function TStringArray.Find(const Value: String): Integer; constref;
+function TStringArray.Find(const value: String): Integer; constref;
 begin
-  Result := System.IndexOf(value, Self);
+  for Result := 0 to High(Self) do
+    if value = Self[Result] then
+      Exit;
+  Result := -1;
 end;
 
 function TStringArray.FindAll(const Value: String): TIntegerArray; constref;
