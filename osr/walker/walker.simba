@@ -869,49 +869,10 @@ end;
 ```pascal
 function TRSWalker.Click(minimapPoint: TPoint; Randomness: Int32): Boolean;
 ```
-
 Internal method used by walker to handle clicking while walking.
 You will probably never need to call this directly.
 
-If you wish to modify certain walker behaviors, it's a good approach to override this function.
-For example, if you are screenwalking and you don't like it right clicking > walk here when it hovers a tree you could use the following example.
-
-Example:
-```pascal
-function TRSWalker.Click(minimapPoint: TPoint; Randomness: Int32): Boolean; override;
-var
-  P: TPoint;
-begin
-  Result := True;
-
-  if Self.ScreenWalk then
-  begin
-    Mouse.Move(Minimap.PointToMsRect(minimapPoint).Mean());
-
-    if not MainScreen.IsUpText(['Walk here', 'Tree', 'tree']) then
-      Exit(ChooseOption.Select('Walk here'));
-  end else
-  begin
-    P := minimapPoint.Random(-Randomness, Randomness);
-    while not Minimap.IsPointOn(P) do
-      P := minimapPoint.Random(-Randomness, Randomness);
-
-    Mouse.Move(P);
-  end;
-
-  Mouse.Click(MOUSE_LEFT);
-
-  // 15% chance of spam clicking
-  if (Randomness > 0) and (Random() < 0.15) then
-    for 0 to Random(3) do
-    begin
-      Mouse.Click(Mouse.Position(), MOUSE_LEFT);
-
-      Wait(0, 150, wdLeft);
-    end;
-end;
-
-```
+If you wish to modify certain walker behaviors, it can be a good approach to override this function.
 *)
 function TRSWalker.Click(minimapPoint: TPoint; Randomness: Int32): Boolean;
 var
@@ -950,6 +911,48 @@ begin
 end;
 
 (*
+## Walker.WalkStepHelper()
+```pascal
+function TRSWalker.WalkStepHelper(playerPoint, walkerPoint: TPoint; out minimapPoint: TPoint): Boolean;
+```
+Internal method used by walker to help walking steps.
+You will probably never need to call this directly.
+*)
+function TRSWalker.WalkStepHelper(playerPoint, walkerPoint: TPoint; out minimapPoint: TPoint): Boolean;
+var
+  event_time: Int64;
+begin
+  event_time := GetTickCount();
+
+  // run events
+  if (@Self.OnWalkEvent <> nil) then
+    Self.OnWalkEvent(@Self, playerPoint, walkerPoint);
+  if (@Self.OnWalkEventEx <> nil) then
+    Self.OnWalkEventEx(@Self, playerPoint, walkerPoint);
+
+  // in case the events used a bit of time, while our character was moving towards a point, we have to update the current position.
+  if GetTickCount() - event_time > 100 then
+    playerPoint := Self.GetMyPos();
+
+  if not Self.Enabled then
+    Exit;
+
+  minimapPoint := Self.WorldToMM(playerPoint, walkerPoint, Minimap.GetCompassAngle(False));
+
+  if Self.ScreenWalk then
+  begin
+    if (Self.ScreenWalk and not Minimap.PointInZoomRectangle(minimapPoint)) then
+      Exit;
+  end
+  else
+  begin
+    if (not Minimap.IsPointOn(minimapPoint)) then
+      Exit;
+  end;
+  Result := True;
+end;
+
+(*
 ## Walker.WalkFinalStep
 ```pascal
 function TRSWalker.WalkFinalStep(playerPoint, walkerPoint: TPoint; WaitUntilDistance: Int32): Boolean;
@@ -961,27 +964,11 @@ You will probably never need to call this directly but it can be used to take a 
 function TRSWalker.WalkFinalStep(playerPoint, walkerPoint: TPoint; WaitUntilDistance: Int32): Boolean;
 var
   minimapPoint: TPoint;
-  event_time: Int64;
 begin
-  event_time := GetTickCount();
-  
-  // run events
-  if (@Self.OnWalkEvent <> nil) then
-    Self.OnWalkEvent(@Self, playerPoint, walkerPoint);
-  if (@Self.OnWalkEventEx <> nil) then
-    Self.OnWalkEventEx(@Self, playerPoint, walkerPoint);
-  
-  // in case the events used a bit of time, while our character was moving towards a point, we have to update the current position.
-  if GetTickCount() - event_time > 100 then
-    playerPoint := Self.GetMyPos();
+  if not Self.WalkStepHelper(playerPoint, walkerPoint, minimapPoint) then
+    Exit(not Self.Enabled);
 
-  if not Self.Enabled then
-    Exit(True);
-
-  minimapPoint := Self.WorldToMM(playerPoint, walkerPoint, Minimap.GetCompassAngle(False));
-  if (not Minimap.IsPointOn(minimapPoint)) then
-    Exit(False);
-  if (Minimap.Center.DistanceTo(minimapPoint) < 5) then
+  if (Minimap.Center().DistanceTo(minimapPoint) < 5) then
     Exit(True);
 
   Result := Self.Click(minimapPoint, 0);
@@ -1002,35 +989,18 @@ function TRSWalker.WalkStep(playerPoint, walkerPoint: TPoint): Boolean;
 var
   minimapPoint: TPoint;
   waitUntilDistance: Int32;
-  event_time: Int64;
 begin
-  event_time := GetTickCount();
-  
-  // run events
-  if (@Self.OnWalkEvent <> nil) then
-    Self.OnWalkEvent(@Self, playerPoint, walkerPoint);
-  if (@Self.OnWalkEventEx <> nil) then
-    Self.OnWalkEventEx(@Self, playerPoint, walkerPoint);
+  if not Self.WalkStepHelper(playerPoint, walkerPoint, minimapPoint) then
+    Exit(not Self.Enabled);
 
-  // in case the events used a bit of time, while our character was moving towards a point, we have to update the current position.
-  if GetTickCount() - event_time > 100 then
-    playerPoint := Self.GetMyPos();
-
-  if not Self.Enabled then
-    Exit(True);
-
-  minimapPoint := Self.WorldToMM(playerPoint, walkerPoint, Minimap.GetCompassAngle(False));
-  if (not Minimap.IsPointOn(minimapPoint)) then
-    Exit(False);
-  if (Minimap.Center.DistanceTo(minimapPoint) < 5) then
+  if (Minimap.Center().DistanceTo(minimapPoint) < 5) then
     Exit(True);
 
   Result := Self.Click(minimapPoint, Self.ClickRandomness);
-
   if Result then
   begin
     if (Random() < 0.15) then // 15% chance of randomness else mean
-      waitUntilDistance := Random(Distance(Minimap.Center, minimapPoint))
+      waitUntilDistance := Random(Distance(Minimap.Center(), minimapPoint))
     else
       waitUntilDistance := SRL.NormalRange(0, Distance(Minimap.Center(), minimapPoint) + 10);
 
