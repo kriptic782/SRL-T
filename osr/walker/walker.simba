@@ -884,20 +884,13 @@ begin
 
   if Self.ScreenWalk then
   begin
-    p := Minimap.RandomPointInZoomRectangle(minimapPoint, randomness);
-    if p = [0, 0] then
-      Exit;
+    p := Minimap.RandomPointOn(minimapPoint, randomness);
     Mouse.Move(Minimap.PointToMsRect(p).Mean());
     if not MainScreen.IsUpText('Walk here') then
       Exit(ChooseOption.Select('Walk here'));
   end
   else
-  begin
-    p := Minimap.RandomPointOn(minimapPoint, randomness);
-    if p = [0, 0] then
-      Exit;
-    Mouse.Move(p);
-  end;
+    Mouse.Move(Minimap.RandomPointOn(minimapPoint, randomness));
 
   Mouse.Click(MOUSE_LEFT);
 
@@ -941,12 +934,12 @@ begin
 
   if Self.ScreenWalk then
   begin
-    if (Self.ScreenWalk and not Minimap.PointInZoomRectangle(minimapPoint)) then
+    if not Minimap.PointOnZoomRectangle(minimapPoint) then
       Exit;
   end
   else
   begin
-    if (not Minimap.IsPointOn(minimapPoint)) then
+    if not Minimap.IsPointOn(minimapPoint) then
       Exit;
   end;
   Result := True;
@@ -961,7 +954,7 @@ function TRSWalker.WalkFinalStep(playerPoint, walkerPoint: TPoint; WaitUntilDist
 Internal method used by walker when finishing walking a path.
 You will probably never need to call this directly but it can be used to take a single step.
 *)
-function TRSWalker.WalkFinalStep(playerPoint, walkerPoint: TPoint; WaitUntilDistance: Int32): Boolean;
+function TRSWalker.WalkFinalStep(playerPoint, walkerPoint: TPoint; waitUntilDistance: Int32): Boolean;
 var
   minimapPoint: TPoint;
 begin
@@ -973,7 +966,7 @@ begin
 
   Result := Self.Click(minimapPoint, 0);
   if Result then
-    Self.WaitMoving(walkerPoint, WaitUntilDistance);
+    Self.WaitMoving(walkerPoint, waitUntilDistance);
 end;
 
 (*
@@ -1017,19 +1010,24 @@ function TRSWalker.IsWalkable(walkerPoint: TPoint; playerPoint: TPoint; Angle: D
 Internal method used by walker to decide if the destination point is within 1 click reach.
 You will probably never need to call this directly.
 *)
-function TRSWalker.IsWalkable(worldPoint: TPoint; playerPoint: TPoint; Angle: Double): Boolean;
+function TRSWalker.IsWalkable(walkerPoint: TPoint; playerPoint: TPoint; angle: Double): Boolean;
 var
   mmPoint: TPoint;
   r: TRectangle;
 begin
-  mmPoint := Self.WorldToMM(playerPoint, worldPoint, Angle);
+  mmPoint := Self.WorldToMM(playerPoint, walkerPoint, angle);
 
   Result := Minimap.IsPointOn(mmPoint, -1);
+
   if not ScreenWalk or not Result then
     Exit;
 
-  r := Minimap.PointToMSRect(mmPoint, 1, 1, Angle);
-  Result := MainScreen.IsVisible(r.mean()) and (CountColor($000000, r.Bounds.Expand(0, MainScreen.Bounds())) = 0);
+  r := Minimap.PointToMSRect(mmPoint, 1, 1, angle);
+
+  if not MainScreen.IsVisible(r.mean()) then
+    Exit;
+
+  Result := CountColor($0, r.Bounds().Expand(0, MainScreen.Bounds())) = 0;
 end;
 
 

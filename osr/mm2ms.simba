@@ -393,7 +393,7 @@ p := Minimap.GetDots(ERSMinimapDot.ITEM)[0]; //find an item dot and returns it's
 WriteLn Minimap.PointInZoomRadius(p);
 ```
 *)
-function TRSMinimap.PointInZoomRectangle(p: TPoint): Boolean;
+function TRSMinimap.PointOnZoomRectangle(p: TPoint): Boolean;
 begin
   Result := Self.IsPointOn(p) and MainScreen.IsVisible(Self.PointToMS(p));
 end;
@@ -406,7 +406,7 @@ function TRSMinimap.RandomPointInZoomRectangle(p: TPoint; randomness: Int32): TP
 Creates a random point that based on `randomness` and `p` that is within the zoom rectangle.
 Returns `[0, 0]` if the point couldn't be generated, e.g. it's too far away from the zoom rectangle.
 *)
-function TRSMinimap.RandomPointInZoomRectangle(p: TPoint; randomness: Int32): TPoint;
+function TRSMinimap.RandomPointOnZoomRectangle(p: TPoint; randomness: Int32): TPoint;
 var
   rect: TRectangle;
 begin
