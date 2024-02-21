@@ -26,6 +26,7 @@ The comments explains it. This is the datastructure MM2MS uses.
 type
   TMM2MS = record(TSRLBaseRecord)
     ZoomLevel: Int32;
+    ZoomRectangles: array [0..100] of TRectangle;
   end;
 
 procedure TMM2MS.DebugTiles(Dots: Boolean; Angle: Double = -1);
@@ -64,7 +65,7 @@ begin
   BMP.Free();
 end;
 
-function TMM2MS.GetZoomLevel: Integer;
+function TMM2MS.GetZoomLevel(): Integer;
 begin
   if (Self.ZoomLevel = -1) then
   begin
@@ -109,7 +110,7 @@ begin
   Result := Projector.Run(Arr, Vec3(0, 0, PI*2 - Roll));
 end;
 
-procedure TMM2MS.Setup;
+procedure TMM2MS.Setup();
 begin
   Self.Name := 'MM2MS';
   Self.ZoomLevel := -1;
@@ -370,14 +371,16 @@ begin
   if MM2MS.ZoomLevel = -1 then
     MM2MS.ZoomLevel := Options.GetZoomLevel();
 
+  if MM2MS.ZoomRectangles[MM2MS.ZoomLevel] <> [] then
+    Exit(MM2MS.ZoomRectangles[MM2MS.ZoomLevel]);
+
   Result := [
     MainScreen.PointToMM([MainScreen.X1(), MainScreen.Y1()]).ToPoint(),
     MainScreen.PointToMM([MainScreen.X2(), MainScreen.Y1()]).ToPoint(),
     MainScreen.PointToMM([MainScreen.X2(), MainScreen.Y2()]).ToPoint(),
     MainScreen.PointToMM([MainScreen.X1(), MainScreen.Y2()]).ToPoint()
   ];
-
-  Result := Result.FixOrder();
+  MM2MS.ZoomRectangles[MM2MS.ZoomLevel] := Result;
 end;
 
 (*
@@ -395,7 +398,7 @@ WriteLn Minimap.PointInZoomRadius(p);
 *)
 function TRSMinimap.PointOnZoomRectangle(p: TPoint): Boolean;
 begin
-  Result := Self.IsPointOn(p) and MainScreen.IsVisible(Self.PointToMS(p));
+  Result := p.InRect(Self.GetZoomRectangle());
 end;
 
 (*

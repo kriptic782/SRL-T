@@ -884,7 +884,7 @@ begin
 
   if Self.ScreenWalk then
   begin
-    p := Minimap.RandomPointOn(minimapPoint, randomness);
+    p := Minimap.RandomPointOnZoomRectangle(minimapPoint, randomness);
     Mouse.Move(Minimap.PointToMsRect(p).Mean());
     if not MainScreen.IsUpText('Walk here') then
       Exit(ChooseOption.Select('Walk here'));
