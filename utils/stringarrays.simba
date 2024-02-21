@@ -95,6 +95,25 @@ begin
   Result := Self.Find(value) > -1;
 end;
 
+function TStringArray.ContainsAny(const values: TStringArray): Boolean; constref;
+var
+  value: String;
+begin
+  for value in values do
+    if Self.Contains(value) then
+      Exit(True);
+end;
+
+function TStringArray.ContainsAll(const values: TStringArray): Boolean; constref;
+var
+  value: String;
+begin
+  for value in values do
+    if not Self.Contains(value) then
+      Exit;
+  Result := True;
+end;
+
 
 function TStringArray.Reversed(): TStringArray;
 var

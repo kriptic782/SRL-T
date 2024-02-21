@@ -106,16 +106,14 @@ TRSWalker is the record responsbile for walking and position.
 
     Map: TRSWalkerMap;
     Cache: TMatchTemplateRGBCache;
+    Scaling: Int32;
+    Similarity: Single;
 
     WebGraph: TWebGraph;
 
     EnableRunAtEnergy: Int32;
 
-    Scaling: Int32;
-    Similarity: Single;
-    ScreenWalk: Boolean;
-    AdaptiveWalk: Boolean;
-    NearZoomMode: Boolean;
+    ScreenWalk, AdaptiveWalk, NearZoomMode, FancyMouse: Boolean;
 
     ClickRandomness: Int32;
     AdaptiveToggleDistances: TPoint;
@@ -123,10 +121,10 @@ TRSWalker is the record responsbile for walking and position.
     Path: TPointArray;
     PathIndex: Int32;
 
-    FancyMouse: Boolean;
     MouseAheadTimer: Int32;
 
     Enabled: Boolean;
+    WalkUpText: TStringArray;
 
     OnWalkEvent: TRSWalker_OnWalkEvent;
     OnWalkEventEx: TRSWalker_OnWalkEventEx;
@@ -152,6 +150,7 @@ begin
   minimapSample := Self.ScaleMinimap(minimapImage, Self.Scaling);
 
   Self.Cache := TMatchTemplateRGBCache.Create(Self.Map.ScaledMap.ToMatrix(), MinimapSample.ToMatrix());
+  Self.WalkUpText := ['Walk here', 'lk he'];
 
   minimapSample.Free();
   minimapImage.Free();
@@ -876,8 +875,9 @@ If you wish to modify certain walker behaviors, it can be a good approach to ove
 *)
 function TRSWalker.Click(minimapPoint: TPoint; Randomness: Int32): Boolean;
 var
-  P: TPoint;
+  p: TPoint;
   i: Int32;
+  upText: String;
 begin
   Result := True;
   Self.CheckRunEnergy();
@@ -886,7 +886,9 @@ begin
   begin
     p := Minimap.RandomPointOnZoomRectangle(minimapPoint, randomness);
     Mouse.Move(Minimap.PointToMsRect(p).Mean());
-    if not MainScreen.IsUpText('Walk here') then
+    upText := MainScreen.GetUpText();
+
+    if not upText.ContainsAny(Self.WalkUpText) then
       Exit(ChooseOption.Select('Walk here'));
   end
   else
