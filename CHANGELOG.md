@@ -1,3 +1,12 @@
+## [4.0.11](https://github.com/Torwent/SRL-T/compare/v4.0.10...v4.0.11) (2024-02-21)
+
+
+### Bug Fixes
+
+* reverting recent walker changes related to random point generation ([478ce74](https://github.com/Torwent/SRL-T/commit/478ce74c36598df3f6e0fdf6dfbae525fafbcc7f))
+
+
+
 ## [4.0.10](https://github.com/Torwent/SRL-T/compare/v4.0.9...v4.0.10) (2024-02-20)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **walker:** add methods to convert coordinates from the minimap to the walker map ([c9832bf](https://github.com/Torwent/SRL-T/commit/c9832bf0fa51634c90ca627335ec8f26e2985bd0))
-
-
-
-## [4.0.6](https://github.com/Torwent/SRL-T/compare/v4.0.5...v4.0.6) (2024-02-16)
-
-
-### Bug Fixes
-
-* **WalkerMap:** setting up walker without region won't crash walker anymore ([c2c0586](https://github.com/Torwent/SRL-T/commit/c2c0586ae364d383cfd016c5595f38c5e00ac03b))
 
 
 
