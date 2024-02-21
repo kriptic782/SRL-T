@@ -1,3 +1,12 @@
+## [4.0.12](https://github.com/Torwent/SRL-T/compare/v4.0.11...v4.0.12) (2024-02-21)
+
+
+### Bug Fixes
+
+* **MM2MS:** read notes ([618bda1](https://github.com/Torwent/SRL-T/commit/618bda17cec05f162dfc39c7b118e916372997db))
+
+
+
 ## [4.0.11](https://github.com/Torwent/SRL-T/compare/v4.0.10...v4.0.11) (2024-02-21)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **ri:** now shows a dialog box that links you to the official java client if the current client is not supported ([5acd588](https://github.com/Torwent/SRL-T/commit/5acd5886b317fefc4ba45aa6a2ee7ea10d50d81e))
-
-
-
-## [4.0.7](https://github.com/Torwent/SRL-T/compare/v4.0.6...v4.0.7) (2024-02-16)
-
-
-### Bug Fixes
-
-* **walker:** add methods to convert coordinates from the minimap to the walker map ([c9832bf](https://github.com/Torwent/SRL-T/commit/c9832bf0fa51634c90ca627335ec8f26e2985bd0))
 
 
 
