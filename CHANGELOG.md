@@ -1,3 +1,12 @@
+# [4.1.0](https://github.com/Torwent/SRL-T/compare/v4.0.12...v4.1.0) (2024-02-21)
+
+
+### Features
+
+* **walker:** read notes ([8c32980](https://github.com/Torwent/SRL-T/commit/8c329804860ba129c210dd83951bc45d7ae31b7a))
+
+
+
 ## [4.0.12](https://github.com/Torwent/SRL-T/compare/v4.0.11...v4.0.12) (2024-02-21)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([6256e76](https://github.com/Torwent/SRL-T/commit/6256e7691dcb8e670bcef259ce2c05c41e994f2a))
-
-
-
-## [4.0.8](https://github.com/Torwent/SRL-T/compare/v4.0.7...v4.0.8) (2024-02-17)
-
-
-### Bug Fixes
-
-* **ri:** now shows a dialog box that links you to the official java client if the current client is not supported ([5acd588](https://github.com/Torwent/SRL-T/commit/5acd5886b317fefc4ba45aa6a2ee7ea10d50d81e))
 
 
 
