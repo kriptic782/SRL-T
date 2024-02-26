@@ -1,3 +1,12 @@
+## [4.1.1](https://github.com/Torwent/SRL-T/compare/v4.1.0...v4.1.1) (2024-02-26)
+
+
+### Bug Fixes
+
+* **TRSWalker:** TRSWalker.IsWalkable() was rolled back ([bbda28e](https://github.com/Torwent/SRL-T/commit/bbda28ee0896fd3210ea18ecc849d3cfce54cc20))
+
+
+
 # [4.1.0](https://github.com/Torwent/SRL-T/compare/v4.0.12...v4.1.0) (2024-02-21)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **walker:** some tweaks to fix issues with the latest commit on screenwalking ([4608a3c](https://github.com/Torwent/SRL-T/commit/4608a3cd116d8c3dca70e6d083d2239fb9468e77))
-
-
-
-## [4.0.9](https://github.com/Torwent/SRL-T/compare/v4.0.8...v4.0.9) (2024-02-20)
-
-
-### Bug Fixes
-
-* read notes ([6256e76](https://github.com/Torwent/SRL-T/commit/6256e7691dcb8e670bcef259ce2c05c41e994f2a))
 
 
 
