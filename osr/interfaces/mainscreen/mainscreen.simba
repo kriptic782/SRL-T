@@ -143,19 +143,7 @@ type
     UpTextBitmapBuffer: TMufasaBitmap;
     UpTextArea: TBox;
     UpTextFilter: TOCRFilter;
-
-    YellowClicks: TIntegerArray;
-    RedClicks: TIntegerArray;
   end;
-
-procedure TRSMainScreen.Free();
-var
-  Bitmap: Int32;
-begin
-  Self.UpTextBitmapBuffer.Free();
-  for Bitmap in Self.YellowClicks + Self.RedClicks do
-    FreeBitmap(Bitmap);
-end;
 
 (*
 ## MainScreen.Setup
@@ -181,22 +169,7 @@ begin
   Self.UpTextFilter := TOCRAnyColorFilter.Create(85, 65);
   Self.UpTextFilter.MinCharacterMatch := '-';
 
-  Self.YellowClicks := [
-    BitmapFromString(14, 14, 'meJxjZGBgBKP/DP+xIkaYAiCCiGFVjCwLZ2MqxpTCqhiXCRBxrGZiugqXO3H5lLqISNuJ9BGRoUR8yJMUm0SmEABZMScY'),
-    BitmapFromString(14, 14, 'meJxjZGBgBKP/DP+xIkaYAiCCiGFVjCwLZ2MqxpTCqhiXCWjieCxCU4xHGVbF+AOEDAOJcSQeHxEZSsSHPEmxSWQKAQAWmB8k'),
-    BitmapFromString(10, 10, 'meJxjZGBgBKP/DP/hiBEmCEQQMbgCZBE4GysXWTEyQrYLTQGmM4jUiMtSPI7E5SM8oQEA57h/pQ==')
-  ];
-
-  Self.RedClicks := [
-    BitmapFromString(14, 14, 'meJxjZGBgBKP/DP+xIkaYAiACqQKLYFUGl4WzMRVjSmFVjMsEiDhWMzFdhcuduHxKXUSk7UT6iMhQIj7kSYpNIlMIABY0Azw='),
-    BitmapFromString(14, 14, 'meJxjZGBgBKP/DP+xIkaYAiACqQKLYFUGl4WzMRVjSmFVjMsENHE8FqEpxqMMq2L8AUKGgcQ4Eo+PiAwl4kOepNgkMoUAALvi31U='),
-    BitmapFromString(10, 10, 'meJxjZGBgBKP/DP/hiBEmCEQgGbAIXAouAmdj5SIrRkbIdqEpwHQGkRpxWYrHkbh8hCc0AHnjV80=')
-  ];
-
-  for Bitmap in Self.YellowClicks + Self.RedClicks do
-    SetTransparentColor(Bitmap, $FF00FF);
-
-  AddOnTerminate(@Self.Free);
+  AddOnTerminate(@Self.UpTextBitmapBuffer.Free);
 end;
 
 procedure TRSMainScreen.SetupAlignment(Mode: ERSClientMode); override;
@@ -798,25 +771,21 @@ if MainScreen.FindClick([50,50,100,100]) = RS_CLICK_RED then
   WriteLn('Found a red click in 50,50,100,100');
 ```
 *)
-function TRSMainScreen.FindClick(Area: TBox): ERSClickType;
+function TRSMainScreen.FindClick(area: TBox): ERSClickType;
 var
-  X, Y: Int32;
-  Bitmap: Int32;
-  Attempt: Int32;
+  attempt: Int32;
 begin
-  Area.LimitTo(Self.Bounds);
+  area.LimitTo(Self.Bounds);
 
-  for Attempt := 1 to 2 do
+  for attempt := 1 to 2 do
   begin
-    for Bitmap in Self.YellowClicks do
-      if FindBitmapToleranceIn(Bitmap, X, Y, Area, 5) then
-        Exit(ERSClickType.YELLOW);
+    if SRL.CountColor(CTS1(65535,0), area) > 0 then
+      Exit(ERSClickType.YELLOW);
 
-    for Bitmap in Self.RedClicks do
-      if FindBitmapToleranceIn(Bitmap, X, Y, Area, 5) then
-        Exit(ERSClickType.RED);
+    if SRL.CountColor(CTS1(255,0), area) + SRL.CountColor(CTS1(262600,0), area) > 0 then
+      Exit(ERSClickType.RED);
 
-    if Attempt = 1 then // Try again after 50 ms
+    if attempt = 1 then // Try again after 50 ms
       Wait(50);
   end;
 end;
