@@ -1,3 +1,12 @@
+## [4.1.2](https://github.com/Torwent/SRL-T/compare/v4.1.1...v4.1.2) (2024-03-03)
+
+
+### Bug Fixes
+
+* add the same gitattributes changes from Wasplib by TaZe ([0872516](https://github.com/Torwent/SRL-T/commit/0872516e9e28e385f59516cb576d130b02b6f6e1))
+
+
+
 ## [4.1.1](https://github.com/Torwent/SRL-T/compare/v4.1.0...v4.1.1) (2024-02-26)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * reverting recent walker changes related to random point generation ([478ce74](https://github.com/Torwent/SRL-T/commit/478ce74c36598df3f6e0fdf6dfbae525fafbcc7f))
-
-
-
-## [4.0.10](https://github.com/Torwent/SRL-T/compare/v4.0.9...v4.0.10) (2024-02-20)
-
-
-### Bug Fixes
-
-* **walker:** some tweaks to fix issues with the latest commit on screenwalking ([4608a3c](https://github.com/Torwent/SRL-T/commit/4608a3cd116d8c3dca70e6d083d2239fb9468e77))
 
 
 
