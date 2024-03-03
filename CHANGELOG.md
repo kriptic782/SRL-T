@@ -1,3 +1,12 @@
+## [4.1.3](https://github.com/Torwent/SRL-T/compare/v4.1.2...v4.1.3) (2024-03-03)
+
+
+### Bug Fixes
+
+* .gitattributes remove pngs and zip ignore ([8e3cae4](https://github.com/Torwent/SRL-T/commit/8e3cae4a059c7124df5f0d3f0874f3c784fe80b8))
+
+
+
 ## [4.1.2](https://github.com/Torwent/SRL-T/compare/v4.1.1...v4.1.2) (2024-03-03)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **MM2MS:** read notes ([618bda1](https://github.com/Torwent/SRL-T/commit/618bda17cec05f162dfc39c7b118e916372997db))
-
-
-
-## [4.0.11](https://github.com/Torwent/SRL-T/compare/v4.0.10...v4.0.11) (2024-02-21)
-
-
-### Bug Fixes
-
-* reverting recent walker changes related to random point generation ([478ce74](https://github.com/Torwent/SRL-T/commit/478ce74c36598df3f6e0fdf6dfbae525fafbcc7f))
 
 
 
