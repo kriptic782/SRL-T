@@ -1,0 +1,71 @@
+{.$I SRL-T/osr.simba}
+
+const PATH = {$macro CURRENT_DIRECTORY};
+
+
+function String.Before(SubStr: String): String; constref;
+var
+  p: UInt32;
+begin
+  p := System.Pos(SubStr, Self);
+  if (p = 0) then Exit(Self);
+  Result := Copy(Self, 1, p - 1);
+end;
+
+procedure CreateHashesFile();
+const
+  ZIP_FILE = PATH + 'crop-images.zip';
+  TMP_PATH = PATH + 'images';
+var
+  files: TStringArray;
+  current, hash, id: String;
+  bmp: TMufasaBitmap;
+begin
+  WriteLn 'unzipping... this will take a while.';
+  //UnZipFile(ZIP_FILE, TMP_PATH);
+  WriteLn 'Done unzipping.';
+
+  if FileExists(PATH + 'hash-id') then
+    if not DeleteFile(PATH + 'hash-id') then
+    begin
+      WriteLn 'Something went wrong deleting the old hashes file. No privilleges?';
+      TerminateScript();
+    end;
+
+  for current in FindFiles(TMP_PATH + '\', ['.png']) do
+  begin
+    bmp.Init();
+    bmp.LoadFromFile(current);
+
+    if (bmp.getWidth() <> 36) or (bmp.getHeight() <> 24) then
+    begin
+      WriteLn(ExtractFileName(current), ' has wrong dimensions.');
+      bmp.Free();
+      Continue;
+    end;
+
+    bmp.ReplaceColor($202030, $0);
+
+    id := ExtractFileName(current).Before('.png');
+
+    if id = '1755' then
+    begin
+      ShowBitmap(bmp);
+      WriteLn bmp.getWidth();
+      WriteLn bmp.getHeight();
+    end;
+    hash := SHA1String(bmp.ToString());
+
+    if not WriteFileContents(PATH + 'hash-id', hash + '=' + id + LineEnding, True) then
+    begin
+      WriteLn 'Failed to write to hash-id';
+      TerminateScript();
+    end;
+
+    bmp.Free();
+  end;
+end;
+
+begin
+  CreateHashesFile();
+end.

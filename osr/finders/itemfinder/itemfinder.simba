@@ -33,7 +33,6 @@ end;
 ```pascal
 function TRSItemArray.Contains(const value: TRSItem): Boolean; constref;
 ```
-
 Find a TRSItem in a TRSItemArray and return true or false.
 *)
 function TRSItemArray.Contains(const value: TRSItem): Boolean; constref;
@@ -46,10 +45,9 @@ type
 
   TRSItemFinder = record(TSRLBaseRecord)
     IMAGES_ZIP: String;
-    ITEM_NAMES: String;
     IMAGES_PATH: String;
 
-    ItemNames: TStringList;
+    ItemNames, IDItem, HashID: TStringList;
     ItemFilters: array of record
       Name: String;
       Filter: TRSItemFinderCustomFilter;
@@ -68,6 +66,8 @@ var
   i, j: Int32;
 begin
   Self.ItemNames.Free();
+  Self.IDItem.Free();
+  Self.HashID.Free();
 
   for i := 0 to High(Self.ItemImages) do
     for j := 0 to High(Self.ItemImages[i].Images) do
@@ -76,8 +76,7 @@ end;
 
 procedure TRSItemFinder.Setup();
 begin
-  Self.IMAGES_ZIP  := {$macro CURRENT_DIRECTORY} + '/item-images.zip';
-  Self.ITEM_NAMES  := {$macro CURRENT_DIRECTORY} + '/item-names';
+  Self.IMAGES_ZIP  := {$macro CURRENT_DIRECTORY} + 'images.zip';
   Self.IMAGES_PATH := SIMBA_DATA_DIR + 'SRL' + DirectorySeparator + 'itemfinder' +
                       DirectorySeparator + SHA1File(Self.IMAGES_ZIP) +
                       DirectorySeparator;
@@ -88,8 +87,16 @@ begin
   Self.Similarity := 0.999;
 
   Self.ItemNames.Init();
-  Self.ItemNames.LoadFromFile(Self.ITEM_NAMES);
+  Self.ItemNames.LoadFromFile({$macro CURRENT_DIRECTORY} + 'item-id');
   Self.ItemNames.SetSorted(True);
+
+  Self.IDItem.Init();
+  Self.IDItem.LoadFromFile({$macro CURRENT_DIRECTORY} + 'id-item');
+  Self.IDItem.SetSorted(True);
+
+  Self.HashID.Init();
+  Self.HashID.LoadFromFile({$macro CURRENT_DIRECTORY} + 'hash-id');
+  Self.HashID.SetSorted(True);
 
   AddOnTerminate(@Self.Free);
 end;
@@ -130,19 +137,48 @@ type
   end;
 
 var
-  itemID: Int32;
+  index: Int32;
 begin
   if item.IsDigit() then
     Exit(Result + item.ExtractNumber());
 
-  itemID := Self.ItemNames.IndexOfName(item);
-  while SameText(item, Self.ItemNames.NameFromIndex(itemID)) do
+  index := Self.ItemNames.IndexOfName(item);
+  while SameText(item, Self.ItemNames.NameFromIndex(index)) do
   begin
-    Result := Result + StrToInt(Self.ItemNames.ValueFromIndex(itemID));
-
-    Inc(itemID);
+    Result := Result + StrToInt(Self.ItemNames.ValueFromIndex(index));
+    Inc(index);
   end;
 end;
+
+function TRSItemFinder.GetIDItem(item: Int32): String;
+var
+  index: Int32;
+begin
+  index := Self.IDItem.IndexOfName(ToStr(item));
+  Result := Self.IDItem.ValueFromIndex(index);
+end;
+
+function TRSItemFinder.GetHashIDs(hash: String): TIntegerArray;
+var
+  index: Int32;
+begin
+  index := Self.HashID.IndexOfName(hash);
+  while SameText(hash, Self.HashID.NameFromIndex(index)) do
+  begin
+    Result := Result + StrToInt(Self.HashID.ValueFromIndex(index));
+
+    Inc(index);
+  end;
+end;
+
+function TRSItemFinder.GetHashItems(hash: String): TStringArray;
+var
+  id: Int32;
+begin
+  for id in Self.GetHashIDs(hash) do
+    Result += Self.GetIDItem(id);
+end;
+
 
 
 function TRSItemFinder.GetItemImages(item: String): array of TMufasaBitmap;
