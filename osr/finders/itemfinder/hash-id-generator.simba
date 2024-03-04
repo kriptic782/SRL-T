@@ -16,6 +16,7 @@ function TMufasaBitmap.GetHash(): String;
 var
   str: String;
 begin
+  Self.ReplaceColor(0,0);
   SetLength(str, Self.getWidth()*Self.getHeight()*4);
   Move(Self.getdata()^, str[1], length(str));
   Result := SHA1String(str);
@@ -34,14 +35,14 @@ end;
 procedure CreateHashesFile();
 const
   ZIP_FILE = PATH + 'crop-images.zip';
-  TMP_PATH = PATH + 'images';
+  TMP_PATH = PATH + 'crop-images';
 var
   files: TStringArray;
   current, hash, id: String;
   bmp: TMufasaBitmap;
 begin
   WriteLn 'unzipping... this will take a while.';
-  UnZipFile(ZIP_FILE, TMP_PATH);
+  //UnZipFile(ZIP_FILE, TMP_PATH);
   WriteLn 'Done unzipping.';
 
   if FileExists(PATH + 'hash-id') then
@@ -56,7 +57,7 @@ begin
     bmp.Init();
     bmp.LoadFromFile(current);
 
-    if (bmp.getWidth() <> 36) or (bmp.getHeight() <> 24) then
+    if (bmp.getWidth() <> 36) or (bmp.getHeight() <> 23) then
     begin
       WriteLn(ExtractFileName(current), ' has wrong dimensions.');
       bmp.Free();
@@ -66,8 +67,6 @@ begin
     id := ExtractFileName(current).Before('.png');
 
     hash := bmp.GetHash();
-    if id = '1771' then
-      WriteLn bmp.GetString();
 
     if not WriteFileContents(PATH + 'hash-id', hash + '=' + id + LineEnding, True) then
     begin

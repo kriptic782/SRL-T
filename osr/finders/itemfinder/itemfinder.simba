@@ -121,7 +121,7 @@ end;
 
 
 //Thanks to Olly.
-//Make sure your bitmap has the top 8 pixels cropped (possible stack number) and is 36 width.
+//Make sure your bitmap has the top 9 pixels cropped (possible stack number) and is 36 width.
 function TRSItemFinder.GetHash(bmp: TMufasaBitmap): String;
 var
   str: String;
@@ -129,6 +129,53 @@ begin
   SetLength(str, bmp.getWidth()*bmp.getHeight()*4);
   Move(bmp.getdata()^, str[1], length(str));
   Result := SHA1String(str);
+end;
+
+//Attempt to clean an item bmp. Should be 36x23
+procedure TRSItemFinder.ClearItemBackground(bmp: TMufasaBitmap);
+const
+  FILL_COLOR = $0; //for debugging white is pretty good.
+var
+  black: TPointArray;
+  b: TBox;
+  boxes: TBoxArray;
+  x, y: Int32;
+begin
+  bmp.ReplaceColor($333333, FILL_COLOR); //item shadow
+  bmp.FindColors(black, RS_ITEM_BORDER);
+  b := black.Bounds();
+
+  boxes := b.Invert([-1,-1,36,24]);
+  bmp.DrawBoxesFilled(boxes, FILL_COLOR);
+  bmp.Debug();
+
+  for x := b.X1 to b.X2 do
+    for y := b.Y1 to b.Y2 do
+      case bmp.GetPixel(x, y) of
+        RS_ITEM_BORDER: if y = b.Y1 then Break(2) else Continue(2);
+        else bmp.SetPixel(x, y, FILL_COLOR);
+      end;
+
+  for x := b.X2 downto b.X1 do
+    for y := b.Y2 downto b.Y1 do
+      case bmp.GetPixel(x, y) of
+        RS_ITEM_BORDER: if y = b.Y2 then Break(2) else Continue(2);
+        else bmp.SetPixel(x, y, FILL_COLOR);
+      end;
+
+  for x := b.X1 to b.X2 do
+    for y := b.Y2 downto b.Y1 do
+      case bmp.GetPixel(x, y) of
+        RS_ITEM_BORDER: if y = b.Y2 then Break(2) else Continue(2);
+        else bmp.SetPixel(x, y, FILL_COLOR);
+      end;
+
+  for x := b.X2 downto b.X1 do
+    for y := b.Y1 to b.Y2 do
+      case bmp.GetPixel(x, y) of
+        RS_ITEM_BORDER: if y = b.Y1 then Break(2) else Continue(2);
+        else bmp.SetPixel(x, y, FILL_COLOR);
+      end
 end;
 
 
@@ -169,6 +216,7 @@ begin
   index := Self.IDItem.IndexOfName(ToStr(item));
   Result := Self.IDItem.ValueFromIndex(index);
 end;
+
 
 //original concept idea by CanadianJames and Skunks
 function TRSItemFinder.GetHashIDs(hash: String): TIntegerArray;
