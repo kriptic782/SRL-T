@@ -1,3 +1,12 @@
+## [4.2.2](https://github.com/Torwent/SRL-T/compare/v4.2.1...v4.2.2) (2024-03-04)
+
+
+### Bug Fixes
+
+* **itemfinder:** change hashes file with Olly suggestions ([88b86e1](https://github.com/Torwent/SRL-T/commit/88b86e11061dd2e496defc8da8d2537a0de1a43a))
+
+
+
 ## [4.2.1](https://github.com/Torwent/SRL-T/compare/v4.2.0...v4.2.1) (2024-03-04)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * add the same gitattributes changes from Wasplib by TaZe ([0872516](https://github.com/Torwent/SRL-T/commit/0872516e9e28e385f59516cb576d130b02b6f6e1))
-
-
-
-## [4.1.1](https://github.com/Torwent/SRL-T/compare/v4.1.0...v4.1.1) (2024-02-26)
-
-
-### Bug Fixes
-
-* **TRSWalker:** TRSWalker.IsWalkable() was rolled back ([bbda28e](https://github.com/Torwent/SRL-T/commit/bbda28ee0896fd3210ea18ecc849d3cfce54cc20))
 
 
 
