@@ -1,3 +1,12 @@
+# [4.2.0](https://github.com/Torwent/SRL-T/compare/v4.1.3...v4.2.0) (2024-03-04)
+
+
+### Features
+
+* **itemfinder:** Item BMP to ID and Name conversion ([55933f7](https://github.com/Torwent/SRL-T/commit/55933f7f4f0b22c0c1f1af3ebfdb4f22dca7ac1b))
+
+
+
 ## [4.1.3](https://github.com/Torwent/SRL-T/compare/v4.1.2...v4.1.3) (2024-03-03)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **walker:** read notes ([8c32980](https://github.com/Torwent/SRL-T/commit/8c329804860ba129c210dd83951bc45d7ae31b7a))
-
-
-
-## [4.0.12](https://github.com/Torwent/SRL-T/compare/v4.0.11...v4.0.12) (2024-02-21)
-
-
-### Bug Fixes
-
-* **MM2MS:** read notes ([618bda1](https://github.com/Torwent/SRL-T/commit/618bda17cec05f162dfc39c7b118e916372997db))
 
 
 
