@@ -1,3 +1,12 @@
+## [4.2.3](https://github.com/Torwent/SRL-T/compare/v4.2.2...v4.2.3) (2024-03-04)
+
+
+### Bug Fixes
+
+* **itemfinder:** several improvements to the reverse itemfinder ([cd8cbe4](https://github.com/Torwent/SRL-T/commit/cd8cbe4cb2a188829a6db065c2e12be5f12a1e90))
+
+
+
 ## [4.2.2](https://github.com/Torwent/SRL-T/compare/v4.2.1...v4.2.2) (2024-03-04)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * .gitattributes remove pngs and zip ignore ([8e3cae4](https://github.com/Torwent/SRL-T/commit/8e3cae4a059c7124df5f0d3f0874f3c784fe80b8))
-
-
-
-## [4.1.2](https://github.com/Torwent/SRL-T/compare/v4.1.1...v4.1.2) (2024-03-03)
-
-
-### Bug Fixes
-
-* add the same gitattributes changes from Wasplib by TaZe ([0872516](https://github.com/Torwent/SRL-T/commit/0872516e9e28e385f59516cb576d130b02b6f6e1))
 
 
 
