@@ -147,8 +147,8 @@ begin
 
   boxes := b.Invert([-1,-1,36,24]);
   bmp.DrawBoxesFilled(boxes, FILL_COLOR);
-  bmp.Debug();
 
+  //THIS NEEDS IMPROVEMENTS!
   for x := b.X1 to b.X2 do
     for y := b.Y1 to b.Y2 do
       case bmp.GetPixel(x, y) of
