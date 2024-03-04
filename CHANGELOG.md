@@ -1,3 +1,12 @@
+## [4.2.1](https://github.com/Torwent/SRL-T/compare/v4.2.0...v4.2.1) (2024-03-04)
+
+
+### Bug Fixes
+
+* forgot to credit CanadianJames and Skunks! ([53fb25b](https://github.com/Torwent/SRL-T/commit/53fb25b80f30c67cecd8b4c500be6c94e2ca2d4c))
+
+
+
 # [4.2.0](https://github.com/Torwent/SRL-T/compare/v4.1.3...v4.2.0) (2024-03-04)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSWalker:** TRSWalker.IsWalkable() was rolled back ([bbda28e](https://github.com/Torwent/SRL-T/commit/bbda28ee0896fd3210ea18ecc849d3cfce54cc20))
-
-
-
-# [4.1.0](https://github.com/Torwent/SRL-T/compare/v4.0.12...v4.1.0) (2024-02-21)
-
-
-### Features
-
-* **walker:** read notes ([8c32980](https://github.com/Torwent/SRL-T/commit/8c329804860ba129c210dd83951bc45d7ae31b7a))
 
 
 
