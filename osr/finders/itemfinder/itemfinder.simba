@@ -158,6 +158,7 @@ begin
   Result := Self.IDItem.ValueFromIndex(index);
 end;
 
+//original concept idea by CanadianJames and Skunks
 function TRSItemFinder.GetHashIDs(hash: String): TIntegerArray;
 var
   index: Int32;
