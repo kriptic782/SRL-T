@@ -1,3 +1,12 @@
+## [4.2.5](https://github.com/Torwent/SRL-T/compare/v4.2.4...v4.2.5) (2024-03-04)
+
+
+### Bug Fixes
+
+* **itemfinder:** added ITEM_NAMES  again for compatibility reasons ([2c843f6](https://github.com/Torwent/SRL-T/commit/2c843f6e69c54145eea770a6a6405721445632d4))
+
+
+
 ## [4.2.4](https://github.com/Torwent/SRL-T/compare/v4.2.3...v4.2.4) (2024-03-04)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * forgot to credit CanadianJames and Skunks! ([53fb25b](https://github.com/Torwent/SRL-T/commit/53fb25b80f30c67cecd8b4c500be6c94e2ca2d4c))
-
-
-
-# [4.2.0](https://github.com/Torwent/SRL-T/compare/v4.1.3...v4.2.0) (2024-03-04)
-
-
-### Features
-
-* **itemfinder:** Item BMP to ID and Name conversion ([55933f7](https://github.com/Torwent/SRL-T/commit/55933f7f4f0b22c0c1f1af3ebfdb4f22dca7ac1b))
 
 
 
