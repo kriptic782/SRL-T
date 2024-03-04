@@ -12,6 +12,25 @@ begin
   Result := Copy(Self, 1, p - 1);
 end;
 
+function TMufasaBitmap.GetHash(): String;
+var
+  str: String;
+begin
+  SetLength(str, Self.getWidth()*Self.getHeight()*4);
+  Move(Self.getdata()^, str[1], length(str));
+  Result := SHA1String(str);
+end;
+
+//for debugging purposes.
+function TMufasaBitmap.GetString(): String;
+var
+  str: String;
+begin
+  SetLength(str, Self.getWidth()*Self.getHeight()*4);
+  Move(Self.getdata()^, str[1], length(str));
+  Result := str;
+end;
+
 procedure CreateHashesFile();
 const
   ZIP_FILE = PATH + 'crop-images.zip';
@@ -22,7 +41,7 @@ var
   bmp: TMufasaBitmap;
 begin
   WriteLn 'unzipping... this will take a while.';
-  //UnZipFile(ZIP_FILE, TMP_PATH);
+  UnZipFile(ZIP_FILE, TMP_PATH);
   WriteLn 'Done unzipping.';
 
   if FileExists(PATH + 'hash-id') then
@@ -44,17 +63,11 @@ begin
       Continue;
     end;
 
-    bmp.ReplaceColor($202030, $0);
-
     id := ExtractFileName(current).Before('.png');
 
-    if id = '1755' then
-    begin
-      ShowBitmap(bmp);
-      WriteLn bmp.getWidth();
-      WriteLn bmp.getHeight();
-    end;
-    hash := SHA1String(bmp.ToString());
+    hash := bmp.GetHash();
+    if id = '1771' then
+      WriteLn bmp.GetString();
 
     if not WriteFileContents(PATH + 'hash-id', hash + '=' + id + LineEnding, True) then
     begin

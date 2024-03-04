@@ -120,6 +120,18 @@ begin
 end;
 
 
+//Thanks to Olly.
+//Make sure your bitmap has the top 8 pixels cropped (possible stack number) and is 36 width.
+function TRSItemFinder.GetHash(bmp: TMufasaBitmap): String;
+var
+  str: String;
+begin
+  SetLength(str, bmp.getWidth()*bmp.getHeight()*4);
+  Move(bmp.getdata()^, str[1], length(str));
+  Result := SHA1String(str);
+end;
+
+
 function TRSItemFinder.GetItemIDs(item: String): TIntegerArray;
 type
   TStringList = TStringList;
