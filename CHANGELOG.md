@@ -1,3 +1,12 @@
+## [4.2.4](https://github.com/Torwent/SRL-T/compare/v4.2.3...v4.2.4) (2024-03-04)
+
+
+### Bug Fixes
+
+* removed leftover debugging ([91927f5](https://github.com/Torwent/SRL-T/commit/91927f5beeeff4a8b46f52e8ba0b774f2fa8841c))
+
+
+
 ## [4.2.3](https://github.com/Torwent/SRL-T/compare/v4.2.2...v4.2.3) (2024-03-04)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **itemfinder:** Item BMP to ID and Name conversion ([55933f7](https://github.com/Torwent/SRL-T/commit/55933f7f4f0b22c0c1f1af3ebfdb4f22dca7ac1b))
-
-
-
-## [4.1.3](https://github.com/Torwent/SRL-T/compare/v4.1.2...v4.1.3) (2024-03-03)
-
-
-### Bug Fixes
-
-* .gitattributes remove pngs and zip ignore ([8e3cae4](https://github.com/Torwent/SRL-T/commit/8e3cae4a059c7124df5f0d3f0874f3c784fe80b8))
 
 
 
