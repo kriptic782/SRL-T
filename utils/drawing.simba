@@ -51,7 +51,7 @@ procedure TMufasaBitmap.FromClient(Area: TBox);
 Copy client to bitmap.
 *)
 procedure TMufasaBitmap.FromClient(Area: TBox=[0,0,-1,-1]);
-var 
+var
   W,H: Int32;
 begin
   client.GetIOManager().GetDimensions(W,H);
@@ -60,13 +60,25 @@ begin
   Self.Init(client.GetMBitmaps);
   Self.CopyClientToBitmap(client.GetIOManager, True, Area.X1, Area.Y1, Area.X2, Area.Y2);
 end;
-  
-procedure TMufasaBitmap.Clear; constref; overload;
+
+procedure TMufasaBitmap.FromFile(path: String);
+begin
+  if (self <> nil) and (self.GetIndex() <> -1) then self.Free();
+  Self.Init();
+  Self.LoadFromFile(path);
+end;
+
+function TMufasaBitmap.Bounds(): TBox;
+begin
+  Result := [0, 0, Self.getWidth()-1, Self.getHeight()-1];
+end;
+
+procedure TMufasaBitmap.Clear(); constref; overload;
 begin
   Self.DrawClear(0);
 end;
 
-procedure TMufasaBitmap.Clear(Area: TBox); constref; overload;
+procedure TMufasaBitmap.Clear(area: TBox); constref; overload;
 begin
   Self.DrawBoxFilled(Area, False, 0);
 end;
@@ -258,7 +270,7 @@ begin
   Self.DrawBox(Box, BoxColor);
 end;
 
-procedure TMufasaBitmap.Debug;
+procedure TMufasaBitmap.Debug();
 begin
   ShowBitmap(Self);
 end;

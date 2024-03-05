@@ -135,49 +135,103 @@ end;
 
 //Attempt to clean an item bmp. Should be 36x23
 procedure TRSItemFinder.ClearItemBackground(bmp: TMufasaBitmap);
+  function AdjacentBorder(p: TPoint): Boolean;
+  var
+    q: TPoint;
+    c: Int32;
+  begin
+    for q in [[0,1],[1,0],[1,1],[-1,0],[0,-1],[1,-1],[-1,1],[-1,-1]] do
+    begin
+      q := p.Offset(q);
+      if not q.InBox(bmp.Bounds()) then
+        Continue;
+      c := bmp.GetPixel(q.X, q.Y);
+      if c = RS_ITEM_BORDER then
+        Exit(True);
+    end;
+  end;
+
 const
-  FILL_COLOR = $0; //for debugging white is pretty good.
+  FILL = $0; //for debugging white is pretty good.
 var
-  black: TPointArray;
-  b: TBox;
-  boxes: TBoxArray;
-  x, y: Int32;
+  border, line1, line2, tpa, corners, bg: TPointArray;
+  atpa, tmp: T2DPointArray;
+  i, j: Int32;
+  colors, around: TIntegerArray;
+  color, tol, average: Int32;
+  hue, sat: Extended;
+  p, q: TPoint;
 begin
-  bmp.ReplaceColor($333333, FILL_COLOR); //item shadow
-  bmp.FindColors(black, RS_ITEM_BORDER);
-  b := black.Bounds();
+  corners := bmp.Bounds().ToRectangle().ToTPA();
+  bmp.FindColors(border, RS_ITEM_BORDER);
 
-  boxes := b.Invert([-1,-1,36,24]);
-  bmp.DrawBoxesFilled(boxes, FILL_COLOR);
+  tpa := border.Invert(bmp.Bounds());
 
-  //THIS NEEDS IMPROVEMENTS!
-  for x := b.X1 to b.X2 do
-    for y := b.Y1 to b.Y2 do
-      case bmp.GetPixel(x, y) of
-        RS_ITEM_BORDER: if y = b.Y1 then Break(2) else Continue(2);
-        else bmp.SetPixel(x, y, FILL_COLOR);
-      end;
+  line1 := TPAFromLine(corners[0], corners[2]);
+  line2 := TPAFromLine(corners[1], corners[3]);
 
-  for x := b.X2 downto b.X1 do
-    for y := b.Y2 downto b.Y1 do
-      case bmp.GetPixel(x, y) of
-        RS_ITEM_BORDER: if y = b.Y2 then Break(2) else Continue(2);
-        else bmp.SetPixel(x, y, FILL_COLOR);
-      end;
+  for p in line1 do
+  begin
+    if AdjacentBorder(p) then
+      Break;
+    colors += bmp.GetPixel(p.X, p.Y);
+  end;
 
-  for x := b.X1 to b.X2 do
-    for y := b.Y2 downto b.Y1 do
-      case bmp.GetPixel(x, y) of
-        RS_ITEM_BORDER: if y = b.Y2 then Break(2) else Continue(2);
-        else bmp.SetPixel(x, y, FILL_COLOR);
-      end;
+  for p in line2 do
+  begin
+    if AdjacentBorder(p) then
+      Break;
+    colors += bmp.GetPixel(p.X, p.Y);
+  end;
 
-  for x := b.X2 downto b.X1 do
-    for y := b.Y1 to b.Y2 do
-      case bmp.GetPixel(x, y) of
-        RS_ITEM_BORDER: if y = b.Y1 then Break(2) else Continue(2);
-        else bmp.SetPixel(x, y, FILL_COLOR);
-      end
+  for p in line1.Reversed() do
+  begin
+    if AdjacentBorder(p) then
+      Break;
+    colors += bmp.GetPixel(p.X, p.Y);
+  end;
+
+  for p in line2.Reversed() do
+  begin
+    if AdjacentBorder(p) then
+      Break;
+    colors += bmp.GetPixel(p.X, p.Y);
+  end;
+
+  ACA(colors, 2, color, tol, hue, sat);
+  tol += 1;
+  try
+    SetColorToleranceSpeed(2);
+    SetToleranceSpeed2Modifiers(hue, sat);
+    for p in tpa do
+      if SimilarColors(color, bmp.GetPixel(p.X, p.Y), tol) then
+        bg += p;
+  finally
+    SetColorToleranceSpeed(1);
+    SetToleranceSpeed2Modifiers(0.2, 0.2);
+  end;
+
+  tmp := bg.Cluster(1);
+
+  for i := High(tmp) downto 0 do
+  begin
+    for j := 0 to High(tmp[i]) do
+      if AdjacentBorder(tmp[i,j]) then
+        Continue(2);
+
+    Delete(tmp, i, 1);
+  end;
+
+  bg := tmp.Merge();
+  tpa := bg.Invert(bmp.Bounds());
+
+  tmp := tpa.Cluster(1);
+  for i := High(tmp) downto 0 do
+    if Length(tmp[i]) = 1 then
+      bg += tmp[i];
+
+  bmp.DrawTPA(bg, FILL);
+  bmp.ReplaceColor($333333, FILL);
 end;
 
 

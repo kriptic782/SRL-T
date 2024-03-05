@@ -1020,8 +1020,10 @@ end;
 ```pascal
 function TRSMinimap.FindDotShadows(bmp: TMufasaBitmap): T2DPointArray;
 ```
-
 Returns an ATPA of the found dot shadows in a bitmap of the minimap.
+
+```{note}Credits: Torwent
+```
 
 Example:
 ```pascal
@@ -1579,7 +1581,6 @@ end;
 ```pascal
 function TRSMinimap.GetDotsBitmap(BMP: TMufasaBitmap; Dots: ERSMinimapDots): TPointArray;
 ```
-
 Returns the ERSMinimapDots found in a bitmap of the minimap.
 *)
 function TRSMinimap.GetDotsBitmap(bmp: TMufasaBitmap; dots: ERSMinimapDots): TPointArray;
@@ -1676,7 +1677,6 @@ end;
 function TRSMinimap.GetDots(Dots: ERSMinimapDots): TPointArray;
 function TRSMinimap.GetDots(Dot: ERSMinimapDot): TPointArray; overload;
 ```
-
 Returns a TPointArray with the coordinates of the ERSMinimapDots found on the minimap.
 *)
 function TRSMinimap.GetDots(dots: ERSMinimapDots): TPointArray;
