@@ -1,3 +1,12 @@
+## [4.2.6](https://github.com/Torwent/SRL-T/compare/v4.2.5...v4.2.6) (2024-03-05)
+
+
+### Bug Fixes
+
+* **itemfinder:** added a much better item bg cleaner. ([5e8afc3](https://github.com/Torwent/SRL-T/commit/5e8afc3cf60d7d474e126f6a0d8400f197c8cc57))
+
+
+
 ## [4.2.5](https://github.com/Torwent/SRL-T/compare/v4.2.4...v4.2.5) (2024-03-04)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **itemfinder:** change hashes file with Olly suggestions ([88b86e1](https://github.com/Torwent/SRL-T/commit/88b86e11061dd2e496defc8da8d2537a0de1a43a))
-
-
-
-## [4.2.1](https://github.com/Torwent/SRL-T/compare/v4.2.0...v4.2.1) (2024-03-04)
-
-
-### Bug Fixes
-
-* forgot to credit CanadianJames and Skunks! ([53fb25b](https://github.com/Torwent/SRL-T/commit/53fb25b80f30c67cecd8b4c500be6c94e2ca2d4c))
 
 
 
