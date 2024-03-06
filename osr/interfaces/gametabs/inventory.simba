@@ -66,6 +66,7 @@ begin
   Self.HIGH_SLOT := 27;
   Self.ItemInterface.Name := Self.Name + '.ItemInterface';
   Self.ItemInterface.GetSearchBoxesFunction := @Self.GetSlotBoxes;
+  Self.ItemInterface.DiscoverOffset := [0, 0, 4,9];
 end;
 
 procedure TRSInventory.SetupAlignment(Mode: ERSClientMode); override;
@@ -586,7 +587,6 @@ end;
 ```pascal
 function TRSInventory.ContainsAll(items: TRSItemArray): Boolean;
 ```
-
 Returns true if the inventory contains all items passed in **items**.
 
 Example:
@@ -600,12 +600,26 @@ begin
 end;
 
 
+function TRSInventory.DiscoverAllEx(): array of TRSItemArray;
+begin
+  Result := Self.ItemInterface.DiscoverAllEx();
+end;
+
+function TRSInventory.DiscoverAll(): TRSItemArray;
+begin
+  Result := Self.ItemInterface.DiscoverAll();
+end;
+
+function TRSInventory.Discover(slot: Int32): TRSItemArray;
+begin
+  Result := Self.ItemInterface.Discover(slot);
+end;
+
 (*
 ## Inventory.CountItem
 ```pascal
 function TRSInventory.CountItem(Item: TRSItem): Int32;
 ```
-
 Returns the amount of **Item** in the inventory.
 Keep in mind this does not count a stack number, but every single item that occupies an inventory slot.
 

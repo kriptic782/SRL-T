@@ -66,6 +66,7 @@ begin
   Self.Name := 'Equipment';
   Self.ItemInterface.Name := Self.Name + '.ItemInterface';
   Self.ItemInterface.GetSearchBoxesFunction := @Self.GetSlotBoxes;
+  Self.ItemInterface.DiscoverOffset := [-1,-1, 4, 9];
 end;
 
 procedure TRSEquipment.SetupAlignment(Mode: ERSClientMode); override;
@@ -102,20 +103,20 @@ begin
 end;
 
 
-function TRSEquipment.FindItem(Item: TRSItem; out box: TBox): Boolean;
+function TRSEquipment.FindItem(Item: TRSItem; out bounds: TBox): Boolean;
 begin
   if not Self.Open() then
     Exit;
 
-  Result := Self.ItemInterface.Find([item], box);
+  Result := Self.ItemInterface.Find([item], bounds);
 end;
 
 //for use without having to pass extra parameters
 function TRSEquipment.ContainsItem(Item: TRSItem): Boolean;
 var
-  B: TBox;
+  b: TBox;
 begin
-  Result := Self.FindItem(Item, B);
+  Result := Self.FindItem(Item, b);
 end;
 
 function TRSEquipment.FindItem(Item: TRSItem): Boolean; overload; deprecated 'Use TRSEquipment.ContainsItem()';
@@ -143,6 +144,27 @@ begin
   for item in items do
     if not Self.ContainsItem(item) then
       Exit(False);
+end;
+
+
+function TRSEquipment.DiscoverAllEx(): array of TRSItemArray;
+begin
+  Result := Self.ItemInterface.DiscoverAllEx();
+end;
+
+function TRSEquipment.DiscoverAll(): TRSItemArray;
+begin
+  Result := Self.ItemInterface.DiscoverAll();
+end;
+
+function TRSEquipment.Discover(slot: ERSEquipmentButton): TRSItemArray;
+begin
+  Result := Self.ItemInterface.Discover(Ord(slot));
+end;
+
+function TRSEquipment.Discover(slot: Int32): TRSItemArray; overload;
+begin
+  Result := Self.ItemInterface.Discover(slot);
 end;
 
 function TRSEquipment.HoverItem(Item: TRSItem): Boolean;

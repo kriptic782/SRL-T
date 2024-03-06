@@ -6,6 +6,7 @@
 type
   TRSItemInterface = record(TSRLBaseRecord)
     GetSearchBoxesFunction: function: TBoxArray of object;
+    DiscoverOffset: TBox;
   end;
 
 function TRSItemInterface.GetSlotBoxes(slots: TIntegerArray): TBoxArray;
@@ -260,6 +261,73 @@ begin
       found += matches[i].Item;
 
   Result := Length(found) = Length(items);
+end;
+
+
+function TRSItemInterface.DiscoverAllEx(): array of TRSItemArray;
+var
+  b: TBox;
+  bmp: TMufasaBitmap;
+begin
+  if (@Self.GetSearchBoxesFunction = nil) then
+    Self.Fatal('ItemInterface.GetSearchBoxesFunction = nil');
+
+  for b in Self.GetSearchBoxesFunction() do
+  begin
+    b.X1 += DiscoverOffset.X1;
+    b.Y1 += DiscoverOffset.Y1;
+    b.X2 += DiscoverOffset.X2;
+    b.Y1 += DiscoverOffset.Y2;
+
+    bmp.FromClient(b);
+    ItemFinder.CleanItemBitmap(bmp);
+    Result += ItemFinder.GetHashItems(ItemFinder.GetHash(bmp));
+    bmp.Free();
+  end;
+end;
+
+function TRSItemInterface.DiscoverAll(): TRSItemArray;
+var
+  b: TBox;
+  bmp: TMufasaBitmap;
+begin
+  if (@Self.GetSearchBoxesFunction = nil) then
+    Self.Fatal('ItemInterface.GetSearchBoxesFunction = nil');
+
+  for b in Self.GetSearchBoxesFunction() do
+  begin
+    b.X1 += DiscoverOffset.X1;
+    b.Y1 += DiscoverOffset.Y1;
+    b.X2 += DiscoverOffset.X2;
+    b.Y1 += DiscoverOffset.Y2;
+
+    bmp.FromClient(b);
+    ItemFinder.CleanItemBitmap(bmp);
+    Result += ItemFinder.GetHashItems(ItemFinder.GetHash(bmp));
+    bmp.Free();
+  end;
+end;
+
+
+function TRSItemInterface.Discover(slot: Int32): TRSItemArray;
+var
+  b: TBox;
+  bmp: TMufasaBitmap;
+begin
+  b := Self.GetSlotBox(slot);
+
+  b.X1 += DiscoverOffset.X1;
+  b.Y1 += DiscoverOffset.Y1;
+  b.X2 += DiscoverOffset.X2;
+  b.Y1 += DiscoverOffset.Y2;
+
+  WriteLn b;
+
+  bmp.FromClient(b);
+  bmp.Debug();
+  ItemFinder.CleanItemBitmap(bmp);
+  Result := ItemFinder.GetHashItems(ItemFinder.GetHash(bmp));
+  bmp.Free();
 end;
 
 

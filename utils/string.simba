@@ -207,6 +207,26 @@ begin
   Result := Copy(Self, 1, p - 1);
 end;
 
+function String.Between(start, finish: String): String; constref;
+var
+  p: UInt32;
+begin
+  Result := System.Between(start, finish, Self);
+end;
+
+
+
+function String.SubString(start, finish: Int32): String;
+begin
+  Result := Copy(Self, start, finish);
+end;
+
+function String.SubString(finish: Int32): String; overload;
+begin
+  Result := Copy(Self, 1, finish);
+end;
+
+
 (*
 ## String.Count
 ```pascal
