@@ -1,3 +1,12 @@
+# [4.3.0](https://github.com/Torwent/SRL-T/compare/v4.2.6...v4.3.0) (2024-03-06)
+
+
+### Features
+
+* **itemfinder:** reverse itemfinder is finished ([778e269](https://github.com/Torwent/SRL-T/commit/778e2690f4400991825d64655ef0b57cd4c71b4b))
+
+
+
 ## [4.2.6](https://github.com/Torwent/SRL-T/compare/v4.2.5...v4.2.6) (2024-03-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **itemfinder:** several improvements to the reverse itemfinder ([cd8cbe4](https://github.com/Torwent/SRL-T/commit/cd8cbe4cb2a188829a6db065c2e12be5f12a1e90))
-
-
-
-## [4.2.2](https://github.com/Torwent/SRL-T/compare/v4.2.1...v4.2.2) (2024-03-04)
-
-
-### Bug Fixes
-
-* **itemfinder:** change hashes file with Olly suggestions ([88b86e1](https://github.com/Torwent/SRL-T/commit/88b86e11061dd2e496defc8da8d2537a0de1a43a))
 
 
 
