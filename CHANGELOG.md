@@ -1,3 +1,12 @@
+## [4.3.4](https://github.com/Torwent/SRL-T/compare/v4.3.3...v4.3.4) (2024-03-07)
+
+
+### Bug Fixes
+
+* **equipment:** methods open it first again ([04ecf46](https://github.com/Torwent/SRL-T/commit/04ecf46079da6a91bcc0b24ee8f41fd876b86b41))
+
+
+
 ## [4.3.3](https://github.com/Torwent/SRL-T/compare/v4.3.2...v4.3.3) (2024-03-07)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **itemfinder:** reverse itemfinder is finished ([778e269](https://github.com/Torwent/SRL-T/commit/778e2690f4400991825d64655ef0b57cd4c71b4b))
-
-
-
-## [4.2.6](https://github.com/Torwent/SRL-T/compare/v4.2.5...v4.2.6) (2024-03-05)
-
-
-### Bug Fixes
-
-* **itemfinder:** added a much better item bg cleaner. ([5e8afc3](https://github.com/Torwent/SRL-T/commit/5e8afc3cf60d7d474e126f6a0d8400f197c8cc57))
 
 
 
