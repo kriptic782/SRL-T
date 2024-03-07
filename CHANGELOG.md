@@ -1,3 +1,12 @@
+## [4.3.2](https://github.com/Torwent/SRL-T/compare/v4.3.1...v4.3.2) (2024-03-07)
+
+
+### Bug Fixes
+
+* **ItemInterface:** CountStack(slot) works again ([e937aca](https://github.com/Torwent/SRL-T/commit/e937acae6fe898d272eb982419c6853e75698454))
+
+
+
 ## [4.3.1](https://github.com/Torwent/SRL-T/compare/v4.3.0...v4.3.1) (2024-03-07)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **itemfinder:** added ITEM_NAMES  again for compatibility reasons ([2c843f6](https://github.com/Torwent/SRL-T/commit/2c843f6e69c54145eea770a6a6405721445632d4))
-
-
-
-## [4.2.4](https://github.com/Torwent/SRL-T/compare/v4.2.3...v4.2.4) (2024-03-04)
-
-
-### Bug Fixes
-
-* removed leftover debugging ([91927f5](https://github.com/Torwent/SRL-T/commit/91927f5beeeff4a8b46f52e8ba0b774f2fa8841c))
 
 
 
