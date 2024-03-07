@@ -1,3 +1,12 @@
+## [4.3.1](https://github.com/Torwent/SRL-T/compare/v4.3.0...v4.3.1) (2024-03-07)
+
+
+### Bug Fixes
+
+* **ItemFinder:** read notes ([40d8a02](https://github.com/Torwent/SRL-T/commit/40d8a020647d1cfdfcbcd73823d1e92191f2c886))
+
+
+
 # [4.3.0](https://github.com/Torwent/SRL-T/compare/v4.2.6...v4.3.0) (2024-03-06)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * removed leftover debugging ([91927f5](https://github.com/Torwent/SRL-T/commit/91927f5beeeff4a8b46f52e8ba0b774f2fa8841c))
-
-
-
-## [4.2.3](https://github.com/Torwent/SRL-T/compare/v4.2.2...v4.2.3) (2024-03-04)
-
-
-### Bug Fixes
-
-* **itemfinder:** several improvements to the reverse itemfinder ([cd8cbe4](https://github.com/Torwent/SRL-T/commit/cd8cbe4cb2a188829a6db065c2e12be5f12a1e90))
 
 
 
