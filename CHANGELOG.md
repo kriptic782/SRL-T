@@ -1,3 +1,12 @@
+## [4.3.3](https://github.com/Torwent/SRL-T/compare/v4.3.2...v4.3.3) (2024-03-07)
+
+
+### Bug Fixes
+
+* compatibility with latest SRL-T ([4c9b09c](https://github.com/Torwent/SRL-T/commit/4c9b09c9365bc1138fd53005b4b89a737878635a))
+
+
+
 ## [4.3.2](https://github.com/Torwent/SRL-T/compare/v4.3.1...v4.3.2) (2024-03-07)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **itemfinder:** added a much better item bg cleaner. ([5e8afc3](https://github.com/Torwent/SRL-T/commit/5e8afc3cf60d7d474e126f6a0d8400f197c8cc57))
-
-
-
-## [4.2.5](https://github.com/Torwent/SRL-T/compare/v4.2.4...v4.2.5) (2024-03-04)
-
-
-### Bug Fixes
-
-* **itemfinder:** added ITEM_NAMES  again for compatibility reasons ([2c843f6](https://github.com/Torwent/SRL-T/commit/2c843f6e69c54145eea770a6a6405721445632d4))
 
 
 
