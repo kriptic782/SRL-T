@@ -397,14 +397,16 @@ end;
 
 function TRSItemInterface.CountStack(slot: Int32): Int32;
 var
-  box: TBox;
+  b: TBox;
 begin
   Result := -1;
 
-  box := Self.GetSlotBox(slot);
-  box.X2 := box.X1 + 35;
-  box.Y2 := box.Y1 + 8;
-  Result := SRL.GetItemAmount(box);
+  b := Self.GetSlotBox(slot);
+  b.X1 += Self.DiscoverOffset.X1;
+  b.Y1 += Self.DiscoverOffset.Y1 - 9;
+  b.X2 := b.X1 + 35;
+  b.Y2 := b.Y1 + 8;
+  Result := SRL.GetItemAmount(b);
 end;
 
 function TRSItemInterface.CountStack(item: TRSItem): Int32; overload;
