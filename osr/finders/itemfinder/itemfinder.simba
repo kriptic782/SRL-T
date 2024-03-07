@@ -135,7 +135,7 @@ begin
 end;
 
 //Attempt to clean an item bmp. Should be 36x23
-procedure TRSItemFinder.CleanItemBitmap(bmp: TMufasaBitmap);
+function TRSItemFinder.CleanItemBitmap(bmp: TMufasaBitmap): Boolean;
 const
   NOTED_TPA: TPointArray = [[2,0],[2,1],[2,2],[2,3],[3,4],[4,4],[2,5],[1,6],[1,7],[1,8],[1,9],[1,10],[1,11],[1,12],[1,13],[1,14],[1,15],[1,16],[1,17],[2,18],[3,18],[4,18],[5,18],[6,18],[7,18],[8,18],[9,18],[10,18],[11,18],[12,19],[13,19],[14,19],[15,19],[16,19],[17,19],[18,19],[19,20],[20,20],[21,20],[22,20],[23,20],[24,20],[25,20],[26,20],[27,20],[28,19],[28,18],[28,17],[28,16],[28,15],[28,14],[28,13],[28,12],[28,11],[27,10],[27,9],[27,8],[28,7],[28,6],[28,5],[28,4],[28,3],[28,2],[29,1],[29,0]];
 var
@@ -148,6 +148,10 @@ var
   noted: Boolean;
 begin
   bmp.FindColors(border, RS_ITEM_BORDER);
+  if border = [] then
+    Exit;
+
+  Result := True;
   matrix := bmp.ToMatrix();
 
   corners := [[0,bmp.getHeight()-1], [bmp.getWidth()-1,bmp.getHeight()-1]];

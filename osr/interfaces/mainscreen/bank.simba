@@ -317,7 +317,7 @@ WriteLn ItemInterface.Find(Item, Boxes);
 *)
 function TRSBank.FindItemBoundaries(): TBoxArray;
 var
-  tpa: TPointArray;
+  tpa, final: TPointArray;
   atpa: T2DPointArray;
   area, b: TBox;
   i: Int32;
@@ -327,10 +327,14 @@ begin
   area.X2 := Self.X2() - 63;
   area.Y2 := Self.Y2() - 44;
 
-  if SRL.FindColors(tpa, RS_ITEM_BORDER, area) = 0 then
+  if SRL.FindColors(final, RS_ITEM_BORDER, area) = 0 then
     Exit;
 
-  atpa := tpa.Cluster(200, 3);
+  for i in [RS_ITEM_YELLOW_STACK, RS_ITEM_WHITE_STACK, RS_ITEM_GREEN_STACK] do
+    if SRL.FindColors(tpa, i, area) > 0 then
+      final += tpa;
+
+  atpa := final.Cluster(200, 3);
 
   for i := 0 to High(atpa) do
   begin
@@ -338,7 +342,7 @@ begin
     if b.Height() <= 5 then
       Continue;
 
-    Result += Grid(8, 1, 32, b.Height(), [16], [area.X1, b.Y1 - 1]);
+    Result += Grid(8, 1, 32, 32, [16], [area.X1, b.Y1 - 1]);
   end;
 end;
 
@@ -357,7 +361,6 @@ end;
 ```pascal
 procedure Bank.Setup;
 ```
-
 Initializes Bank variables.
 
 ```{note}
@@ -371,6 +374,7 @@ begin
   Self.Name := 'Bank';
   Self.ItemInterface.Name := Self.Name + '.ItemInterface';
   Self.ItemInterface.GetSearchBoxesFunction := @Self.FindItemBoundaries;
+  Self.ItemInterface.DiscoverOffset := [0, 10, 3, 0];
   Self.GetScrollAreaFunction := @Self.ScrollAreaFunction;
 
   Self.FINDER_UPTEXT := ['Use Bank', 'Bank chest', 'Bank Bank', 'Bank booth', 'Banker'];
@@ -1138,6 +1142,51 @@ end;
 
 
 (*
+## Bank.DiscoverAll
+```pascal
+function TRSBank.DiscoverAllEx(): array of TRSItemArray;
+function TRSBank.DiscoverAll(): TRSItemArray;
+```
+Returns all possible items found visible in the bank.
+The extended version returns an `array of TRSItemArray` while the other returns
+a flat `TRSItemArray`.
+
+Example:
+```pascal
+if Bank.Open() then
+  WriteLn Bank.DiscoverAll();
+```
+*)
+function TRSBank.DiscoverAllEx(): array of TRSItemArray;
+begin
+  Result := Self.ItemInterface.DiscoverAllEx();
+end;
+
+function TRSBank.DiscoverAll(): TRSItemArray;
+begin
+  Result := Self.ItemInterface.DiscoverAll();
+end;
+
+(*
+## Bank.Discover
+```pascal
+function TRSBank.Discover(slot: Int32): TRSItemArray;
+```
+Discovers what item is on the specified bank `slot`.
+
+Example:
+```pascal
+if Bank.Open() then
+  WriteLn Bank.Discover(0);
+```
+*)
+function TRSBank.Discover(slot: Int32): TRSItemArray;
+begin
+  Result := Self.ItemInterface.Discover(slot);
+end;
+
+
+(*
 ## Bank.ContainsAny
 ```pascal
 function TRSBank.ContainsAny(items: TRSItemArray): Boolean;
@@ -1395,7 +1444,7 @@ end;
 var
 (*
 ## var Bank
-  Global Bank variable.
+Global Bank variable.
 *)
   Bank: TRSBank;
 

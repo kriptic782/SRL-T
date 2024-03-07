@@ -1,62 +1,79 @@
+(*
+# Equipment
+Methods to interact with the Equipment tab.
+*)
 {$DEFINE SRL_STATS_INCLUDED}
 {$IFNDEF SRL_OSR}
   {$I SRL-T/osr.simba}
 {$ENDIF}
 
 type
-  ERSEquipmentButton = (
-    HELM,
-    CAPE,
-    AMULET,
-    AMMO,
-    WEAPON,
-    BODY,
-    SHIELD,
-    LEGS,
-    GLOVES,
-    FEET,
-    RING,
-    
-    STATS,
-    PRICES,
-    DEATH,
-    FOLLOWER
+(*
+(ERSEquipmentSlot)=
+## type ERSEquipmentSlot
+```pascal
+ERSEquipmentSlot = (
+  HELM, SECONDARY_AMMO, CAPE, AMULET, AMMO, WEAPON,
+  BODY, SHIELD, LEGS, GLOVES, FEET, RING
+);
+```
+Enumerator of the equipment slots.
+*)
+  ERSEquipmentSlot = (
+    HELM, SECONDARY_AMMO, CAPE, AMULET, AMMO, WEAPON,
+    BODY, SHIELD, LEGS, GLOVES, FEET, RING
   );
-  
+
+(*
+(ERSEquipmentButton)=
+## type ERSEquipmentButton
+```pascal
+ERSEquipmentButton = (STATS, PRICES, DEATH, FOLLOWER);
+```
+Enumerator of the equipment buttons.
+*)
+  ERSEquipmentButton = (STATS, PRICES, DEATH, FOLLOWER);
+
+(*
+(TRSEquipment)=
+## type TRSEquipment
+```pascal
+TRSEquipment = record(TRSInterface)
+  Slots: TBoxArray;
+end;
+```
+Main equipment type reponsible for handling it.
+*)
   TRSEquipment = record(TRSInterface)
     Slots: TBoxArray;
   end;
 
 
-
+(*
+## Equipment.GetSlotBoxes
+```pascal
 function TRSEquipment.GetSlotBoxes(): TBoxArray;
-var
-  tba: TBoxArray = [
-    [80, 8, 30, 30],
-    [39, 47, 30, 30],
-    [81, 47, 30, 30],
-    [121, 47, 30, 30],
-    [24, 86, 30, 30],
-    [81, 86, 30, 30],
-    [136, 86, 30, 30],
-    [80, 126, 30, 30],
-    [24, 166, 30, 30],
-    [80, 166, 30, 30],
-    [136, 166, 30, 30]
-  ];
-  i: Int32;
+```
+Returns the boxes of slots in the equipment tab.
+
+Example:
+```pascal
+Debug(Equipment.GetSlotBoxes());
+```
+*)
+function TRSEquipment.GetSlotBoxes(): TBoxArray;
 begin
   if Self.Slots <> [] then
     Exit(Self.Slots);
 
-  for i := 0 to High(tba) do
-  begin
-    tba[i].X2 += tba[i].X1;
-    tba[i].Y2 += tba[i].Y1;
-  end;
+  Result := Grid(3,2, 35, 35, [6, 4], [Self.X1()+33, Self.Y1()+5]) +
+            Grid(3,3, 35, 35, [21, 5], [Self.X1()+18, Self.Y1()+83]);
 
-  Self.Slots := tba.Offset([Self.X1()-4, Self.Y1()]);
-  Result := Self.Slots;
+  Delete(Result, 0, 1);
+  Delete(Result, 8, 1);
+  Delete(Result, 9, 1);
+
+  Self.Slots := Result;
 end;
 
 procedure TRSEquipment.Setup(); override;
@@ -66,7 +83,7 @@ begin
   Self.Name := 'Equipment';
   Self.ItemInterface.Name := Self.Name + '.ItemInterface';
   Self.ItemInterface.GetSearchBoxesFunction := @Self.GetSlotBoxes;
-  Self.ItemInterface.DiscoverOffset := [-1,-1, 4, 9];
+  Self.ItemInterface.DiscoverOffset := [2, 11, 2, -2];
 end;
 
 procedure TRSEquipment.SetupAlignment(Mode: ERSClientMode); override;
@@ -79,31 +96,97 @@ begin
   Self.Alignment.Bottom := [@GameTab.Y2];
 end;
 
-function TRSEquipment.IsOpen: Boolean;
+
+(*
+## Equipment.IsOpen
+```pascal
+function TRSEquipment.IsOpen(): Boolean;
+```
+Returns true/false whether the equipment tab is open or not.
+
+Example:
+```pascal
+WriteLn Equipment.IsOpen();
+```
+*)
+function TRSEquipment.IsOpen(): Boolean;
 begin
-  Result := (GameTabs.GetCurrentTab() = ERSGameTab.EQUIPMENT);
+  Result := GameTabs.GetCurrentTab() = ERSGameTab.EQUIPMENT;
 end;
 
-function TRSEquipment.Open: Boolean;
+(*
+## Equipment.Open
+```pascal
+function TRSEquipment.Open(): Boolean;
+```
+Attempts to open the equipment tab.
+Returns true if we succeed.
+
+Example:
+```pascal
+WriteLn Equipment.Open();
+```
+*)
+function TRSEquipment.Open(): Boolean;
 begin
   Result := GameTabs.Open(ERSGameTab.EQUIPMENT);
 end;
 
-function TRSEquipment.GetButtons: TRSButtonArray;
+
+(*
+## Equipment.GetButtons
+```pascal
+function TRSEquipment.GetButtons(): TRSButtonArray;
+```
+Returns a `TRSButtonArray` of the bottom equipment buttons.
+
+Example:
+```pascal
+Debug(Equipment.GetButtons());
+```
+*)
+function TRSEquipment.GetButtons(): TRSButtonArray;
 begin
-  Result := Self.FindButtons([[34,34], [40,40]]);
+  Result := Self.FindButtons([[40,40]]);
 end;
 
-function TRSEquipment.GetButton(Button: ERSEquipmentButton): TRSButton;
+(*
+## Equipment.GetButton
+```pascal
+function TRSEquipment.GetButton(button: ERSEquipmentButton): TRSButton;
+```
+Returns a `TRSButton` of the specified equipment button.
+
+Example:
+```pascal
+Debug([Equipment.GetButton(ERSEquipmentButton.PRICES)]);
+```
+*)
+function TRSEquipment.GetButton(button: ERSEquipmentButton): TRSButton;
 var
-  Buttons: TRSButtonArray := Self.GetButtons();
+  buttons: TRSButtonArray;
 begin
-  if Length(Buttons) = Length(ERSEquipmentButton) then
-    Result := Buttons[Button];
+  buttons := Self.GetButtons();
+  if Length(buttons) = Length(ERSEquipmentButton) then
+    Result := buttons[button];
 end;
 
 
-function TRSEquipment.FindItem(Item: TRSItem; out bounds: TBox): Boolean;
+(*
+## Equipment.FindItem
+```pascal
+function TRSEquipment.FindItem(item: TRSItem; out bounds: TBox): Boolean;
+```
+Returns true if we find the `item` specified in the equipment tab.
+`bounds` will return a `TBox` of the item bounds.
+
+Example:
+```pascal
+if Equipment.FindItem('Abyssal whip', bounds) then
+  Debug(bounds);
+```
+*)
+function TRSEquipment.FindItem(item: TRSItem; out bounds: TBox): Boolean;
 begin
   if not Self.Open() then
     Exit;
@@ -111,12 +194,22 @@ begin
   Result := Self.ItemInterface.Find([item], bounds);
 end;
 
-//for use without having to pass extra parameters
+
+(*
+## Equipment.ContainsItem
+```pascal
+function TRSEquipment.ContainsItem(item: TRSItem): Boolean;
+```
+Same as {ref}`Equipment.FindItem` without the bounds.
+
+Example:
+```pascal
+WriteLn Equipment.ContainsItem('Abyssal whip');
+```
+*)
 function TRSEquipment.ContainsItem(Item: TRSItem): Boolean;
-var
-  b: TBox;
 begin
-  Result := Self.FindItem(Item, b);
+  Result := Self.ItemInterface.Contains(item);
 end;
 
 function TRSEquipment.FindItem(Item: TRSItem): Boolean; overload; deprecated 'Use TRSEquipment.ContainsItem()';
@@ -127,26 +220,57 @@ begin
 end;
 
 
+(*
+## Equipment.ContainsAny
+```pascal
 function TRSEquipment.ContainsAny(items: TRSItemArray): Boolean;
-var
-  item: TRSItem;
+```
+Returns true if any item on the `items` parameter is found on the equipment tab.
+
+Example:
+```pascal
+WriteLn Equipment.ContainsAny(['Abyssal whip', 'Dragon dagger']);
+```
+*)
+function TRSEquipment.ContainsAny(items: TRSItemArray): Boolean;
 begin
-  for item in items do
-    if Self.ContainsItem(item) then
-      Exit(True);
+  Result := Self.ItemInterface.ContainsAny(items);
 end;
 
+(*
+## Equipment.ContainsAll
+```pascal
 function TRSEquipment.ContainsAll(items: TRSItemArray): Boolean;
-var
-  item: TRSItem;
+```
+Returns true if all items on the `items` parameter are found on the equipment tab.
+
+Example:
+```pascal
+WriteLn Equipment.ContainsAll(['Abyssal whip', 'Dragon dagger']);
+```
+*)
+function TRSEquipment.ContainsAll(items: TRSItemArray): Boolean;
 begin
-  Result := True;
-  for item in items do
-    if not Self.ContainsItem(item) then
-      Exit(False);
+  Result := Self.ItemInterface.ContainsAll(items);
 end;
 
 
+(*
+## Equipment.DiscoverAll
+```pascal
+function TRSEquipment.DiscoverAllEx(): array of TRSItemArray;
+function TRSEquipment.DiscoverAll(): TRSItemArray;
+```
+Returns all possible items found in the equipment.
+The extended version returns an `array of TRSItemArray` while the other returns
+a flat `TRSItemArray`.
+
+Example:
+```pascal
+if Equipment.Open() then
+  WriteLn Equipment.DiscoverAll();
+```
+*)
 function TRSEquipment.DiscoverAllEx(): array of TRSItemArray;
 begin
   Result := Self.ItemInterface.DiscoverAllEx();
@@ -157,6 +281,20 @@ begin
   Result := Self.ItemInterface.DiscoverAll();
 end;
 
+(*
+## Equipment.Discover
+```pascal
+function TRSEquipment.Discover(slot: ERSEquipmentButton): TRSItemArray;
+function TRSInventory.Discover(slot: Int32): TRSItemArray;
+```
+Discovers what item is on the specified equipment `slot`.
+
+Example:
+```pascal
+if Equipment.Open() then
+  WriteLn Equipment.Discover(0);
+```
+*)
 function TRSEquipment.Discover(slot: ERSEquipmentButton): TRSItemArray;
 begin
   Result := Self.ItemInterface.Discover(Ord(slot));
@@ -167,33 +305,63 @@ begin
   Result := Self.ItemInterface.Discover(slot);
 end;
 
-function TRSEquipment.HoverItem(Item: TRSItem): Boolean;
-var
-  B: TBox;
+
+(*
+## Equipment.HoverItem
+```pascal
+function TRSEquipment.HoverItem(item: TRSItem): Boolean;
+```
+Attempts to hover an item, returns false if the item is not on the equipment tab.
+
+Example:
+```pascal
+WriteLn Equipment.HoverItem('Abyssal whip');
+```
+*)
+function TRSEquipment.HoverItem(item: TRSItem): Boolean;
 begin
-  if Self.FindItem(Item, B) then
-  begin
-    Mouse.Move(B);
-    Result := True;
-  end;
+  Self.ItemInterface.MouseItem(item);
 end;
 
-function TRSEquipment.ClickItem(Item: TRSItem; Option: String = ''): Boolean;
-begin
-  if Self.HoverItem(Item) then
-  begin
-    if Option <> '' then
-      Result := ChooseOption.Select(Option)
-    else
-    begin
-      Result := True;
+(*
+## Equipment.ClickItem
+```pascal
+function TRSEquipment.ClickItem(item: TRSItem; option: String = ''): Boolean;
+```
+Attempts to click an item, if an `option` is specified, that `option` will be
+selected if it exists via right clicking if it's not the first action.
 
-      Mouse.Click(MOUSE_LEFT);
-    end;
-  end;
+Returns false if the item is not found or the option specified doesn't exist.
+
+Example:
+```pascal
+WriteLn Equipment.ClickItem('Abyssal whip');
+```
+*)
+function TRSEquipment.ClickItem(item: TRSItem; option: String = ''): Boolean;
+begin
+  if not Self.IsOpen() then
+    Exit;
+
+  Result := Self.ItemInterface.InteractItem(item, option);
 end;
 
-//to count arrows, darts, etc.
+(*
+## Equipment.CountItemStack
+```pascal
+function TRSEquipment.CountItemStack(item: TRSItem): Int32;
+```
+Attempts to count an item stack.
+Realistically, it's only useful for ammo or any other few stackable items that
+can be equipped.
+
+Returns `-1` if the item is not found or if there's no stack number to read.
+
+Example:
+```pascal
+WriteLn Equipment.CountItemStack('Broad bolts');
+```
+*)
 function TRSEquipment.CountItemStack(item: TRSItem): Int32;
 begin
   if not Self.IsOpen() then
@@ -203,47 +371,84 @@ begin
 end;
 
 
-function TRSEquipment.IsSlotUsed(b: TBox): Boolean; overload;
+(*
+## Equipment.IsSlotUsed
+```pascal
+function TRSEquipment.IsSlotUsed(b: TBox): Boolean;
+function TRSEquipment.IsSlotUsed(slot: ERSEquipmentSlot): Boolean; overload;
+```
+Returns true if a slot is occupied.
+
+Example:
+```pascal
+WriteLn Equipment.IsSlotUsed(ERSEquipmentSlot.WEAPON);
+```
+*)
+function TRSEquipment.IsSlotUsed(b: TBox): Boolean;
 begin
   // black with tolerance for when item is transparent
   Result := SRL.CountColor(CTS1(1118740, 35), b) > 0;
 end;
 
-function TRSEquipment.IsSlotUsed(Slot: ERSEquipmentButton): Boolean; overload;
+function TRSEquipment.IsSlotUsed(slot: ERSEquipmentSlot): Boolean; overload;
 begin
-  Result := Self.Open and Self.IsSlotUsed(Self.GetButton(Slot).Bounds);
-end;
-
-function TRSEquipment.CountGear: Int32;
-var
-  i: ERSEquipmentButton;
-begin
-  for i := ERSEquipmentButton.HELM to ERSEquipmentButton.Ring do
-    if Self.IsSlotUsed(i) then
-      Result += 1;
+  Result := Self.Open() and Self.ItemInterface.SlotUsed(Ord(slot));
 end;
 
 
+(*
+## Equipment.CountGear
+```pascal
+function TRSEquipment.CountGear(): Int32;
+```
+Returns the number of equipped items.
+
+Example:
+```pascal
+WriteLn Equipment.CountGear();
+```
+*)
+function TRSEquipment.CountGear(): Int32;
+begin
+  Result := Self.ItemInterface.Count();
+end;
+
+
+procedure TRSEquipment.Draw(bitmap: TMufasaBitmap); override;
+begin
+  if not Self.IsOpen() then
+    Exit;
+
+  inherited();
+
+  bitmap.DrawBoxes(Self.GetSlotBoxes(), $00FFFF);
+  bitmap.DrawButtons(Self.GetButtons());
+end;
+
 var
+(*
+## var Equipment
+Global Equipment variable.
+*)
   Equipment: TRSEquipment;
 
-procedure TRSClient.ClientModeChanged; override;
+procedure TRSClient.ClientModeChanged(); override;
 begin
   inherited;
 
   Equipment.SetupAlignment(Self.Mode);
 end;
 
-procedure TSRL.Setup; override;
+procedure TSRL.Setup(); override;
 begin
   inherited;
 
   Equipment.Setup();
 end;
 
-procedure TSRL.Debug(Bitmap: TMufasaBitmap); override;
+procedure TSRL.Debug(bitmap: TMufasaBitmap); override;
 begin
   inherited;
 
-  Equipment.Draw(Bitmap);
+  Equipment.Draw(bitmap);
 end;

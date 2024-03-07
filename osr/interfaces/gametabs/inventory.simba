@@ -66,7 +66,7 @@ begin
   Self.HIGH_SLOT := 27;
   Self.ItemInterface.Name := Self.Name + '.ItemInterface';
   Self.ItemInterface.GetSearchBoxesFunction := @Self.GetSlotBoxes;
-  Self.ItemInterface.DiscoverOffset := [0, 0, 4,9];
+  Self.ItemInterface.DiscoverOffset := [0, 9, 4, 0];
 end;
 
 procedure TRSInventory.SetupAlignment(Mode: ERSClientMode); override;
@@ -549,7 +549,6 @@ end;
 ```pascal
 function TRSInventory.ContainsAny(items: TRSItemArray): Boolean;
 ```
-
 Returns true if the inventory contains any of the items passed in **items**.
 It's the same as TRSInventory.FindItems() but without requiring a **Slots** parameter.
 
@@ -600,6 +599,22 @@ begin
 end;
 
 
+(*
+## Inventory.DiscoverAll
+```pascal
+function TRSInventory.DiscoverAllEx(): array of TRSItemArray;
+function TRSInventory.DiscoverAll(): TRSItemArray;
+```
+Returns all possible items found in the inventory.
+The extended version returns an `array of TRSItemArray` while the other returns
+a flat `TRSItemArray`.
+
+Example:
+```pascal
+if Inventory.Open() then
+  WriteLn Inventory.DiscoverAll();
+```
+*)
 function TRSInventory.DiscoverAllEx(): array of TRSItemArray;
 begin
   Result := Self.ItemInterface.DiscoverAllEx();
@@ -610,10 +625,24 @@ begin
   Result := Self.ItemInterface.DiscoverAll();
 end;
 
+(*
+## Inventory.Discover
+```pascal
+function TRSInventory.Discover(slot: Int32): TRSItemArray;
+```
+Discovers what item is on the specified inventory `slot`.
+
+Example:
+```pascal
+if Inventory.Open() then
+  WriteLn Inventory.Discover(0);
+```
+*)
 function TRSInventory.Discover(slot: Int32): TRSItemArray;
 begin
   Result := Self.ItemInterface.Discover(slot);
 end;
+
 
 (*
 ## Inventory.CountItem
