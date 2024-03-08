@@ -356,7 +356,7 @@ WriteLn Equipment.ClickItem('Abyssal whip');
 *)
 function TRSEquipment.ClickItem(item: TRSItem; option: String = ''): Boolean;
 begin
-  if not Self.IsOpen() then
+  if not Self.Open() then
     Exit;
   Result := Self.ItemInterface.InteractItem(item, option);
 end;
