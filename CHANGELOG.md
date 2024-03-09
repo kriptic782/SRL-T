@@ -1,3 +1,12 @@
+## [4.3.6](https://github.com/Torwent/SRL-T/compare/v4.3.5...v4.3.6) (2024-03-09)
+
+
+### Bug Fixes
+
+* **Bank:** Bank.FindItemTab() shouldn't crash anymore ([3da2c24](https://github.com/Torwent/SRL-T/commit/3da2c24d46e8a3ffe81f4ca5513e05ee1edaed30))
+
+
+
 ## [4.3.5](https://github.com/Torwent/SRL-T/compare/v4.3.4...v4.3.5) (2024-03-08)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **ItemInterface:** CountStack(slot) works again ([e937aca](https://github.com/Torwent/SRL-T/commit/e937acae6fe898d272eb982419c6853e75698454))
-
-
-
-## [4.3.1](https://github.com/Torwent/SRL-T/compare/v4.3.0...v4.3.1) (2024-03-07)
-
-
-### Bug Fixes
-
-* **ItemFinder:** read notes ([40d8a02](https://github.com/Torwent/SRL-T/commit/40d8a020647d1cfdfcbcd73823d1e92191f2c886))
 
 
 
