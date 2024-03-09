@@ -1,3 +1,12 @@
+## [4.3.7](https://github.com/Torwent/SRL-T/compare/v4.3.6...v4.3.7) (2024-03-09)
+
+
+### Bug Fixes
+
+* **equipment:** minor typo in the new discover method ([e26f0a9](https://github.com/Torwent/SRL-T/commit/e26f0a99244121c53681cf675e348d04f0522964))
+
+
+
 ## [4.3.6](https://github.com/Torwent/SRL-T/compare/v4.3.5...v4.3.6) (2024-03-09)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * compatibility with latest SRL-T ([4c9b09c](https://github.com/Torwent/SRL-T/commit/4c9b09c9365bc1138fd53005b4b89a737878635a))
-
-
-
-## [4.3.2](https://github.com/Torwent/SRL-T/compare/v4.3.1...v4.3.2) (2024-03-07)
-
-
-### Bug Fixes
-
-* **ItemInterface:** CountStack(slot) works again ([e937aca](https://github.com/Torwent/SRL-T/commit/e937acae6fe898d272eb982419c6853e75698454))
 
 
 
