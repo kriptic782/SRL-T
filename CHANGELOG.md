@@ -1,3 +1,12 @@
+## [4.3.8](https://github.com/Torwent/SRL-T/compare/v4.3.7...v4.3.8) (2024-03-09)
+
+
+### Bug Fixes
+
+* **equipment:** HoverItem now sets the result ([aa9ea4a](https://github.com/Torwent/SRL-T/commit/aa9ea4ac4183bf1518093af95a2fdfa7a6c4a8e4))
+
+
+
 ## [4.3.7](https://github.com/Torwent/SRL-T/compare/v4.3.6...v4.3.7) (2024-03-09)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **equipment:** methods open it first again ([04ecf46](https://github.com/Torwent/SRL-T/commit/04ecf46079da6a91bcc0b24ee8f41fd876b86b41))
-
-
-
-## [4.3.3](https://github.com/Torwent/SRL-T/compare/v4.3.2...v4.3.3) (2024-03-07)
-
-
-### Bug Fixes
-
-* compatibility with latest SRL-T ([4c9b09c](https://github.com/Torwent/SRL-T/commit/4c9b09c9365bc1138fd53005b4b89a737878635a))
 
 
 
