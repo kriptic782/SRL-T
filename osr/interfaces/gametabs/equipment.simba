@@ -336,7 +336,7 @@ function TRSEquipment.HoverItem(item: TRSItem): Boolean;
 begin
   if not Self.Open() then
     Exit;
-  Self.ItemInterface.MouseItem(item);
+  Result := Self.ItemInterface.MouseItem(item);
 end;
 
 (*
