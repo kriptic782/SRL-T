@@ -294,7 +294,7 @@ end;
 (*
 ## Equipment.Discover
 ```pascal
-function TRSEquipment.Discover(slot: ERSEquipmentButton): TRSItemArray;
+function TRSEquipment.Discover(slot: ERSEquipmentSlot): TRSItemArray;
 function TRSInventory.Discover(slot: Int32): TRSItemArray;
 ```
 Discovers what item is on the specified equipment `slot`.
@@ -305,7 +305,7 @@ if Equipment.Open() then
   WriteLn Equipment.Discover(0);
 ```
 *)
-function TRSEquipment.Discover(slot: ERSEquipmentButton): TRSItemArray;
+function TRSEquipment.Discover(slot: ERSEquipmentSlot): TRSItemArray;
 begin
   if not Self.Open() then
     Exit;
