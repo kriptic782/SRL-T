@@ -1,3 +1,12 @@
+## [4.3.9](https://github.com/Torwent/SRL-T/compare/v4.3.8...v4.3.9) (2024-03-13)
+
+
+### Bug Fixes
+
+* read notes ([3356b83](https://github.com/Torwent/SRL-T/commit/3356b8378960c1c34eb440c4fdfcf00644a93d5b))
+
+
+
 ## [4.3.8](https://github.com/Torwent/SRL-T/compare/v4.3.7...v4.3.8) (2024-03-09)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **equipment:** typo ([20801f7](https://github.com/Torwent/SRL-T/commit/20801f78bbf9dda9cbc53654479055b0c92c671d))
-
-
-
-## [4.3.4](https://github.com/Torwent/SRL-T/compare/v4.3.3...v4.3.4) (2024-03-07)
-
-
-### Bug Fixes
-
-* **equipment:** methods open it first again ([04ecf46](https://github.com/Torwent/SRL-T/commit/04ecf46079da6a91bcc0b24ee8f41fd876b86b41))
 
 
 
