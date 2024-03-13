@@ -50,6 +50,13 @@ procedure TMufasaBitmap.FromClient(Area: TBox);
 
 Copy client to bitmap.
 *)
+
+procedure TMufasaBitmap.Create(w, h: Int32);
+begin
+  Self.Init();
+  Self.SetSize(w, h);
+end;
+
 procedure TMufasaBitmap.FromClient(Area: TBox=[0,0,-1,-1]);
 var
   W,H: Int32;
@@ -82,6 +89,7 @@ procedure TMufasaBitmap.Clear(area: TBox); constref; overload;
 begin
   Self.DrawBoxFilled(Area, False, 0);
 end;
+
 
 (*
 ## TMufasaBitmap.ClearAllBut
@@ -161,7 +169,6 @@ end;
 ```pascal
 procedure TMufasaBitmap.DrawBox(Center:TPoint; Radius:UInt32; Fill: Boolean; Color: Int32);
 ```
-
 Draws a TBox onto the TMufasaBitmap
 *)
 procedure TMufasaBitmap.DrawBox(Center:TPoint; Radius:UInt32; Color: Int32); constref; overload;

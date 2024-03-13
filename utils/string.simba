@@ -12,31 +12,6 @@ const
   STR_WHITESPACE = #9#10#11#12#13#32;
   STR_NEW_LINE = #13#10;
 
-function String.Contains(SubString: String): Boolean;
-begin
-  Result := Self.Pos(SubString) > 0;
-end;
-
-function String.ContainsAny(subStrings: TStringArray): Boolean;
-var
-  str: String;
-begin
-  Result := False;
-  for str in subStrings do
-    if Self.Contains(str) then
-      Exit(True);
-end;
-
-function String.ContainsAll(SubStrings: TStringArray): Boolean;
-var
-  Str: String;
-begin
-  Result := True;
-  for Str in SubStrings do
-    if not Self.Contains(Str) then
-      Exit(False);
-end;
-
 (*
 ## String.Len
 ```pascal
@@ -55,7 +30,6 @@ end;
 ```pascal
 function String.Pos(SubStr: String): Int32; constref;
 ```
-
 Returns the position of the position of the first occurance of the substring
 *)
 function String.Pos(SubStr: String): Int32; constref;
@@ -68,7 +42,6 @@ end;
 ```pascal
 function String.PosR(SubStr: String): Int32; constref;
 ```
-
 Returns the position of the position of the last occurance of the substring
 *)
 function String.PosR(SubStr: String): Int32; constref; 
@@ -87,13 +60,59 @@ end;
 ```pascal
 function String.PosEx(SubStr: String): TIntegerArray; constref;
 ```
-
 Returns the position of every occurance of the substring
 *)
 function String.PosEx(SubStr: String): TIntegerArray; constref;
 begin
   Result := System.PosMulti(SubStr, self);
 end;
+
+
+(*
+## String.Contains
+```pascal
+function String.Contains(subString: String): Boolean;
+```
+Returns true if the substring exists on the string.
+*)
+function String.Contains(subString: String): Boolean;
+begin
+  Result := Self.Pos(subString) > 0;
+end;
+
+(*
+## String.ContainsAny
+```pascal
+function String.ContainsAny(subStrings: TStringArray): Boolean;
+```
+Returns true if any of the substrings exists on the string.
+*)
+function String.ContainsAny(subStrings: TStringArray): Boolean;
+var
+  str: String;
+begin
+  for str in subStrings do
+    if Self.Contains(str) then
+      Exit(True);
+end;
+
+(*
+## String.ContainsAll
+```pascal
+function String.ContainsAll(subStrings: TStringArray): Boolean;
+```
+Returns true if all of the substrings exist on the string.
+*)
+function String.ContainsAll(subStrings: TStringArray): Boolean;
+var
+  str: String;
+begin
+  Result := True;
+  for str in subStrings do
+    if not Self.Contains(str) then
+      Exit(False);
+end;
+
 
 (*
 ## String.Startswith
@@ -208,8 +227,6 @@ begin
 end;
 
 function String.Between(start, finish: String): String; constref;
-var
-  p: UInt32;
 begin
   Result := System.Between(start, finish, Self);
 end;

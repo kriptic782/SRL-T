@@ -49,7 +49,7 @@ end;
 // The following allows individual include files to compile on their own with just having {$I SRL-T/osr.simba}
 // Summary: It includes this file until the current file is reached.
 
-{$IFNDEF SRL_OCR_INCLUDED}                  {$I osr/ocr.simba}
+{$IFNDEF SRL_OCR_INCLUDED}                  {$I osr/ocr/ocr.simba}
 {$IFNDEF SRL_MISC_INCLUDED}                 {$I osr/misc.simba}
 {$IFNDEF SRL_ITEMFINDER_INCLUDED}           {$I osr/finders/itemfinder/itemfinder.simba}
 {$IFNDEF SRL_RSCLIENT_INCLUDED}             {$I osr/rsclient.simba}

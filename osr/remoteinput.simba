@@ -1,4 +1,4 @@
-{$loadlib ../plugins/libremoteinput}
+{$loadlib ../plugins/libremoteinput/libremoteinput}
 
 function EIOS_GetClientPIDs(): TIntegerArray;
 var
@@ -126,7 +126,7 @@ begin
       RIInject(Self.PID);
     Self.EIOS := EIOS_PairClient(Self.PID);
     if (Self.EIOS <> nil) then
-      SetEIOSTarget({$libpath ../plugins/libremoteinput}, ToString(Self.PID));
+      SetEIOSTarget({$libpath ../plugins/libremoteinput/libremoteinput}, ToString(Self.PID));
   except
     if MessageDlg(
       'Unsupported client!',
