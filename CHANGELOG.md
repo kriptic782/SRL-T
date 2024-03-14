@@ -1,3 +1,12 @@
+## [4.3.10](https://github.com/Torwent/SRL-T/compare/v4.3.9...v4.3.10) (2024-03-14)
+
+
+### Bug Fixes
+
+* **walker:** typo in addregions ([a817251](https://github.com/Torwent/SRL-T/commit/a817251dd15cd94478ae3a4ec158415617adaf07))
+
+
+
 ## [4.3.9](https://github.com/Torwent/SRL-T/compare/v4.3.8...v4.3.9) (2024-03-13)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **Bank:** Bank.FindItemTab() shouldn't crash anymore ([3da2c24](https://github.com/Torwent/SRL-T/commit/3da2c24d46e8a3ffe81f4ca5513e05ee1edaed30))
-
-
-
-## [4.3.5](https://github.com/Torwent/SRL-T/compare/v4.3.4...v4.3.5) (2024-03-08)
-
-
-### Bug Fixes
-
-* **equipment:** typo ([20801f7](https://github.com/Torwent/SRL-T/commit/20801f78bbf9dda9cbc53654479055b0c92c671d))
 
 
 
