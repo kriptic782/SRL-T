@@ -292,8 +292,8 @@ begin
   if Self = [] then
     Self.Fatal('Walker has to be setup already to add a single region');
   Self.Map.Load(map, start, Self.Scaling, aRegion);
-  Self.InternalSetup();
   Self.Regions += aRegion;
+  Self.InternalSetup();
 end;
 
 procedure TRSWalker.AddRegion(map: String; aRegion: TBox); overload;
@@ -301,8 +301,8 @@ begin
   if Self = [] then
     Self.Fatal('Walker has to be setup already to add a single region');
   Self.Map.Load(map, aRegion, Self.Scaling);
-  Self.InternalSetup();
   Self.Regions += aRegion;
+  Self.InternalSetup();
 end;
 
 procedure TRSWalker.AddRegion(aRegion: TBox); overload;
