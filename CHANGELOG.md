@@ -1,3 +1,12 @@
+## [4.3.11](https://github.com/Torwent/SRL-T/compare/v4.3.10...v4.3.11) (2024-03-19)
+
+
+### Bug Fixes
+
+* read notes ([561a9ff](https://github.com/Torwent/SRL-T/commit/561a9ff6ef8c3f00b84e10b437a93840eb7e7c80))
+
+
+
 ## [4.3.10](https://github.com/Torwent/SRL-T/compare/v4.3.9...v4.3.10) (2024-03-14)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **equipment:** minor typo in the new discover method ([e26f0a9](https://github.com/Torwent/SRL-T/commit/e26f0a99244121c53681cf675e348d04f0522964))
-
-
-
-## [4.3.6](https://github.com/Torwent/SRL-T/compare/v4.3.5...v4.3.6) (2024-03-09)
-
-
-### Bug Fixes
-
-* **Bank:** Bank.FindItemTab() shouldn't crash anymore ([3da2c24](https://github.com/Torwent/SRL-T/commit/3da2c24d46e8a3ffe81f4ca5513e05ee1edaed30))
 
 
 
