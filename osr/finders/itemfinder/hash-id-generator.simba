@@ -4,6 +4,7 @@ const
   PATH = {$macro CURRENT_DIRECTORY};
   RS_ITEM_BORDER = $010000;
   RS_ITEM_SHADOW = $202030;
+  CLEANUP = True;
 
 function String.Before(SubStr: String): String; constref;
 var
@@ -470,62 +471,71 @@ end;
 
 procedure CreateHashesFile();
 const
-  ZIP_FILE = PATH + 'crop-images.zip';
-  TMP_PATH = PATH + 'crop-images';
+  ZIP_FILE = PATH + 'images.zip';
+  TMP_PATH = PATH + 'images';
   MODDED_PATH = PATH + 'modded' + DirectorySeparator;
 var
   current, hash, id: String;
   bmp: TMufasaBitmap;
 begin
-  if not DirectoryExists(TMP_PATH) then
-  begin
-    WriteLn 'unzipping... this will take a while.';
-    UnZipFile(ZIP_FILE, TMP_PATH);
-    WriteLn 'Done unzipping.';
-  end;
-
-  if DirectoryExists(MODDED_PATH) then
-    DeleteDirectory(MODDED_PATH, True);
-
-  ForceDirectories(MODDED_PATH);
-
-  if FileExists(PATH + 'hash-id') then
-    if not DeleteFile(PATH + 'hash-id') then
+  try
+    if not DirectoryExists(TMP_PATH) then
     begin
-      WriteLn 'Something went wrong deleting the old hashes file. No privilleges?';
-      TerminateScript();
+      WriteLn 'unzipping... this will take a while.';
+      UnZipFile(ZIP_FILE, TMP_PATH);
+      WriteLn 'Done unzipping.';
     end;
 
-  for current in FindFiles(TMP_PATH + '\', ['.png']) do
-  begin
-    bmp.Init();
-    bmp.LoadFromFile(current);
+    if DirectoryExists(MODDED_PATH) then
+      DeleteDirectory(MODDED_PATH, True);
 
-    if (bmp.getWidth() <> 36) or (bmp.getHeight() <> 23) then
+    ForceDirectories(MODDED_PATH);
+
+    if FileExists(PATH + 'hash-id') then
+      if not DeleteFile(PATH + 'hash-id') then
+      begin
+        WriteLn 'Something went wrong deleting the old hashes file. No privilleges?';
+        TerminateScript();
+      end;
+
+    for current in FindFiles(TMP_PATH + '\', ['.png']) do
     begin
-      WriteLn(ExtractFileName(current), ' has wrong dimensions.');
+      bmp.Init();
+      bmp.LoadFromFile(current);
+      bmp.Crop(0, 9, 35, 31);
+
+      if (bmp.getWidth() <> 36) or (bmp.getHeight() <> 23) then
+      begin
+        WriteLn(ExtractFileName(current), ' has wrong dimensions.');
+        bmp.Free();
+        Continue;
+      end;
+
+      id := ExtractFileName(current).Before('.png');
+
+      ClearItemBackground(bmp);
+      hash := bmp.GetHash();
+
+      if not WriteFileContents(PATH + 'hash-id', hash + '=' + id + LineEnding, True) then
+      begin
+        WriteLn 'Failed to write to hash-id';
+        TerminateScript();
+      end;
+
+      if not bmp.SaveToFile(MODDED_PATH + id + '.png') then
+      begin
+        WriteLn 'Failed to write to img file';
+        TerminateScript();
+      end;
+
       bmp.Free();
-      Continue;
     end;
-
-    id := ExtractFileName(current).Before('.png');
-
-    ClearItemBackground(bmp);
-    hash := bmp.GetHash();
-
-    if not WriteFileContents(PATH + 'hash-id', hash + '=' + id + LineEnding, True) then
+  finally
+    if CLEANUP then
     begin
-      WriteLn 'Failed to write to hash-id';
-      TerminateScript();
+      DeleteDirectory(TMP_PATH, False);
+      DeleteDirectory(MODDED_PATH, False);
     end;
-
-    if not bmp.SaveToFile(MODDED_PATH + id + '.png') then
-    begin
-      WriteLn 'Failed to write to img file';
-      TerminateScript();
-    end;
-
-    bmp.Free();
   end;
 end;
 
