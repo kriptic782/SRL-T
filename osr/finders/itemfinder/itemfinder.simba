@@ -45,10 +45,10 @@ type
 
   TRSItemFinder = record(TSRLBaseRecord)
     IMAGES_ZIP: String;
-    ITEM_NAMES: String;
     IMAGES_PATH: String;
 
-    ItemNames, IDItem, HashID: TStringList;
+    Database: TSimpleDatabase;
+
     ItemFilters: array of record
       Name: String;
       Filter: TRSItemFinderCustomFilter;
@@ -66,10 +66,6 @@ procedure TRSItemFinder.Free();
 var
   i, j: Int32;
 begin
-  Self.ItemNames.Free();
-  Self.IDItem.Free();
-  Self.HashID.Free();
-
   for i := 0 to High(Self.ItemImages) do
     for j := 0 to High(Self.ItemImages[i].Images) do
       Self.ItemImages[i].Images[j].Free();
@@ -78,8 +74,7 @@ end;
 procedure TRSItemFinder.Setup();
 begin
   Self.IMAGES_ZIP  := {$macro CURRENT_DIRECTORY} + 'images.zip';
-  Self.ITEM_NAMES  := {$macro CURRENT_DIRECTORY} + 'item-id';
-  Self.IMAGES_PATH := SIMBA_DATA_DIR + 'SRL' + DirectorySeparator + 'itemfinder' +
+  Self.IMAGES_PATH := SIMBA_DATA_DIR + 'Cache' + DirectorySeparator + 'itemfinder' +
                       DirectorySeparator + SHA1File(Self.IMAGES_ZIP) +
                       DirectorySeparator;
 
@@ -88,24 +83,13 @@ begin
   Self.Name := 'ItemFinder';
   Self.Similarity := 0.999;
 
-  Self.ItemNames.Init();
-  Self.ItemNames.LoadFromFile({$macro CURRENT_DIRECTORY} + 'item-id');
-  Self.ItemNames.SetSorted(True);
-
-  Self.IDItem.Init();
-  Self.IDItem.LoadFromFile({$macro CURRENT_DIRECTORY} + 'id-item');
-  Self.IDItem.SetSorted(True);
-
-  Self.HashID.Init();
-  Self.HashID.LoadFromFile({$macro CURRENT_DIRECTORY} + 'hash-id');
-  Self.HashID.SetSorted(True);
-
+  Self.Database.Setup('itemfinder',['id', 'item', 'hash'], {$macro CURRENT_DIRECTORY}, Self.IMAGES_PATH);
   AddOnTerminate(@Self.Free);
 end;
 
 procedure TRSItemFinder.AddItemName(constref item, id: String);
 begin
-  Self.ItemNames.Add(item + '=' + id);
+  Self.Database.AddRow([id, item, '']);
 end;
 
 procedure TRSItemFinder.AddItemNames(constref items: TStringArray; constref id: String);
@@ -113,7 +97,7 @@ var
   item: String;
 begin
   for item in items do
-    Self.ItemNames.Add(item + '=' + id);
+    Self.Database.AddRow([id, item, '']);
 end;
 
 procedure TRSItemFinder.AddItemFilter(item: String; filter: TRSItemFinderCustomFilter);
@@ -270,65 +254,28 @@ begin
   bmp.DrawTPA(tpa + bg, $0);
 end;
 
-function TRSItemFinder.GetItemIDs(item: String): TIntegerArray;
-type
-  TStringList = TStringList;
-
-  function TStringList.NameFromIndex(index: Int32): String;
-  begin
-    if InRange(index, 0, Self.GetCount() - 1) then
-      Result := Self.GetStrings(index).Before('=');
-  end;
-
-  function TStringList.ValueFromIndex(index: Int32): String;
-  begin
-    if InRange(index, 0, Self.GetCount() - 1) then
-      Result := Self.GetStrings(index).After('=');
-  end;
-
-var
-  index: Int32;
+function TRSItemFinder.GetItemIDs(item: String): TRSItemArray;
 begin
   if item.IsDigit() then
     Exit(Result + item.ExtractNumber());
-
-  index := Self.ItemNames.IndexOfName(item);
-  while SameText(item, Self.ItemNames.NameFromIndex(index)) do
-  begin
-    Result := Result + StrToInt(Self.ItemNames.ValueFromIndex(index));
-    Inc(index);
-  end;
+  Result := Self.Database.GetAll(item, 'item', 'id');
 end;
 
 function TRSItemFinder.GetIDItem(item: Int32): String;
-var
-  index: Int32;
 begin
-  index := Self.IDItem.IndexOfName(ToStr(item));
-  Result := Self.IDItem.ValueFromIndex(index);
+  Result := Self.Database.Get(ToStr(item), 'id', 'item');
 end;
 
 
 //original concept idea by CanadianJames and Skunks
-function TRSItemFinder.GetHashIDs(hash: String): TIntegerArray;
-var
-  index: Int32;
+function TRSItemFinder.GetHashIDs(hash: String): TRSItemArray;
 begin
-  index := Self.HashID.IndexOfName(hash);
-  while SameText(hash, Self.HashID.NameFromIndex(index)) do
-  begin
-    Result := Result + StrToInt(Self.HashID.ValueFromIndex(index));
-
-    Inc(index);
-  end;
+  Result := Self.Database.GetAll(hash, 'hash', 'id');
 end;
 
 function TRSItemFinder.GetHashItems(hash: String): TRSItemArray;
-var
-  id: Int32;
 begin
-  for id in Self.GetHashIDs(hash) do
-    Result += Self.GetIDItem(id);
+  Result := Self.Database.GetAll(hash, 'hash', 'item');
 end;
 
 
@@ -395,7 +342,7 @@ end;
 function TRSItemFinder.CompareItems(constref image, template: TMufasaBitmap; constref CustomFilter: TRSItemFinderCustomFilter): Single;
 var
   imageBorder, templateBorder: TPointArray;
-  tpa, clearTPA: TPointArray;
+  tpa, clearTPA, borderTPA: TPointArray;
   alignedTemplate, alignedImage: TMufasaBitmap;
   align: TPoint;
   clearColor: Int32;
@@ -447,6 +394,19 @@ begin
 
     alignedTemplate.DrawTPA(clearTPA, 0);
     alignedImage.DrawTPA(clearTPA, 0);
+
+    if (@CustomFilter <> nil) then
+    begin
+      if alignedImage.FindColors(tpa, RS_ITEM_BORDER) then
+        borderTPA += tpa;
+      if alignedTemplate.FindColors(tpa, RS_ITEM_BORDER) then
+        borderTPA += tpa;
+
+      alignedTemplate.DrawTPA(borderTPA, RS_ITEM_BORDER);
+      alignedImage.DrawTPA(borderTPA, RS_ITEM_BORDER);
+
+      alignedTemplate.Debug();
+    end;
 
     Result := alignedImage.MatchTemplate(alignedTemplate, TM_CCORR_NORMED)[0][0]; // IDK why I used CCORR. But it works!
   
@@ -606,18 +566,21 @@ end;
 
 procedure TRSItemFinder._SetupHerbSeeds(herbSeed: String);
 const
-  ID_ARRAY = ['5224', '5225', '5226', '5227'];
+  IDS = ['5224', '5225', '5226', '5227'];
 var
   i: Int32;
 begin
-  for i := 0 to High(ID_ARRAY) do
-    Self.AddItemName(herbSeed, ID_ARRAY[i]);
+  for i := 0 to High(IDS) do
+    Self.AddItemName(herbSeed, IDS[i]);
 end;
 
 var
   ItemFinder: TRSItemFinder;
 
+procedure TSRL.Setup; override;
 begin
+  inherited;
+
   ItemFinder.Setup();
 
   // We can map some useful things here
@@ -634,7 +597,9 @@ begin
   ItemFinder._SetupHerbSeeds('Lantadyme seed');
   ItemFinder._SetupHerbSeeds('Dwarf weed seed');
   ItemFinder._SetupHerbSeeds('Torstol seed');
+
   ItemFinder.AddItemFilter('Magic logs', @TRSItemFinderCustomFilter.ClearSparkles);
+  ItemFinder.AddItemFilter('Magic shortbow (i)', @TRSItemFinderCustomFilter.ClearSparkles);
   ItemFinder.AddItemFilter('noted Magic logs', @TRSItemFinderCustomFilter.ClearSparkles);
   ItemFinder.AddItemFilter('Fire cape', @TRSItemFinderCustomFilter.FireCape);
   ItemFinder.AddItemFilter('Lava scale', @TRSItemFinderCustomFilter.LavaScales);

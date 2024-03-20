@@ -909,7 +909,7 @@ var
 begin
   item := itemName;
 
-  if (System.ItemFinder.ItemNames.IndexOfName('noted ' + itemName) > -1) and Inventory.FindItem('noted ' + itemName, invSlot) then
+  if ItemFinder.Database.Has('noted ' + itemName, 'item') and Inventory.FindItem('noted ' + itemName, invSlot) then
     item := 'noted ' + itemName
   else
     if not Inventory.FindItem(item, InvSlot) then
