@@ -1,3 +1,12 @@
+# [4.4.0](https://github.com/Torwent/SRL-T/compare/v4.3.11...v4.4.0) (2024-03-20)
+
+
+### Features
+
+* **TSimpleDatabase:** added a new database like interface ([605940a](https://github.com/Torwent/SRL-T/commit/605940a67ffec592bab83228708a98691d8bfbb4))
+
+
+
 ## [4.3.11](https://github.com/Torwent/SRL-T/compare/v4.3.10...v4.3.11) (2024-03-19)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **equipment:** HoverItem now sets the result ([aa9ea4a](https://github.com/Torwent/SRL-T/commit/aa9ea4ac4183bf1518093af95a2fdfa7a6c4a8e4))
-
-
-
-## [4.3.7](https://github.com/Torwent/SRL-T/compare/v4.3.6...v4.3.7) (2024-03-09)
-
-
-### Bug Fixes
-
-* **equipment:** minor typo in the new discover method ([e26f0a9](https://github.com/Torwent/SRL-T/commit/e26f0a99244121c53681cf675e348d04f0522964))
 
 
 
