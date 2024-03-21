@@ -297,7 +297,7 @@ function TRSMagic.FindSpell(spell: ERSSpell; out box: TBox): Boolean;
 
 Return true or false wether we found a spell or not and return it's bounds if found.
 *)
-function TRSMagic.FindSpell(spell: ERSSpell; out box: TBox; attempt: Int32 = 0): Boolean;
+function TRSMagic.FindSpell(spell: ERSSpell; out b: TBox; attempts: Int32 = 2): Boolean;
 var
   match: TRSSpellFinderMatch;
 begin
@@ -307,20 +307,46 @@ begin
   Result := SpellFinder.Find([spell], GameTab.Bounds(), match);
   if Result then
   begin
-    box := match.Box.Expand(-1);
-    Self.SpellCache[spell].Box := box;
+    b := match.Box.Expand(-1);
+    Self.SpellCache[spell].Box := b;
     Exit;
   end;
 
+  if attempts = 0 then
+    Exit;
+
   if Self.InfoIsOpen() then
   begin
-    case attempt of
-      0: if Self.CloseInfo(spell) then
-          Result := Self.FindSpell(spell, box, attempt+1);
+    case attempts of
+      2: if Self.CloseInfo(spell) then
+          Result := Self.FindSpell(spell, b, attempts-1);
 
       1: if Self.CloseInfo() then
-          Result := Self.FindSpell(spell, box, attempt+1);
+          Result := Self.FindSpell(spell, b, attempts-1);
     end;
+  end;
+
+  if not Result then
+  begin
+    if spell in [ERSSpell.LVL1_ENCHANT..ERSSpell.LVL7_ENCHANT] then
+    begin
+      if SpellFinder.Find([ERSSpell.BACK], GameTab.Bounds(), match) then
+        Exit;
+
+      if SpellFinder.Find([ERSSpell.JEWELLERY_ENCHANTMENTS], GameTab.Bounds(), match) then
+      begin
+        Mouse.CLick(match.Box, MOUSE_LEFT);
+        if WaitUntil(SpellFinder.Find([ERSSpell.BACK], GameTab.Bounds(), match), 300, 2000) then
+          Exit(Self.FindSpell(spell, b, attempts-1));
+      end;
+    end
+    else if SpellFinder.Find([ERSSpell.BACK], GameTab.Bounds(), match) then
+      begin
+        Mouse.CLick(match.Box, MOUSE_LEFT);
+        WaitUntil(SpellFinder.Find([ERSSpell.JEWELLERY_ENCHANTMENTS], GameTab.Bounds(), match), 300, 2000);
+      end;
+
+    Result := Self.FindSpell(spell, b, attempts-1);
   end;
 end;
 
@@ -381,9 +407,9 @@ Return true or false wether we found a spell or not.
 *)
 function TRSMagic.ContainsSpell(spell: ERSSpell): Boolean;
 var
-  box: TBox;
+  b: TBox;
 begin
-  Result := Self.FindSpell(spell, box);
+  Result := Self.FindSpell(spell, b);
 end;
 
 
@@ -401,7 +427,7 @@ Magic.MouseSpell(ERSSpell.HIGH_LEVEL_ALCHEMY);
 *)
 function TRSMagic.MouseSpell(spell: ERSSpell): Boolean;
 var
-  box: TBox;
+  b: TBox;
   upText: String;
 begin
   if (Self.SpellCache[spell].UpText <> '') and
@@ -412,11 +438,11 @@ begin
       Exit(True);
   end;
 
-  Result := Self.Open() and Self.FindSpell(spell, box);
+  Result := Self.Open() and Self.FindSpell(spell, b);
 
   if Result then
   begin
-    Mouse.Move(box);
+    Mouse.Move(b);
 
     if Self.SpellCache[spell].UpText = '' then
     begin
