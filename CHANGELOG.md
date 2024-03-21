@@ -1,3 +1,12 @@
+## [4.4.1](https://github.com/Torwent/SRL-T/compare/v4.4.0...v4.4.1) (2024-03-21)
+
+
+### Bug Fixes
+
+* handle the new nested enchantment spells ([8900af1](https://github.com/Torwent/SRL-T/commit/8900af199902d2347560c4c12a49848f6c2ebd2f))
+
+
+
 # [4.4.0](https://github.com/Torwent/SRL-T/compare/v4.3.11...v4.4.0) (2024-03-20)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([3356b83](https://github.com/Torwent/SRL-T/commit/3356b8378960c1c34eb440c4fdfcf00644a93d5b))
-
-
-
-## [4.3.8](https://github.com/Torwent/SRL-T/compare/v4.3.7...v4.3.8) (2024-03-09)
-
-
-### Bug Fixes
-
-* **equipment:** HoverItem now sets the result ([aa9ea4a](https://github.com/Torwent/SRL-T/commit/aa9ea4ac4183bf1518093af95a2fdfa7a6c4a8e4))
 
 
 
