@@ -404,8 +404,6 @@ begin
 
       alignedTemplate.DrawTPA(borderTPA, RS_ITEM_BORDER);
       alignedImage.DrawTPA(borderTPA, RS_ITEM_BORDER);
-
-      alignedTemplate.Debug();
     end;
 
     Result := alignedImage.MatchTemplate(alignedTemplate, TM_CCORR_NORMED)[0][0]; // IDK why I used CCORR. But it works!
