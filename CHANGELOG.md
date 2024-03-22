@@ -1,3 +1,12 @@
+## [4.4.3](https://github.com/Torwent/SRL-T/compare/v4.4.2...v4.4.3) (2024-03-22)
+
+
+### Bug Fixes
+
+* remove the fix I did for magic shortbow (i) ([9606ee3](https://github.com/Torwent/SRL-T/commit/9606ee3bf46feaa329bca79b6d701bf4cda6ccda))
+
+
+
 ## [4.4.2](https://github.com/Torwent/SRL-T/compare/v4.4.1...v4.4.2) (2024-03-22)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([561a9ff](https://github.com/Torwent/SRL-T/commit/561a9ff6ef8c3f00b84e10b437a93840eb7e7c80))
-
-
-
-## [4.3.10](https://github.com/Torwent/SRL-T/compare/v4.3.9...v4.3.10) (2024-03-14)
-
-
-### Bug Fixes
-
-* **walker:** typo in addregions ([a817251](https://github.com/Torwent/SRL-T/commit/a817251dd15cd94478ae3a4ec158415617adaf07))
 
 
 
