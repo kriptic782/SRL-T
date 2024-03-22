@@ -1,3 +1,12 @@
+## [4.4.2](https://github.com/Torwent/SRL-T/compare/v4.4.1...v4.4.2) (2024-03-22)
+
+
+### Bug Fixes
+
+* **itemfinder:** items that have filters won't pop up a debug image anymore ([6c6f4a9](https://github.com/Torwent/SRL-T/commit/6c6f4a97ab2b6cc6023260c5a6c1e2d911364aab))
+
+
+
 ## [4.4.1](https://github.com/Torwent/SRL-T/compare/v4.4.0...v4.4.1) (2024-03-21)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **walker:** typo in addregions ([a817251](https://github.com/Torwent/SRL-T/commit/a817251dd15cd94478ae3a4ec158415617adaf07))
-
-
-
-## [4.3.9](https://github.com/Torwent/SRL-T/compare/v4.3.8...v4.3.9) (2024-03-13)
-
-
-### Bug Fixes
-
-* read notes ([3356b83](https://github.com/Torwent/SRL-T/commit/3356b8378960c1c34eb440c4fdfcf00644a93d5b))
 
 
 
