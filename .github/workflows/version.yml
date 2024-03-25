@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2.2.0
+    - uses: actions/checkout@v4
                     
     - name: Generate changelog
       id: changelog
@@ -27,7 +27,7 @@ jobs:
         fallback-version: '1.0.8'
           
     - name: Create release
-      uses: actions/create-release@v1
+      uses: actions/create-release@v1.1.4
       if: ${{ steps.changelog.outputs.skipped == 'false' }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
