@@ -1,3 +1,12 @@
+## [4.4.4](https://github.com/Torwent/SRL-T/compare/v4.4.3...v4.4.4) (2024-03-25)
+
+
+### Bug Fixes
+
+* update itemfinder ([f536de8](https://github.com/Torwent/SRL-T/commit/f536de83abd2e99fe0c428309ffd93b9efa9c7e7))
+
+
+
 ## [4.4.3](https://github.com/Torwent/SRL-T/compare/v4.4.2...v4.4.3) (2024-03-22)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **TSimpleDatabase:** added a new database like interface ([605940a](https://github.com/Torwent/SRL-T/commit/605940a67ffec592bab83228708a98691d8bfbb4))
-
-
-
-## [4.3.11](https://github.com/Torwent/SRL-T/compare/v4.3.10...v4.3.11) (2024-03-19)
-
-
-### Bug Fixes
-
-* read notes ([561a9ff](https://github.com/Torwent/SRL-T/commit/561a9ff6ef8c3f00b84e10b437a93840eb7e7c80))
 
 
 
