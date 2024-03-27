@@ -1,3 +1,12 @@
+## [4.4.5](https://github.com/Torwent/SRL-T/compare/v4.4.4...v4.4.5) (2024-03-27)
+
+
+### Bug Fixes
+
+* **itemfinder:** improved discover a lot. should have way less collisions now ([f236efb](https://github.com/Torwent/SRL-T/commit/f236efb6f46b7e7dec32b7ecb403e717edc90fa5))
+
+
+
 ## [4.4.4](https://github.com/Torwent/SRL-T/compare/v4.4.3...v4.4.4) (2024-03-25)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * handle the new nested enchantment spells ([8900af1](https://github.com/Torwent/SRL-T/commit/8900af199902d2347560c4c12a49848f6c2ebd2f))
-
-
-
-# [4.4.0](https://github.com/Torwent/SRL-T/compare/v4.3.11...v4.4.0) (2024-03-20)
-
-
-### Features
-
-* **TSimpleDatabase:** added a new database like interface ([605940a](https://github.com/Torwent/SRL-T/commit/605940a67ffec592bab83228708a98691d8bfbb4))
 
 
 
