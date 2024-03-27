@@ -6,7 +6,8 @@ type
   end;
 
 const
-  SIMBA_DATA_DIR = AppPath + 'Data' + DirectorySeparator; //missing this const and walker1500 needs it.
+  SIMBA_DATA_DIR = AppPath + 'Data' + DirectorySeparator;
+  CACHE_DIR = SIMBA_DATA_DIR + 'cache' + DirectorySeparator;
 
 var
   SRL: TSRL;

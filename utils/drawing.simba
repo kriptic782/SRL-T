@@ -57,6 +57,11 @@ begin
   Self.SetSize(w, h);
 end;
 
+procedure TMufasaBitmap.Crop(b: TBox); overload;
+begin
+  Self.Crop(b.X1, b.Y1, b.X2, b.Y2);
+end;
+
 procedure TMufasaBitmap.FromClient(Area: TBox=[0,0,-1,-1]);
 var
   W,H: Int32;

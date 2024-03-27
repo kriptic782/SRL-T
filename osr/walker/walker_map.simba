@@ -122,9 +122,9 @@ begin
   Result.Init();
   if ExtractFileExt(fileName) <> '.bmp' then
   begin
-    path := SIMBA_DATA_DIR + 'SRL' + DirectorySeparator + 'walker' +
-            DirectorySeparator + SHA1File(WALKER_MAP);
+    path := CACHE_DIR + 'walker' + SHA1File(WALKER_MAP).SubString(6);
     cacheName := path + DirectorySeparator + ExtractFileName(fileName.FileName()) + '.bmp';
+
     if not FileExists(cacheName) then
     begin
       if not ForceDirectories(path) then

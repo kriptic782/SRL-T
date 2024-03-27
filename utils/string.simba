@@ -233,12 +233,12 @@ end;
 
 
 
-function String.SubString(start, finish: Int32): String;
+function String.SubString(start, finish: Int32): String; constref;
 begin
   Result := Copy(Self, start, finish);
 end;
 
-function String.SubString(finish: Int32): String; overload;
+function String.SubString(finish: Int32): String; constref; overload;
 begin
   Result := Copy(Self, 1, finish);
 end;

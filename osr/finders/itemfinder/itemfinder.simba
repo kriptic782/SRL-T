@@ -74,8 +74,8 @@ end;
 procedure TRSItemFinder.Setup();
 begin
   Self.IMAGES_ZIP  := {$macro CURRENT_DIRECTORY} + 'images.zip';
-  Self.IMAGES_PATH := SIMBA_DATA_DIR + 'Cache' + DirectorySeparator + 'itemfinder' +
-                      DirectorySeparator + SHA1File(Self.IMAGES_ZIP) +
+  Self.IMAGES_PATH := CACHE_DIR + 'itemfinder' + DirectorySeparator +
+                      SHA1File(Self.IMAGES_ZIP).SubString(6) +
                       DirectorySeparator;
 
   ForceDirectories(Self.IMAGES_PATH);
@@ -110,20 +110,22 @@ end;
 //Make sure your bitmap has the top 9 pixels cropped (possible stack number) and is 36 width.
 function TRSItemFinder.GetHash(bmp: TMufasaBitmap): String;
 var
+  pixels: TIntegerArray;
   str: String;
 begin
-  SetLength(str, bmp.getWidth()*bmp.getHeight()*4);
-  Move(bmp.getdata()^, str[1], length(str));
+  pixels := bmp.GetColors();
+  SetLength(str, Length(pixels));
+  Move(pixels^, str[1], length(str));
   str := SHA1String(str);
   Result := str.SubString(16);
 end;
 
-//Attempt to clean an item bmp. Should be 36x23
+//Attempt to clean an item bmp. Should be
 function TRSItemFinder.CleanItemBitmap(bmp: TMufasaBitmap): Boolean;
 const
   NOTED_TPA: TPointArray = [[2,0],[2,1],[2,2],[2,3],[3,4],[4,4],[2,5],[1,6],[1,7],[1,8],[1,9],[1,10],[1,11],[1,12],[1,13],[1,14],[1,15],[1,16],[1,17],[2,18],[3,18],[4,18],[5,18],[6,18],[7,18],[8,18],[9,18],[10,18],[11,18],[12,19],[13,19],[14,19],[15,19],[16,19],[17,19],[18,19],[19,20],[20,20],[21,20],[22,20],[23,20],[24,20],[25,20],[26,20],[27,20],[28,19],[28,18],[28,17],[28,16],[28,15],[28,14],[28,13],[28,12],[28,11],[27,10],[27,9],[27,8],[28,7],[28,6],[28,5],[28,4],[28,3],[28,2],[29,1],[29,0]];
 var
-  border, tpa, item, corners, bg: TPointArray;
+  border, shadow, tpa, item, corners, bg: TPointArray;
   count, x, y, i: Int32;
   p: TPoint;
   b: TBox;
@@ -131,20 +133,27 @@ var
   atpa: T2DPointArray;
   noted: Boolean;
 begin
-  bmp.FindColors(border, RS_ITEM_BORDER);
-  if border = [] then
+  if not bmp.FindColors(border, RS_ITEM_BORDER) then
     Exit;
 
   Result := True;
+
+  bmp.FindColors(shadow, RS_ITEM_SHADOW);
+  if bmp.FindColors(tpa, $333333) then
+    shadow += tpa;
+
   matrix := bmp.ToMatrix();
 
   corners := [[0,bmp.getHeight()-1], [bmp.getWidth()-1,bmp.getHeight()-1]];
 
   tpa := border.Invert(bmp.Bounds());
   atpa := tpa.ClusterEx(1);
-  for tpa in atpa do
-    if tpa.Contains(corners[0]) or tpa.Contains(corners[1]) then
-      bg += tpa;
+  for i := High(atpa) downto 0 do
+    if atpa[i].Contains(corners[0]) or atpa[i].Contains(corners[1]) then
+    begin
+      bg += atpa[i];
+      Delete(atpa, i, 1);
+    end;
 
   noted := True;
   for i := 0 to High(NOTED_TPA) do
@@ -242,6 +251,15 @@ begin
       item += tpa;
   end;
 
+  for p in shadow do
+  begin
+    p := [p.X-1, p.Y-1];
+    if p.InBox(b) then
+      item += p;
+  end;
+
+  for p in item do matrix[p.Y, p.X] := $00FFFF;
+
   item := [];
   for y := 0 to High(matrix) do
     for x := 0 to High(matrix[y]) do
@@ -249,6 +267,15 @@ begin
         item += [x,y];
 
   item += border;
+
+  for tpa in atpa do
+    for p in item do
+      if tpa.Contains(p) then
+      begin
+        item += tpa;
+        Continue(2);
+      end;
+
   tpa := item.Invert(bmp.Bounds());
 
   bmp.DrawTPA(tpa + bg, $0);
@@ -342,7 +369,7 @@ end;
 function TRSItemFinder.CompareItems(constref image, template: TMufasaBitmap; constref CustomFilter: TRSItemFinderCustomFilter): Single;
 var
   imageBorder, templateBorder: TPointArray;
-  tpa, clearTPA, borderTPA: TPointArray;
+  tpa, clearTPA: TPointArray;
   alignedTemplate, alignedImage: TMufasaBitmap;
   align: TPoint;
   clearColor: Int32;
