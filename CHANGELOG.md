@@ -1,3 +1,12 @@
+## [4.4.6](https://github.com/Torwent/SRL-T/compare/v4.4.5...v4.4.6) (2024-03-29)
+
+
+### Bug Fixes
+
+* move wasplib's base httpclient here ([5aef939](https://github.com/Torwent/SRL-T/commit/5aef939578927a96dafd65b564369730e964bb5d))
+
+
+
 ## [4.4.5](https://github.com/Torwent/SRL-T/compare/v4.4.4...v4.4.5) (2024-03-27)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **itemfinder:** items that have filters won't pop up a debug image anymore ([6c6f4a9](https://github.com/Torwent/SRL-T/commit/6c6f4a97ab2b6cc6023260c5a6c1e2d911364aab))
-
-
-
-## [4.4.1](https://github.com/Torwent/SRL-T/compare/v4.4.0...v4.4.1) (2024-03-21)
-
-
-### Bug Fixes
-
-* handle the new nested enchantment spells ([8900af1](https://github.com/Torwent/SRL-T/commit/8900af199902d2347560c4c12a49848f6c2ebd2f))
 
 
 
