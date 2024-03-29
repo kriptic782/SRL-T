@@ -338,7 +338,7 @@ begin
   end;
 end;
 
-function TBoxArray.Pack: TBoxArray;
+function TBoxArray.Pack(): TBoxArray;
 type
   TBlock = record X,Y,W,H: Integer; Index: Integer; end;
   TBlockArray = array of TBlock;

@@ -650,7 +650,7 @@ end;
 
 
 begin
-  TestHash('1387');
+  //TestHash('1387');
   CreateHashesFile();
   CountUnique();
 end.
