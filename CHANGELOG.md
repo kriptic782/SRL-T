@@ -1,3 +1,12 @@
+## [4.5.2](https://github.com/Torwent/SRL-T/compare/v4.5.1...v4.5.2) (2024-04-03)
+
+
+### Bug Fixes
+
+* just shutting the compiler suggestions up ([aab329a](https://github.com/Torwent/SRL-T/commit/aab329ad34edafbc7269762654d29b26a3183b95))
+
+
+
 ## [4.5.1](https://github.com/Torwent/SRL-T/compare/v4.5.0...v4.5.1) (2024-04-03)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **itemfinder:** improved discover a lot. should have way less collisions now ([f236efb](https://github.com/Torwent/SRL-T/commit/f236efb6f46b7e7dec32b7ecb403e717edc90fa5))
-
-
-
-## [4.4.4](https://github.com/Torwent/SRL-T/compare/v4.4.3...v4.4.4) (2024-03-25)
-
-
-### Bug Fixes
-
-* update itemfinder ([f536de8](https://github.com/Torwent/SRL-T/commit/f536de83abd2e99fe0c428309ffd93b9efa9c7e7))
 
 
 
