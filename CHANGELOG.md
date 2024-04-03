@@ -1,3 +1,12 @@
+## [4.5.1](https://github.com/Torwent/SRL-T/compare/v4.5.0...v4.5.1) (2024-04-03)
+
+
+### Bug Fixes
+
+* fixed compile issues ([f306782](https://github.com/Torwent/SRL-T/commit/f306782eea20a0881e88fb6fbbb4158ed1960585))
+
+
+
 # [4.5.0](https://github.com/Torwent/SRL-T/compare/v4.4.6...v4.5.0) (2024-04-03)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * update itemfinder ([f536de8](https://github.com/Torwent/SRL-T/commit/f536de83abd2e99fe0c428309ffd93b9efa9c7e7))
-
-
-
-## [4.4.3](https://github.com/Torwent/SRL-T/compare/v4.4.2...v4.4.3) (2024-03-22)
-
-
-### Bug Fixes
-
-* remove the fix I did for magic shortbow (i) ([9606ee3](https://github.com/Torwent/SRL-T/commit/9606ee3bf46feaa329bca79b6d701bf4cda6ccda))
 
 
 
