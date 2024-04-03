@@ -1,6 +1,6 @@
 (*
-# Map
-This file is responsible for the TRSMapLoader positioning system.
+# MapLoader
+This file is responsible for loading maps for TRSMap.
 It was made from scratch by Torwent but heavily inspired in the original
 TRSWalker by Slacky and it's future iterations made by Olly.
 *)
