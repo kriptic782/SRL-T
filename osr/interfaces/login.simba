@@ -697,7 +697,6 @@ end;
 ```pascal
 function TRSLogin.LoginPlayer(): Boolean;
 ```
-
 Attempts to login the current selected player into the game.
 The currently selected player is decided by TRSLogin.PlayerIndex which is an
 index of the TRSLogin.Players array.

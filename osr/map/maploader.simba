@@ -548,7 +548,7 @@ begin
 
   Self.Map := Self.LegacyLoader.GetMap(filename);
   Self.Heightmap := Self.LegacyLoader.GetMap('h' + filename);
-  Self.Graph := MapWeb;
+  Self.Graph := WaspWeb;
   Self.Map.Downsample(downscale, Self.DownscaledMap);
   AddOnTerminate(@Self.Free);
 
