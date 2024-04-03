@@ -1,3 +1,12 @@
+# [4.5.0](https://github.com/Torwent/SRL-T/compare/v4.4.6...v4.5.0) (2024-04-03)
+
+
+### Features
+
+* partial release of the walker rework ([03f2f20](https://github.com/Torwent/SRL-T/commit/03f2f20e127b904317eba5de88e10f68902bb038))
+
+
+
 ## [4.4.6](https://github.com/Torwent/SRL-T/compare/v4.4.5...v4.4.6) (2024-03-29)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * remove the fix I did for magic shortbow (i) ([9606ee3](https://github.com/Torwent/SRL-T/commit/9606ee3bf46feaa329bca79b6d701bf4cda6ccda))
-
-
-
-## [4.4.2](https://github.com/Torwent/SRL-T/compare/v4.4.1...v4.4.2) (2024-03-22)
-
-
-### Bug Fixes
-
-* **itemfinder:** items that have filters won't pop up a debug image anymore ([6c6f4a9](https://github.com/Torwent/SRL-T/commit/6c6f4a97ab2b6cc6023260c5a6c1e2d911364aab))
 
 
 
