@@ -170,7 +170,6 @@ end;
 ```pascal
 function TRectangle.DirByLen(Longest: Boolean=True): ESplitDirection; constref;
 ```
-  
 Returns the direction which is the longest or shortest.
 
 ```{note}
@@ -191,7 +190,6 @@ end;
 ```pascal
 function TRectangle.Partition(m,n:Int32; dir:ESplitDirection=rpTopLeft): TRectArray; constref;
 ```
-    
 Break the rectangle into smaller rectangles. Goes well along with `DirByLen`
 
 ```{note}

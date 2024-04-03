@@ -47,7 +47,6 @@ var
 ```pascal
 procedure TMufasaBitmap.FromClient(Area: TBox);
 ```
-
 Copy client to bitmap.
 *)
 
@@ -55,6 +54,11 @@ procedure TMufasaBitmap.Create(w, h: Int32);
 begin
   Self.Init();
   Self.SetSize(w, h);
+end;
+
+function TMufasaBitmap.Copy(b: TBox): TMufasaBitmap; overload;
+begin
+  Result := Self.Copy(b.X1, b.Y1, b.X2, b.Y2);
 end;
 
 procedure TMufasaBitmap.Crop(b: TBox); overload;
@@ -230,7 +234,6 @@ end;
 ```pascal
 procedure TMufasaBitmap.DrawPoly(Poly: TPointArray; Color: Int32);
 ```
-
 Draws a polygon onto the TMufasaBitmap
 *)
 procedure TMufasaBitmap.DrawPoly(Poly: TPointArray; Color: Int32); constref;

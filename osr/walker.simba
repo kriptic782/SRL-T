@@ -1,0 +1,584 @@
+(*
+# WalkerV2
+This file is responsible for the walking system.
+It is heavily inspired in the original TRSWalker by Slacky and it's future
+iterations made by Olly.
+*)
+
+{$DEFINE SRL_WALKERV2_INCLUDED}
+{$IFNDEF SRL_OSR}
+  {$I SRL-T/osr.simba}
+{$ENDIF}
+
+type
+(*
+## PRSWalkerV2
+TRSWalkerV2 pointer.
+*)
+  PRSWalkerV2 = ^TRSWalkerV2;
+
+(*
+## TRSWalker_OnWalkEvent
+Callback object method to use while walking. This can be used to perform custom tasks while walking.
+
+Example:
+```pascal
+procedure TRSWalker.WalkerTasks(Walker: PRSWalker; Position: TPoint; Destination: TPoint);
+begin
+  Antiban.RandomTab();
+end;
+
+var
+  rsw: TRSWalker;
+begin
+  rsw.Setup('world');
+  rsw.OnWalkingEvent := @rsw.WalkerTasks;
+end;
+```
+*)
+  TRSWalkerV2_OnWalkEvent = procedure(walker: PRSWalkerV2; position: TPoint; destination: TPoint) of object;
+
+  TRSWalkerV2 = record(TSRLBaseRecord)
+    Position: function (): TPoint of object;
+
+    MinEnergy, ClickRandomness, MouseAheadTimer: Int32;
+
+    ScreenWalk, AdaptiveWalk, NearZoomMode, FancyMouse, Walking: Boolean;
+
+    AdaptiveToggleDistances: TPoint;
+
+    PathIndex: Int32;
+    Path: TPointArray;
+
+    WalkUpText: TStringArray;
+
+    WebGraph: ^TWebGraph;
+    OnWalkEvent, OnWalkingEvent: TRSWalkerV2_OnWalkEvent;
+  end;
+
+
+function TRSWalkerV2.Point2MM(playerPoint, p: TPoint; radians: Double): TPoint;
+begin
+  with Minimap.Center() do
+  begin
+    Result := p - playerPoint + [X, Y];
+    Result := Result.Rotate(radians, [X, Y]);
+  end;
+end;
+
+(*
+## Walker.CheckRunEnergy
+```pascal
+procedure TRSWalkerV2.CheckRunEnergy();
+```
+Internal method used to check and enable the player run.
+You will probably never need to call this directly.
+
+The values used are hardcoded and if you don't like them, it's recommended you override the method.
+The following example shows how one could override the function to enable run at 50% energy everytime, keep in mind though, you shouldn't do this, you should add randomness to it!
+```
+*)
+procedure TRSWalkerV2.CheckRunEnergy();
+begin
+  if Minimap.IsRunEnabled() or (Minimap.GetRunEnergy() < Self.MinEnergy) then
+    Exit;
+
+  Self.MinEnergy := SRL.SkewedRand(40, 10, 100);
+  Minimap.EnableRun();
+end;
+
+(*
+## Walker.AdaptiveWalkCheck
+```pascal
+procedure TRSWalkerV2.AdaptiveWalkCheck(Position: TPoint);
+```
+Internal method used to check if adaptive walk should toggle and toggle TRSWalkerV2.ScreenWalk.
+You will probably never need to call this directly.
+*)
+procedure TRSWalkerV2.AdaptiveWalkCheck(Position: TPoint);
+var
+  wasEnabled: Boolean;
+begin
+  wasEnabled := Self.ScreenWalk;
+  Self.ScreenWalk := False;
+  if ((Position.DistanceTo(Self.Path[0]) < Self.AdaptiveToggleDistances.X) or
+      (Position.DistanceTo(Self.Path[High(Self.Path)]) < Self.AdaptiveToggleDistances.Y)) and
+     (Random() > 0.05) then
+    Self.ScreenWalk := True
+
+  else if Random() < 0.02 then
+    Self.ScreenWalk := True;
+
+  if (not wasEnabled) and (Self.ScreenWalk) and (Self.FancyMouse) and (Random() < 0.75) and (Minimap.IsPointOn(Mouse.Position)) then
+    Self.DoMouseAhead(Position, True);
+end;
+
+(*
+## Walker.DoMouseAhead
+```pascal
+procedure TRSWalkerV2.DoMouseAhead(Position: TPoint; Forced: Boolean = False);
+```
+Internal method used to pre-hover the next walking step.
+You will probably never need to call this directly.
+*)
+procedure TRSWalkerV2.DoMouseAhead(Position: TPoint; Forced: Boolean = False);
+var
+  flag: TPoint;
+  dist: Int32;
+
+  procedure MouseToNextPoint(myPos: TPoint);
+  var
+    mmPos: TPoint;
+    idx: Int32;
+    angle: Double;
+    SlowMouse: TMouse;
+  begin
+    angle := Minimap.GetCompassAngle(False);
+    idx := Self.PathIndex;
+    while (idx < High(Self.Path)) and Self.IsWalkable(Self.Path[idx+1], myPos, angle) do
+      Inc(idx);
+
+    if (Idx = High(Self.Path)) and (Random(10) > 2) then Exit();
+
+    mmPos := Self.Path[idx] - myPos + minimap.Center;
+    mmPos := mmPos.Rotate(angle, Minimap.Center);
+
+    if Self.ScreenWalk then
+      mmPos := Minimap.PointToMsRect(mmPos).Mean();
+
+    SlowMouse := Mouse;
+    SlowMouse.Speed := Random(6,10);
+    if not Self.ScreenWalk then
+      SlowMouse.Move(Box(mmPos, Random(5,16), Random(5,16)))
+    else
+      SlowMouse.Move(Box(mmPos, Random(15,36), Random(15,36)));
+  end;
+begin
+  if (not Forced) then
+    if (GetTimeRunning() < Self.MouseAheadTimer) or (not Minimap.FindFlag(Flag)) then
+      Exit();
+
+  dist := Trunc(flag.DistanceTo(Minimap.Center()));
+  if InRange(dist, Random(5,10), Random(60,70)) then
+    MouseToNextPoint(Position);
+
+  Self.MouseAheadTimer := GetTimeRunning() + SRL.SkewedRand(0,50,500);
+  if Self.ScreenWalk then
+    Self.MouseAheadTimer += SRL.SkewedRand(0,50,500);
+end;
+
+(*
+## Walker.WaitMoving
+```pascal
+procedure TRSWalkerV2.WaitMoving(Destination: TPoint; WaitUntilDistance: Int32);
+```
+Internal method used to wait while we are moving using walker.
+You will probably never need to call this directly.
+
+This is where TRSWalkerV2.OnWalkingEvent are called.
+*)
+procedure TRSWalkerV2.WaitMoving(Destination: TPoint; WaitUntilDistance: Int32);
+var
+  Timeout, Countdown: TCountDown;
+  Position: record
+    Current, Previous: TPoint;
+  end;
+  awct: Int64;
+begin
+  Timeout.Init(Round(SRL.TruncatedGauss(20000, 25000)));
+
+  Countdown.Init(Round(SRL.TruncatedGauss(500, 1500)));
+
+  // initial timeout needs to be longer, as we might not have started walking yet.
+  Countdown.Timeout := GetTickCount() + Round(SRL.TruncatedGauss(2500, 3500));
+
+  Position.Previous := Self.Position();
+  Position.Current := Position.Previous;
+
+  // Break from the loop if:
+  // - Haven't moved in 500ms
+  // - Been walking for over 20 seconds
+  // - Within `WaitUntilDistance` to the destination
+  repeat
+    Self.CheckRunEnergy();
+
+    Position.Previous := Position.Current;
+    Position.Current := Self.Position();
+    if Position.Current <> Position.Previous then
+      Countdown.Restart();
+
+    if (@Self.OnWalkingEvent <> nil) then
+      Self.OnWalkingEvent(@Self, Position.Current, Destination);
+
+    if (Self.AdaptiveWalk) and (GetTickCount() > awct) then
+    begin
+      Self.AdaptiveWalkCheck(Position.Current);
+      awct := GetTickCount() + 1000;
+    end;
+
+    if Self.FancyMouse then
+      Self.DoMouseAhead(Position.Current);
+
+    if not Self.Walking then
+      Break;
+
+    Wait(100);
+  until Timeout.IsFinished() or Countdown.IsFinished() or (Position.Current.DistanceTo(Destination) <= WaitUntilDistance);
+end;
+
+(*
+## Walker.Click
+```pascal
+function TRSWalkerV2.Click(minimapPoint: TPoint; Randomness: Int32): Boolean;
+```
+Internal method used by walker to handle clicking while walking.
+You will probably never need to call this directly.
+
+If you wish to modify certain walker behaviors, it can be a good approach to override this function.
+*)
+function TRSWalkerV2.Click(minimapPoint: TPoint; Randomness: Int32): Boolean;
+var
+  p: TPoint;
+  i: Int32;
+  upText: String;
+begin
+  Result := True;
+  Self.CheckRunEnergy();
+
+  if Self.ScreenWalk then
+  begin
+    p := Minimap.RandomPointOnZoomRectangle(minimapPoint, randomness);
+    Mouse.Move(Minimap.PointToMsRect(p).Mean());
+    upText := MainScreen.GetUpText();
+
+    if not upText.ContainsAny(Self.WalkUpText) then
+      Exit(ChooseOption.Select('Walk here'));
+  end
+  else
+    Mouse.Move(Minimap.RandomPointOn(minimapPoint, randomness));
+
+  Mouse.Click(MOUSE_LEFT);
+
+  // 15% chance of spam clicking
+  if (Randomness > 0) and (Random() < 0.15) then
+    for i := 0 to Random(3) do
+    begin
+      Mouse.Click(Mouse.Position(), MOUSE_LEFT);
+      Wait(0, 150, wdLeft);
+    end;
+end;
+
+(*
+## Walker.WalkStepHelper()
+```pascal
+function TRSWalkerV2.WalkStepHelper(playerPoint, walkerPoint: TPoint; out minimapPoint: TPoint): Boolean;
+```
+Internal method used by walker to help walking steps.
+You will probably never need to call this directly.
+*)
+function TRSWalkerV2.WalkStepHelper(playerPoint, walkerPoint: TPoint; out minimapPoint: TPoint): Boolean;
+var
+  event_time: Int64;
+begin
+  event_time := GetTickCount();
+
+  // run events
+  if (@Self.OnWalkEvent <> nil) then
+    Self.OnWalkEvent(@Self, playerPoint, walkerPoint);
+
+  // in case the events used a bit of time, while our character was moving towards a point, we have to update the current position.
+  if GetTickCount() - event_time > 100 then
+    playerPoint := Self.Position();
+
+  if not Self.Walking then
+    Exit;
+
+  minimapPoint := Self.Point2MM(playerPoint, walkerPoint, Minimap.GetCompassAngle(False));
+
+  if Self.ScreenWalk then
+  begin
+    if not Minimap.PointOnZoomRectangle(minimapPoint) then
+      Exit;
+  end
+  else
+  begin
+    if not Minimap.IsPointOn(minimapPoint) then
+      Exit;
+  end;
+  Result := True;
+end;
+
+(*
+## Walker.WalkFinalStep
+```pascal
+function TRSWalkerV2.WalkFinalStep(playerPoint, walkerPoint: TPoint; WaitUntilDistance: Int32): Boolean;
+```
+Internal method used by walker when finishing walking a path.
+You will probably never need to call this directly but it can be used to take a single step.
+*)
+function TRSWalkerV2.WalkFinalStep(playerPoint, walkerPoint: TPoint; waitUntilDistance: Int32): Boolean;
+var
+  minimapPoint: TPoint;
+begin
+  if not Self.WalkStepHelper(playerPoint, walkerPoint, minimapPoint) then
+    Exit(not Self.Walking);
+
+  if (Minimap.Center().DistanceTo(minimapPoint) < 5) then
+    Exit(True);
+
+  Result := Self.Click(minimapPoint, 0);
+  if Result then
+    Self.WaitMoving(walkerPoint, waitUntilDistance);
+end;
+
+(*
+## Walker.WalkStep
+```pascal
+function TRSWalkerV2.WalkStep(playerPoint, walkerPoint: TPoint): Boolean;
+```
+Internal method used by walker while walking a path.
+You will probably never need to call this directly.
+*)
+function TRSWalkerV2.WalkStep(playerPoint, walkerPoint: TPoint): Boolean;
+var
+  minimapPoint: TPoint;
+  waitUntilDistance: Int32;
+begin
+  if not Self.WalkStepHelper(playerPoint, walkerPoint, minimapPoint) then
+    Exit(not Self.Walking);
+
+  if (Minimap.Center().DistanceTo(minimapPoint) < 5) then
+    Exit(True);
+
+  Result := Self.Click(minimapPoint, Self.ClickRandomness);
+  if Result then
+  begin
+    if (Random() < 0.15) then // 15% chance of randomness else mean
+      waitUntilDistance := Random(Distance(Minimap.Center(), minimapPoint))
+    else
+      waitUntilDistance := SRL.NormalRange(0, Distance(Minimap.Center(), minimapPoint) + 10);
+
+    Self.WaitMoving(walkerPoint, waitUntilDistance);
+  end;
+end;
+
+(*
+## Walker.IsWalkable
+```pascal
+function TRSWalkerV2.IsWalkable(walkerPoint: TPoint; playerPoint: TPoint; Angle: Double): Boolean;
+```
+Internal method used by walker to decide if the destination point is within 1 click reach.
+You will probably never need to call this directly.
+*)
+function TRSWalkerV2.IsWalkable(walkerPoint: TPoint; playerPoint: TPoint; angle: Double): Boolean;
+var
+  mmPoint: TPoint;
+  b: TBox;
+begin
+  mmPoint := Self.Point2MM(playerPoint, walkerPoint, angle);
+  if not Self.ScreenWalk then
+    Exit(Minimap.IsPointOn(mmPoint, -1));
+
+  b := Minimap.PointToMSRect(mmPoint, 1, 1, Angle).Bounds();
+  if MainScreen.IsVisible(b.Middle) then
+    Result := CountColor($0, b.Expand(4, MainScreen.Bounds())) = 0; //Client doesn't always render everything when zoomed out
+end;
+
+
+(*
+## TRSWalkerV2.WalkPath
+```pascal
+function TRSWalkerV2.WalkPath(Path: TPointArray; WaitUntilDistance: Int32 = 0): Boolean;
+```
+Walks a path of points taken from the loaded map. We advice that WaitUntilDistance is not 0.
+
+Parameters:
+- Path
+	Array of points taken from the loaded map to walk. Must be ordered from start to finish.
+- WaitUntilDistance
+	Determines when the method returns once the final point has been clicked. Default value: 0.
+	| *WaitUntilDistance=0* waits until the player has reached the final point.
+	| *WaitUntilDistance=20* waits until the player is within 20 pixels of the final point.
+
+Example:
+```pascal
+Walker.WalkPath([[100,100],[120,120],[140,140],[160,160],[180,180]]);
+```
+*)
+function TRSWalkerV2.WalkPath(path: TPointArray; WaitUntilDistance: Int32 = 0): Boolean;
+
+  function BuildPath(TPA: TPointArray): TPointArray;
+  var
+    I, J: Int32;
+    Line: TPointArray;
+  begin
+    for I := 1 to High(TPA) do
+    begin
+      Line := TPAFromLine(TPA[I-1], TPA[I]);
+
+      J := 0;
+      while J < High(Line) do
+      begin
+        Result += Line[J];
+
+        // keep the steps low, as mainscreen walking might just have a few tiles visible when NearZoomMode is set True
+        if (Self.NearZoomMode) and ((Self.ScreenWalk) or (Self.AdaptiveWalk)) then
+          Inc(J, Random(1, 4))
+        else
+          Inc(J, Random(3, 12));
+      end;
+    end;
+
+    Result += TPA[High(TPA)];
+  end;
+
+  function AdvancePath(var index: Int32; playerPoint: TPoint): Boolean;
+  var
+    Angle: Double := Minimap.GetCompassAngle(False);
+    Previous: Int32 := index;
+    Nearest, Furthest: Int32;
+  begin
+    Nearest := Self.Path.Find(Self.Path.Sorted(playerPoint)[0]);
+    Self.Pathindex := Nearest;
+
+    while (Nearest < High(Self.Path)) and (not Self.IsWalkable(Self.Path[Nearest+1], playerPoint, Angle)) do
+      Inc(Nearest);
+
+    Furthest := Nearest;
+    while (Furthest < High(Self.Path)) and Self.IsWalkable(Self.Path[Furthest+1], playerPoint, Angle) do
+      Inc(Furthest);
+
+    index := Furthest;
+
+    // do the result check before randomness to avoid false error
+    Result := (index > Previous);
+
+    // 15% chance of randomness else furthest
+    if Random() < 0.15 then
+      index := Random(Nearest, Furthest);
+  end;
+
+var
+  playerPoint: TPoint;
+  index, fails: Int32;
+begin
+  Self.Walking := True;
+  playerPoint := Self.Position();
+  Self.Path := BuildPath([playerPoint] + path);
+
+  if Self.AdaptiveWalk then
+  begin
+    Self.AdaptiveToggleDistances.X := RSW_ADAPTIVE_SCREEN_TOGGLE_DISTANCES.X + Random(-6,6);
+    Self.AdaptiveToggleDistances.Y := RSW_ADAPTIVE_SCREEN_TOGGLE_DISTANCES.Y + Random(-16,16);
+    Self.AdaptiveWalkCheck(playerPoint);
+  end;
+
+  while Self.Walking and (fails < 10) do
+  begin
+    playerPoint := Self.Position();
+
+    if AdvancePath(index, playerPoint) then
+      fails := 0
+    else
+    begin
+      Inc(fails);
+
+      // Likely haven't moved far enough to advance to next point
+      if (fails < 5) then begin
+        Wait(300);
+        Continue;
+      end else begin
+        // screen walking struggles, so disable it
+        if Self.AdaptiveWalk then
+          Self.ScreenWalk := False
+        else if (fails = 5) then
+          case SRL.Dice(50) of
+            True:  Minimap.SetCompassAngle(Minimap.GetCompassAngle() - SRL.TruncatedGauss(30, 360, 3));
+            False: Minimap.SetCompassAngle(Minimap.GetCompassAngle() + SRL.TruncatedGauss(30, 360, 3));
+          end;
+      end;
+
+      if (fails mod 2 = 0) then
+        Minimap.WaitFlag();
+    end;
+
+    if index = High(Self.Path) then
+    begin
+      if Self.WalkFinalStep(playerPoint, Self.Path[index], WaitUntilDistance) then
+        Exit(True);
+    end else
+      Self.WalkStep(playerPoint, Self.Path[index]);
+  end;
+
+  if fails = 10 then
+    Self.DebugLn('Failed to advance path');
+end;
+
+(*
+## TRSWalkerV2.WalkBlind
+```pascal
+function TRSWalkerV2.WalkBlind(Destination: TPoint; WaitUntilDistance: Int32 = 0): Boolean;
+```
+"Blindly" walks to a point taken from the loaded map.
+A straight line is generated between the player's position and destination which is then walked.
+
+Parameters:
+- Destination
+  Destination point taken from the loaded map.
+- WaitUntilDistance
+	Determines when the method returns once the final point has been clicked. Default value: 0.
+	| *WaitUntilDistance=0* waits until the player has reached the final point.
+	| *WaitUntilDistance=20* waits until the player is within 20 pixels of the final point.
+
+Example:
+```pascal
+Walker.WalkBlind([300, 300]);
+```
+*)
+function TRSWalkerV2.WalkBlind(Destination: TPoint; WaitUntilDistance: Int32 = 0): Boolean;
+begin
+  Result := Self.WalkPath([Destination], WaitUntilDistance);
+end;
+
+(*
+## TRSWalkerV2.WebWalk
+```pascal
+function TRSWalkerV2.WebWalk(Destination: TPoint; WaitUntilDistance: Int32 = 0; PathRandomness: Double = 0): Boolean;
+```
+Web walks to the destination point on the loaded map. Does **not** handle any obstacles.
+Please run ``webber.simba`` to see how webgraphs are built.
+
+Pre built webgraphs are available for "World" and "Zeah" when used.
+
+Parameters:
+- Destination
+	Destination point taken from the loaded map.
+- WaitUntilDistance
+	Determines when the method returns once the final point has been clicked. Default value: 0.
+	| *WaitUntilDistance=0* waits until the player has reached the final point.
+	| *WaitUntilDistance=20* waits until the player is within 20 pixels of the final point.
+- PathRandomness
+	Randomness to add to the path so the absoulte shortest path isn't always taken. Must be between 0..1
+
+Example:
+```pascal
+var Walker: TRSWalker;
+
+Walker.Setup('world');
+Walker.WebWalk([4595, 3575]); // Lumbridge
+
+// Or use a location from the webgraph
+Walker.WebWalk(WorldWeb.LOCATION_LUMBRIDGE);
+```
+*)
+function TRSWalkerV2.WebWalk(Destination: TPoint; WaitUntilDistance: Int32 = 0; PathRandomness: Double = 0): Boolean;
+var
+  Path: TPointArray;
+begin
+  if not InRange(PathRandomness, 0, 1) then
+    Self.Fatal('TRSWalkerV2.WebWalk `PathRandomness` must be within 0..1');
+
+  Path   := Self.WebGraph^.PathBetween(Self.Position, Destination, PathRandomness);
+  Result := Self.WalkPath(Path, WaitUntilDistance);
+end;
+

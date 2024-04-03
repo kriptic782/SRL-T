@@ -38,7 +38,6 @@ Variables for users to tweak:
   {$I SRL-T/osr.simba}
 {$ENDIF}
 
-{$I webgraph.simba}
 {$I world.graph}
 
 // not a const, allow people to edit.

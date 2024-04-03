@@ -207,7 +207,7 @@ end;
 
 function TRSInterface.Center(): TPoint;
 begin
-  Result := Self.Bounds().Middle;
+  Result := Self.Bounds().Middle();
 end;
 
 type

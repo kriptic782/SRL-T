@@ -22,7 +22,10 @@ end;
 
 procedure THTTPClient.Free();
 begin
+  if not Self.IsSetup then
+    Exit;
   FreeHTTPClient(Self.Client);
+  Self.IsSetup := False;
 end;
 
 function THTTPClient.GET(route: String; debugTime, verbose: Boolean = True): String;

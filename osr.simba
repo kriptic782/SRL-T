@@ -13,7 +13,6 @@
 procedure TSRL.Setup;
 begin
   { override me to setup things }
-  
   Self.IsSetup := True;
 end;
 
@@ -22,7 +21,7 @@ begin
   { override me to debug things }
 end;
 
-procedure TSRL.Debug; overload;
+procedure TSRL.Debug(); overload;
 var
   Bitmap: TMufasaBitmap;
 begin
@@ -83,11 +82,17 @@ end;
 {$IFNDEF SRL_ANTIBAN_INCLUDED}              {$I osr/antiban.simba}
 {$IFNDEF SRL_COMBAT_INCLUDED}               {$I osr/interfaces/gametabs/combat.simba}
 {$IFNDEF SRL_MAGIC_INCLUDED}                {$I osr/interfaces/gametabs/magic.simba}
-
-
 {$IFNDEF SRL_PRAYER_INCLUDED}               {$I osr/interfaces/gametabs/prayer.simba}
 {$IFNDEF SRL_KEYBINDINGS_INCLUDED}          {$I osr/keybindings.simba}
+{$IFNDEF SRL_MAPLOADER_INCLUDED}            {$I osr/map/maploader.simba}
+{$IFNDEF SRL_WALKERV2_INCLUDED}             {$I osr/walker.simba}
+{$IFNDEF SRL_MAP_INCLUDED}                  {$I osr/map/map.simba}
 
+
+
+{$ELSE}{$ENDIF}
+{$ELSE}{$ENDIF}
+{$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}

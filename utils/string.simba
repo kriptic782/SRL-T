@@ -563,7 +563,6 @@ end;
 ```pascal
 function String.FileName(): String; constref;
 ```
-
 Returns the file name
 *)
 function String.FileName(): String; constref;
