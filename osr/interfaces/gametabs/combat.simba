@@ -212,7 +212,7 @@ Combat.SetCombatStyle(COMBAT_STYLE_SLASH);
 
 ```
 *)
-function TRSCombat.SetCombatStyle(Style: String): Boolean;
+function TRSCombat.SetCombatStyle(style: String): Boolean;
 var
   Buttons: TRSButtonArray;
   Button: TRSButton;
@@ -222,7 +222,7 @@ begin
 
   Buttons := Self.GetButtons();
   for Button in Buttons do
-    if Button.FindText(Style, RS_FONT_PLAIN_11, [2070783]) then
+    if Button.FindText(style, RS_FONT_PLAIN_11, [2070783]) then
       Exit(Button.Enable());
 end;
 

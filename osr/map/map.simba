@@ -24,8 +24,9 @@ type
     Similarity: Double;
     Cache: TMatchTemplateRGBCache;
     Loader: TRSMapLoader;
-  end;
 
+    IsSetup: Boolean;
+  end;
 
 
 function TRSMap.Position(): TPoint; forward;
@@ -39,10 +40,21 @@ Internal TRSMap setup method.
 This is caleld automatically for you and you shouldn't need to call it.
 *)
 procedure TRSMap.InternalSetup();
+var
+  minimapImage, minimapSample: TMufasaBitmap;
 begin
-  Self.Walker.Position := @Self.Position;
-  Self.Walker.WebGraph := @Self.Loader.Graph;
-  AddOnTerminate(@Self.Loader.Free);
+  minimapImage := TRSWalker.GetCleanMinimap();
+  minimapSample := Self.ScaleMinimap(minimapImage, Self.Loader.Downscale);
+
+  Self.Cache := TMatchTemplateRGBCache.Create(Self.Loader.DownscaledMap.ToMatrix(), MinimapSample.ToMatrix());
+
+  if not Self.IsSetup then
+  begin
+    Self.Walker.Position := @Self.Position;
+    Self.Walker.WebGraph := @Self.Loader.Graph;
+    AddOnTerminate(@Self.Loader.Free);
+    Self.IsSetup := True;
+  end;
 end;
 
 (*
@@ -154,16 +166,18 @@ With the "Chunk" methods you are able to setup multiple levels from 0 to 3.
 procedure TRSMap.Add(filename: String; downscale: Int32 = 8);
 begin
   Self.Loader.LoadEx(filename, downscale);
+  Self.InternalSetup();
 end;
 
 procedure TRSMap.AddRegions(filename: String; regions: TBoxArray; downscale: Int32 = 8);
 begin
   Self.Loader.AddEx(filename, regions, downscale);
+  Self.InternalSetup();
 end;
 
 procedure TRSMap.AddRegion(filename: String; region: TBox; downscale: Int32 = 8);
 begin
-  Self.SetupRegions(filename, [region], downscale);
+  Self.AddRegions(filename, [region], downscale);
 end;
 
 procedure TRSMap.AddFromURL(url: String; filename: String = ''; downscale: Int32 = 8; force: Boolean = False); overload;
@@ -207,6 +221,7 @@ end;
 procedure TRSMap.AddChunks(chunks: TBoxArray; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
 begin
   Self.Loader.Add(chunks, levels, downscale);
+  Self.InternalSetup();
 end;
 
 procedure TRSMap.AddChunk(chunk: TBox; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
@@ -398,7 +413,7 @@ This is used by TRSMap.Position() to determine how likely is the **Position** pa
 This likelyhood is returned with **Match** which ranges from 0 to 1.
 You probably won't ever need to call this directly.
 *)
-function TRSMap.FullSearch(template, world: TMufasaBitmap; position: TPoint; out match: Single): TPoint;
+function TRSMap.FullSearch(template, map: TMufasaBitmap; position: TPoint; out match: Single): TPoint;
 const
   TEMPL_SIZE = 25;
   SLICE_SIZE = TEMPL_SIZE + 45;
@@ -411,11 +426,11 @@ begin
   area := [
     Max(0, position.X - SLICE_SIZE),
     Max(0, position.Y - SLICE_SIZE),
-    Min(world.GetWidth()  - 1, position.X + SLICE_SIZE),
-    Min(world.GetHeight() - 1, position.Y + SLICE_SIZE)
+    Min(map.GetWidth()  - 1, position.X + SLICE_SIZE),
+    Min(map.GetHeight() - 1, position.Y + SLICE_SIZE)
   ];
 
-  slice := world.Copy(area);
+  slice := map.Copy(area);
   downscaledSlice := slice.Downsample(SCALING);
 
   downscaledTemplate := template.Downsample(SCALING);
@@ -465,7 +480,7 @@ begin
   Self.Region := [];
   Self.Similarity := 0;
 
-  cleanMinimap := TRSMap.GetCleanMinimap();
+  cleanMinimap := Self.GetCleanMinimap();
 
   tpa := Self.ScaledSearch(cleanMinimap, SAMPLES);
   for i := 0 to High(tpa) do
@@ -475,19 +490,24 @@ begin
     if match > Self.Similarity then
     begin
       Self.Similarity := match;
-
       Result := hit;
     end;
   end;
 
   cleanMinimap.Free();
 
-  Self.RegionIndex := Self.Loader.Point2Region(Result);
+
+  Self.RegionIndex := Self.Loader.GetRegion(Result);
   if Self.RegionIndex > -1 then
   begin
     Self.Region := Self.Loader.Regions[Self.RegionIndex];
-    Exit(Self.Loader.Region2Global(Result));
+    if Self.Loader.UsingChunks then
+      Exit(Result); // Transform coordinate missing here.
+
+    Exit(Self.Loader.GetGlobal(Self.RegionIndex, Result));
   end;
+
+
 
   Result := [0,0];
 end;
@@ -526,7 +546,7 @@ begin
   end;
 
   if global then
-    p := Self.Loader.Global2Region(Self.RegionIndex, p);
+    p := Self.Loader.GetLocal(Self.RegionIndex, p);
 
   if Self.Loader.Heightmap.getWidth() < Self.Loader.Map.getWidth() then
     p := [p.X div TILE_SIZE, p.Y div TILE_SIZE];
@@ -669,7 +689,7 @@ while True do
 function TRSMap.DebugPosition(): TPoint;
 var
   x1, y1, x2, y2, x, y, i: Int32;
-  p: TPoint;
+  p, local: TPoint;
   bitmap, map, cleanMinimap: TMufasaBitmap;
   time: Double;
   lines: TStringArray;
@@ -677,19 +697,19 @@ begin
   Freeze();
 
   time := PerformanceTimer();
-  Result := Self.Position();
+  Result := local := Self.Position();
   time := PerformanceTimer() - time;
 
   if Self.RegionIndex > -1 then
-    Result := Self.Loader.Global2Region(Self.RegionIndex, Result);
+    local := Self.Loader.GetLocal(Self.RegionIndex, Result);
 
-  x1 := Max(0, Result.X - 200);
-  y1 := Max(0, Result.Y - 200);
+  x1 := Max(0, local.X - 200);
+  y1 := Max(0, local.Y - 200);
   x2 := Min(x1 + 400, Self.Loader.Map.GetWidth()  - 1);
   y2 := Min(y1 + 400, Self.Loader.Map.GetHeight() - 1);
 
-  x := Result.X - x1;
-  y := Result.Y - y1;
+  x := local.X - x1;
+  y := local.Y - y1;
 
   map := Self.Loader.Map.Copy(x1, y1, x2, y2);
   map.LineTo(Point(0, Y), Point(x2 - x1, y), $00FF00);
@@ -706,21 +726,21 @@ begin
 
   lines := [
     'RegionIndex: ' + ToStr(Self.RegionIndex),
-    'RegionName: ' + ToStr(Self.Region.Name),
-    'Level: ' + ToStr(Self.Region.Level),
+    'RegionName: '  + ToStr(Self.Region.Name),
+    'Level: '       + ToStr(Self.Region.Level),
     'Accuracy: '    + ToStr(Round(Self.Similarity, 3)),
-    'Time: '   + ToStr(Round(time)) + ' ms'
+    'Time: '        + ToStr(Round(time)) + ' ms'
   ];
 
   bitmap.Init();
-  bitmap.SetSize(430 + cleanMinimap.GetWidth(), 420);
+  bitmap.SetSize(480 + cleanMinimap.GetWidth(), 420);
   bitmap.DrawClear($403027);
 
   bitmap.SetFontName('Consolas');
   bitmap.SetFontSize(18);
   bitmap.SetFontAntialiasing(True);
 
-  bitmap.DrawText('Local: ' + Format('(%d, %d)', [Result.X - Self.Region.Region.X1, Result.Y - Self.Region.Region.Y1]), [420, 20 + cleanMinimap.GetHeight()], $FFFFFF);
+  bitmap.DrawText('Local: ' + Format('(%d, %d)', [local.X, local.Y]), [420, 20 + cleanMinimap.GetHeight()], $FFFFFF);
   bitmap.DrawText('Global: ' + Format('(%d, %d)', [Result.X, Result.Y]), [420, 40 + cleanMinimap.GetHeight()], $FFFFFF);
 
   for i := 0 to High(lines) do
@@ -729,7 +749,7 @@ begin
   map.DrawTransparent(10, 10, bitmap);
   map.Free();
 
-  cleanMinimap.DrawTransparent(420, 10, bitmap);
+  cleanMinimap.DrawTransparent(450, 10, bitmap);
   cleanMinimap.Free();
 
   bitmap.Debug();

@@ -288,7 +288,7 @@ type
     Loader: TRSChunkLoader;
     LegacyLoader: TRSLegacyMapLoader;
 
-    CompactHeightmap: Boolean;
+    UsingChunks: Boolean;
   end;
 
 procedure TRSMapLoader.Free();
@@ -427,7 +427,7 @@ begin
 
   for i := 0 to High(bitmaps) do
   begin
-    Result.DrawBitmap(bitmaps[i], Point(Self.Regions[i].Region.X1, Self.Regions[i].Region.Y1));
+    Result.DrawBitmap(bitmaps[i], [Self.Regions[i].Region.X1, Self.Regions[i].Region.Y1]);
     bitmaps[i].Free();
   end;
 
@@ -493,7 +493,7 @@ begin
 
   Self.Map.Downsample(downscale, Self.DownscaledMap);
 
-  CompactHeightmap := True;
+  Self.UsingChunks := True;
 end;
 
 procedure TRSMapLoader.Add(chunks: TBoxArray; levels: TIntegerArray = [0]; downscale: UInt32 = 8; padding: UInt32 = 40); overload;
@@ -515,24 +515,16 @@ begin
 end;
 
 
-function TRSMapLoader.InternalLoadEx(bitmaps: TMufasaBitmapArray; padding: UInt32): TMufasaBitmap;
+function TRSMapLoader.InternalLoadEx(bitmaps: TMufasaBitmapArray): TMufasaBitmap;
 var
   i: Int32;
 begin
-  for i := 0 to High(Self.Regions) do
-  begin
-    bitmaps += Self.LegacyLoader.GetMap(Self.Regions[i].Name, Self.Regions[i].Original);
-    bitmaps[i].Pad(padding);
-  end;
-
-  Self.Pack();
-
   Result.Init();
   Result.SetSize(Self.MapBox.Width(), Self.MapBox.Height());
 
-  for i := 0 to High(Self.Regions) do
+  for i := 0 to High(bitmaps) do
   begin
-    Result.DrawBitmap(bitmaps[i], Point(Self.Regions[i].Region.X1, Self.Regions[i].Region.Y1));
+    Result.DrawBitmap(bitmaps[i], [Self.Regions[i].Region.X1, Self.Regions[i].Region.Y1]);
     bitmaps[i].Free();
   end;
 
@@ -568,19 +560,20 @@ begin
   begin
     Self.Regions[i].Name := filename;
     Self.Regions[i].Original := boxes[i];
-    Self.Regions[i].Offset := Point(boxes[i].X1-padding, boxes[i].Y1-padding);
+    Self.Regions[i].Offset := [boxes[i].X1-padding, boxes[i].Y1-padding];
 
     bitmaps  += Self.LegacyLoader.GetMap(filename, boxes[i]);
     bitmaps[i].Pad(padding);
-
     hbitmaps += Self.LegacyLoader.GetMap('h' + filename, boxes[i]);
     hbitmaps[i].Pad(padding);
 
     Self.Regions[i].Region := Box(0, 0, bitmaps[i].GetWidth(), bitmaps[i].GetHeight());
   end;
 
-  Self.Map := Self.InternalLoadEx(bitmaps, padding);
-  Self.Heightmap := Self.InternalLoadEx(hbitmaps, padding);
+  Self.Pack();
+
+  Self.Map := Self.InternalLoadEx(bitmaps);
+  Self.Heightmap := Self.InternalLoadEx(hbitmaps);
 
   Self.Map.Downsample(downscale, Self.DownscaledMap);
   AddOnTerminate(@Self.Free);
@@ -589,16 +582,34 @@ end;
 
 procedure TRSMapLoader.AddEx(filename: String; downscale: UInt32 = 8);
 var
-  bitmap, hbitmap: TMufasaBitmap;
+  i, len: Int32;
+  bmp, hbmp: TMufasaBitmap;
+  bitmaps, hbitmaps: TMufasaBitmapArray;
 begin
-  bitmap  := Self.LegacyLoader.GetMap(filename);
-  hbitmap := Self.LegacyLoader.GetMap('h' + filename);
+  for i := 0 to High(Self.Regions) do
+  begin
+    Self.Regions[i].Offset := [Self.Regions[i].Original.X1 - Self.Padding, Self.Regions[i].Original.Y1 - Self.Padding];
 
-  Self.Regions += [filename, bitmap.Bounds(), bitmap.Bounds(), 0, [0,0]];
+    bitmaps += Self.LegacyLoader.GetMap(filename, Self.Regions[i].Original);
+    bitmaps[i].Pad(Self.Padding);
+    hbitmaps += Self.LegacyLoader.GetMap('h' + filename, Self.Regions[i].Original);
+    hbitmaps[i].Pad(Self.Padding);
+
+    Self.Regions[i].Region := [0, 0, bitmaps[i].GetWidth(), bitmaps[i].GetHeight()];
+  end;
+
+  bmp := Self.LegacyLoader.GetMap(filename);
+  Self.Regions += [filename, bmp.Bounds(), bmp.Bounds(), 0, [0,0]];
+  bitmaps += bmp;
+
+  hbmp := Self.LegacyLoader.GetMap('h' + filename);
+  hbitmaps += hbmp;
+
   Self.Free();
+  Self.Pack();
 
-  Self.Map := Self.InternalLoadEx([bitmap], Self.Padding);
-  Self.Heightmap := Self.InternalLoadEx([hbitmap], Self.Padding);
+  Self.Map := Self.InternalLoadEx(bitmaps);
+  Self.Heightmap := Self.InternalLoadEx(hbitmaps);
   Self.Map.Downsample(downscale, Self.DownscaledMap);
 end;
 
@@ -611,55 +622,70 @@ begin
   SetLength(Self.Regions, len + Length(boxes));
   Self.Padding := Max(Self.Padding, padding);
 
-  for i := len to High(Self.Regions) do
+  for i := 0 to len-1 do
   begin
-    Self.Regions[i].Name := filename;
-    Self.Regions[i].Original := boxes[i-len];
-    Self.Regions[i].Offset := Point(boxes[i-len].X1 - Self.Padding, boxes[i-len].Y1 - Self.Padding);
+    if i >= len then
+    begin
+      Self.Regions[i].Name := filename;
+      Self.Regions[i].Original := boxes[i-len];
+    end;
 
-    bitmaps  += Self.LegacyLoader.GetMap(filename, boxes[i-len]);
-    bitmaps[i-len].Pad(Self.Padding);
-    hbitmaps += Self.LegacyLoader.GetMap('h' + filename, boxes[i-len]);
-    hbitmaps[i-len].Pad(Self.Padding);
+    Self.Regions[i].Offset := Point(Self.Regions[i].Original.X1 - Self.Padding, Self.Regions[i].Original.Y1 - Self.Padding);
 
-    Self.Regions[i].Region := Box(0, 0, bitmaps[i-len].GetWidth(), bitmaps[i-len].GetHeight());
+    bitmaps += Self.LegacyLoader.GetMap(filename, Self.Regions[i].Original);
+    bitmaps[i].Pad(Self.Padding);
+    hbitmaps += Self.LegacyLoader.GetMap('h' + filename, Self.Regions[i].Original);
+    hbitmaps[i].Pad(Self.Padding);
+
+    Self.Regions[i].Region := [0, 0, bitmaps[i].GetWidth(), bitmaps[i].GetHeight()];
   end;
 
   Self.Free();
-  Self.Map := Self.InternalLoadEx(bitmaps, Self.Padding);
-  Self.Heightmap := Self.InternalLoadEx(hbitmaps, Self.Padding);
+  Self.Pack();
+
+  Self.Map := Self.InternalLoadEx(bitmaps);
+  Self.Heightmap := Self.InternalLoadEx(hbitmaps);
   Self.Map.Downsample(downscale, Self.DownscaledMap);
 end;
 
 
-function TRSMapLoader.Point2Region(p: TPoint): Int32;
-var
-  i: Int32;
+function TRSMapLoader.GetRegion(p: TPoint): Int32;
 begin
+  for Result := 0 to High(Self.Regions) do
+    if p.InBox(Self.Regions[Result].Region) then
+      Exit;
   Result := -1;
-  for i := 0 to High(Self.Regions) do
-    if p.InBox(Self.Regions[i].Region) then
-      Exit(i);
 end;
 
-function TRSMapLoader.Region2Global(p: TPoint): TPoint;
+function TRSMapLoader.GetGlobal(p: TPoint): TPoint;
 var
   i: Int32;
 begin
   Result := p;
   for i := 0 to High(Self.Regions) do
-    if p.InBox(Self.Regions[i].Region) then
-    begin
-      Result += Self.Regions[i].Offset - [Self.Regions[i].Region.X1, Self.Regions[i].Region.Y1];
-      Exit(Result);
-    end;
+    with Self.Regions[i] do
+      if p.InBox(Region) then
+      begin
+        Result += Offset - [Region.X1, Region.Y1];
+        Exit(Result);
+      end;
 end;
 
-function TRSMapLoader.Global2Region(regionIndex: Int32; p: TPoint): TPoint;
+function TRSMapLoader.GetGlobal(regionIndex: Int32; p: TPoint): TPoint; overload;
 begin
-  Result := p;
-  if (regionIndex > -1) then
-    Result := Result - Self.Regions[regionIndex].Offset +
-              [Self.Regions[regionIndex].Region.X1, Self.Regions[regionIndex].Region.Y1];
+  if regionIndex = -1 then
+    Exit(p);
+
+  with Self.Regions[regionIndex] do
+    Result := p + Offset - [Region.X1, Region.Y1];
+end;
+
+function TRSMapLoader.GetLocal(regionIndex: Int32; p: TPoint): TPoint;
+begin
+  if regionIndex = -1 then
+    Exit(p);
+
+  with Self.Regions[regionIndex] do
+    Result := p - Offset + Point(Region.X1, Region.Y1);
 end;
 
