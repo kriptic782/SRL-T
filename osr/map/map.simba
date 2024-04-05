@@ -496,18 +496,12 @@ begin
 
   cleanMinimap.Free();
 
-
   Self.RegionIndex := Self.Loader.GetRegion(Result);
   if Self.RegionIndex > -1 then
   begin
     Self.Region := Self.Loader.Regions[Self.RegionIndex];
-    if Self.Loader.UsingChunks then
-      Exit(Result); // Transform coordinate missing here.
-
     Exit(Self.Loader.GetGlobal(Self.RegionIndex, Result));
   end;
-
-
 
   Result := [0,0];
 end;

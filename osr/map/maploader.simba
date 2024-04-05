@@ -30,12 +30,19 @@ begin
   Self.Cache := cache;
 end;
 
-function TRSChunkLoader.ConvertPoint(p: TPoint): TPoint;
+function TRSChunkLoader.GetChunk(p: TPoint): TPoint; static;
 const
   PIXELS: UInt32 = TILE_SIZE * CHUNK_SIZE;
 begin
   Result.X :=  16 + Floor(p.X / PIXELS); //X starts at 16
   Result.Y := 196 - Floor(p.Y / PIXELS); //Y starts at 196
+end;
+
+function TRSChunkLoader.GetGlobal(p: TPoint): TPoint; static;
+const
+  PIXELS: UInt32 = TILE_SIZE * CHUNK_SIZE;
+begin
+  Result := [(p.X-16) * PIXELS, (196-p.Y) * PIXELS];
 end;
 
 function TRSChunkLoader.ConvertString(str: String): TPoint;
@@ -455,7 +462,7 @@ procedure TRSMapLoader.Load(chunks: TBoxArray; levels: TIntegerArray = [0]; down
 var
   i, j, idx: Int32;
   bitmaps, hbitmaps: TMufasaBitmapArray;
-  s, f: TPoint;
+  s, f, tmp: TPoint;
 begin
   Self.Init(downscale);
   SetLength(Self.Regions, Length(chunks) * Length(levels));
@@ -472,7 +479,9 @@ begin
       Self.Regions[idx].Name :=  ToStr(levels[i]) + '_' + ToStr(s.X) + '-' + ToStr(s.Y) + '_' + ToStr(f.X) + '-' + ToStr(f.Y);
       Self.Regions[idx].Original := chunks[j];
       Self.Regions[idx].Level := levels[i];
-      Self.Regions[idx].Offset := [s.X - padding, s.Y - padding];
+
+      tmp := TRSChunkLoader.GetGlobal(s);
+      Self.Regions[idx].Offset := [tmp.X-padding, tmp.Y - padding];
 
       bitmaps += Self.Loader.GetMap(s, f, levels[i], ERSMapType.NORMAL);
       bitmaps[idx].Pad(padding);
@@ -661,14 +670,11 @@ function TRSMapLoader.GetGlobal(p: TPoint): TPoint;
 var
   i: Int32;
 begin
-  Result := p;
   for i := 0 to High(Self.Regions) do
     with Self.Regions[i] do
       if p.InBox(Region) then
-      begin
-        Result += Offset - [Region.X1, Region.Y1];
-        Exit(Result);
-      end;
+        Exit(p + Offset - [Region.X1, Region.Y1]);
+  Result := p;
 end;
 
 function TRSMapLoader.GetGlobal(regionIndex: Int32; p: TPoint): TPoint; overload;
