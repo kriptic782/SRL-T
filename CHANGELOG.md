@@ -1,3 +1,12 @@
+## [4.5.4](https://github.com/Torwent/SRL-T/compare/v4.5.3...v4.5.4) (2024-04-05)
+
+
+### Bug Fixes
+
+* **TRSMap:** read notes ([e62ad7e](https://github.com/Torwent/SRL-T/commit/e62ad7e6fae12e0d5dc987a98cea02e58bd33c04))
+
+
+
 ## [4.5.3](https://github.com/Torwent/SRL-T/compare/v4.5.2...v4.5.3) (2024-04-05)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * partial release of the walker rework ([03f2f20](https://github.com/Torwent/SRL-T/commit/03f2f20e127b904317eba5de88e10f68902bb038))
-
-
-
-## [4.4.6](https://github.com/Torwent/SRL-T/compare/v4.4.5...v4.4.6) (2024-03-29)
-
-
-### Bug Fixes
-
-* move wasplib's base httpclient here ([5aef939](https://github.com/Torwent/SRL-T/commit/5aef939578927a96dafd65b564369730e964bb5d))
 
 
 
