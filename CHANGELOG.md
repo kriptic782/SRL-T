@@ -1,3 +1,12 @@
+## [4.5.3](https://github.com/Torwent/SRL-T/compare/v4.5.2...v4.5.3) (2024-04-05)
+
+
+### Bug Fixes
+
+* **TRSMap:** several fixes for the TRSMap ([4f1f1b0](https://github.com/Torwent/SRL-T/commit/4f1f1b0ea8daa6d621ec6105d190a07fd645d03d))
+
+
+
 ## [4.5.2](https://github.com/Torwent/SRL-T/compare/v4.5.1...v4.5.2) (2024-04-03)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * move wasplib's base httpclient here ([5aef939](https://github.com/Torwent/SRL-T/commit/5aef939578927a96dafd65b564369730e964bb5d))
-
-
-
-## [4.4.5](https://github.com/Torwent/SRL-T/compare/v4.4.4...v4.4.5) (2024-03-27)
-
-
-### Bug Fixes
-
-* **itemfinder:** improved discover a lot. should have way less collisions now ([f236efb](https://github.com/Torwent/SRL-T/commit/f236efb6f46b7e7dec32b7ecb403e717edc90fa5))
 
 
 
