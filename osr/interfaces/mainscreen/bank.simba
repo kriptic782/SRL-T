@@ -1034,7 +1034,7 @@ begin
 
   Mouse.Move(b);
 
-  if (amount = StrToInt(MainScreen.GetUpText.After('Withdraw-').Before(' '))) then
+  if (toStr(amount) = MainScreen.GetUpText.After('Withdraw-').Before(' ')) then
   begin
     Mouse.Click(MOUSE_LEFT);
     Exit(True);
