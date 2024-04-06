@@ -591,7 +591,7 @@ end;
 
 procedure TRSMapLoader.AddEx(filename: String; downscale: UInt32 = 8);
 var
-  i, len: Int32;
+  i: Int32;
   bmp, hbmp: TMufasaBitmap;
   bitmaps, hbitmaps: TMufasaBitmapArray;
 begin
