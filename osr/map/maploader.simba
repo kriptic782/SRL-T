@@ -694,4 +694,3 @@ begin
   with Self.Regions[regionIndex] do
     Result := p - Offset + Point(Region.X1, Region.Y1);
 end;
-

@@ -262,7 +262,6 @@ end;
 ```pascal
 function String.Replace(SubStr, ReplaceStr: String; Flags: TReplaceFlags=[rfReplaceAll]): String; constref;
 ```
-
 Replace [all by default] occurrences of the given SubStr with with ReplaceStr
 *)
 function String.Replace(SubStr, ReplaceStr: String; Flags: TReplaceFlags=[rfReplaceAll]): String; constref;
@@ -570,6 +569,23 @@ begin
   if Length(Self) <> 0 then
     Result := Self.Explode('.')[0];
 end;
+
+(*
+## String.Hex
+```pascal
+function String.Hex(): string; constref;
+```
+Returns the hexadecimal value that represents the string.
+*)
+function String.Hex(): string; constref;
+var
+  n: Integer;
+begin
+  Result := '';
+  for n := 1 to Length(Self) do
+    Result := LowerCase(Result + IntToHex(Ord(Self[n]), 2));
+end;
+
 
 //---| operator overloads bellow this |---------------------------------------\\
 (*

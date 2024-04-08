@@ -15,10 +15,16 @@ begin
   Result := Copy(Self, 1, p - 1);
 end;
 
-function String.SubString(finish: Int32): String;
+function String.SubString(start, finish: Int32): String; constref;
+begin
+  Result := Copy(Self, start, finish);
+end;
+
+function String.SubString(finish: Int32): String; constref; overload;
 begin
   Result := Copy(Self, 1, finish);
 end;
+
 
 function String.EndsWith(Suffix: String): Boolean; constref;
 var
@@ -31,6 +37,15 @@ begin
   for i:=1 to Length(Suffix) do
     if (Suffix[i] <> Self[l-Length(Suffix)+i]) then
       Exit(False);
+end;
+
+function String.Hex(): string; constref;
+var
+  n: Integer;
+begin
+  Result := '';
+  for n := 1 to Length(Self) do
+    Result := LowerCase(Result + IntToHex(Ord(Self[n]), 2));
 end;
 
 
@@ -280,6 +295,51 @@ begin
     Result := CustomClusterTPA(Self, dist);
 end;
 
+
+function TIntegerArray.Find(const Value: Integer): Integer; constref;
+begin
+  for Result := 0 to High(Self) do
+    if (Value = Self[Result]) then
+      Exit;
+
+  Result := -1;
+end;
+
+function TIntegerArray.FindAll(const Value: Integer): TIntegerArray; constref;
+var
+  i,top: UInt32;
+begin
+  for i:=0 to High(Self) do
+    if (Self[i] = Value) then
+    begin
+      SetLength(Result, top+1);
+      Result[Inc(top)-1] := i;
+    end;
+end;
+
+procedure TIntegerArray.Del(const Index: Integer; const Count: Integer = 1);
+begin
+  Delete(Self, Index, Count);
+end;
+
+procedure TIntegerArray.Remove(const Value: Integer; const All: Boolean = False);
+var
+  i: Int32;
+  lst: TIntegerArray;
+begin
+  if (not All) then
+  begin
+    i := Self.Find(Value);
+    if i >= 0 then Self.Del(i);
+    Exit;
+  end;
+
+  lst := Self.FindAll(Value);
+  for i:=High(lst) downto 0 do
+    Self.Del(lst[i]);
+end;
+
+
 function TMufasaBitmap.Bounds(): TBox;
 begin
   Result := [0, 0, Self.getWidth()-1, Self.getHeight()-1];
@@ -334,7 +394,7 @@ begin
   hashes += str;
 end;
 
-function TMufasaBitmap.GetHash(): String;
+function TMufasaBitmap.GetHashOld(): String;
 var
   pixels: TIntegerArray;
   str: String;
@@ -344,6 +404,30 @@ begin
   Move(pixels^, str[1], length(str));
   str := SHA1String(str);
   Result := str.SubString(16);
+
+  AddHash(str, Result);
+end;
+
+function TMufasaBitmap.GetHash(): String;
+var
+  pixels: TIntegerArray;
+  str: String;
+  h, i: Int32;
+begin
+  pixels := Self.GetColors();
+
+  h := $811C9DC5;
+  for i:=0 to High(pixels) do
+  begin
+    if pixels[i] = $0 then
+      Continue;
+    h := (h * $1000193) xor pixels[i];
+  end;
+
+  str := LowerCase(IntToHex(h, 16));
+  Result := str.SubString(Length(str)-8, Length(str));
+
+  AddHash(Result, Result);
 end;
 
 function ClearItemBackground(bmp: TMufasaBitmap): Boolean;

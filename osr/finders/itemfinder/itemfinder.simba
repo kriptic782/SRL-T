@@ -106,18 +106,26 @@ begin
 end;
 
 
-//Thanks to Olly.
+//Thanks to Olly for the original idea.
 //Make sure your bitmap has the top 9 pixels cropped (possible stack number) and is 36 width.
 function TRSItemFinder.GetHash(bmp: TMufasaBitmap): String;
 var
   pixels: TIntegerArray;
+  h, i: Int32;
   str: String;
 begin
   pixels := bmp.GetColors();
-  SetLength(str, Length(pixels));
-  Move(pixels^, str[1], length(str));
-  str := SHA1String(str);
-  Result := str.SubString(16);
+
+  h := $811C9DC5;
+  for i:=0 to High(pixels) do
+  begin
+    if pixels[i] = $0 then
+      Continue;
+    h := (h * $1000193) xor pixels[i];
+  end;
+
+  str := LowerCase(IntToHex(h, 16));
+  Result := str.SubString(Length(str)-8, Length(str));
 end;
 
 //Attempt to clean an item bmp. Should be

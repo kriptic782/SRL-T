@@ -66,13 +66,6 @@ begin
   end;
 end;
 
-function String.Signature(): String; constref;
-var
-  i: Int32;
-begin
-  for i in TByteArray(SHA1String(Self)) do
-    Result += ToStr(i);
-end;
 
 type
   TSimpleDatabase = record
@@ -101,7 +94,7 @@ begin
   SetLength(Self.Maps, Length(columns));
 
   if cache = '' then
-    cache := SIMBA_DATA_DIR + 'Cache' + DirectorySeparator + name + DirectorySeparator;
+    cache := CACHE_DIR + name + DirectorySeparator;
   if not ForceDirectories(cache) then
     TerminateScript('Failed to create cache directory for the ' + name + ' database.');
 
@@ -114,22 +107,20 @@ begin
 
     Self.Data[i].Init();
     Self.Data[i].LoadFromFile(path + columns[i]);
+
     Self.Maps[i].Init();
+    Self.Maps[i].SetSorted(True);
+    Self.Maps[i].setCaseSensitive(False);
 
     if FileExists(cache + columns[i]) then
     begin
       Self.Maps[i].LoadFromFile(cache + columns[i]);
-      Self.Maps[i].SetSorted(True);
       Continue;
     end;
 
     for j := 0 to Self.Data[i].High() do
-    begin
-      str := Self.Data[i].GetStrings(j).Signature();
-      Self.Maps[i].Add(str + '=' + ToStr(j));
-    end;
+      Self.Maps[i].Add(Self.Data[i].GetStrings(j) + '=' + ToStr(j));
 
-    Self.Maps[i].SetSorted(True);
     Self.Maps[i].SaveToFile(cache + columns[i]);
   end;
 
@@ -158,8 +149,7 @@ begin
   if k = -1 then
     TerminateScript('Column ' + key + ' does not exist!');
 
-  sign := search.ToLower().Signature();
-  index := Self.Maps[k].ValueFromName(sign);
+  index := Self.Maps[k].ValueFromName(search);
   Result := index > 0;
 end;
 
@@ -176,8 +166,7 @@ begin
   if v = -1 then
     TerminateScript('Column ' + value +' does not exist!');
 
-  sign := search.ToLower().Signature();
-  index := Self.Maps[k].ValueFromName(sign);
+  index := Self.Maps[k].ValueFromName(search);
   Result := Self.Data[v].getStrings(index);
 end;
 
@@ -195,8 +184,7 @@ begin
   if v = -1 then
     TerminateScript('Column ' + value +' does not exist!');
 
-  sign := search.ToLower().Signature();
-  indices := Self.Maps[k].ValuesFromName(sign);
+  indices := Self.Maps[k].ValuesFromName(search);
   Result := Self.Data[v].GetStrings(indices);
 end;
 
@@ -209,6 +197,6 @@ begin
   begin
     str := LowerCase(values[i]);
     Self.Data[i].Add(str);
-    Self.Maps[i].Add(str.Signature() + '=' + ToStr(Self.Data[i].High()));
+    Self.Maps[i].Add(str + '=' + ToStr(Self.Data[i].High()));
   end;
 end;
