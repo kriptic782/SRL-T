@@ -1,3 +1,12 @@
+## [4.5.5](https://github.com/Torwent/SRL-T/compare/v4.5.4...v4.5.5) (2024-04-08)
+
+
+### Bug Fixes
+
+* read notes ([b64bbdf](https://github.com/Torwent/SRL-T/commit/b64bbdf831675caf51af31dbf6aacf73d176110e))
+
+
+
 ## [4.5.4](https://github.com/Torwent/SRL-T/compare/v4.5.3...v4.5.4) (2024-04-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * fixed compile issues ([f306782](https://github.com/Torwent/SRL-T/commit/f306782eea20a0881e88fb6fbbb4158ed1960585))
-
-
-
-# [4.5.0](https://github.com/Torwent/SRL-T/compare/v4.4.6...v4.5.0) (2024-04-03)
-
-
-### Features
-
-* partial release of the walker rework ([03f2f20](https://github.com/Torwent/SRL-T/commit/03f2f20e127b904317eba5de88e10f68902bb038))
 
 
 
