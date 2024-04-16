@@ -16,6 +16,12 @@ type
     Z: Int32;
   end;
 
+  TRSMapChunk = record
+    Name: String;
+    Chunk: TBox;
+    Levels: TIntegerArray;
+  end;
+
   TRSMap = record
     Walker: TRSWalkerV2;
 
@@ -27,7 +33,6 @@ type
 
     IsSetup: Boolean;
   end;
-
 
 function TRSMap.Position(): TPoint; forward;
 
@@ -142,6 +147,29 @@ procedure TRSMap.SetupChunk(chunk: TBox; levels: TIntegerArray = [0]; downscale:
 begin
   Self.SetupChunks([chunk], levels, downscale);
 end;
+
+procedure TRSMap.SetupChunks(chunks: array of TRSMapChunk; downscale: UInt32 = 8); overload;
+var
+  i, l: Int32;
+  boxes: TBoxArray;
+  levels: TIntegerArray;
+begin
+  for i := 0 to High(chunks) do
+  begin
+    boxes += chunks[i].Chunk;
+    for l in chunks[i].Levels do
+      if levels.Find(l) = -1 then
+        levels += l;
+  end;
+
+  Self.SetupChunks(boxes, levels, downscale);
+end;
+
+procedure TRSMap.SetupChunk(chunk: TRSMapChunk; downscale: UInt32 = 8); overload;
+begin
+  Self.SetupChunks([chunk], downscale);
+end;
+
 
 
 (*
