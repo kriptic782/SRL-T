@@ -197,7 +197,7 @@ function TWebGraph.AddNode(p: TPoint; FromNode: Int32): Boolean;
 var
   c: Int32;
 begin
-  if (FromNode <> -1) and (InvalidConnection(p, Self.Nodes[FromNode])) then
+  if (FromNode <> -1) and (Self.InvalidConnection(p, Self.Nodes[FromNode])) then
     Exit(False);
 
   c := Length(Self.Nodes);
@@ -213,6 +213,7 @@ begin
 
   Result := True;
 end;
+
 
 function TWebGraph.ConnectNodes(a,b: Int32): Boolean;
 begin
@@ -231,6 +232,27 @@ begin
 
   Result := True;
 end;
+
+function TWebGraph.ConnectNodes(a,b: TPoint): Boolean; overload;
+var
+  i, j: Int32;
+begin
+  i := Self.Nodes.Find(a);
+  if i = -1 then Exit;
+  j := Self.Nodes.Find(b);
+  if j = -1 then Exit;
+  Result := Self.ConnectNodes(i,j);
+end;
+
+function TWebGraph.ConnectNodes(a: Int32; b: TPoint): Boolean; overload;
+var
+  i: Int32;
+begin
+  i := Self.Nodes.Find(b);
+  if i = -1 then Exit;
+  Result := Self.ConnectNodes(a, i);
+end;
+
 
 function TWebGraph.DeleteNode(node: Int32): Int32;
 var
@@ -263,6 +285,7 @@ begin
     Result += 1;
   until Length(marked) = 0;
 end;
+
 
 function TWebGraph.NodesToString: String;
 var
@@ -361,4 +384,22 @@ begin
   for I := 0 to High(Elements) do
     if (Elements[I] <> '#0') then
       Self.Names[I] := Elements[I];
+end;
+
+
+procedure TWebGraph.Merge(graph: TWebGraph);
+var
+  i, j, len: Int32;
+begin
+  len := Length(Self.Nodes);
+  for i := 0 to High(graph.Nodes) do
+  begin
+    Self.Nodes += graph.Nodes[i];
+    Self.Paths += graph.Paths[i];
+
+    for j := 0 to High(Self.Paths[len+i]) do
+      Self.Paths[len+i,j] += len;
+
+    Self.Names += graph.Names[i];
+  end;
 end;

@@ -769,11 +769,18 @@ Map.Debug(ERSMapType.HEIGHT);
 ```
 *)
 procedure TRSMap.Debug(map: ERSMapType = ERSMapType.NORMAL);
+var
+  bmp: TMufasaBitmap;
 begin
   case map of
     ERSMapType.NORMAL: Self.Loader.Map.Debug();
     ERSMapType.HEIGHT: Self.Loader.Heightmap.Debug();
-    ERSMapType.COLLISION: Self.Loader.Map.Debug();
+    ERSMapType.COLLISION:
+    begin
+      bmp := Self.Loader.WebGraphBitmap(Self.Loader.Graph);
+      bmp.Debug();
+      bmp.Free();
+    end;
   end;
 end;
 

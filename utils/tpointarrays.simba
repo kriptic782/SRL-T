@@ -392,6 +392,30 @@ begin
 end;
 
 
+function TPointArray.Matrix(out x,y: Int32): array of TBoolArray; constref;
+var
+  b: TBox;
+  p: TPoint;
+begin
+  b := Self.Bounds();
+  x := b.X1;
+  y := b.Y1;
+
+  SetLength(Result, b.Height(), b.Width());
+  for p in Self do Result[p.Y-y,p.X-x] := True;
+end;
+
+function TPointArray.Matrix(): array of TBoolArray; constref; overload;
+var
+  b: TBox;
+  p: TPoint;
+begin
+  b := Self.Bounds();
+
+  SetLength(Result, b.Y2+1, b.X2+1);
+  for p in Self do Result[p.Y,p.X] := True;
+end;
+
 function TPointArray.Intersection(other: TPointArray): TPointArray; constref;
 begin
   try
@@ -475,7 +499,7 @@ function TPointArray.SortFrom(from: TPoint = [0,0]): TPointArray; constref;
 ```
 Wraps Simba's `SortTPAFrom`, produces a sorted copy.
 *)
-function TPointArray.Sorted(from: TPoint = [0,0]): TPointArray;
+function TPointArray.Sorted(from: TPoint = [0,0]): TPointArray; constref;
 begin
   Result := Copy(Self);
   SortTPAFrom(Result, from);
@@ -1233,6 +1257,114 @@ begin
   Self.Sort(other);
   Result := Self[0];
 end;
+
+
+//TPointArray.Skeleton by slacky
+function TPointArray.Skeleton(FMin: Integer; FMax: Integer = 10): TPointArray; constref;
+
+  function _TransitCount(const p2,p3,p4,p5,p6,p7,p8,p9: Integer): Integer;
+  begin
+    Result := 0;
+
+    if ((p2 = 0) and (p3 = 1)) then Inc(Result);
+    if ((p3 = 0) and (p4 = 1)) then Inc(Result);
+    if ((p4 = 0) and (p5 = 1)) then Inc(Result);
+    if ((p5 = 0) and (p6 = 1)) then Inc(Result);
+    if ((p6 = 0) and (p7 = 1)) then Inc(Result);
+    if ((p7 = 0) and (p8 = 1)) then Inc(Result);
+    if ((p8 = 0) and (p9 = 1)) then Inc(Result);
+    if ((p9 = 0) and (p2 = 1)) then Inc(Result);
+  end;
+
+var
+  j,i,x,y,h,transit,sumn,MarkHigh,hits: Integer;
+  p2,p3,p4,p5,p6,p7,p8,p9:Integer;
+  Change, PTS: TPointArray;
+  Matrix: array of TBooleanMatrix;
+  iter: Boolean;
+  B: TBox;
+begin
+  h := High(Self);
+  if (h <= 0) then
+    Exit;
+
+  B := Self.Bounds();
+  B.X1 -= 2;
+  B.Y1 -= 2;
+  SetLength(Matrix, B.Height() + 2, B.Width() + 2);
+
+  SetLength(PTS, h + 1);
+  for i := 0 to h do
+  begin
+    x := Self[i].X - B.X1;
+    y := Self[i].Y - B.Y1;
+    PTS[i] := [x, y];
+    Matrix[y, x] := True;
+  end;
+
+  j := 0;
+  MarkHigh := h;
+  SetLength(Change, h+1);
+  repeat
+    iter := (j mod 2) = 0;
+    Hits := 0;
+    i := 0;
+    while (i < MarkHigh) do
+    begin
+      x := PTS[i].x;
+      y := PTS[i].y;
+      p2 := Ord(Matrix[y-1,x]);
+      p4 := Ord(Matrix[y,x+1]);
+      p6 := Ord(Matrix[y+1,x]);
+      p8 := Ord(Matrix[y,x-1]);
+
+      if iter then
+      begin
+        if (((p4 * p6 * p8) <> 0) or ((p2 * p4 * p6) <> 0)) then
+        begin
+          Inc(i);
+          Continue;
+        end;
+      end
+      else if ((p2 * p4 * p8) <> 0) or ((p2 * p6 * p8) <> 0) then
+      begin
+        Inc(i);
+        Continue;
+      end;
+
+      p3 := Ord(Matrix[y-1,x+1]);
+      p5 := Ord(Matrix[y+1,x+1]);
+      p7 := Ord(Matrix[y+1,x-1]);
+      p9 := Ord(Matrix[y-1,x-1]);
+      Sumn := (p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9);
+      if (SumN >= FMin) and (SumN <= FMax) then
+      begin
+        Transit := _TransitCount(p2,p3,p4,p5,p6,p7,p8,p9);
+        if (Transit = 1) then
+        begin
+          Change[Hits] := PTS[i];
+          Inc(Hits);
+          PTS[i] := PTS[MarkHigh];
+          PTS[MarkHigh] := Point(x, y);
+          Dec(MarkHigh);
+          Continue;
+        end;
+      end;
+      Inc(i);
+    end;
+
+    for i:=0 to (Hits-1) do
+      Matrix[Change[i].y, Change[i].x] := False;
+
+    inc(j);
+  until ((Hits=0) and (Iter=False));
+
+  SetLength(Result, (MarkHigh + 1));
+  for i := 0 to MarkHigh do
+    Result[i] := Point(PTS[i].X+B.X1, PTS[i].Y+B.Y1);
+end;
+
+
 
 //--| Other TPA methods |------------------------------------------------------>
 //----------------------------------------------------------------------------->
