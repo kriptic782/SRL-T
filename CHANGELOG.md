@@ -1,3 +1,12 @@
+## [4.6.1](https://github.com/Torwent/SRL-T/compare/v4.6.0...v4.6.1) (2024-04-16)
+
+
+### Bug Fixes
+
+* **Bank:** read notes ([6d2e334](https://github.com/Torwent/SRL-T/commit/6d2e334bad4e08ff901adc1ccdf6a85cfff763a6))
+
+
+
 # [4.6.0](https://github.com/Torwent/SRL-T/compare/v4.5.5...v4.6.0) (2024-04-16)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMap:** several fixes for the TRSMap ([4f1f1b0](https://github.com/Torwent/SRL-T/commit/4f1f1b0ea8daa6d621ec6105d190a07fd645d03d))
-
-
-
-## [4.5.2](https://github.com/Torwent/SRL-T/compare/v4.5.1...v4.5.2) (2024-04-03)
-
-
-### Bug Fixes
-
-* just shutting the compiler suggestions up ([aab329a](https://github.com/Torwent/SRL-T/commit/aab329ad34edafbc7269762654d29b26a3183b95))
 
 
 
