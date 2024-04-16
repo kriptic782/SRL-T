@@ -1,3 +1,12 @@
+## [4.6.2](https://github.com/Torwent/SRL-T/compare/v4.6.1...v4.6.2) (2024-04-16)
+
+
+### Bug Fixes
+
+* **TRSMap:** added TRSMapChunk helper type ([a451f18](https://github.com/Torwent/SRL-T/commit/a451f188e25ee27f82de7b18a6a3eaddbb3b39d7))
+
+
+
 ## [4.6.1](https://github.com/Torwent/SRL-T/compare/v4.6.0...v4.6.1) (2024-04-16)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMap:** read notes ([e62ad7e](https://github.com/Torwent/SRL-T/commit/e62ad7e6fae12e0d5dc987a98cea02e58bd33c04))
-
-
-
-## [4.5.3](https://github.com/Torwent/SRL-T/compare/v4.5.2...v4.5.3) (2024-04-05)
-
-
-### Bug Fixes
-
-* **TRSMap:** several fixes for the TRSMap ([4f1f1b0](https://github.com/Torwent/SRL-T/commit/4f1f1b0ea8daa6d621ec6105d190a07fd645d03d))
 
 
 
