@@ -1079,12 +1079,19 @@ begin
 end;
 
 function TRSBank.FindItem(out item: TRSBankItem; out box: TBox; attempts: Int32 = 0): Boolean; overload;
+var
+  count: Int32;
 begin
   if not Self.FindItem(item.Item, box) then
   begin
     if item.Tab = -1 then
       item.Tab := Self.FindItemTab(item.Item, False);
-    Self.OpenTab(item.Tab);
+
+    if item.Tab = 0 then
+      count := Self.ItemInterface.Count();
+
+    if Self.OpenTab(item.Tab) then
+      if item.Tab = 0 then WaitUntil(count <> Self.ItemInterface.Count(), 300, 3000);
 
     if not Self.FindItem(item.Item, box) then
     begin
