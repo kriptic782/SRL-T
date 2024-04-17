@@ -1,3 +1,12 @@
+# [4.7.0](https://github.com/Torwent/SRL-T/compare/v4.6.3...v4.7.0) (2024-04-17)
+
+
+### Features
+
+* **TRSMap:** read notes ([5edb01c](https://github.com/Torwent/SRL-T/commit/5edb01c74e61c568f230266b35f807304a45555e))
+
+
+
 ## [4.6.3](https://github.com/Torwent/SRL-T/compare/v4.6.2...v4.6.3) (2024-04-17)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **TRSMap:** read notes ([80ce3ab](https://github.com/Torwent/SRL-T/commit/80ce3ab33f9eb98e8897619c572ddd42efb57b97))
-
-
-
-## [4.5.5](https://github.com/Torwent/SRL-T/compare/v4.5.4...v4.5.5) (2024-04-08)
-
-
-### Bug Fixes
-
-* read notes ([b64bbdf](https://github.com/Torwent/SRL-T/commit/b64bbdf831675caf51af31dbf6aacf73d176110e))
 
 
 
