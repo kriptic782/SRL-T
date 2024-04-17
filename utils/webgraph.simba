@@ -403,3 +403,34 @@ begin
     Self.Names += graph.Names[i];
   end;
 end;
+
+
+procedure TWebGraph.Draw(out bitmap: TMufasaBitmap);
+var
+  i,j,color: Int32;
+  p,q: TPoint;
+begin
+  if Length(Self.Nodes) = 0 then
+    Exit;
+
+  for i := 0 to High(Self.Paths) do
+  begin
+    p := Self.Nodes[i];
+
+    for j := 0 to High(Self.Paths[i]) do
+    begin
+      q := Self.Nodes[Self.Paths[i][j]];
+      bitmap.DrawTPA(TPAFromLine(p, q), $00EAEA);
+    end;
+  end;
+
+  for i := 0 to High(Self.Nodes) do
+  begin
+    color := $0101CC;
+    if Length(Self.Names[i]) <> 0 then
+      color := $FF7F00;
+
+    p := Self.Nodes[i];
+    bitmap.DrawBox(p, 1, color);
+  end;
+end;

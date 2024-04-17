@@ -809,32 +809,31 @@ end;
 (*
 ## TRSMap.Debug
 ```pascal
-procedure TRSMap.Debug(map: ERSMapType = ERSMapType.NORMAL);
+procedure TRSMap.Debug(map: ERSMapType = ERSMapType.NORMAL; graph: Boolean = False);
 ```
-Displays one of the maps loaded.
+Displays one of the maps loaded. You can optionally overlay the webgraph on top of you map.
 
 Example:
 ```pascal
 Map.SetupChunks([[18,56,22,60], [42,50, 46, 45]], [0, 1]);
-Map.Debug();
-Wait(5000);
 Map.Debug(ERSMapType.HEIGHT);
 ```
 *)
-procedure TRSMap.Debug(map: ERSMapType = ERSMapType.NORMAL);
+procedure TRSMap.Debug(map: ERSMapType = ERSMapType.NORMAL; graph: Boolean = False);
 var
   bmp: TMufasaBitmap;
 begin
   case map of
-    ERSMapType.NORMAL: Self.Loader.Map.Debug();
-    ERSMapType.HEIGHT: Self.Loader.Heightmap.Debug();
-    ERSMapType.COLLISION:
-    begin
-      bmp := Self.Loader.WebGraphBitmap(Self.Loader.Graph);
-      bmp.Debug();
-      bmp.Free();
-    end;
+    ERSMapType.NORMAL:    bmp := Self.Loader.Map.Copy();
+    ERSMapType.HEIGHT:    bmp := Self.Loader.Heightmap.Copy();
+    ERSMapType.COLLISION: bmp := Self.Loader.Collision.Copy();
   end;
+
+  if graph then
+    Self.Loader.Graph.Draw(bmp);
+
+  bmp.Debug();
+  bmp.Free();
 end;
 
 var

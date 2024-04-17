@@ -117,6 +117,7 @@ begin
   Result := Self.GetBitmap(ToStr(chunk.X) + '-' + ToStr(chunk.Y), level, map);
 end;
 
+
 function TRSChunkLoader.GetJSONFile(chunk: String; level: UInt32; json: ERSMapJSON): TJSONArray;
 var
   name, cacheroot, cachename, zipFile, zipPath: String;
@@ -149,6 +150,7 @@ function TRSChunkLoader.GetJSONFile(chunk: TPoint; level: UInt32; json: ERSMapJS
 begin
   Result := Self.GetJSONFile(ToStr(chunk.X) + '-' + ToStr(chunk.Y), level, json);
 end;
+
 
 function TRSChunkLoader.GetMap(chunks: TPointArray; level: UInt32; map: ERSMapType): TMufasaBitmap;
 var
@@ -204,9 +206,189 @@ begin
   Result := Self.GetMap(chunks, level, map);
 end;
 
-function TRSChunkLoader.GetMap(start, finish: String; level: UInt32; map: ERSMapType): TMufasaBitmap; overload;
+
+function TRSChunkLoader.BuildGraph(name: String; map: TMufasaBitmap): TWebGraph;
+var
+  i, j, n, len, connection: Int32;
+  atpa: T2DPointArray;
+  white, black, red, skeleton: TPointArray;
+  p: TPoint;
+  circle: TCircle;
+  matrix: array of TBoolArray;
+  crossings: array [0..12] of TBoolArray;
+  skip: TIntegerArray;
+  sorted: array of record
+    Points: TPointArray;
+    Setup: Boolean;
+  end;
 begin
-  Result := Self.GetMap(Self.ConvertString(start), Self.ConvertString(finish), level, map);
+  map.FindColors(white, $FFFFFF);
+  map.FindColors(black, $0);
+  map.FindColors(red, $FF);
+  black += red;
+
+  SetLength(matrix, map.GetHeight(), map.GetWidth());
+
+  for p in black do matrix[p.Y, p.X] := True;
+
+  Self.DebugLn('Generating webgraph for region: ' + name);
+
+  atpa := white.ClusterEx(1);
+  for i := High(atpa) downto 0 do
+  begin
+    if Length(atpa[i]) < 17 then
+    begin
+      for p in atpa[i] do matrix[p.Y, p.X] := True;
+      Continue;
+    end;
+
+    if (red <> []) and (atpa[i].PointsInRangeOf(red,0,1) = []) then
+    begin
+      for p in atpa[i] do matrix[p.Y, p.X] := True;
+      Continue;
+    end;
+
+    len := Length(Result.Nodes);
+
+    circle := atpa[i].MinAreaCircle();
+    if circle.Radius < 70 then
+    begin
+      SetLength(Result.Nodes, len+1);
+      SetLength(Result.Paths, len+1);
+
+      Result.Nodes[len] := atpa[i].Sorted(atpa[i].Mean())[0];
+
+      for p in atpa[i] do matrix[p.Y, p.X] := True;
+      Continue;
+    end;
+
+    skeleton := atpa[i].Erode(1).Skeleton(2, 7);
+
+    RAaSTPA(skeleton, 6);
+
+    for p in skeleton do
+      if not matrix[p.Y, p.X] then
+        Result.Nodes += p;
+
+    SetLength(Result.Paths, Length(Result.Nodes));
+
+    sorted := [];
+    SetLength(sorted, Length(Result.Nodes));
+
+    for connection := 0 to 10 do
+    begin
+      if connection mod 3 = 0 then
+        Self.DebugLn('Creating webgraph connections ' + ToStr(connection) + '/12');
+
+      crossings[connection] := [];
+      SetLength(crossings[connection], Length(Result.Nodes));
+
+      for j := len to High(Result.Nodes) do
+      begin
+        if InIntArray(skip, j) then Continue;
+
+        if not sorted[j].Setup then
+        begin
+          sorted[j].Points := Result.Nodes.FilterDist(0, 80, Result.Nodes[j].X, Result.Nodes[j].Y);
+          sorted[j].Points.Sort(Result.Nodes[j]);
+          Delete(sorted[j].Points, 0, 1);
+          sorted[j].Setup := True;
+        end;
+
+        if High(sorted[j].Points) < connection then
+        begin
+          skip += j;
+          Continue;
+        end;
+
+        if crossings[connection, j] then Continue;
+
+        for p in TPAFromLine(Result.Nodes[j], sorted[j].Points[connection]) do
+          if matrix[p.Y,p.X] then
+          begin
+
+            if Length(sorted[j].Points) = 1 then
+              skip += j
+            else
+            begin
+              Delete(sorted[j].Points, connection, 1);
+              j -= 1;
+            end;
+
+            Continue(2);
+          end;
+
+        crossings[connection, j] := True;
+        n := Result.Nodes.Find(sorted[j].Points[connection]);
+        if InIntArray(Result.Paths[j], n) or Result.ConnectNodes(j, n) then
+          Continue;
+
+        if Length(sorted[j].Points) = 1 then
+          skip += j
+        else
+        begin
+          Delete(sorted[j].Points, connection, 1);
+          j -= 1;
+        end;
+      end;
+    end;
+
+    for j := High(Result.Paths) downto len do
+      if Length(Result.Paths[j]) = 0 then
+        Result.DeleteNode(j);
+  end;
+
+  SetLength(Result.Names, Length(Result.Nodes));
+end;
+
+function TRSChunkLoader.GetGraph(start, finish: TPoint; level: UInt32; map: TMufasaBitmap): TWebGraph; overload;
+var
+  cacheroot, cachename, name: String;
+  json: TJSONObject;
+begin
+  name := ToStr(start.X) + '-' + ToStr(start.Y) + '_' +
+          ToStr(finish.X) + '-' + ToStr(finish.Y);
+
+  cacheroot := Self.Cache + 'graphs' + DirectorySeparator;
+  cachename := cacheroot + ToStr(level) + DirectorySeparator + name;
+
+  if not FileExists(cachename + '.json') then
+  begin
+    Self.DebugLn('Caching ' + name + ' webgraph, this will take a minute.');
+
+    if not ForceDirectories(cacheroot + ToStr(level) + DirectorySeparator) then
+      Self.Fatal('Failed to create path: ' + cacheroot + ToStr(level) + DirectorySeparator);
+
+    Result := Self.BuildGraph(name, map);
+    try
+      json.Init();
+
+      json.Put('nodes', Result.NodesToString());
+      json.Put('paths', Result.PathsToString());
+      json.Put('names', Result.NamesToString());
+
+      if not WriteFileContents(cachename + '.json', json.ToString(2), False) then
+        Self.Fatal('Failed to save ' + name + ' webgraph.');
+    except
+      Self.Fatal('Something went wrong saving ' + name + ' webraph: ' + GetExceptionMessage());
+    finally
+      json.Free();
+    end;
+
+    Exit;
+  end;
+
+  try
+    json.Init(ReadFileContents(cachename + '.json'));
+
+    Result.LoadNodesFromString(json.getString('nodes'));
+    Result.LoadPathsFromString(json.getString('paths'));
+    Result.LoadNamesFromString(json.getString('names'));
+  except
+    TerminateScript('Something went wrong loading the webraph: ' + GetExceptionMessage());
+  finally
+    json.Free();
+  end;
 end;
 
 
@@ -261,11 +443,6 @@ begin
       chunks += [x,y];
 
   Result := Self.GetJSON(chunks, level, json);
-end;
-
-function TRSChunkLoader.GetJSON(start, finish: String; level: UInt32; json: ERSMapJSON): TMufasaBitmap; overload;
-begin
-  Result := Self.GetJSON(Self.ConvertString(start), Self.ConvertString(finish), level, json);
 end;
 
 
@@ -538,184 +715,28 @@ begin
   end;
 end;
 
-
-function TRSMapLoader.WebGraphBitmap(graph: TWebGraph): TMufasaBitmap;
+function TRSMapLoader.InternalCollisionLoad(bitmaps: TMufasaBitmapArray): TMufasaBitmap;
 var
-  i,j,color: Int32;
-  p,q: TPoint;
+  i: Int32;
 begin
-  if Length(graph.Nodes) = 0 then
-    Exit;
+  Result.Init();
+  Result.SetSize(Self.MapBox.Width(), Self.MapBox.Height());
 
-  Result := Self.Collision.Copy();
-
-  for i := 0 to High(graph.Paths) do
+  for i := 0 to High(bitmaps) do
   begin
-    p := graph.Nodes[i];
-
-    for j := 0 to High(graph.Paths[i]) do
-    begin
-      q := graph.Nodes[graph.Paths[i][j]];
-      Result.DrawTPA(TPAFromLine(p, q), $00EAEA);
-    end;
-  end;
-
-  for i := 0 to High(graph.Nodes) do
-  begin
-    color := $0101CC;
-    if Length(graph.Names[i]) <> 0 then
-      color := $FF7F00;
-
-    p := graph.Nodes[i];
-    Result.DrawBox(p, 1, color);
+    Result.DrawBitmap(bitmaps[i], [Self.Regions[i].Region.X1, Self.Regions[i].Region.Y1]);
+    bitmaps[i].Free();
   end;
 end;
 
-function TRSMapLoader.BuildGraph(): TWebGraph;
+function TRSMapLoader.InternalGraphLoad(graphs: array of TWebGraph; padding: UInt32): TWebGraph;
 var
-  i, j, n, len, x, y, connection, r: Int32;
-  atpa: T2DPointArray;
-  gwhite, gblack, gred, white, black, red, skeleton: TPointArray;
-  p: TPoint;
-  circle: TCircle;
-  matrix: array of TBoolArray;
-  crossings: array [0..12] of TBoolArray;
-  skip: TIntegerArray;
-  sorted: array of record
-    Points: TPointArray;
-    Setup: Boolean;
-  end;
-  graph: TWebGraph;
+  i: Int32;
 begin
-  if not Assigned(Self.Collision) then
-    Self.Fatal('You can''t build a webgraph from scratch without a collision map');
-
-  Self.Collision.FindColors(gwhite, $FFFFFF);
-  Self.Collision.FindColors(gblack, $0);
-  Self.Collision.FindColors(gred, $FF);
-  gblack += gred;
-
-  x := Self.Collision.GetWidth();
-  y := Self.Collision.GetHeight();
-
-  SetLength(matrix, y, x);
-
-  for p in gblack do matrix[p.Y, p.X] := True;
-
-  for r := 0 to High(Self.Regions) do
+  for i := 0 to High(graphs) do
   begin
-    WriteLn('Generating webgraph for region: ', Self.Regions[r].Name);
-    white := gwhite.FilterBox(Self.Regions[r].Region);
-    black := gwhite.FilterBox(Self.Regions[r].Region);
-    red := gwhite.FilterBox(Self.Regions[r].Region);
-
-    atpa := white.ClusterEx(1);
-    for i := High(atpa) downto 0 do
-    begin
-      if Length(atpa[i]) < 17 then
-      begin
-        black += atpa[i];
-        for p in atpa[i] do matrix[p.Y, p.X] := True;
-        Continue;
-      end;
-
-      if (red <> []) and (atpa[i].PointsInRangeOf(red,0,1) = []) then
-      begin
-        black += atpa[i];
-        for p in atpa[i] do matrix[p.Y, p.X] := True;
-        Continue;
-      end;
-
-      circle := atpa[i].MinAreaCircle();
-      if circle.Radius < 70 then
-      begin
-        graph.Nodes += [atpa[i].Sorted(atpa[i].Mean())[0]];
-        graph.Paths += [];
-        black += atpa[i];
-        for p in atpa[i] do matrix[p.Y, p.X] := True;
-        Continue;
-      end;
-
-      skeleton := atpa[i].Erode(1).Skeleton(2, 7);
-
-      RAaSTPA(skeleton, 8);
-
-      len := Length(graph.Nodes);
-
-      for p in skeleton do
-        if not matrix[p.Y, p.X] then
-          graph.Nodes += p;
-
-      SetLength(graph.Paths, Length(graph.Nodes));
-
-      sorted := [];
-      SetLength(sorted, Length(graph.Nodes));
-
-      for connection := 0 to 12 do
-      begin
-        if connection mod 6 = 0 then
-          WriteLn('Creating webgraph connections ', connection, '/12');
-        crossings[connection] := [];
-        SetLength(crossings[connection], Length(graph.Nodes));
-
-        for j := len to High(graph.Nodes) do
-        begin
-          if InIntArray(skip, j) then Continue;
-
-          if not sorted[j].Setup then
-          begin
-            sorted[j].Points := graph.Nodes.FilterDist(0, 80, graph.Nodes[j].X, graph.Nodes[j].Y);
-            sorted[j].Points.Sort(graph.Nodes[j]);
-            Delete(sorted[j].Points, 0, 1);
-            sorted[j].Setup := True;
-          end;
-
-          if High(sorted[j].Points) < connection then
-          begin
-            skip += j;
-            Continue;
-          end;
-
-          if crossings[connection, j] then Continue;
-
-          for p in TPAFromLine(graph.Nodes[j], sorted[j].Points[connection]) do
-            if matrix[p.Y,p.X] then
-            begin
-
-              if Length(sorted[j].Points) = 1 then
-                skip += j
-              else
-              begin
-                Delete(sorted[j].Points, connection, 1);
-                j -= 1;
-              end;
-
-              Continue(2);
-            end;
-
-          crossings[connection, j] := True;
-          n := graph.Nodes.Find(sorted[j].Points[connection]);
-          if InIntArray(graph.Paths[j], n) or graph.ConnectNodes(j, n) then
-            Continue;
-
-          if Length(sorted[j].Points) = 1 then
-            skip += j
-          else
-          begin
-            Delete(sorted[j].Points, connection, 1);
-            j -= 1;
-          end;
-        end;
-      end;
-
-      for j := High(graph.Paths) downto len do
-        if Length(graph.Paths[j]) = 0 then
-          graph.DeleteNode(j);
-    end;
-
-    SetLength(graph.Names, Length(graph.Nodes));
-    Result.Merge(graph);
-    graph := [];
+    graphs[i].Nodes:= graphs[i].Nodes.Offset([Self.Regions[i].Region.X1 + 40, Self.Regions[i].Region.Y1 + padding]);
+    Result.Merge(graphs[i]);
   end;
 end;
 
@@ -725,6 +746,7 @@ var
   i, j, idx: Int32;
   bitmaps, hbitmaps, cbitmaps: TMufasaBitmapArray;
   s, f, tmp: TPoint;
+  graphs: array of TWebGraph;
 begin
   Self.Init(downscale);
   SetLength(Self.Regions, Length(chunks) * Length(levels));
@@ -755,6 +777,8 @@ begin
       end;
 
       cbitmaps += Self.Loader.GetMap(s, f, levels[i], ERSMapType.COLLISION);
+      graphs += Self.Loader.GetGraph(s, f, levels[i], cbitmaps[idx]);
+
       cbitmaps[idx].Pad(padding);
 
       Self.Regions[idx].Region := Box(0, 0, bitmaps[idx].GetWidth(), bitmaps[idx].GetHeight());
@@ -764,7 +788,8 @@ begin
 
   Self.Map := Self.InternalLoad(bitmaps);
   Self.Heightmap := Self.InternalHeightLoad(hbitmaps);
-  Self.Collision := Self.InternalLoad(cbitmaps);
+  Self.Collision := Self.InternalCollisionLoad(cbitmaps);
+  Self.Graph := Self.InternalGraphLoad(graphs, padding);
 
   Self.Map.Downsample(downscale, Self.DownscaledMap);
 
