@@ -69,8 +69,10 @@ procedure TRSMap.Setup(filename: String; downscale: Int32 = 8);
 procedure TRSMap.SetupRegions(filename: String; regions: TBoxArray; downscale: Int32 = 8);
 procedure TRSMap.SetupRegion(filename: String; region: TBox; downscale: Int32 = 8);
 procedure TRSMap.SetupFromURL(url: String; filename: String = ''; downscale: Int32 = 8; force: Boolean = False);
-procedure TRSMap.SetupChunks(chunks: TBoxArray; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
-procedure TRSMap.SetupChunk(chunk: TBox; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunksEx(chunks: TBoxArray; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunkEx(chunk: TBox; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunks(chunks: array of TRSMapChunk; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunk(chunk: TRSMapChunk; downscale: UInt32 = 8);
 ```
 Setup a TRSMap.
 If for some reason you can't setup all your maps at once, you can later use the `Add` methods.
@@ -137,18 +139,18 @@ begin
   Self.Setup(filename, downscale);
 end;
 
-procedure TRSMap.SetupChunks(chunks: TBoxArray; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunksEx(chunks: TBoxArray; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
 begin
   Self.Loader.Load(chunks, levels, downscale);
   Self.InternalSetup();
 end;
 
-procedure TRSMap.SetupChunk(chunk: TBox; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunkEx(chunk: TBox; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
 begin
-  Self.SetupChunks([chunk], levels, downscale);
+  Self.SetupChunksEx([chunk], levels, downscale);
 end;
 
-procedure TRSMap.SetupChunks(chunks: array of TRSMapChunk; downscale: UInt32 = 8); overload;
+procedure TRSMap.SetupChunks(chunks: array of TRSMapChunk; downscale: UInt32 = 8);
 var
   i, l: Int32;
   boxes: TBoxArray;
@@ -162,14 +164,13 @@ begin
         levels += l;
   end;
 
-  Self.SetupChunks(boxes, levels, downscale);
+  Self.SetupChunksEx(boxes, levels, downscale);
 end;
 
-procedure TRSMap.SetupChunk(chunk: TRSMapChunk; downscale: UInt32 = 8); overload;
+procedure TRSMap.SetupChunk(chunk: TRSMapChunk; downscale: UInt32 = 8);
 begin
-  Self.SetupChunks([chunk], downscale);
+  Self.SetupChunksEx([chunk.Chunk], chunk.Levels, downscale);
 end;
-
 
 
 (*
@@ -178,9 +179,11 @@ end;
 procedure TRSMap.Add(filename: String; downscale: Int32 = 8);
 procedure TRSMap.AddRegions(filename: String; regions: TBoxArray; downscale: Int32 = 8);
 procedure TRSMap.AddRegion(filename: String; region: TBox; downscale: Int32 = 8);
-procedure TRSMap.AddFromURL(url: String; filename: String = ''; downscale: Int32 = 8; force: Boolean = False); overload;
-procedure TRSMap.AddChunks(chunks: TBoxArray; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
-procedure TRSMap.AddChunk(chunk: TBox; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
+procedure TRSMap.AddFromURL(url: String; filename: String = ''; downscale: Int32 = 8; force: Boolean = False);
+procedure TRSMap.AddChunksEx(chunks: TBoxArray; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
+procedure TRSMap.AddChunkEx(chunk: TBox; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
+procedure TRSMap.AddChunks(chunks: array of TRSMapChunk; downscale: UInt32 = 8);
+procedure TRSMap.AddChunk(chunk: TRSMapChunk; downscale: UInt32 = 8);
 ```
 TRSMap to add maps to an already setup TRSMap.
 If it's possible to add all your maps during setup, avoid using this,
@@ -208,7 +211,7 @@ begin
   Self.AddRegions(filename, [region], downscale);
 end;
 
-procedure TRSMap.AddFromURL(url: String; filename: String = ''; downscale: Int32 = 8; force: Boolean = False); overload;
+procedure TRSMap.AddFromURL(url: String; filename: String = ''; downscale: Int32 = 8; force: Boolean = False);
 var
   client: Int32;
   filepath, path: String;
@@ -246,15 +249,37 @@ begin
   Self.Add(filename, downscale);
 end;
 
-procedure TRSMap.AddChunks(chunks: TBoxArray; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
+procedure TRSMap.AddChunksEx(chunks: TBoxArray; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
 begin
   Self.Loader.Add(chunks, levels, downscale);
   Self.InternalSetup();
 end;
 
-procedure TRSMap.AddChunk(chunk: TBox; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
+procedure TRSMap.AddChunkEx(chunk: TBox; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
 begin
-  Self.AddChunks([chunk], levels, downscale);
+  Self.AddChunksEx([chunk], levels, downscale);
+end;
+
+procedure TRSMap.AddChunks(chunks: array of TRSMapChunk; downscale: UInt32 = 8);
+var
+  i, l: Int32;
+  boxes: TBoxArray;
+  levels: TIntegerArray;
+begin
+  for i := 0 to High(chunks) do
+  begin
+    boxes += chunks[i].Chunk;
+    for l in chunks[i].Levels do
+      if levels.Find(l) = -1 then
+        levels += l;
+  end;
+
+  Self.AddChunksEx(boxes, levels, downscale);
+end;
+
+procedure TRSMap.AddChunk(chunk: TRSMapChunk; downscale: UInt32 = 8);
+begin
+  Self.AddChunksEx([chunk.Chunk], chunk.Levels, downscale);
 end;
 
 

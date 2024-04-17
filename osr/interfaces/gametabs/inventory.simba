@@ -28,8 +28,8 @@ type
   TRSInventory = record(TRSInterface)
     LOW_SLOT: Int32;
     HIGH_SLOT: Int32;
+    ShiftEnabled: Boolean;
   end;
-
 
 (*
 ## Inventory.GetSlotBoxes
@@ -52,21 +52,22 @@ end;
 
 function TRSInventory.GetSlotBox(slot: Int32): TBox;
 begin
-  if InRange(slot, 0, HIGH_SLOT) then
+  if InRange(slot, 0, Self.HIGH_SLOT) then
     Result := Self.GetSlotBoxes()[slot];
 end;
+
 
 procedure TRSInventory.Setup(); override;
 begin
   inherited;
 
   Self.Name := 'Inventory';
-
-  Self.LOW_SLOT := 0;
   Self.HIGH_SLOT := 27;
+
   Self.ItemInterface.Name := Self.Name + '.ItemInterface';
   Self.ItemInterface.GetSearchBoxesFunction := @Self.GetSlotBoxes;
   Self.ItemInterface.DiscoverOffset := [0, 9, 4, 0];
+  Self.ShiftEnabled := True;
 end;
 
 procedure TRSInventory.SetupAlignment(Mode: ERSClientMode); override;
@@ -781,20 +782,94 @@ begin
 end;
 
 (*
-## Inventory.ShiftDrop()
+## Inventory.Drop
 ```pascal
+function TRSInventory.RightClickDrop(slots: TIntegerArray): Boolean;
+function TRSInventory.RightClickDrop(items: TRSItemArray; pattern: TIntegerArray): Boolean; overload;
 function TRSInventory.ShiftDrop(slots: TIntegerArray): Boolean;
 function TRSInventory.ShiftDrop(items: TRSItemArray; pattern: TIntegerArray): Boolean; overload;
 ```
-Shift drops `slots` or `items` specified.
+Right click or shift drops `slots` or `items` specified.
 If `items` are passed in, you also have to specify a `pattern` to use.
+
+Shift dropping falls back to right click dropping if `TRSInventory.ShiftEnabled` is set to false.
 
 Example:
 ```pascal
+// Right click drop maple & willow logs in the snake pattern
+Inventory.RightClickDrop(['Maple logs', 'Willow logs'], DROP_PATTERN_SNAKE);
+
 // Shift drop maple & willow logs in the snake pattern
 Inventory.ShiftDrop(['Maple logs', 'Willow logs'], DROP_PATTERN_SNAKE);
 ```
 *)
+function TRSInventory.RightClickDrop(slots: TIntegerArray): Boolean;
+var
+  boxes: TBoxArray;
+  b: TBox;
+  i, j, attempts: Int32;
+  selected: Int32;
+  circle: TCircle;
+begin
+  if (Length(slots) = 0) then
+    Exit(True);
+
+  boxes := Self.GetSlotBoxes();
+
+  for attempts := 1 to 5 do
+  begin
+    i := 0;
+
+    for i := 0 to High(slots) do
+    begin
+      b := boxes[slots[i]];
+      selected := Self.GetSelectedSlot();
+      if (selected > -1) then
+      begin
+        Self.SetSelectedSlot(-1);
+        Continue(2);
+      end;
+
+      if Self.IsSlotUsed(b) then
+      begin
+        Mouse.Move(b);
+        ChooseOption.Select('Drop');
+
+        if SRL.Dice(3) then
+          for j := 1 to SRL.TruncatedGauss(0, 2) do
+          begin
+            circle.X := Mouse.Position().X;
+            circle.Y := Mouse.Position().Y;
+            circle.Radius := 5;
+
+            Mouse.Click(circle, MOUSE_LEFT, True);
+          end;
+
+        Wait(0, 250, wdLeft);
+      end;
+    end;
+
+    Break;
+  end;
+
+  Result := attempts <= 5;
+end;
+
+function TRSInventory.RightClickDrop(items: TRSItemArray; pattern: TIntegerArray): Boolean; overload;
+var
+  slots, order: TIntegerArray;
+  i: Int32;
+begin
+  if Self.FindItems(items, slots) then
+  begin
+    for i := 0 to High(pattern) do
+      if slots.Find(pattern[i]) > -1 then
+        order += pattern[i];
+
+    Result := Self.RightClickDrop(order);
+  end;
+end;
+
 function TRSInventory.ShiftDrop(slots: TIntegerArray): Boolean;
 var
   boxes: TBoxArray;
@@ -806,7 +881,10 @@ begin
   if (Length(slots) = 0) then
     Exit(True);
 
-  IsKeyDown(VK_SHIFT); // Clear cache
+  if not Self.ShiftEnabled then
+    Exit(Self.RightClickDrop(slots));
+
+  Keyboard.IsKeyDown(VK_SHIFT); // Clear cache
   boxes := Self.GetSlotBoxes();
 
   try
@@ -826,9 +904,9 @@ begin
 
         if Self.IsSlotUsed(box) then
         begin
-          if not IsKeyDown(VK_SHIFT) then
+          if not Keyboard.IsKeyDown(VK_SHIFT) then
           begin
-            KeyDown(VK_SHIFT);
+            Keyboard.KeyDown(VK_SHIFT);
             Wait(95,170,wdLeft); //Wait for SHIFT to be registered before the click (important).
           end;
 
@@ -854,11 +932,16 @@ begin
         Exit;
     end;
   finally
-    if IsKeyDown(VK_SHIFT) then
-      KeyUp(VK_SHIFT);
+    if Keyboard.IsKeyDown(VK_SHIFT) then
+      Keyboard.KeyUp(VK_SHIFT);
   end;
 
   Result := attempts <= 5;
+  if not Result then
+  begin
+    Self.DebugLn('Shift drop is not enabled, consider enabling it for better performance.');
+    Self.ShiftEnabled := False;
+  end;
 end;
 
 function TRSInventory.ShiftDrop(items: TRSItemArray; pattern: TIntegerArray): Boolean; overload;
@@ -877,16 +960,20 @@ begin
 end;
 
 var
+(*
+## var Inventory
+Global TRSInventory variable.
+*)
   Inventory: TRSInventory;
 
-procedure TRSClient.ClientModeChanged; override;
+procedure TRSClient.ClientModeChanged(); override;
 begin
   inherited;
 
   Inventory.SetupAlignment(Self.Mode);
 end;
 
-procedure TSRL.Setup; override;
+procedure TSRL.Setup(); override;
 begin
   Inventory.Setup();
 

@@ -9,6 +9,12 @@ Methods to interact with the XP bar.
 
 type
   TRSXPBar = record(TRSInterface)
+    Tracker: record
+      Start: Int32;
+      Current: Int32;
+      IsSetup: Boolean;
+    end;
+
     Alignments: array of TRSInterfaceAlignment;
     Font: TFontSet;
     IsSetup: Boolean;
@@ -115,7 +121,6 @@ Internal method automatically called by SRL once when attempting to read the XPB
 procedure TRSXPBar._Setup();
 var
   tpa: TPointArray;
-  b: TBox;
 begin
   if not Self.Enable() then
     Exit;
@@ -156,7 +161,6 @@ end;
 ```pascal
 function TRSXPBar.Read(): Int32;
 ```
-
 Reads the XP in the XPBar.
 
 Example:
@@ -169,12 +173,47 @@ begin
   if not Self.IsSetup then
     Self._Setup();
 
-  //Self._Setup() already checks Self.IsEnabled() but it's only called once.
   if not Self.IsSetup or not Self.Enable() then
     Exit;
 
   Result := OCR.RecognizeNumber(Self.Bounds(), TOCRColorFilter.Create([$FFFFFF]), Self.Font);
+
+  Self.Tracker.IsSetup := (Result > 0) and (Result >= Self.Tracker.Current);
+
+  if Self.Tracker.IsSetup then
+  begin
+    if Self.Tracker.Start = 0 then
+      Self.Tracker.Start := Result;
+
+    if (Self.Tracker.Current = 0) or (Result > Self.Tracker.Current) then
+      Self.Tracker.Current := Result;
+  end;
 end;
+
+function TRSXPBar.EarnedXP(): Boolean;
+var
+  previous: Int32;
+begin
+  previous := Self.Tracker.Current;
+  Result := Self.Read() > previous;
+end;
+
+function TRSXPBar.WaitXP(waitTime: Int32 = 600; interval: Int32 = -1): Boolean;
+begin
+  if (interval = -1) then
+    interval := SRL.TruncatedGauss(50, 200);
+
+  Result := WaitUntil(Self.EarnedXP(), interval, waitTime);
+end;
+
+
+function TRSXPBar.TotalEarnedXP(update: Boolean = False): Int32;
+begin
+  if update then
+    Self.Read();
+  Result := Self.Tracker.Current - Self.Tracker.Start;
+end;
+
 
 (*
 ## XPBar.IsOpen
