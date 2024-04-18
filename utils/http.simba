@@ -120,5 +120,5 @@ begin
   Self.Server := server;
   Self.Client := InitializeHTTPClient(handleCookies);
   AddOnTerminate(@Self.Free);
-  IsSetup := True;
+  Self.IsSetup := True;
 end;

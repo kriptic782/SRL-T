@@ -190,6 +190,19 @@ begin
   end;
 end;
 
+(*
+## XPBar.EarnedXP
+```pascal
+function TRSXPBar.EarnedXP(): Boolean;
+```
+Returns True/False if we earned XP since the last time this or XPBar.Read() was called.
+
+Example:
+```pascal
+while True do
+  WriteLn XPBar.EarnedXP();
+```
+*)
 function TRSXPBar.EarnedXP(): Boolean;
 var
   previous: Int32;
@@ -198,6 +211,13 @@ begin
   Result := Self.Read() > previous;
 end;
 
+(*
+## XPBar.WaitXP
+```pascal
+function TRSXPBar.WaitXP(waitTime: Int32 = 600; interval: Int32 = -1): Boolean;
+```
+Waits a set amount of time until XPBar.EarnedXP() is true.
+*)
 function TRSXPBar.WaitXP(waitTime: Int32 = 600; interval: Int32 = -1): Boolean;
 begin
   if (interval = -1) then
@@ -206,6 +226,15 @@ begin
   Result := WaitUntil(Self.EarnedXP(), interval, waitTime);
 end;
 
+(*
+## XPBar.TotalEarnedXP
+```pascal
+function TRSXPBar.TotalEarnedXP(update: Boolean = False): Int32;
+```
+Returns the total amount of earned experience.
+This is pretty reliable but should be taken with a grain of salt since XPBar can be misread
+due to several reasons, like open interfaces.
+*)
 
 function TRSXPBar.TotalEarnedXP(update: Boolean = False): Int32;
 begin
@@ -220,7 +249,6 @@ end;
 ```pascal
 function TRSXPBar.IsOpen(): Boolean;
 ```
-
 Checks if the XPBar is open.
 Keep in mind interfaces and things that cover the xp bar, might make this return false.
 
