@@ -1,3 +1,12 @@
+## [4.8.1](https://github.com/Torwent/SRL-T/compare/v4.8.0...v4.8.1) (2024-04-18)
+
+
+### Bug Fixes
+
+* re-add cached quantity ([c907596](https://github.com/Torwent/SRL-T/commit/c907596f615bfd1e0ee59b12845109e1dc7708a9))
+
+
+
 # [4.8.0](https://github.com/Torwent/SRL-T/compare/v4.7.0...v4.8.0) (2024-04-18)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMap:** added TRSMapChunk helper type ([a451f18](https://github.com/Torwent/SRL-T/commit/a451f188e25ee27f82de7b18a6a3eaddbb3b39d7))
-
-
-
-## [4.6.1](https://github.com/Torwent/SRL-T/compare/v4.6.0...v4.6.1) (2024-04-16)
-
-
-### Bug Fixes
-
-* **Bank:** read notes ([6d2e334](https://github.com/Torwent/SRL-T/commit/6d2e334bad4e08ff901adc1ccdf6a85cfff763a6))
 
 
 
