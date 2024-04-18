@@ -455,3 +455,21 @@ begin
 
   TerminateScript();
 end;
+
+function TJSONArray.High(): Int32;
+begin
+  if Self = nil then
+    Exit(-1);
+  Result := Self.length()-1;
+end;
+
+procedure TJSONArray.Merge(other: TJSONArray);
+var
+  i: Int32;
+begin
+  if Self = nil then Exit;
+  if other = nil then Exit;
+
+  for i := 0 to other.High() do
+    Self.Put(other.Get(i));
+end;
