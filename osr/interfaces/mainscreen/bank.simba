@@ -40,6 +40,7 @@ type
     FINDER_OPTION: TStringArray;
     QUANTITY_ALL: Int32;
     QUANTITY_ALL_BUT_ONE: Int32;
+    CachedQuantity: Int32;
   end;
 
   TRSBankItem = record
@@ -1034,13 +1035,17 @@ begin
 
   Mouse.Move(b);
 
-  if (toStr(amount) = MainScreen.GetUpText.After('Withdraw-').Before(' ')) then
+  if (amount = Self.CachedQuantity) or (amount = MainScreen.GetUpText().ExtractNumber(Self.CachedQuantity)) then
   begin
+    Self.CachedQuantity := amount;
     Mouse.Click(MOUSE_LEFT);
     Exit(True);
   end;
 
+  Self.CachedQuantity := 0; //in case we falsely return the next statement true we reset this.
   Result := ChooseOption.Select('Withdraw-X') and Chat.AnswerQuery('Enter amount', ToString(amount), Random(2000, 4000));
+  if Result then
+    Self.CachedQuantity := amount;
 end;
 
 
