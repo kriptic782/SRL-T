@@ -1,3 +1,12 @@
+# [4.8.0](https://github.com/Torwent/SRL-T/compare/v4.7.0...v4.8.0) (2024-04-18)
+
+
+### Features
+
+* **TRSMap:** full object data loading added ([a0eb6fa](https://github.com/Torwent/SRL-T/commit/a0eb6fac56c2ecc3af8508843f82b8dbda9117d4))
+
+
+
 # [4.7.0](https://github.com/Torwent/SRL-T/compare/v4.6.3...v4.7.0) (2024-04-17)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **Bank:** read notes ([6d2e334](https://github.com/Torwent/SRL-T/commit/6d2e334bad4e08ff901adc1ccdf6a85cfff763a6))
-
-
-
-# [4.6.0](https://github.com/Torwent/SRL-T/compare/v4.5.5...v4.6.0) (2024-04-16)
-
-
-### Features
-
-* **TRSMap:** read notes ([80ce3ab](https://github.com/Torwent/SRL-T/commit/80ce3ab33f9eb98e8897619c572ddd42efb57b97))
 
 
 
