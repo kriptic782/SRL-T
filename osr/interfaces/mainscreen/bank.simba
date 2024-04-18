@@ -1035,7 +1035,7 @@ begin
 
   Mouse.Move(b);
 
-  if (Self.CachedQuantity = amount) or MainScreen.IsUpText('Withdraw-' + ToString(amount)) then
+  if (amount = Self.CachedQuantity) or (amount = MainScreen.GetUpText().ExtractNumber(Self.CachedQuantity)) then
   begin
     Self.CachedQuantity := amount;
     Mouse.Click(MOUSE_LEFT);
