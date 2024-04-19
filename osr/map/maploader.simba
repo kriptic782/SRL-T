@@ -563,8 +563,8 @@ type
 
     UsingChunks: Boolean;
 
-    Objects: TJSONArray;
-    NPCs: TJSONArray;
+    ObjectData: TJSONArray;
+    NPCData: TJSONArray;
   end;
 
 procedure TRSMapLoader.Free();
@@ -593,16 +593,16 @@ begin
     Self.Collision := nil;
   end;
 
-  if Assigned(Self.Objects) then
+  if Assigned(Self.ObjectData) then
   begin
-    Self.Objects.Free();
-    Self.Objects := nil;
+    Self.ObjectData.Free();
+    Self.ObjectData := nil;
   end;
 
-  if Assigned(Self.NPCs) then
+  if Assigned(Self.NPCData) then
   begin
-    Self.NPCs.Free();
-    Self.NPCs := nil;
+    Self.NPCData.Free();
+    Self.NPCData := nil;
   end;
 end;
 
@@ -860,7 +860,7 @@ begin
   Self.Heightmap := Self.InternalHeightLoad(hbitmaps);
   Self.Collision := Self.InternalCollisionLoad(cbitmaps);
   Self.Graph := Self.InternalGraphLoad(graphs, padding);
-  Self.Objects := Self.InternalObjectsLoad(objects);
+  Self.ObjectData := Self.InternalObjectsLoad(objects);
 
   Self.Map.Downsample(downscale, Self.DownscaledMap);
 

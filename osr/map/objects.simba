@@ -1,0 +1,87 @@
+(*
+# Map Objects
+This file is responsible for interacting with map objects.
+*)
+
+{$DEFINE SRL_MAPOBJECTS_INCLUDED}
+{$IFNDEF SRL_OSR}
+  {$I SRL-T/osr.simba}
+{$ENDIF}
+
+type
+  TRSMapObject = record
+    ID: Int32;
+    Name: String;
+    ObjType:  Int32;
+    Category: Int32;
+    Actions: TStringArray;
+    Coordinates: TPointArray;
+    Size: Int32;
+    Rotations: TIntegerArray;
+  end;
+
+  TRSMapObjectArray = array of TRSMapObject;
+
+  TRSMapObjects = record
+    Data: TJSONArray;
+    Walker: PRSWalkerV2;
+    Cached: TRSMapObjectArray;
+  end;
+
+function TRSMapObjects.GetData(obj: Variant): TJSONObject;
+var
+  i: Int32;
+  str: String;
+begin
+  if VarIsNumeric(obj) then
+  begin
+    for i := 0 to  Self.Data.High() do
+      if Self.Data.getJSONObject(i).getInt('id') = obj then
+        Exit(Self.Data.getJSONObject(i));
+    Exit;
+  end;
+
+  str := LowerCase(obj);
+
+  if str.IsDigit() then
+  begin
+    for i := 0 to  Self.Data.High() do
+      if Self.Data.getJSONObject(i).getInt('id') = obj then
+        Exit(Self.Data.getJSONObject(i));
+    Exit;
+  end;
+
+  for i := 0 to  Self.Data.High() do
+    if LowerCase(Self.Data.getJSONObject(i).getString('name')) = str then
+      Exit(Self.Data.getJSONObject(i));
+end;
+
+function TRSMapObjects.GetActions(obj: Variant): TStringArray;
+var
+  json: TJSONObject;
+  actions: TJSONArray;
+  i: Int32;
+begin
+  json := Self.GetData(obj);
+  if json = nil then
+    Exit;
+
+  actions:= json.getJSONArray('actions');
+  for i := 0 to actions.High() do
+    Result += actions.getString(i);
+end;
+
+function TRSMapObjects.GetCoordinates(obj: Variant): TStringArray;
+var
+  json: TJSONObject;
+  actions: TJSONArray;
+  i: Int32;
+begin
+  json := Self.GetData(obj);
+  if json = nil then
+    Exit;
+
+  actions:= json.getJSONArray('actions');
+  for i := 0 to actions.High() do
+    Result += actions.getString(i);
+end;

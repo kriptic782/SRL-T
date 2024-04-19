@@ -83,10 +83,11 @@ end;
 {$IFNDEF SRL_KEYBINDINGS_INCLUDED}          {$I osr/keybindings.simba}
 {$IFNDEF SRL_MAPLOADER_INCLUDED}            {$I osr/map/maploader.simba}
 {$IFNDEF SRL_WALKERV2_INCLUDED}             {$I osr/walker.simba}
+{$IFNDEF SRL_MAPOBJECTS_INCLUDED}           {$I osr/map/objects.simba}
 {$IFNDEF SRL_MAP_INCLUDED}                  {$I osr/map/map.simba}
 
 
-
+{$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
