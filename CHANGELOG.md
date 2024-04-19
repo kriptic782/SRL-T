@@ -1,3 +1,12 @@
+## [4.8.4](https://github.com/Torwent/SRL-T/compare/v4.8.3...v4.8.4) (2024-04-19)
+
+
+### Bug Fixes
+
+* **TRSMapObjects:** started work on Map Objects ([2a5939e](https://github.com/Torwent/SRL-T/commit/2a5939ec72baed0958cefb0b07937a22df9a1f86))
+
+
+
 ## [4.8.3](https://github.com/Torwent/SRL-T/compare/v4.8.2...v4.8.3) (2024-04-19)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **TRSMap:** full object data loading added ([a0eb6fa](https://github.com/Torwent/SRL-T/commit/a0eb6fac56c2ecc3af8508843f82b8dbda9117d4))
-
-
-
-# [4.7.0](https://github.com/Torwent/SRL-T/compare/v4.6.3...v4.7.0) (2024-04-17)
-
-
-### Features
-
-* **TRSMap:** read notes ([5edb01c](https://github.com/Torwent/SRL-T/commit/5edb01c74e61c568f230266b35f807304a45555e))
 
 
 
