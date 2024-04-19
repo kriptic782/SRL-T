@@ -1,3 +1,12 @@
+## [4.8.5](https://github.com/Torwent/SRL-T/compare/v4.8.4...v4.8.5) (2024-04-19)
+
+
+### Bug Fixes
+
+* **XPBar:** restore old WL functionality that got lost ([21cd768](https://github.com/Torwent/SRL-T/commit/21cd76845ac6ad1130fac83bef14407cd73916f8))
+
+
+
 ## [4.8.4](https://github.com/Torwent/SRL-T/compare/v4.8.3...v4.8.4) (2024-04-19)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * re-add cached quantity ([c907596](https://github.com/Torwent/SRL-T/commit/c907596f615bfd1e0ee59b12845109e1dc7708a9))
-
-
-
-# [4.8.0](https://github.com/Torwent/SRL-T/compare/v4.7.0...v4.8.0) (2024-04-18)
-
-
-### Features
-
-* **TRSMap:** full object data loading added ([a0eb6fa](https://github.com/Torwent/SRL-T/commit/a0eb6fac56c2ecc3af8508843f82b8dbda9117d4))
 
 
 
