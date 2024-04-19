@@ -91,7 +91,7 @@ begin
   if FileExists(map) then
     Exit(ExpandfileName(map));
 
-  mask := StringReplace(mask, '.', map + '.', [rfReplaceAll]);
+  mask := StringReplace(mask, '.', map.FileName() + '.', [rfReplaceAll]);
 
   files := FindFile(ExtractFileDir(map), mask, False, False) +
            FindFile(WALKER_MAPS, mask, True, False);

@@ -239,19 +239,22 @@ begin
   if FileExists(fileName) then
   begin
     if not force then
+    begin
+      Self.Setup(map, scaling);
       Exit;
+    end;
 
     if not DeleteFile(fileName) then
       RaiseException('Failed to delete: ' + fileName);
   end;
 
-  WriteLn 'Downloading file: ' + url + ' > ' + fileName;
+  WriteLn 'Downloading file: ' + url + '  >  ' + fileName;
   path := ExtractFileDir(fileName);
   if not ForceDirectories(path) then
     TerminateScript('Failed to create path: ' + path);
 
-  client := InitializeHTTPClient(False);
   try
+    client := InitializeHTTPClient(False);
     GetHTTPPageEx(client, url, fileName);
   finally
     FreeHTTPClient(client);
