@@ -12,6 +12,7 @@ type
     Tracker: record
       Start: Int32;
       Current: Int32;
+      Previous: Int32;
       IsSetup: Boolean;
     end;
 
@@ -204,11 +205,11 @@ while True do
 ```
 *)
 function TRSXPBar.EarnedXP(): Boolean;
-var
-  previous: Int32;
 begin
-  previous := Self.Tracker.Current;
-  Result := Self.Read() > previous;
+  Result := Self.Read() > Self.Tracker.Previous;
+
+  if Result and Self.Tracker.IsSetup then
+    Self.Tracker.Previous := Self.Tracker.Current;
 end;
 
 (*
