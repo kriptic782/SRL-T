@@ -456,7 +456,7 @@ begin
   TerminateScript();
 end;
 
-function TJSONArray.High(): Int32;
+function TJSONArray.High(): Int32; constref;
 begin
   if Self = nil then
     Exit(-1);

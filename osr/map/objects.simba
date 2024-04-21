@@ -16,28 +16,145 @@ type
     Category: Int32;
     Actions: TStringArray;
     Coordinates: TPointArray;
-    Size: Int32;
+    Size: Vector3;
     Rotations: TIntegerArray;
   end;
 
+function TRSMapObject.Setup(json: TJSONObject): TRSMapObject; static;
+var
+  i: Int32;
+begin
+  Result.ID := json.getInt('id');
+  Result.Name := json.getString('name');
+  Result.ObjType := json.getInt('type');
+  Result.Category := json.getInt('category');
+
+  with json.getJSONArray('actions') do
+    for i := 0 to High() do
+      if getString(i) <> 'null' then
+        Result.Actions += getString(i);
+
+  with json.getJSONArray('coordinates') do
+    for i := 0 to High() do
+      with getJSONArray(i) do
+        Result.Coordinates += [getInt(0), getInt(1)];
+
+  with json.getJSONArray('size') do
+  begin
+    Result.Size.X := getInt(0);
+    Result.Size.Y := getInt(1);
+    if High() > 1 then
+      Result.Size.Z := getInt(3)
+    else
+      Result.Size.Z := 0;
+  end;
+
+  with json.getJSONArray('rotations') do
+    for i := 0 to High() do
+      Result.Rotations += getInt(i);
+end;
+
+type
   TRSMapObjectArray = array of TRSMapObject;
 
+
+function TRSMapObjectArray.FindAnyID(id: Int32): Int32;
+begin
+  for Result := 0 to High(Self) do
+    if Self[Result].ID = id then
+      Exit;
+  Result := -1;
+end;
+
+function TRSMapObjectArray.FindAnyName(name: String): Int32;
+begin
+  name := LowerCase(name);
+  for Result := 0 to High(Self) do
+    if Self[Result].Name = name then
+      Exit;
+  Result := -1;
+end;
+
+function TRSMapObjectArray.FindAnyType(objType: Int32): Int32;
+begin
+  for Result := 0 to High(Self) do
+    if Self[Result].ObjType = objType then
+      Exit;
+  Result := -1;
+end;
+
+function TRSMapObjectArray.FindAnyCategory(category: Int32): Int32;
+begin
+  for Result := 0 to High(Self) do
+    if Self[Result].Category = category then
+      Exit;
+  Result := -1;
+end;
+
+
+function TRSMapObjectArray.FindAny(obj: Variant): Int32;
+var
+  str: String;
+begin
+  str := obj;
+  if VarIsNumeric(obj) or str.IsDigit() then
+    Exit(Self.FindAnyID(obj));
+  Result := Self.FindAnyName(str);
+end;
+
+function TRSMapObjectArray.FindAllName(name: String): TIntegerArray;
+var
+  i: Int32;
+begin
+  name := LowerCase(name);
+  for i := 0 to High(Self) do
+    if Self[i].Name = name then
+      Result += i;
+end;
+
+function TRSMapObjectArray.FindAllType(objType: Int32): TIntegerArray;
+var
+  i: Int32;
+begin
+  for i := 0 to High(Self) do
+    if Self[i].ObjType = objType then
+      Result += i;
+end;
+
+function TRSMapObjectArray.FindAllCategory(category: Int32): TIntegerArray;
+var
+  i: Int32;
+begin
+  for i := 0 to High(Self) do
+    if Self[i].Category = category then
+      Result += i;
+end;
+
+type
   TRSMapObjects = record
     Data: TJSONArray;
     Walker: PRSWalkerV2;
-    Cached: TRSMapObjectArray;
+    Cache: TRSMapObjectArray;
   end;
 
-function TRSMapObjects.GetData(obj: Variant): TJSONObject;
+function TRSMapObjects.Get(obj: Variant): TRSMapObject;
 var
   i: Int32;
   str: String;
 begin
+  i := Self.Cache.FindAny(obj);
+  if i > -1 then
+    Exit(Self.Cache[i]);
+
   if VarIsNumeric(obj) then
   begin
     for i := 0 to  Self.Data.High() do
       if Self.Data.getJSONObject(i).getInt('id') = obj then
-        Exit(Self.Data.getJSONObject(i));
+      begin
+        Result := TRSMapObject.Setup(Self.Data.getJSONObject(i));
+        Self.Cache += Result;
+        Exit;
+      end;
     Exit;
   end;
 
@@ -47,41 +164,40 @@ begin
   begin
     for i := 0 to  Self.Data.High() do
       if Self.Data.getJSONObject(i).getInt('id') = obj then
-        Exit(Self.Data.getJSONObject(i));
+      begin
+        Result := TRSMapObject.Setup(Self.Data.getJSONObject(i));
+        Self.Cache += Result;
+        Exit;
+      end;
     Exit;
   end;
 
   for i := 0 to  Self.Data.High() do
     if LowerCase(Self.Data.getJSONObject(i).getString('name')) = str then
-      Exit(Self.Data.getJSONObject(i));
+    begin
+      Result := TRSMapObject.Setup(Self.Data.getJSONObject(i));
+      Self.Cache += Result;
+      Exit;
+    end;
 end;
 
-function TRSMapObjects.GetActions(obj: Variant): TStringArray;
+
+function TRSMapObjects.GetCuboidArray(obj: Variant; me: TPoint = [0,0]): TCuboidExArray;
 var
-  json: TJSONObject;
-  actions: TJSONArray;
-  i: Int32;
+  o: TRSMapObject;
+  coordinates: TPointArray;
 begin
-  json := Self.GetData(obj);
-  if json = nil then
-    Exit;
+  if me = [0,0] then
+    me := Self.Walker^.Position();
 
-  actions:= json.getJSONArray('actions');
-  for i := 0 to actions.High() do
-    Result += actions.getString(i);
-end;
+  o := Self.Get(obj);
+  if o = []then
+    TerminateScript('Object ' + ToStr(obj) + ' doesn''t exist.');
 
-function TRSMapObjects.GetCoordinates(obj: Variant): TStringArray;
-var
-  json: TJSONObject;
-  actions: TJSONArray;
-  i: Int32;
-begin
-  json := Self.GetData(obj);
-  if json = nil then
-    Exit;
+  coordinates := o.Coordinates.FilterDist(0, 120, me.X, me.Y);
+  coordinates := coordinates.Sorted(me);
 
-  actions:= json.getJSONArray('actions');
-  for i := 0 to actions.High() do
-    Result += actions.getString(i);
+  //This is extremely wrong but will stay for now. shapearray should also be sorted and cropped.
+  //Result := Self.Walker^.GetCuboidArrayMS(me, coordinates, Self.ShapeArray, [0, 0]);
+  Result := [];
 end;

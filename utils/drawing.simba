@@ -229,6 +229,21 @@ begin
   Self.DrawRect([Top.Right, Btm.Right, Btm.Btm, Top.Btm], Color);
 end;
 
+
+procedure TMufasaBitmap.DrawCuboid(cuboid: TCuboid; color: Integer = $0000FF); overload;
+begin
+  Self.DrawTPA(cuboid.Edges(), color);
+end;
+
+procedure TMufasaBitmap.DrawCuboidArray(cuboids: TCuboidArray; color: Integer = $0000FF); overload;
+var
+  c: TCuboid;
+begin
+  for c in cuboids do
+    Self.DrawCuboid(c, color);
+end;
+
+
 (*
 ## TMufasaBitmap.DrawPoly
 ```pascal
@@ -340,3 +355,24 @@ begin
   Bitmap.Debug();
   Bitmap.Free();
 end;
+
+procedure Debug(cuboid: TCuboid; color: Integer = $0000FF); overload;
+var
+  bitmap: TMufasaBitmap;
+begin
+  bitmap.FromClient();
+  bitmap.DrawCuboid(cuboid, color);
+  bitmap.Debug();
+  bitmap.Free();
+end;
+
+procedure Debug(cuboids: TCuboidArray; color: Integer = $0000FF); overload;
+var
+  bitmap: TMufasaBitmap;
+begin
+  bitmap.FromClient();
+  bitmap.DrawCuboidArray(cuboids, color);
+  bitmap.Debug();
+  bitmap.Free();
+end;
+

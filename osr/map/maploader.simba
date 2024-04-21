@@ -264,7 +264,7 @@ begin
 
     skeleton := atpa[i].Erode(1).Skeleton(2, 7);
 
-    RAaSTPA(skeleton, 6);
+    RAaSTPA(skeleton, 5);
 
     for p in skeleton do
       if not matrix[p.Y, p.X] then
@@ -278,7 +278,7 @@ begin
     for connection := 0 to 10 do
     begin
       if connection mod 3 = 0 then
-        Self.DebugLn('Creating webgraph connections ' + ToStr(connection) + '/12');
+        Self.DebugLn('Creating webgraph connections ' + ToStr(connection) + '/10');
 
       crossings[connection] := [];
       SetLength(crossings[connection], Length(Result.Nodes));
@@ -611,7 +611,13 @@ var
   version: String;
 begin
   Self.Name := 'RSMap';
-  version := SHA1File(RSMAP_PATH + 'files' + DirectorySeparator + 'map.zip');
+  version := SHA1String(
+     SHA1File(RSMAP_PATH + 'files' + DirectorySeparator + 'map.zip') +
+     SHA1File(RSMAP_PATH + 'files' + DirectorySeparator + 'heightmap.zip') +
+     SHA1File(RSMAP_PATH + 'files' + DirectorySeparator + 'collision.zip') +
+     SHA1File(RSMAP_PATH + 'files' + DirectorySeparator + 'objects.zip')
+  );
+
   version := version.SubString(6);
   Self.Cache := CACHE_DIR + 'map' + DirectorySeparator +
                 version + DirectorySeparator;
@@ -620,8 +626,8 @@ begin
     Self.Fatal('Failed to create TRSMapLoader cache directory for: ' + version);
 
   Self.Downscale := downscale;
-  Self.Loader.Setup('RSMap.Loader', cache);
-  Self.LegacyLoader.Setup('RSMap.LegacyLoader', cache);
+  Self.Loader.Setup(Self.Name + '.Loader', cache);
+  Self.LegacyLoader.Setup(Self.Name + '.LegacyLoader', cache);
 end;
 
 procedure TRSMapLoader.Pack();
