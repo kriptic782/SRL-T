@@ -1,3 +1,12 @@
+## [4.8.6](https://github.com/Torwent/SRL-T/compare/v4.8.5...v4.8.6) (2024-04-21)
+
+
+### Bug Fixes
+
+* **TRSMapObjects:** more methods for the map objects ([f754db6](https://github.com/Torwent/SRL-T/commit/f754db621f8f3ffdb90543d8a52bbc95162070ca))
+
+
+
 ## [4.8.5](https://github.com/Torwent/SRL-T/compare/v4.8.4...v4.8.5) (2024-04-19)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **THTTPClient:** typo ([9c1d480](https://github.com/Torwent/SRL-T/commit/9c1d480a132500c1d3bd0d3fdacd255a38c36d51))
-
-
-
-## [4.8.1](https://github.com/Torwent/SRL-T/compare/v4.8.0...v4.8.1) (2024-04-18)
-
-
-### Bug Fixes
-
-* re-add cached quantity ([c907596](https://github.com/Torwent/SRL-T/commit/c907596f615bfd1e0ee59b12845109e1dc7708a9))
 
 
 
