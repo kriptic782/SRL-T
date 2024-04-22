@@ -1,3 +1,12 @@
+## [4.8.8](https://github.com/Torwent/SRL-T/compare/v4.8.7...v4.8.8) (2024-04-22)
+
+
+### Bug Fixes
+
+* read notes ([97991ba](https://github.com/Torwent/SRL-T/commit/97991ba2cf3b9aebc24290ca874e30947d20b3a9))
+
+
+
 ## [4.8.7](https://github.com/Torwent/SRL-T/compare/v4.8.6...v4.8.7) (2024-04-22)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMapObjects:** started work on Map Objects ([2a5939e](https://github.com/Torwent/SRL-T/commit/2a5939ec72baed0958cefb0b07937a22df9a1f86))
-
-
-
-## [4.8.3](https://github.com/Torwent/SRL-T/compare/v4.8.2...v4.8.3) (2024-04-19)
-
-
-### Bug Fixes
-
-* **old walker:** SetupFromURL should work properly now ([22a884f](https://github.com/Torwent/SRL-T/commit/22a884fa2663ba6760061230732d27c34c35be28))
 
 
 
