@@ -1,3 +1,12 @@
+## [4.8.7](https://github.com/Torwent/SRL-T/compare/v4.8.6...v4.8.7) (2024-04-22)
+
+
+### Bug Fixes
+
+* read notes ([ecf45dc](https://github.com/Torwent/SRL-T/commit/ecf45dccc9615f7b647304d6b30f85ec456b3898))
+
+
+
 ## [4.8.6](https://github.com/Torwent/SRL-T/compare/v4.8.5...v4.8.6) (2024-04-21)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **old walker:** SetupFromURL should work properly now ([22a884f](https://github.com/Torwent/SRL-T/commit/22a884fa2663ba6760061230732d27c34c35be28))
-
-
-
-## [4.8.2](https://github.com/Torwent/SRL-T/compare/v4.8.1...v4.8.2) (2024-04-18)
-
-
-### Bug Fixes
-
-* **THTTPClient:** typo ([9c1d480](https://github.com/Torwent/SRL-T/commit/9c1d480a132500c1d3bd0d3fdacd255a38c36d51))
 
 
 
