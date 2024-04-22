@@ -143,6 +143,8 @@ type
     UpTextBitmapBuffer: TMufasaBitmap;
     UpTextArea: TBox;
     UpTextFilter: TOCRFilter;
+
+    HighestPitch: Boolean;
   end;
 
 (*
@@ -158,8 +160,6 @@ This is automatically called on the **MainScreen** variable.
 ```
 *)
 procedure TRSMainScreen.Setup(); override;
-var
-  Bitmap: Int32;
 begin
   inherited;
 
@@ -286,7 +286,6 @@ end;
 ```pascal
 procedure TRSMainScreen.SetHighestPitch();
 ```
-
 Moves the camera to the highest pitch.
 There is no way to detect the camera pitch reliably using color, this is why SRL only provides this method.
 
@@ -307,6 +306,7 @@ begin
         Break;
   finally
     Keyboard.KeyUp(VK_UP);
+    Self.HighestPitch := True;
   end;
 end;
 
@@ -482,13 +482,17 @@ begin
   Result := Self.FindObject(Finder, Self.Bounds());
 end;
 
+
 (*
 ## Mainscreen.IsVisible
 ```pascal
-function TRSMainScreen.IsVisible(P: TPoint): Boolean;
+function TRSMainScreen.IsVisible(p: TPoint): Boolean;
+function TRSMainScreen.IsVisible(tpa: TPointArray; useCenter: Boolean = True): Boolean; override;
+function TRSMainScreen.IsVisible(b: TBox; useCenter: Boolean = True): Boolean; overload;
+function TRSMainScreen.IsVisible(rect: TRectangle; useCenter: Boolean = True): Boolean; overload;
+function TRSMainScreen.IsVisible(cuboid: TCuboidEx; useCenter: Boolean = True): Boolean; overload;
 ```
-
-Returns true if the TPoint is visible (not hidden by any other interfaces)
+Returns true if the TPoint, TPointArray, TBox, TRectangle or TCuboid is visible (not hidden by any other interfaces)
 on the mainscreen.
 
 This is only useful in resizable mode. The interfaces checked are Chatbox, Minimap and Gametabs.
@@ -499,22 +503,120 @@ if MainScreen.IsVisible([100, 100]) then
   WriteLn('The point is not behind Chatbox, Minimap or Gametabs.');
 ```
 *)
-function TRSMainScreen.IsVisible(P: TPoint): Boolean;
+function TRSMainScreen.IsVisible(p: TPoint): Boolean;
 begin
-  Result := Self.Bounds.Contains(P);
+  Result := Self.Bounds().Expand(-10).Contains(p);
 
-  if Result then
-  begin
-    if Chat.IsOpen() and Chat.Bounds().Contains(P) then
-      Exit(False);
-    if ChatButtons.Bounds().Contains(P) then
-      Exit(False);
-    if Minimap.Bounds.Expand(50).Contains(P) then
-      Exit(False);
-    if GameTabs.Bounds().Contains(P) then
-      Exit(False);
-  end;
+  if not Result or (RSClient.Mode = ERSClientMode.FIXED) then
+    Exit;
+
+  if Chat.Bounds().Expand(5).Contains(p) and Chat.IsOpen() then
+    Exit(False);
+  if ChatButtons.Bounds().Expand(5).Contains(p) then
+    Exit(False);
+  if Minimap.Bounds().Expand(55).Contains(p) then
+    Exit(False);
+  if GameTabs.Bounds().Expand(5).Contains(p) then
+    Exit(False);
 end;
+
+function TRSMainScreen.IsVisible(tpa: TPointArray; useCenter: Boolean = True): Boolean; overload;
+begin
+  if useCenter then
+    Exit(Self.IsVisible(tpa.Mean()));
+  Result := Self.Bounds().Expand(-10).ContainsAll(tpa);
+
+  if not Result or (RSClient.Mode = ERSClientMode.FIXED) then
+    Exit;
+
+  if Chat.Bounds().Expand(5).ContainsAll(tpa) and Chat.IsOpen() then
+    Exit(False);
+  if ChatButtons.Bounds().Expand(5).ContainsAll(tpa) then
+    Exit(False);
+  if Minimap.Bounds().Expand(55).ContainsAll(tpa) then
+    Exit(False);
+  if GameTabs.Bounds().Expand(5).ContainsAll(tpa) then
+    Exit(False);
+end;
+
+function TRSMainScreen.IsVisible(b: TBox; useCenter: Boolean = True): Boolean; overload;
+begin
+  Result := Self.IsVisible(b.ToRectangle().ToTPA(), useCenter);
+end;
+
+function TRSMainScreen.IsVisible(rect: TRectangle; useCenter: Boolean = True): Boolean; overload;
+begin
+  Result := Self.IsVisible(rect.ToTPA(), useCenter);
+end;
+
+function TRSMainScreen.IsVisible(cuboid: TCuboidEx; useCenter: Boolean = True): Boolean; overload;
+begin
+  if useCenter then
+    Exit(Self.IsVisible(cuboid.Center()));
+  Result := Self.IsVisible(cuboid.ConvexHull(), False);
+end;
+
+
+(*
+## MainScreen.Filter
+```pascal
+function TRSMainScreen.Filter(arr: TPointArray): TPointArray;
+function TRSMainScreen.Filter(arr: TBoxArray): TBoxArray; overload;
+function TRSMainScreen.Filter(arr: TRectArray): TRectArray; overload;
+function TRSMainScreen.Filter(arr: TPolyArray): TPolyArray; overload;
+```
+Filters the given TPointArray, TBoxArray, TRectArray or TCuboidArray and returns only those that are visible in the MainScreen.
+*)
+function TRSMainScreen.Filter(arr: TPointArray): TPointArray;
+begin
+  Result := arr := arr.FilterBox(Self.Bounds());
+
+  if (Result = []) or (RSClient.Mode = ERSClientMode.FIXED) then
+    Exit;
+
+  if Chat.IsOpen() then
+  begin
+    arr := Result.FilterBox(Chat.Bounds());
+    Result := Result.Difference(arr);
+  end;
+
+  arr := Result.FilterBox(ChatButtons.Bounds().Expand(0, 2));
+  Result := Result.Difference(arr);
+
+  arr := Result.FilterBox(Minimap.Bounds().Expand(54, 13));
+  Result := Result.Difference(arr);
+
+  arr := Result.FilterBox(GameTabs.Bounds());
+  Result := Result.Difference(arr);
+end;
+
+function TRSMainScreen.Filter(arr: TBoxArray): TBoxArray; overload;
+var
+  i: Int32;
+begin
+  for i := 0 to High(arr) do
+    if Self.IsVisible(arr[i]) then
+      Result += arr[i];
+end;
+
+function TRSMainScreen.Filter(arr: TRectArray): TRectArray; overload;
+var
+  i: Int32;
+begin
+  for i := 0 to High(arr) do
+    if Self.IsVisible(arr[i]) then
+      Result += arr[i];
+end;
+
+function TRSMainScreen.Filter(arr: TCuboidExArray): TCuboidExArray; overload;
+var
+  i: Int32;
+begin
+  for i := 0 to High(arr) do
+    if Self.IsVisible(arr[i]) then
+      Result += arr[i];
+end;
+
 
 (*
 ## type TRSHitsplat

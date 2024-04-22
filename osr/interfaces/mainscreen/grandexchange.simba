@@ -311,7 +311,6 @@ end;
 
 function TRSGrandExchange.GetItemName: String;
 var
-  Button: TRSButton;
   B: TBox;
 begin
   B.X1 := Self.X1 + 175;
@@ -1210,7 +1209,6 @@ end;
 
 function TRSGrandExchange.GetHistory(rows: Int32): TRSGEHistory; overload;
 var
-  pages : Int32;
   forceMove : Boolean;
 begin
   if rows > 30 then

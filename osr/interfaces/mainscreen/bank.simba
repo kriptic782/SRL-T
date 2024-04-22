@@ -1472,16 +1472,41 @@ begin
   Result := inherited();
 end;
 
+function TRSMainScreen.IsVisible(p: TPoint): Boolean; override;
+begin
+  Result := inherited;
+
+  if not Result or (RSClient.Mode = ERSClientMode.FIXED) then
+    Exit;
+
+  if Bank.Bounds().Expand(5).Contains(p) and Bank.IsOpen() then
+    Exit(False);
+end;
+
+function TRSMainScreen.IsVisible(tpa: TPointArray; useCenter: Boolean = True): Boolean; override;
+begin
+  Result := inherited;
+
+  if Result and useCenter then
+    Exit;
+
+  if not Result or (RSClient.Mode = ERSClientMode.FIXED) then
+    Exit;
+
+  if Bank.Bounds().Expand(5).ContainsAll(tpa) and Bank.IsOpen() then
+    Exit(False);
+end;
 
 
-procedure TRSClient.ClientModeChanged; override;
+
+procedure TRSClient.ClientModeChanged(); override;
 begin
   inherited;
 
   Bank.SetupAlignment(Self.Mode);
 end;
 
-procedure TSRL.Setup; override;
+procedure TSRL.Setup(); override;
 begin
   inherited;
 

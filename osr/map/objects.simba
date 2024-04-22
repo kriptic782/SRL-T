@@ -17,11 +17,26 @@ type
     Actions: TStringArray;
     Coordinates: TPointArray;
     Shapes: TRSMainScreenShapeArray;
+    Finder: TRSObjectFinder;
+
+    {%codetools off}
     Walker: PRSWalkerV2;
+    {%codetools on}
+
+    Filter: record
+      Walker:     Boolean;
+      MinimapDot: Boolean;
+      Finder:     Boolean;
+      UpText:     Boolean;
+    end;
+
+  class var
+    CurrentUpText: TStringArray;
+    CurrentActionUpText: TStringArray;
+    RedClicked: Boolean;
   end;
 
-
-function TRSMapObject.Map2MM(me: TPoint = [0,0]; angle: Single = $FFFF): TPointArray;
+function TRSMapObject.MapToMM(me: TPoint = [0,0]; angle: Single = $FFFF): TPointArray;
 var
   coordinates: TPointArray;
 begin
@@ -37,7 +52,7 @@ begin
   Result := Self.Walker^.Points2MM(me, coordinates, angle);
 end;
 
-function TRSMapObject.Map2MS(me: TPoint = [0,0]; angle: Single = $FFFF): TPointArray;
+function TRSMapObject.MapToMS(me: TPoint = [0,0]; angle: Single = $FFFF): TPointArray;
 var
   coordinates: TPointArray;
 begin
@@ -61,8 +76,76 @@ var
 begin
   if angle = $FFFF then
     angle := Minimap.GetCompassAngle(False);
-  mmPoints := Self.Map2MM(me, angle);
+  mmPoints := Self.MapToMM(me, angle);
   Result := Minimap.GetCuboidArrayMS(coordinates, Self.Shapes, [0, 0], angle);
+end;
+
+(*
+## TRSMapObject.Find
+```pascal
+function TRSMapObject.Find(cuboidArray: TCuboidArray): T2DPointArray;
+```
+Internal TRSMapObject method responsible for filtering a TCuboidArray by what's visible in the mainscren.
+This is meant to filter TRSMapObject.GetCuboidArray() so targets that are outside of the mainscreen are filtered out.
+You will probably never need to use this directly.
+*)
+function TRSMapObject.Find(cuboidArray: TCuboidExArray): T2DPointArray;
+var
+  i: Int32;
+  tpa: TPointArray;
+  tmpFinder: TRSObjectFinder;
+begin
+  //if Self.Filter.Finder then
+  //  tmpFinder := Self.Finder.Unlimited();
+
+  cuboidArray := MainScreen.Filter(cuboidArray);
+
+  for i := 0 to High(cuboidArray) do
+  begin
+    if Self.Filter.Finder then
+    begin
+      tpa := MainScreen.FindObject(tmpFinder, cuboidArray[i].Bounds()).Merge();
+      if tpa = [] then
+        Continue;
+
+      tpa := cuboidArray[i].Filter(tpa);
+      if tpa <> [] then
+        Result += tpa;
+
+      Continue;
+    end;
+
+    tpa := cuboidArray[i].ShapeFill();
+    if tpa <> [] then
+      Result += tpa;
+  end;
+end;
+
+(*
+## TRSMapObject.Visible
+```pascal
+function TRSMapObject.Visible(cuboidArray: TCuboidArray): Boolean;
+```
+
+Internal TRSMapObject method that returns true or false if we have TCuboids visible on the mainscreen.
+You probably don't need to use this directly.
+*)
+function TRSMapObject.Visible(cuboidArray: TCuboidExArray): Boolean;
+var
+  i: Int32;
+  tempFinder: TRSObjectFinder;
+begin
+  //if Self.Filter.Finder then
+  //  tempFinder := Self.Finder.Unlimited();
+
+  cuboidArray := MainScreen.Filter(cuboidArray);
+
+  if not Self.Filter.Finder then
+    Exit(cuboidArray <> []);
+
+  for i := 0 to High(cuboidArray) do
+    if MainScreen.FindObject(tempFinder, cuboidArray[i].Bounds()) <> [] then
+      Exit(True);
 end;
 
 
