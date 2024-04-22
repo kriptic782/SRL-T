@@ -70,11 +70,6 @@ begin
   Result.Noted := True;
 end;
 
-const
-  BANK_DEPOSIT_ALL          = -1; //Deprecated use TRSBank.QUANTITY_ALL instead
-  BANK_WITHDRAW_ALL         = -1; //Deprecated use TRSBank.QUANTITY_ALL instead
-  BANK_WITHDRAW_ALL_BUT_ONE = -2; //Deprecated use TRSBank.QUANTITY_ALL_BUT_ONE instead
-
 type
   //Deprecated use TRSBankItem instead
   TRSBankWithdrawItem = record

@@ -90,7 +90,6 @@ type
 ```pascal
 procedure TRSMagic.Setup; override;
 ```
-
 Initializes **Magic** variables.
 
 ```{note}
@@ -109,7 +108,6 @@ end;
 ```pascal
 procedure TRSMagic.SetupAlignment(Mode: ERSClientMode); override;
 ```
-
 Setups up the interface aligment for the current client mode.
 
 ```{note}
@@ -131,7 +129,6 @@ end;
 ```pascal
 function TRSMagic.IsOpen(): Boolean;
 ```
-
 Returns true if the Magic tab is open.
 
 Example:
@@ -149,7 +146,6 @@ end;
 ```pascal
 function TRSMagic.Open(): Boolean;
 ```
-
 Attempts to open the magic tab.
 
 Example:
@@ -167,7 +163,6 @@ end;
 ```pascal
 function TRSMagic.GetSpellBook(): ERSSpellBook;
 ```
-
 Returns the current spell book.
 
 Example:
@@ -194,7 +189,6 @@ end;
 ```pascal
 function TRSMagic.IsSpellBook(book: ERSSpellBook): Boolean;
 ```
-
 Returns true if we are using the specified spell book.
 
 Example:
@@ -212,7 +206,6 @@ end;
 ```pascal
 function TRSMagic.InfoIsOpen(): Boolean;
 ```
-
 Returns true if the info black box about a spell is open.
 
 Example:
@@ -230,7 +223,6 @@ end;
 ```pascal
 procedure TRSMagic._CloseInfoMouseCallback(sender: PMouse; var x, y: Double; var done: Boolean);
 ```
-
 Mouse movement callback to stop mouse movement when the spell info box closes.
 Do not touch this if you don't understand it.
 *)
@@ -245,7 +237,6 @@ end;
 function TRSMagic.CloseInfo(): Boolean;
 function TRSMagic.CloseInfo(spell: ERSSpell): Boolean; overload;
 ```
-
 Returns true if the info black box about a spell is open.
 
 Example:
@@ -275,17 +266,6 @@ begin
   Mouse.Move(Self.SpellCache[spell].Box);
   Mouse.OnMovingEx := nil;
   Result := not Self.InfoIsOpen();
-end;
-
-function TRSMagic.GetSpellBoxes(out book: ERSSpellBook): TBoxArray; deprecated 'Use Magic.FindSpell() instead!';
-begin
-  book := Self.GetSpellBook();
-  case book of
-    ERSSpellBook.STANDARD: Result := Grid(7, 10, 23, 23, [3, 1],   [Self.X1 + 2, Self.Y1 + 1]);
-    ERSSpellBook.ARCEUUS:  Result := Grid(5, 9,  23, 23, [17, 4],  [Self.X1, Self.Y1 + 1]);
-    ERSSpellBook.LUNAR:    Result := Grid(5, 9,  23, 23, [17, 4],  [Self.X1, Self.Y1 + 1]);
-    ERSSpellBook.ANCIENT:  Result := Grid(4, 7,  23, 23, [25, 13], [Self.X1 + 8, Self.Y1 + 1]);
-  end;
 end;
 
 
@@ -350,52 +330,6 @@ begin
   end;
 end;
 
-(*
-## Magic.GetSpellBox
-```pascal
-function TRSMagic.GetSpellBox(spell: ERSSpell; out box: TBox): Boolean;
-```
-
-Internal function to get the specified spell bounds.
-*)
-function TRSMagic.GetSpellBox(spell: ERSSpell; out box: TBox): Boolean; deprecated 'Use Magic.FindSpell() instead!';
-var
-  book: ERSSpellBook;
-  boxes: TBoxArray;
-begin
-  boxes := {$H-}Self.GetSpellBoxes(book);{$H+}
-
-  case book of
-    ERSSpellBook.STANDARD:
-      begin
-        Result := (spell in RS_STANDARD_SPELLS);
-        if Result then
-          box := boxes[spell - Ord(RS_STANDARD_SPELL_FIRST)];
-      end;
-
-    ERSSpellBook.ARCEUUS:
-      begin
-        Result := (spell in RS_ARCEUUS_SPELLS);
-        if Result then
-          box := boxes[spell - Ord(RS_ARCEUUS_SPELL_FIRST)];
-      end;
-
-    ERSSpellBook.LUNAR:
-      begin
-        Result := (spell in RS_LUNAR_SPELLS);
-        if Result then
-          box := boxes[spell - Ord(RS_LUNAR_SPELL_FIRST)];
-      end;
-
-    ERSSpellBook.ANCIENT:
-      begin
-        Result := (spell in RS_ANCIENT_SPELLS);
-        if Result then
-          box := boxes[spell - Ord(RS_ANCIENT_SPELL_FIRST)];
-      end;
-  end;
-end;
-
 
 (*
 ## Magic.ContainsSpell
@@ -452,19 +386,6 @@ begin
   end;
 end;
 
-function TRSMagic.MouseSpell(spell: ERSSpell; button: Int32): Boolean; overload; deprecated 'Use Magic.MouseSpell() and Magic.ClickSpell() instead!';
-var
-  box: TBox;
-begin
-  Result := Self.Open() and {$H-}Self.GetSpellBox(spell, box){$H+};
-
-  if Result then
-  begin
-    Mouse.Move(box);
-    if (button <> MOUSE_MOVE) then
-      Mouse.Click(button);
-  end;
-end;
 
 (*
 ## Magic.ClickSpell
@@ -565,27 +486,6 @@ begin
       Exit;
 
   Result := False;
-end;
-
-function TRSMagic.GetSelectedSpell(): ERSSpell; deprecated 'Use Magic.FindSelected() or Magic.ContainsSelected() instead!';
-var
-  i: Int32;
-  book: ERSSpellBook;
-  boxes: TBoxArray;
-begin
-  if not Self.IsOpen() then
-    Exit;
-
-  boxes := {$H-}Self.GetSpellBoxes(book);{$H+}
-
-  for I := 0 to High(boxes) do
-    if SRL.CountColor($FFFFFF, boxes[i]) > 30 then
-    case book of
-      ERSSpellBook.STANDARD: Exit(ERSSpell(RS_STANDARD_SPELL_FIRST + i));
-      ERSSpellBook.ARCEUUS:  Exit(ERSSpell(RS_ARCEUUS_SPELL_FIRST + i));
-      ERSSpellBook.LUNAR:    Exit(ERSSpell(RS_LUNAR_SPELL_FIRST + i));
-      ERSSpellBook.ANCIENT:  Exit(ERSSpell(RS_ANCIENT_SPELL_FIRST + i));
-    end;
 end;
 
 

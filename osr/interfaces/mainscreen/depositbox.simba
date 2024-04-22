@@ -211,7 +211,7 @@ begin
     Mouse.Move(B);
 
     case Amount of
-      BANK_DEPOSIT_ALL:
+      Bank.QUANTITY_ALL:
         Result := ChooseOption.Select('Deposit-All');
       else
         Result := ChooseOption.Select('Deposit-' + ToString(Amount) + ' ', MOUSE_LEFT, True, False) or

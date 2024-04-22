@@ -156,8 +156,6 @@ procedure TRSWalker.SetupRegions(aRegions: TBoxArray; scaling: Int32 = 8); overl
 procedure TRSWalker.SetupRegion(map: String; aRegion: TBox; scaling: Int32 = 8);
 procedure TRSWalker.SetupRegion(aRegion: TBox; scaling: Int32 = 8); overload;
 procedure TRSWalker.SetupFromURL(url: String; map: String = ''; scaling: Int32 = 8; force: Boolean = False); overload;
-procedure TRSWalker.Setup(map: String; aRegions: TBoxArray; scaling: Int32 = 8); overload; deprecated;
-procedure TRSWalker.Setup(aRegions: TBoxArray; scaling: Int32 = 8); overload; deprecated;
 ```
 Setup method to be called in scripts.
 There's several versions of the method you can call depending on the features you want to use.
@@ -261,19 +259,6 @@ begin
   end;
 
   Self.Setup(map, scaling);
-end;
-
-procedure TRSWalker.Setup(map: String; aRegions: TBoxArray; scaling: Int32 = 8); overload; deprecated 'Use TRSWalker.SetupRegions() instead.';
-begin
-  Self.Scaling := scaling;
-  Self.Map.Load(map, aRegions, scaling);
-  Self.Regions := aRegions;
-  Self.InternalSetup();
-end;
-
-procedure TRSWalker.Setup(aRegions: TBoxArray; scaling: Int32 = 8); overload; deprecated 'Use TRSWalker.SetupRegions() instead.';
-begin
-  Self.SetupRegions(WALKER_MAP, aRegions, scaling);
 end;
 
 
@@ -748,7 +733,7 @@ var
     mmPos := mmPos.Rotate(angle, Minimap.Center);
 
     if Self.ScreenWalk then
-      mmPos := Minimap.PointToMsRect(mmPos).Mean();
+      mmPos := Minimap.PointToMSRect(mmPos).Mean();
 
     SlowMouse := Mouse;
     SlowMouse.Speed := Random(6,10);
@@ -852,7 +837,7 @@ begin
   if Self.ScreenWalk then
   begin
     p := Minimap.RandomPointOnZoomRectangle(minimapPoint, randomness);
-    Mouse.Move(Minimap.PointToMsRect(p).Mean());
+    Mouse.Move(Minimap.PointToMSRect(p).Mean());
     upText := MainScreen.GetUpText();
 
     if not upText.ContainsAny(Self.WalkUpText) then
@@ -1298,11 +1283,11 @@ function TRSWalker.GetTileMSEx(Me, Loc: TPoint; Height:Double=0; Offx,Offy:Doubl
 var
   angle: Double;
 begin
-  Loc   := Minimap.Center + (Loc - Me);
+  Loc   := Minimap.Center() + (Loc - Me);
   angle := Minimap.GetCompassAngle(False);
   Loc   := Loc.Rotate(angle, Minimap.Center);
 
-  Result := Minimap.VecToMSRect(Vec3(Loc.x - offx, Loc.y - offy, Height), 1, 1, angle);
+  Result := Minimap.VectorToMSRect(Vec3(Loc.x - offx, Loc.y - offy, Height), 1, 1, angle);
 end;
 
 function TRSWalker.GetTileMS(Loc: TPoint; Height:Double=0; Offx,Offy:Double=0): TRectangle;

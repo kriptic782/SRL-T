@@ -87,6 +87,9 @@ end;
 {$IFNDEF SRL_MAP_INCLUDED}                  {$I osr/map/map.simba}
 
 
+{$IFNDEF SRL_DEPRECATED_INCLUDED} {$I osr/deprecated.simba} {$ELSE}{$ENDIF}
+
+
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
@@ -132,7 +135,7 @@ end;
   {$HINTS ON}
 {$ENDIF}
 
-procedure TSRL.Setup; override; // Called first. Don't setup multiple times.
+procedure TSRL.Setup(); override; // Called first. Don't setup multiple times.
 begin
   if Self.IsSetup then
     Exit;

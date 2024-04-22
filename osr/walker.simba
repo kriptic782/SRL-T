@@ -66,6 +66,18 @@ begin
   end;
 end;
 
+function TRSWalkerV2.Points2MM(playerPoint: TPoint; tpa: TPointArray; radians: Double): TPointArray;
+var
+  p: TPoint;
+begin
+  with Minimap.Center() do
+    for p in tpa do
+    begin
+      p := p - playerPoint + [X, Y];
+      Result += p.Rotate(radians, [X, Y]);
+    end;
+end;
+
 (*
 ## Walker.CheckRunEnergy
 ```pascal
@@ -144,7 +156,7 @@ var
     mmPos := mmPos.Rotate(angle, Minimap.Center);
 
     if Self.ScreenWalk then
-      mmPos := Minimap.PointToMsRect(mmPos).Mean();
+      mmPos := Minimap.PointToMSRect(mmPos).Mean();
 
     SlowMouse := Mouse;
     SlowMouse.Speed := Random(6,10);
@@ -248,7 +260,7 @@ begin
   if Self.ScreenWalk then
   begin
     p := Minimap.RandomPointOnZoomRectangle(minimapPoint, randomness);
-    Mouse.Move(Minimap.PointToMsRect(p).Mean());
+    Mouse.Move(Minimap.PointToMSRect(p).Mean());
     upText := MainScreen.GetUpText();
 
     if not upText.ContainsAny(Self.WalkUpText) then

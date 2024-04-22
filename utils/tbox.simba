@@ -148,6 +148,7 @@ begin
   if (self.y2 > b.y2) then self.y2 := b.y2;
 end;
 
+
 function TBox.Partition(Rows, Cols: Int32; SizeMod:Int32=0): TBoxArray; constref;
 var
   idx,x,y: Int32;
@@ -301,6 +302,20 @@ begin
   for B in Boxes do
     if (B.X2 > B.X1) and (B.Y2 > B.Y1) then
       Result := Result + B;
+end;
+
+
+(*
+## TBox.Filter
+```pascal
+function TBox.Filter(testSet: TPointArray): TPointArray; constref;
+```
+Extract all the points from `testSet` that fits within this rectangle.
+*)
+function TBox.Filter(testSet: TPointArray): TPointArray; constref;
+begin
+  Result := testSet;
+  FilterPointsBox(Result, Self.X1, Self.Y1, Self.X2, Self.Y2);
 end;
 
 

@@ -137,7 +137,7 @@ begin
   TPA.Offset([2, 2]);
   TPA := TPA.Cluster(15).Biggest();
   with TPA.MeanEx() do
-    P := Minimap.VecToMS([X, Y]);
+    P := Minimap.VectorToMS([X, Y]);
 
   // Size of GE center at fixed client & default(50) zoom.
   Size := MainScreen.NormalizeDistance(110);

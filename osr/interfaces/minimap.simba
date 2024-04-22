@@ -48,7 +48,6 @@ TRSMinimap type used to interact with the minimap
 ```pascal
 function TRSMinimap.GetCompassCircle(): TCircle;
 ```
-
 Returns the compass circle.
 
 Example:
@@ -67,7 +66,6 @@ end;
 ```pascal
 function TRSMinimap.GetXPCircle(): TCircle;
 ```
-
 Returns the xp bar circle.
 
 Example:
@@ -315,7 +313,7 @@ Debug(Minimap.GetPolygon().Connect());
 *)
 function TRSMinimap.GetPolygon(): TPointArray;
 begin
-  Result := Self.PolygonOffset.Offset(Self.Center);
+  Result := Self.PolygonOffset.Offset(Self.Center());
 end;
 
 

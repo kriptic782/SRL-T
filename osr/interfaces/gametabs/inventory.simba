@@ -147,7 +147,6 @@ end;
 ```pascal
 function TRSInventory.MouseSlot(slot: Int32): Boolean;
 ```
-
 Moves the mouse over the slot. Slot is an Integer between 0 and 27.
 
 Example:
@@ -159,11 +158,6 @@ if Inventory.HoverSlot(1) then
 function TRSInventory.MouseSlot(slot: Int32): Boolean;
 begin
   Result := Self.ItemInterface.MouseSlot(slot);
-end;
-
-function TRSInventory.HoverSlot(slot: Int32): Boolean; deprecated 'Use TRSInventory.MouseSlot() instead!';
-begin
-  Result := Self.MouseSlot(slot);
 end;
 
 
@@ -601,19 +595,22 @@ end;
 
 
 (*
-## Inventory.DiscoverAll
+## Inventory.Discover
 ```pascal
 function TRSInventory.DiscoverAllEx(): array of TRSItemArray;
 function TRSInventory.DiscoverAll(): TRSItemArray;
+function TRSInventory.Discover(slot: Int32): TRSItemArray;
 ```
-Returns all possible items found in the inventory.
-The extended version returns an `array of TRSItemArray` while the other returns
+Returns possible items found in the inventory, either in a single slot or all of them.
+The extended version returns an `array of TRSItemArray` while the others return
 a flat `TRSItemArray`.
 
 Example:
 ```pascal
 if Inventory.Open() then
   WriteLn Inventory.DiscoverAll();
+
+WriteLn Inventory.Discover(0);
 ```
 *)
 function TRSInventory.DiscoverAllEx(): array of TRSItemArray;
@@ -626,19 +623,6 @@ begin
   Result := Self.ItemInterface.DiscoverAll();
 end;
 
-(*
-## Inventory.Discover
-```pascal
-function TRSInventory.Discover(slot: Int32): TRSItemArray;
-```
-Discovers what item is on the specified inventory `slot`.
-
-Example:
-```pascal
-if Inventory.Open() then
-  WriteLn Inventory.Discover(0);
-```
-*)
 function TRSInventory.Discover(slot: Int32): TRSItemArray;
 begin
   Result := Self.ItemInterface.Discover(slot);
@@ -705,12 +689,6 @@ begin
     Exit;
   Result := Self.ItemInterface.MouseItem(item);
 end;
-
-function TRSInventory.HoverItem(item: TRSItem): Boolean; deprecated 'Use TRSInventory.MouseItem() instead!';
-begin
-  Result := Self.MouseItem(item);
-end;
-
 
 (*
 ## Inventory.ClickItem

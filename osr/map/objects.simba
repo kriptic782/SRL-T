@@ -16,13 +16,59 @@ type
     Category: Int32;
     Actions: TStringArray;
     Coordinates: TPointArray;
-    Size: Vector3;
-    Rotations: TIntegerArray;
+    Shapes: TRSMainScreenShapeArray;
+    Walker: PRSWalkerV2;
   end;
 
-function TRSMapObject.Setup(json: TJSONObject): TRSMapObject; static;
+
+function TRSMapObject.Map2MM(me: TPoint = [0,0]; angle: Single = $FFFF): TPointArray;
 var
-  i: Int32;
+  coordinates: TPointArray;
+begin
+  if me = [0,0] then
+    me := Self.Walker^.Position();
+
+  coordinates := Self.Coordinates.FilterCircle([me.X, me.Y, 85]);
+  coordinates := coordinates.Sorted(me);
+
+  if angle = $FFFF then
+    angle := Minimap.GetCompassAngle(False);
+
+  Result := Self.Walker^.Points2MM(me, coordinates, angle);
+end;
+
+function TRSMapObject.Map2MS(me: TPoint = [0,0]; angle: Single = $FFFF): TPointArray;
+var
+  coordinates: TPointArray;
+begin
+  if me = [0,0] then
+    me := Self.Walker^.Position();
+
+  coordinates := Self.Coordinates.FilterCircle([me.X, me.Y, 85]);
+  coordinates := coordinates.Sorted(me);
+
+  if angle = $FFFF then
+    angle := Minimap.GetCompassAngle(False);
+
+  coordinates := Self.Walker^.Points2MM(me, coordinates, angle);
+
+  Result := Minimap.PointsToMS(coordinates, angle);
+end;
+
+function TRSMapObject.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray;
+var
+  mmPoints: TPointArray;
+begin
+  if angle = $FFFF then
+    angle := Minimap.GetCompassAngle(False);
+  mmPoints := Self.Map2MM(me, angle);
+  Result := Minimap.GetCuboidArrayMS(coordinates, Self.Shapes, [0, 0], angle);
+end;
+
+
+function TRSMapObject.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSMapObject; static;
+var
+  i, x, y, z: Int32;
 begin
   Result.ID := json.getInt('id');
   Result.Name := json.getString('name');
@@ -41,17 +87,28 @@ begin
 
   with json.getJSONArray('size') do
   begin
-    Result.Size.X := getInt(0);
-    Result.Size.Y := getInt(1);
+    x := getInt(0);
+    y := getInt(1);
     if High() > 1 then
-      Result.Size.Z := getInt(3)
+      z := getInt(3)
     else
-      Result.Size.Z := 0;
+      z := 0;
   end;
 
+  Result.Walker := pwalker;
+
   with json.getJSONArray('rotations') do
+  begin
+    if x = y then
+    begin
+      for i := 0 to High() do
+        Result.Shapes += [[x, y, z], 0];
+      Exit;
+    end;
+
     for i := 0 to High() do
-      Result.Rotations += getInt(i);
+      Result.Shapes += [[x, y, z], (90*getInt(i) * PI)/180];
+  end;
 end;
 
 type
@@ -151,7 +208,7 @@ begin
     for i := 0 to  Self.Data.High() do
       if Self.Data.getJSONObject(i).getInt('id') = obj then
       begin
-        Result := TRSMapObject.Setup(Self.Data.getJSONObject(i));
+        Result := TRSMapObject.Setup(Self.Walker, Self.Data.getJSONObject(i));
         Self.Cache += Result;
         Exit;
       end;
@@ -165,7 +222,7 @@ begin
     for i := 0 to  Self.Data.High() do
       if Self.Data.getJSONObject(i).getInt('id') = obj then
       begin
-        Result := TRSMapObject.Setup(Self.Data.getJSONObject(i));
+        Result := TRSMapObject.Setup(Self.Walker, Self.Data.getJSONObject(i));
         Self.Cache += Result;
         Exit;
       end;
@@ -175,29 +232,8 @@ begin
   for i := 0 to  Self.Data.High() do
     if LowerCase(Self.Data.getJSONObject(i).getString('name')) = str then
     begin
-      Result := TRSMapObject.Setup(Self.Data.getJSONObject(i));
+      Result := TRSMapObject.Setup(Self.Walker, Self.Data.getJSONObject(i));
       Self.Cache += Result;
       Exit;
     end;
-end;
-
-
-function TRSMapObjects.GetCuboidArray(obj: Variant; me: TPoint = [0,0]): TCuboidExArray;
-var
-  o: TRSMapObject;
-  coordinates: TPointArray;
-begin
-  if me = [0,0] then
-    me := Self.Walker^.Position();
-
-  o := Self.Get(obj);
-  if o = []then
-    TerminateScript('Object ' + ToStr(obj) + ' doesn''t exist.');
-
-  coordinates := o.Coordinates.FilterDist(0, 120, me.X, me.Y);
-  coordinates := coordinates.Sorted(me);
-
-  //This is extremely wrong but will stay for now. shapearray should also be sorted and cropped.
-  //Result := Self.Walker^.GetCuboidArrayMS(me, coordinates, Self.ShapeArray, [0, 0]);
-  Result := [];
 end;

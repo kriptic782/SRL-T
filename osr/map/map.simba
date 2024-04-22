@@ -12,8 +12,9 @@ Without them, this wouldn't be possible.
 {$ENDIF}
 
 type
-  T3DPoint = record(TPoint)
+  TRSPosition = record(TPoint)
     Z: Int32;
+    Plane: Int32;
   end;
 
   TRSMapChunk = record
@@ -118,25 +119,28 @@ begin
     filename := tmp[High(tmp)];
   end;
 
-  filepath := WALKER_MAPS + filename;
+  filePath := WALKER_MAPS + filename;
 
-  if FileExists(filepath) then
+  if FileExists(filePath) then
   begin
     if not force then
+    begin
+      Self.Setup(filename, downscale);
       Exit;
+    end;
 
-    if not DeleteFile(filepath) then
-      RaiseException('Failed to delete: ' + filepath);
+    if not DeleteFile(filePath) then
+      RaiseException('Failed to delete: ' + filePath);
   end;
 
-  WriteLn 'Downloading file: ' + url + ' > ' + filepath;
-  path := ExtractFileDir(filepath);
+  WriteLn 'Downloading file: ' + url + '  >  ' + filePath;
+  path := ExtractFileDir(filePath);
   if not ForceDirectories(path) then
     TerminateScript('Failed to create path: ' + path);
 
-  client := InitializeHTTPClient(False);
   try
-    GetHTTPPageEx(client, url, filepath);
+    client := InitializeHTTPClient(False);
+    GetHTTPPageEx(client, url, filePath);
   finally
     FreeHTTPClient(client);
   end;
@@ -513,7 +517,7 @@ end;
 ## Map.Position
 ```pascal
 function TRSMap.Position(): TPoint;
-function TRSMap.FullPosition(): T3DPoint;
+function TRSMap.FullPosition(): TRSPosition;
 ```
 Returns the players current position on the loaded map.
 `TRSMap.FullPosition()` also returns the current Z level.
@@ -564,10 +568,10 @@ begin
   Result := [0,0];
 end;
 
-function TRSMap.FullPosition(): T3DPoint;
+function TRSMap.FullPosition(): TRSPosition; //TODO: Add height to Z.;
 begin
   with Self.Position() do
-    Result := [X, Y, Self.Region.Level];
+    Result := [X, Y, 0, Self.Region.Level];
 end;
 
 (*
@@ -715,7 +719,7 @@ begin
     mapPoint   := mapPoint.Rotate(radians, [X, Y]);
   end;
 
-  Result := Minimap.VecToMSRect(Vec3(mapPoint.x - offset.X, mapPoint.y - offset.Y, height), 1, 1, radians);
+  Result := Minimap.VectorToMSRect(Vec3(mapPoint.x - offset.X, mapPoint.y - offset.Y, height), 1, 1, radians);
 end;
 
 function TRSMap.GetTileMS(mapPoint: TPoint; height: Double = 0; offset: Vector2 = [0,0]): TRectangle; overload;

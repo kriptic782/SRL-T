@@ -46,7 +46,7 @@ begin
     for Y := Minimap.Center.Y - 25 * 4 to Minimap.Center.Y + 25 * 4 with 4 do
     begin
       Tile := Vec3(X, Y).RotateXY(Angle, Minimap.Center.X, Minimap.Center.Y);
-      TPA := Minimap.VecToMsRect(Tile, 1, 1, Angle).ToTPA().Connect();
+      TPA := Minimap.VectorToMSRect(Tile, 1, 1, Angle).ToTPA().Connect();
 
       BMP.DrawTPA(TPA, $00FF00);
     end;
@@ -54,11 +54,11 @@ begin
   if Dots then
   begin
     for Dot in Minimap.GetDots(ERSMinimapDot.NPC) do
-      BMP.DrawRect(Minimap.VecToMSRect([Dot.X + 2, Dot.Y + 2], 1, 1, Angle), $00FFFF);
+      BMP.DrawRect(Minimap.VectorToMSRect([Dot.X + 2, Dot.Y + 2], 1, 1, Angle), $00FFFF);
     for Dot in Minimap.GetDots(ERSMinimapDot.ITEM) do
-      BMP.DrawRect(Minimap.VecToMSRect([Dot.X + 2, Dot.Y + 2], 1, 1, Angle), $0000FF);
+      BMP.DrawRect(Minimap.VectorToMSRect([Dot.X + 2, Dot.Y + 2], 1, 1, Angle), $0000FF);
     for Dot in Minimap.GetDots(ERSMinimapDot.PLAYER) do
-      BMP.DrawRect(Minimap.VecToMSRect([Dot.X + 2, Dot.Y + 2], 1, 1, Angle), $FFFFFF);
+      BMP.DrawRect(Minimap.VectorToMSRect([Dot.X + 2, Dot.Y + 2], 1, 1, Angle), $FFFFFF);
   end;
 
   BMP.Debug();
@@ -77,7 +77,7 @@ begin
   Result := Self.ZoomLevel;
 end;
 
-function TMM2MS.Run(Arr: Vector3Array; Roll:Single=$FFFF): TPointArray;
+function TMM2MS.Run(Arr: Vector3Array; roll: Single = $FFFF): TPointArray;
 var
   i: Int32;
   P: TPoint;
@@ -107,7 +107,7 @@ begin
   for i := 0 to High(Arr) do
     Arr[i] := [Arr[i].X - P.X, P.Y - Arr[i].Y, Arr[i].Z];
 
-  Result := Projector.Run(Arr, Vec3(0, 0, PI*2 - Roll));
+  Result := Projector.Run(Arr, Vec3(0, 0, PI*2 - roll));
 end;
 
 procedure TMM2MS.Setup();
@@ -126,7 +126,10 @@ The global variable which you would refer to.
 var
   MM2MS: TMM2MS;
 
+procedure TSRL.Setup(); override;
 begin
+  inherited;
+
   MM2MS.Setup();
 end;
 
@@ -134,224 +137,417 @@ end;
 # Minimap Extensions
 Extend the minimap-functionality with MM2MS functions
 *)
-function TRSMinimap.ArrToMs(Arr: Vector3Array; Roll:Single=$FFFF): TPointArray; overload;
-var
-  i: Int32;
-  c: TPoint;
-begin
-  if (Roll = $FFFF) then Roll := Self.GetCompassAngle(False);
-  c := Self.Center();
 
-  for i:=0 to High(Arr) do
-    Arr[i] := Arr[i].RotateXY(PI*2 - Roll, c.X, c.Y);
+type
+(*
+## type TRSMainScreenShape
 
-  Result := MM2MS.Run(Arr, Roll);
-end;
+This record holds information about the shape of a TRSWalkerObject and it's rotation.
 
-function TRSMinimap.ArrToMs(Arr: TPointArray; Roll:Single=$FFFF): TPointArray; overload;
-var
-  VecArr: Vector3Array;
-  i: Int32;
-  c: TPoint;
-begin
-  if (Roll = $FFFF) then Roll := Self.GetCompassAngle(False);
-  c := Self.Center();
-  SetLength(VecArr, Length(Arr));
-  for i:=0 to High(Arr) do
-  begin
-    VecArr[i].x := Arr[i].x;
-    VecArr[i].y := Arr[i].y;
-    VecArr[i] := VecArr[i].RotateXY(PI*2 - Roll,  c.X, c.Y);
+TRSMainScreenShape.Shape has 3 values, X, Y and Z. X and Y are how wide a object is, measured in game tiles.
+Z is the object height which has to be guessed and tested for a good value.
+
+For example, a bank chest would be roughly [1, 1, 4].
+A bank booth would be roughly [1, 1, 8].
+
+Angle is used to rotate an object and should be done in radians.
+*)
+  TRSMainScreenShape = record
+    Tile: Vector3;
+    Angle: Single;
   end;
-  Result := MM2MS.Run(VecArr, Roll);
-end;
+  TRSMainScreenShapeArray = array of TRSMainScreenShape;
 
 (*
-## Minimap.VecToMs
+## Minimap.ToMS
 ```pascal
-function TRSMinimap.VecToMs(Vec: Vector3; Roll:Single=$FFFF): TPoint;
+function TRSMinimap.VectorsToMS(vectors: Vector3Array; roll: Single = $FFFF): TPointArray;
+function TRSMinimap.PointsToMS(points: TPointArray; roll: Single = $FFFF): TPointArray;
+function TRSMinimap.VectorToMS(vec: Vector3; roll: Single = $FFFF): TPoint;
+function TRSMinimap.PointToMS(pt: TPoint; roll: Single = $FFFF): TPoint;
+function TRSMinimap.StaticToMS(StaticMMPoint: TPoint; Height:Int32=0): TPoint;
 ```
-Takes a single coordinate as a Vector3 on the minimap, and converts it to a point on the mainscreen.
+Convert minimap coordinates to mainscreen ones.
+Methods that use Vector3 are used internally, you probably don't need to use them.
 
-*ROLL is the compass angle, by leaving it default it will gather the compass angle itself.*
-*)
-function TRSMinimap.VecToMs(Vec: Vector3; Roll:Single=$FFFF): TPoint;
-begin
-  if (Roll = $FFFF) then Roll := Self.GetCompassAngle(False);
-  Vec := Vec.RotateXY(PI*2 - Roll, Self.Center.X, Self.Center.Y);
-
-  Result := MM2MS.Run([Vec], Roll)[0];
-end;
-
-(*
-## Minimap.PointToMS
-```pascal
-function TRSMinimap.PointToMS(PT: TPoint; Roll:Single=$FFFF): TPoint;
-```
-Takes a single coordinate as a TPoint on the minimap, and converts it to a point on the mainscreen.
-
-*ROLL is the compass angle, by leaving it default it will gather the compass angle itself.*
-*)
-function TRSMinimap.PointToMS(PT: TPoint; Roll:Single=$FFFF): TPoint;
-begin
-  if (Roll = $FFFF) then Roll := Self.GetCompassAngle(False);
-  pt := pt.Rotate(PI*2 - Roll, Self.Center());
-
-  Result := MM2MS.Run([Vec3(PT.x, PT.y)], Roll)[0];
-end;
-
-(*
-## Minimap.VecToMsRect
-```pascal
-function TRSMinimap.VecToMsRect(Vec: Vector3; WESize, NSSize: Double = 1; Roll:Single=$FFFF): TRectangle;
-```
-Takes a single coordinate as a Vector3 on the minimap, and converts it to a rectangle / tile on the mainscreen.
-
-`WESize` is the size of the rectangle we want to get from west-to-east measured in RS tiles.
-`NSSize` is the size of the rectangle we want to get from north-to-south measured in RS tiles.
-
-By default this values are 1 which will return you one single tile.
-If you wanted to get the tiles of a runecrafting altar for example which is 3 by 3 tiles you would set both to 3.
+The static method assumes the coordinate is from the compass angle set to 0.
+And will be rotated to the current compass angle.
 
 :::{note}
 :class: dropdown
-ROLL is the compass angle, by leaving it default it will gather the compass angle itself.
+roll is the compass angle, by leaving it default it will gather the compass angle itself.
 :::
 *)
-function TRSMinimap.VecToMsRect(Vec: Vector3; WESize, NSSize: Double = 1; Roll:Single=$FFFF): TRectangle;
+function TRSMinimap.VectorsToMS(vectors: Vector3Array; roll: Single = $FFFF): TPointArray;
 var
-  Arr: TPointArray;
+  i: Int32;
+  c: TPoint;
 begin
-  if WESize <= 0 then WESize := 1;
-  if NSSize <= 0 then NSSize := 1;
+  if (roll = $FFFF) then
+    roll := Self.GetCompassAngle(False);
 
-  //tiles are roughly 4 pixels height and width in the minimap.
-  //so for our coordinate we will want to "expand" each tile 2 pixels north, south, east and west.
-  WESize := 2 * WESize;
-  NSSize := 2 * NSSize;
+  c := Self.Center();
 
-  if (Roll = $FFFF) then Roll := Self.GetCompassAngle(False);
+  for i := 0 to High(vectors) do
+    vectors[i] := vectors[i].RotateXY(PI*2 - roll, c.X, c.Y);
 
-  Vec := Vec.RotateXY(PI*2 - Roll, Self.Center().X, Self.Center().Y);
-  Arr := MM2MS.Run([Vec3(Vec.X-WESize, Vec.Y-NSSize, Vec.z),
-                    Vec3(Vec.X+WESize, Vec.Y-NSSize, Vec.z),
-                    Vec3(Vec.X+WESize, Vec.Y+NSSize, Vec.z),
-                    Vec3(Vec.X-WESize, Vec.Y+NSSize, Vec.z)], Roll);
-
-  Result := [Arr[0], Arr[1], Arr[2], Arr[3]];
+  Result := MM2MS.Run(vectors, roll);
 end;
 
-(*
-## Minimap.PointToMSRect
-```pascal
-function TRSMinimap.PointToMSRect(PT: TPoint; Roll:Single=$FFFF): TRectangle;
-```
-Takes a single coordinate as a TPoint on the minimap, and converts it to a rectangle / tile on the mainscreen.
-
-`WESize` is the size of the rectangle we want to get from west-to-east measured in RS tiles.
-`NSSize` is the size of the rectangle we want to get from north-to-south measured in RS tiles.
-
-By default this values are 1 which will return you one single tile.
-If you wanted to get the tiles of a runecrafting altar for example which is 3 by 3 tiles you would set both to 3.
-
-:::{note}
-:class: dropdown
-ROLL is the compass angle, by leaving it default it will gather the compass angle itself.
-:::
-*)
-function TRSMinimap.PointToMSRect(PT: TPoint; WESize, NSSize: Double = 1; Roll:Single=$FFFF): TRectangle;
+function TRSMinimap.PointsToMS(points: TPointArray; roll: Single = $FFFF): TPointArray;
 var
-  Arr: TPointArray;
+  vectors: Vector3Array;
+  i: Int32;
+  c: TPoint;
 begin
-  if WESize <= 0 then WESize := 1;
-  if NSSize <= 0 then NSSize := 1;
+  if (roll = $FFFF) then
+    roll := Self.GetCompassAngle(False);
 
-  //tiles are roughly 4 pixels height and width in the minimap.
-  //so for our coordinate we will want to "expand" each tile 2 pixels north, south, east and west.
-  WESize := 2 * WESize;
-  NSSize := 2 * NSSize;
+  c := Self.Center();
+  SetLength(vectors, Length(points));
 
-  if (Roll = $FFFF) then Roll := Self.GetCompassAngle(False);
+  for i := 0 to High(points) do
+  begin
+    vectors[i].x := points[i].x;
+    vectors[i].y := points[i].y;
+    vectors[i] := vectors[i].RotateXY(PI*2 - roll,  c.X, c.Y);
+  end;
 
-  PT := PT.Rotate(PI*2 - Roll, Self.Center());
-
-  Arr := MM2MS.Run([Vec3(PT.x-WESize, PT.y-NSSize),
-                    Vec3(PT.x+WESize, PT.y-NSSize),
-                    Vec3(PT.x+WESize, PT.y+NSSize),
-                    Vec3(PT.x-WESize, PT.y+NSSize)], Roll);
-  Result := [Arr[0], Arr[1], Arr[2], Arr[3]];
+  Result := MM2MS.Run(vectors, roll);
 end;
 
-(*
-## Minimap.GetTileMS
-```pascal
-function TRSMinimap.GetTileMS(Loc: TPoint; TileVector: Vector3; Offset: Vector2 = [0, 0]; Roll: Single = $FFFF): TRectangle;
-```
-This is a more general usage version of the previous 2 functions. This one can take height into account throught the **TileVector**.
-
-TileVector is used to specify the size and height of the tile:
-`TileVector.X` is the size of the rectangle from west to east in game.
-`TileVector.Y` is the size of the rectangle from north to south in game.
-`TileVector.Z` is the height of the rectangle in game. There's no way to accurately measure it but for a rough idea, a player's height is about 6 or 7.
-
-:::{note}
-:class: dropdown
-ROLL is the compass angle, by leaving it default it will gather the compass angle itself.
-:::
-*)
-function TRSMinimap.GetTileMS(Loc: TPoint; TileVector: Vector3 = [1, 1, 0]; Offset: Vector2 = [0, 0]; Roll: Single = $FFFF): TRectangle;
+function TRSMinimap.PointToMS(pt: TPoint; roll: Single = $FFFF): TPoint;
 begin
-  if not Self.IsPointOn(Loc) then
-    Exit;
+  if (roll = $FFFF) then roll := Self.GetCompassAngle(False);
+  pt := pt.Rotate(PI*2 - roll, Self.Center());
 
-  //This check above prevents users running out of memory from fetching tiles too far away.
-  //Everything at the very edge of the minimap is also roughly the same limit of the render distance.
-  //So even though we could fetch tiles further that are visible they would be pitch black because they are not rendered and kind of pointless.
-  //So this just won't go further if the point is not on the minimap and prevents users from accidentally trying to get tiles that are truly too far.
-
-  if (Roll = $FFFF) then
-    Roll := Self.GetCompassAngle(False);
-
-  Result := Self.VecToMSRect(
-                  Vec3(Loc.x + Offset.X, Loc.y + Offset.Y, TileVector.Z),
-                  TileVector.X, TileVector.Y, Roll);
+  Result := MM2MS.Run([Vec3(pt.x, pt.y)], roll)[0];
 end;
 
-(*
-## Minimap.StaticToMsRect
-```pascal
-function TRSMinimap.StaticToMsRect(StaticMMPoint: TPoint; Height:Int32=0): TRectangle;
-```
-Takes static minimap coordinate, rotates it to compass angle, and returns a rectangle on the mainscreen
-The static point is therefor gathered at north, and it will rotate it as expected.
-
-`WESize` is the size of the rectangle we want to get from west-to-east measured in RS tiles.
-`NSSize` is the size of the rectangle we want to get from north-to-south measured in RS tiles.
-*)
-function TRSMinimap.StaticToMsRect(StaticMMPoint: TPoint; WESize, NSSize: Double = 1; Height: Double = 0): TRectangle;
+function TRSMinimap.ATPAToMS(atpa: T2DPointArray; roll: Single = $FFFF): T2DPointArray; overload;
 var
-  Angle: Double;
+  tpa: TPointArray;
 begin
-  Angle  := Self.GetCompassAngle(False);
-  with StaticMMPoint.Rotate(Angle, Self.Center()) do
-    Result := Self.VecToMSRect(Vec3(X, Y, Height), WESize, NSSize, Angle);
+  if roll = $FFFF then
+    roll := Self.GetCompassAngle(False);
+
+  for tpa in atpa do
+    Result += Self.PointsToMS(tpa, roll);
 end;
 
-(*
-## Minimap.StaticToMs
-```pascal
-function TRSMinimap.StaticToMs(StaticMMPoint: TPoint; Height:Int32=0): TPoint;
-```
-This is the same as the above, only that it returns a single point on the mainscreen.
-*)
-function TRSMinimap.StaticToMs(StaticMMPoint: TPoint; Height:Int32=0): TPoint;
+function TRSMinimap.VectorToMS(vec: Vector3; roll: Single = $FFFF): TPoint;
+begin
+  if (roll = $FFFF) then roll := Self.GetCompassAngle(False);
+  Vec := Vec.RotateXY(PI*2 - roll, Self.Center.X, Self.Center.Y);
+
+  Result := MM2MS.Run([Vec], roll)[0];
+end;
+
+function TRSMinimap.StaticToMS(StaticMMPoint: TPoint; Height:Int32=0): TPoint;
 var
   angle: Double;
 begin
   angle := Self.GetCompassAngle(False);
   with StaticMMPoint.Rotate(angle, Self.Center()) do
-    Result := Self.VecToMS(Vec3(X,Y, Height), angle);
+    Result := Self.VectorToMS(Vec3(X,Y, Height), angle);
 end;
+
+
+(*
+## Minimap.ToMSRect
+```pascal
+function TRSMinimap.VectorToMSRect(vector: Vector3; weSize, nsSize: Double = 1; roll: Single = $FFFF): TRectangle;
+function TRSMinimap.PointToMSRect(pt: TPoint; weSize, nsSize: Double = 1; roll: Single = $FFFF): TRectangle;
+function TRSMinimap.StaticToMsRect(staticMMPoint: TPoint; weSize, nsSize: Double = 1; Height: Double = 0): TRectangle;
+```
+Converts minimap coordinates to mainscreen rectangles.
+
+The static method assumes a coordinate with compass angle set to 0.
+So the coordinate will be rotated to whatever the current angle is.
+
+The rectangle can be expanded with `weSize` and `nsSize` and it's unit is measured in game tiles.
+:::{note}
+:class: dropdown
+weSize is the size of the rectangle we want to get from west-to-east measured in RS tiles.
+nsSize is the size of the rectangle we want to get from north-to-south measured in RS tiles.
+:::
+
+:::{note}
+:class: dropdown
+roll is the compass angle, by leaving it default it will gather the compass angle itself.
+:::
+*)
+function TRSMinimap.VectorToMSRect(vector: Vector3; weSize, nsSize: Double = 1; roll: Single = $FFFF): TRectangle;
+var
+  Arr: TPointArray;
+begin
+  if weSize <= 0 then weSize := 1;
+  if nsSize <= 0 then nsSize := 1;
+
+  //tiles are roughly 4 pixels height and width in the minimap.
+  //so for our coordinate we will want to "expand" each tile 2 pixels north, south, east and west.
+  weSize := 2 * weSize;
+  nsSize := 2 * nsSize;
+
+  if (roll = $FFFF) then roll := Self.GetCompassAngle(False);
+
+  vector := vector.RotateXY(PI*2 - roll, Self.Center().X, Self.Center().Y);
+  Arr := MM2MS.Run([Vec3(vector.X-weSize, vector.Y-nsSize, vector.z),
+                    Vec3(vector.X+weSize, vector.Y-nsSize, vector.z),
+                    Vec3(vector.X+weSize, vector.Y+nsSize, vector.z),
+                    Vec3(vector.X-weSize, vector.Y+nsSize, vector.z)], roll);
+
+  Result := [Arr[0], Arr[1], Arr[2], Arr[3]];
+end;
+
+function TRSMinimap.PointToMSRect(pt: TPoint; weSize, nsSize: Double = 1; roll: Single = $FFFF): TRectangle;
+var
+  Arr: TPointArray;
+begin
+  if weSize <= 0 then weSize := 1;
+  if nsSize <= 0 then nsSize := 1;
+
+  //tiles are roughly 4 pixels height and width in the minimap.
+  //so for our coordinate we will want to "expand" each tile 2 pixels north, south, east and west.
+  weSize := 2 * weSize;
+  nsSize := 2 * nsSize;
+
+  if (roll = $FFFF) then roll := Self.GetCompassAngle(False);
+
+  pt := pt.Rotate(PI*2 - roll, Self.Center());
+
+  Arr := MM2MS.Run([Vec3(pt.x-weSize, pt.y-nsSize),
+                    Vec3(pt.x+weSize, pt.y-nsSize),
+                    Vec3(pt.x+weSize, pt.y+nsSize),
+                    Vec3(pt.x-weSize, pt.y+nsSize)], roll);
+  Result := [Arr[0], Arr[1], Arr[2], Arr[3]];
+end;
+
+function TRSMinimap.StaticToMSRect(staticMMPoint: TPoint; weSize, nsSize: Double = 1; Height: Double = 0): TRectangle;
+var
+  Angle: Double;
+begin
+  Angle  := Self.GetCompassAngle(False);
+  with staticMMPoint.Rotate(Angle, Self.Center()) do
+    Result := Self.VectorToMSRect(Vec3(X, Y, Height), weSize, nsSize, Angle);
+end;
+
+
+(*
+## Minimap.GetTile
+```pascal
+function TRSMinimap.GetTileMS(loc: TPoint; tile: Vector3 = [1, 1, 0]; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TRectangle;
+function TRSMinimap.GetTileMS(loc: TPoint; shape: TRSMainScreenShape; offset: TPoint = [0, 0]; angle: Single = $FFFF): TRectangle; overload;
+function TRSMinimap.GetTileArrayMS(locArray: TPointArray; tile: Vector3 = [1, 1, 0]; offset: TPoint = [0, 0]; angle: Single = $FFFF): TRectArray;
+function TRSMinimap.GetTileArrayMS(locArray: TPointArray; shapeArray: TRSMainScreenShapeArray; offset: TPoint = [0, 0]; angle: Single = $FFFF): TRectArray; overload;
+```
+Converts minimap coordinates to mainscreen tile at a specific height.
+There's no accurate way of measuring height so this value has to be eyeballed.
+As a guide, a bank chest is around `4` height, a player is around `6` and a oak tree `12/14`.
+
+Methods with TRSMainScreenShape parameters allow you do have "tilted" rectangles.
+
+:::{note}
+:class: dropdown
+`angle` is the compass angle, by leaving it default it will gather the compass angle itself.
+:::
+*)
+function TRSMinimap.GetTileMS(loc: TPoint; tile: Vector3 = [1, 1, 0]; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TRectangle;
+begin
+  if not Self.IsPointOn(loc) then
+    Exit;
+
+  //The above prevents running out of memory from fetching tiles too far away.
+  //Everything at the very edge of the minimap is also roughly the same limit of the render distance.
+  //So even though we could fetch tiles further that are visible they would be pitch black because they are not rendered and kind of pointless.
+  //So this just won't go further if the point is not on the minimap and prevents users from accidentally trying to get tiles that are truly too far.
+
+  if (angle = $FFFF) then
+    angle := Self.GetCompassAngle(False);
+
+  Result := Self.VectorToMSRect(
+              Vec3(loc.x + Offset.X, loc.y + offset.Y, tile.Z),
+              tile.X, tile.Y, angle
+            );
+end;
+
+function TRSMinimap.GetTileMS(loc: TPoint; shape: TRSMainScreenShape; offset: TPoint = [0, 0]; angle: Single = $FFFF): TRectangle; overload;
+begin
+  if not Self.IsPointOn(loc) then
+    Exit;
+
+  //The above prevents running out of memory from fetching tiles too far away.
+  //Everything at the very edge of the minimap is also roughly the same limit of the render distance.
+  //So even though we could fetch tiles further that are visible they would be pitch black because they are not rendered and kind of pointless.
+  //So this just won't go further if the point is not on the minimap and prevents users from accidentally trying to get tiles that are truly too far.
+
+  if (angle = $FFFF) then
+    angle := Self.GetCompassAngle(False);
+
+  Result := Self.GetTileMS(loc, shape.Tile, offset, angle + shape.Angle)
+end;
+
+function TRSMinimap.GetTileArrayMS(locArray: TPointArray; tile: Vector3 = [1, 1, 0]; offset: TPoint = [0, 0]; angle: Single = $FFFF): TRectArray;
+var
+  loc: TPoint;
+begin
+  if (angle = $FFFF) then
+    angle := Self.GetCompassAngle(False);
+
+  for loc in locArray.SortFrom(Self.Center()) do
+    Result += Self.GetTileMS(loc, tile, offset, angle);
+end;
+
+function TRSMinimap.GetTileArrayMS(locArray: TPointArray; shapeArray: TRSMainScreenShapeArray; offset: TPoint = [0, 0]; angle: Single = $FFFF): TRectArray; overload;
+var
+  i: Int32;
+begin
+  if (angle = $FFFF) then
+    angle := Self.GetCompassAngle(False);
+
+  locArray := locArray.SortFrom(Self.Center());
+
+  if Length(locArray) = Length(shapeArray) then
+  begin
+    for i := 0 to High(locArray) do
+      Result += Self.GetTileMS(locArray[i], shapeArray[i].Tile, offset, angle + shapeArray[i].Angle);
+    Exit;
+  end;
+
+  for i := 0 to High(locArray) do
+    Result += Self.GetTileMS(locArray[i], shapeArray[0].Tile, offset, angle + shapeArray[0].Angle);
+end;
+
+
+(*
+## Minimap.GetCuboidMS
+```pascal
+function TRSMinimap.GetCuboidMSEx(loc: TPoint; shape: TRSMainScreenShape; startHeight: Double = 0; offset: Vector2 = [0, 0]; roll: Single = $FFFF): TCuboidEx;
+function TRSMinimap.GetCuboidMS(loc: TPoint; shape: TRSMainScreenShape; offset: Vector2 = [0, 0]; roll: Single = $FFFF): TCuboidEx;
+function TRSMinimap.GetCuboidMS(loc: TPoint; tile: Vector3 = [1, 1, 4]; offset: Vector2 = [0, 0]; roll: Single = $FFFF): TCuboidEx;
+function TRSMinimap.GetCuboidArrayMSEx(locArray: TPointArray; shapeArray: TRSMainScreenShapeArray; startHeights: TDoubleArray; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidExArray;
+function TRSMinimap.GetCuboidArrayMS(locArray: TPointArray; shapeArray: TRSMainScreenShapeArray; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidExArray
+function TRSMinimap.GetCuboidArrayMS(locArray: TPointArray; shape: TRSMainScreenShape; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidExArray; overload;
+function TRSMinimap.GetCuboidArrayMS(locArray: TPointArray; tile: Vector3; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidExArray; overload;
+```
+Converts minimap coordinates to mainscreen cuboid(s) at a specific height.
+To understand what this better, you should read about `Minimap.GetTileMS` and `TPointArray.ConvexHull` and understand what they do.
+
+To put it simply, this will will first calculate a floor rectangle with **tile.Z**, or **height** if you prefer
+of 0 and then calculate the top rectangle of the **tile.Z** you specified.
+
+After this 2 rectangles are calculated, a cuboid is then made out of the two, resulting in a ConvexHull which is returned.
+
+This is perfect to to get an accurate bounding cuboid of objects and NPCs which you can use to accurately color search after.
+
+:::{note}
+:class: dropdown
+`angle` is the compass angle, by leaving it default it will gather the compass angle itself.
+:::
+
+The example below will show you how it could be used to retrieve an accurate player bounding cuboid.
+
+Example:
+```pascal
+P := Minimap.GetDots(ERSMinimapDot.PLAYER)[0];         //find a player dot and returns it's coodinates.
+offset := [2 , 2];                                     //Minimap dots are actually returned with a slight offset of -2, -2 when converting them to the mainscreen.
+Debug(Minimap.GetCuboidMS(P, [1, 1, 7], offset));     //This will draw a polygon around the nearest player.
+```
+*)
+function TRSMinimap.GetCuboidMSEx(loc: TPoint; shape: TRSMainScreenShape; startHeight: Double = 0; offset: Vector2 = [0, 0]; roll: Single = $FFFF): TCuboidEx;
+var
+  tile: Vector3;
+begin
+  if (roll = $FFFF) then
+    roll := Self.GetCompassAngle(False);
+
+  roll += shape.Angle;
+
+  tile := shape.Tile;
+  Result.Bottom := Self.GetTileMs(loc, [tile.X, tile.Y, startHeight], offset, roll);
+  if tile.Z <> 0 then
+  begin
+    tile.Z += startHeight;
+    Result.Top := Self.GetTileMS(loc, tile, offset, roll);
+  end
+  else
+    Result.Top := Result.Bottom;
+end;
+
+function TRSMinimap.GetCuboidMS(loc: TPoint; shape: TRSMainScreenShape; offset: Vector2 = [0, 0]; roll: Single = $FFFF): TCuboidEx;
+begin
+  Result := Self.GetCuboidMSEx(loc, shape, 0, offset, roll);
+end;
+
+function TRSMinimap.GetCuboidMS(loc: TPoint; tile: Vector3 = [1, 1, 4]; offset: Vector2 = [0, 0]; roll: Single = $FFFF): TCuboidEx; overload;
+var
+  shape: TRSMainScreenShape;
+begin
+  shape := [tile, 0];
+  Result := Self.GetCuboidMS(loc, shape, offset, roll);
+end;
+
+function TRSMinimap.GetCuboidArrayMSEx(locArray: TPointArray; shapeArray: TRSMainScreenShapeArray; startHeights: TDoubleArray; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidExArray;
+var
+  i: Int32;
+begin
+  if (angle = $FFFF) then
+    angle := Self.GetCompassAngle(False);
+
+  for i := 0 to High(locArray) do
+  begin
+    if not Self.Bounds().Expand(10).Contains(locArray[i]) then
+      Continue;
+
+    if Length(locArray) = Length(shapeArray) then
+      Result += Self.GetCuboidMSEx(locArray[i], shapeArray[i], startHeights[i], offset, angle)
+    else
+      Result += Self.GetCuboidMSEx(locArray[i], shapeArray[0], startHeights[0], offset, angle);
+  end;
+end;
+
+function TRSMinimap.GetCuboidArrayMS(locArray: TPointArray; shapeArray: TRSMainScreenShapeArray; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidExArray;
+var
+  i: Int32;
+begin
+  if (angle = $FFFF) then
+    angle := Self.GetCompassAngle(False);
+
+  for i := 0 to High(locArray) do
+  begin
+    if not Self.Bounds().Expand(10).Contains(locArray[i]) then
+      Continue;
+
+    if Length(locArray) = Length(shapeArray) then
+      Result += Self.GetCuboidMS(locArray[i], shapeArray[i], offset, angle)
+    else
+      Result += Self.GetCuboidMS(locArray[i], shapeArray[0], offset, angle);
+  end;
+end;
+
+function TRSMinimap.GetCuboidArrayMS(locArray: TPointArray; shape: TRSMainScreenShape; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidExArray; overload;
+var
+  i: Int32;
+begin
+  if (angle = $FFFF) then
+    angle := Self.GetCompassAngle(False);
+
+  for i := 0 to High(locArray) do
+  begin
+    if not Self.Bounds().Expand(10).Contains(locArray[i]) then
+      Continue;
+    Result += Self.GetCuboidMS(locArray[i], shape, offset, angle);
+  end;
+end;
+
+function TRSMinimap.GetCuboidArrayMS(locArray: TPointArray; tile: Vector3; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidExArray; overload;
+var
+  shape: TRSMainScreenShape;
+begin
+  shape := [tile, 0];
+  Result := Self.GetCuboidArrayMS(locArray, shape, offset, angle);
+end;
+
 
 (*
 ## Minimap.GetZoomRectangle
@@ -469,7 +665,7 @@ var
       x += Step;
     end;
 
-    TPA := Minimap.ArrToMs(Copy(arr), a);
+    TPA := Minimap.VectorsToMS(Copy(arr), a);
     if not IsFinal then Swap(arr, raw);
     for i:=0 to High(TPA) do
       if Distance(TPA[i], MS) < Distance(best, MS) then
@@ -557,8 +753,8 @@ begin
 
   mean := lo + ((hi - lo) / 2);
 
-  Result := Distance(Minimap.VecToMs([Minimap.Center.X, Minimap.Center.Y], 0),
-                     Minimap.VecToMs([Minimap.Center.X + mean, Minimap.Center.Y], 0));
+  Result := Distance(Minimap.VectorToMS([Minimap.Center.X, Minimap.Center.Y], 0),
+                     Minimap.VectorToMS([Minimap.Center.X + mean, Minimap.Center.Y], 0));
 
   if Result < 1 then
     Result := 1;
@@ -577,34 +773,66 @@ var
   Center: TPoint := Minimap.Center();
   TPA: TPointArray;
 begin
-  TPA := [Minimap.VecToMS(Vec3(Center.X - 2, Center.Y, 10), A),
-          Minimap.VecToMS(Vec3(Center.X + 2, Center.Y, -3), A)];
+  TPA := [Minimap.VectorToMS(Vec3(Center.X - 2, Center.Y, 10), A),
+          Minimap.VectorToMS(Vec3(Center.X + 2, Center.Y, -3), A)];
 
   Result := TPA.Bounds();
 end;
 
+
 (*
-## MainScreen.FacePoint() override
+## Minimap.FacePoint
 ```pascal
-function TRSMainScreen.FacePoint(p: TPoint; randomness: Int32 = 0): Boolean;
+function TRSMinimap.FacePoint(p: TPoint; randomness: Int32 = 0): Boolean;
+```
+
+This method will rotate the camera so that **P** is within the zoom rectangle without adjusting the zoom level.
+
+Example:
+```pascal
+WriteLn Minimap.FacePoint([620, 100]); //keep in mind this example uses a static point, you will probably never do this.
+```
+*)
+function TRSMinimap.FacePoint(p: TPoint; randomness: Int32 = 0): Boolean;
+var
+  tpa: TPointArray;
+  d1: Double;
+  i: Int32;
+begin
+  if not Self.IsPointOn(P) then
+    Exit;
+
+  tpa := Self.GetZoomRectangle().Totpa();
+
+  if SRL.PointInPoly(p, tpa) then
+    Exit(True);
+
+  tpa := tpa.SortFrom(p);
+
+  d1 := Self.Center().DistanceTo(p);
+
+  for i := 0 to High(tpa) do
+  begin
+    if Result := d1 <= Self.Center().DistanceTo(tpa[i]) then
+      Break;
+
+    if i = High(tpa) then //the point is outside of the zoom rectangle reach.
+      Exit;
+  end;
+
+  Self.SetCompassAngle(Self.Center().AngleBetween(tpa[i]) - Self.Center().AngleBetween(p) + randomness);
+end;
+
+(*
+## MainScreen.FacePoint
+```pascal
+function TRSMainScreen.FacePoint(p: TPoint; randomness: Int32 = 0): Boolean; override;
 ```
 Rotates the camera to face point `p`.
 *)
 function TRSMainScreen.FacePoint(p: TPoint; randomness: Int32 = 0): Boolean; override;
-var
-  angle: Double;
-  currentAngle: Double;
 begin
-  angle := Self.PointToMM(p).ToPoint.AngleBetween(Minimap.Center());
-  angle += Random(-randomness, randomness);
-
-  currentAngle := Minimap.GetCompassAngle();
-
-  if currentAngle > 180 then
-    currentAngle -= 360;
-
-  Minimap.SetCompassAngle(-(angle - currentAngle));
-  Result := True;
+  Result := Minimap.FacePoint(Self.PointToMM(p).ToPoint(), randomness);
 end;
 
 (*

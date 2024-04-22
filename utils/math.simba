@@ -145,7 +145,6 @@ begin
 end;
 
 
-
 (*
 ## SRL.PointInTriangle
 ```pascal

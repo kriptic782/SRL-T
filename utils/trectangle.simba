@@ -19,7 +19,6 @@ type
 ```pascal
 function TRectangle.ToTPA(): TPointArray; constref;
 ```
-
 TPA from the rectangle.
 *)
 function TRectangle.ToTPA(): TPointArray; constref;
@@ -33,7 +32,6 @@ end;
 ```pascal
 function TRectangle.Bounds(): TBox; constref;
 ```
-
 Returns the minimum bounding box covering the rectangle
 *)
 function TRectangle.Bounds(): TBox; constref;
@@ -46,7 +44,6 @@ end;
 ```pascal
 function TRectangle.Radius(): Double; constref;
 ```
-
 Returns the radius of the shortest side, for the maximum see MaxRadius
 *)
 function TRectangle.Radius(): Double; constref;
@@ -62,7 +59,6 @@ end;
 ```pascal
 function TRectangle.MaxRadius(): Double; constref;
 ```
-
 Returns the radius of the longest side, for minimum see Radius
 *)
 function TRectangle.MaxRadius(): Double; constref;
@@ -78,9 +74,7 @@ end;
 ```pascal
 function TRectangle.Mean(): TPoint; constref;
 ```
-
 Middle of the rectangle
-
 ```{note}
 By slacky
 ```
@@ -97,9 +91,8 @@ end;
 ```pascal
 function TRectangle.FixOrder(): TRectangle; constref;
 ```
-
 As long as the order of the points are clockwise, this will shift the points so that
-``Top``, is the topmost,``Right`` is the right-most etc... 
+`Top`, is the topmost,`Right` is the right-most etc...
 *)
 function TRectangle.FixOrder(): TRectangle; constref;
 type T4PTS = array [0..3] of TPoint;
@@ -123,7 +116,6 @@ end;
 ```pascal
 function TRectangle.Rotate(Angle: Double): TRectangle; constref;
 ```
-    
 Returns a rotated copy of the rectangle
 *)
 function TRectangle.Rotate(Angle: Double): TRectangle; constref;
@@ -143,7 +135,6 @@ end;
 ```pascal
 function TRectangle.Contains(Pt: TPoint): Boolean; constref;
 ```
-  
 Returns true if the point `Pt` is inside the rectangle.
 ```{note}
 By slacky
@@ -247,7 +238,6 @@ end;
 ```pascal
 function TRectangle.Offset(pt: TPoint): TRectangle; constref;
 ```
-
 Offset the rectangle.
 *)
 function TRectangle.Offset(pt: TPoint): TRectangle; constref;
@@ -260,29 +250,17 @@ end;
 (*
 ## TRectangle.Filter
 ```pascal
-function TRectangle.Filter(TestSet: TPointArray): TPointArray; constref;
+function TRectangle.Filter(testSet: TPointArray): TPointArray; constref;
 ```
-    
-Extract all the points from `TestSet` that fits within this rectangle.
+Extract all the points from `testSet` that fits within this rectangle.
 *)
-function TRectangle.Filter(TestSet: TPointArray): TPointArray; constref;
+function TRectangle.Filter(testSet: TPointArray): TPointArray; constref;
 var
-  i, count: UInt32;
+  i: Int32;
 begin
-  if (High(TestSet) < 0) then
-    Exit;
-
-  SetLength(Result, Length(TestSet));
-  count := 0;
-  for i := 0 to High(TestSet) do
-  begin
-    if TestSet[i].InRect(Self) then
-    begin
-      Result[count] := TestSet[i];
-      Inc(count);
-    end;
-  end;
-  SetLength(Result, Count);
+  for i := 0 to High(testSet) do
+    if testSet[i].InRect(Self) then
+      Result += testSet[i];
 end;
 
 
@@ -291,7 +269,6 @@ end;
 ```pascal
 function TRectangle.Expand(Inc: Int32): TRectangle; constref;
 ```
-  
 Increase or decrease the dimensions of the rectangle.
 *)
 function TRectangle.Expand(Incr: Single): TRectangle; constref;

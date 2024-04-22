@@ -196,9 +196,11 @@ end;
 
 
 (*
-## Equipment.ContainsItem
+## Equipment.Contains
 ```pascal
 function TRSEquipment.ContainsItem(item: TRSItem): Boolean;
+function TRSEquipment.ContainsAny(items: TRSItemArray): Boolean;
+function TRSEquipment.ContainsAll(items: TRSItemArray): Boolean;
 ```
 Same as {ref}`Equipment.FindItem` without the bounds.
 
@@ -213,14 +215,6 @@ begin
     Exit;
   Result := Self.ItemInterface.Contains(item);
 end;
-
-function TRSEquipment.FindItem(Item: TRSItem): Boolean; overload; deprecated 'Use TRSEquipment.ContainsItem()';
-var
-  B: TBox;
-begin
-  Result := Self.FindItem(Item, B);
-end;
-
 
 (*
 ## Equipment.ContainsAny

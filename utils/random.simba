@@ -194,10 +194,10 @@ begin
 end;
 
 (*
-## SRL.rowp
+## SRL.ROWP
 ```pascal
-function TSRL.rowp(From: TPoint; Rect: TRectangle; Force: Double=-0.9; Smoothness: Double=PI/12): TPoint;
-function TSRL.rowp(From: TPoint; Box: TBox; Force: Double=-0.9; Smoothness: Double=PI/12): TPoint;
+function TSRL.ROWP(From: TPoint; Rect: TRectangle; Force: Double=-0.9; Smoothness: Double=PI/12): TPoint;
+function TSRL.ROWP(From: TPoint; Box: TBox; Force: Double=-0.9; Smoothness: Double=PI/12): TPoint;
 ```
 ROWP, short for `Random Olly Weighted Point`. Generates a random point based on
 a rough formula that Olly came up with for weighting points towards "From" point.
@@ -205,13 +205,13 @@ Final implementation and math done by slacky.
 
 Force ranges from -1 (close to) to 1 (away from), where 0 is mean, but with a bit of a skewiness...
 *)
-function TSRL.rowp(From: TPoint; Rect: TRectangle; Force: Double=-0.9; Smoothness: Double=PI/12): TPoint; static;
+function TSRL.ROWP(From: TPoint; Rect: TRectangle; Force: Double=-0.9; Smoothness: Double=PI/12): TPoint; static;
 var
   p,e: TPoint;
   t, dist: Double;
 begin
   p := SRL.RandomPoint(rect, SRL_GAUSS_CUTOFF / 1.5);
-  e := Rect.NearestEdge(P);
+  e := Rect.NearestEdge(p);
 
   dist := Hypot(p.X - e.X, p.Y - e.Y);
   t := ArcTan2(p.Y-From.Y, p.X-From.X) + (Random()-0.5) * Smoothness;
@@ -219,9 +219,9 @@ begin
   Result.Y := Round(p.y + Sin(t) * SRL.SkewedRand(dist * force, 0, dist));
 end;
 
-function TSRL.rowp(From: TPoint; Box: TBox; Force: Double=-0.9; Smoothness: Double=PI/12): TPoint; static; overload;
+function TSRL.ROWP(From: TPoint; Box: TBox; Force: Double=-0.9; Smoothness: Double=PI/12): TPoint; static; overload;
 begin
-  Result := TSRL.rowp(From, Box.ToRectangle(), Force, Smoothness);
+  Result := TSRL.ROWP(From, Box.ToRectangle(), Force, Smoothness);
 end;
 
 (*

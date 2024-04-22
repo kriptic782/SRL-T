@@ -743,59 +743,62 @@ end;
 ```pascal
 function TPointArray.Invert(Area:TBox=[0,0,-1,-1]): TPointArray; constref;
 ```
-
 Inverts the shape based on the area covered, alternatively the given area.
 Same as `ReturnPointsNotInTPA` in Simba.
 *)
-function TPointArray.Invert(Area:TBox=[0,0,-1,-1]): TPointArray; constref;
+function TPointArray.Invert(area:TBox=[0,0,-1,-1]): TPointArray; constref;
 begin
   if Area = Box(0,0,-1,-1) then
     Area := Self.Bounds();
   Result := ReturnPointsNotInTPA(Self, Area);
 end;
 
-(*
-## TPointArray.FilterBox
-```pascal
-function TPointArray.FilterBox(Box: TBox): TPointArray; constref;
-```
-Returns a filtered version of the TPA.
-Same as Simba's `FilterPointsBox`
-*)
-function TPointArray.FilterBox(Box: TBox): TPointArray; constref;
-begin
-  Result := Copy(Self);
-  FilterPointsBox(Result, Box.X1, Box.Y1, Box.X2, Box.Y2);
-end;
 
 (*
-## TPointArray.FilterDist
+## TPointArray.Filter
 ```pascal
+function TPointArray.FilterBox(b: TBox): TPointArray; constref;
+function TPointArray.FilterRectangle(rect: TRectangle): TPointArray; constref;
+function TPointArray.FilterCircle(circle: TCircle): TPointArray; constref;
 function TPointArray.FilterDist(MinDist,MaxDist: Double; Mx,My: Int32): TPointArray; constref;
+function TPointArray.FilterDuplicates(): TPointArray; constref;
 ```
-Returns a filtered version of the TPA.
-Same as Simba's `FilterPointsDist`
+Returns a filtered versions of the TPA.
+They should be self explanatory by their naming and parameters.
 *)
+function TPointArray.FilterBox(b: TBox): TPointArray; constref;
+begin
+  Result := Copy(Self);
+  FilterPointsBox(Result, b.X1, b.Y1, b.X2, b.Y2);
+end;
+
+function TPointArray.FilterRectangle(rect: TRectangle): TPointArray; constref;
+var
+  i: Int32;
+begin
+  for i := 0 to High(Self) do
+    if Self[i].InRect(rect) then
+      Result += Self[i];
+end;
+
+function TPointArray.FilterCircle(circle: TCircle): TPointArray; constref;
+begin
+  Result := Copy(Self);
+  FilterPointsDist(Result, 0, circle.Radius, circle.X, circle.Y);
+end;
+
 function TPointArray.FilterDist(MinDist,MaxDist: Double; Mx,My: Int32): TPointArray; constref;
 begin
   Result := Copy(Self);
   FilterPointsDist(Result, MinDist, MaxDist, Mx,My);
 end;
 
-
-(*
-## TPointArray.FilterDuplicates
-```pascal
-function TPointArray.FilterDuplicates(): TPointArray;
-```
-
-Returns a copy where all duplicate points are removed.
-*)
-function TPointArray.FilterDuplicates(): TPointArray;
+function TPointArray.FilterDuplicates(): TPointArray; constref;
 begin
   Result := Copy(Self);
   ClearDoubleTPA(Result);
 end;
+
 
 (*
 ## TPointArray.ClearDuplicates

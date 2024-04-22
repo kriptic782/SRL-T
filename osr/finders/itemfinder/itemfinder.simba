@@ -599,7 +599,7 @@ end;
 var
   ItemFinder: TRSItemFinder;
 
-procedure TSRL.Setup; override;
+procedure TSRL.Setup(); override;
 begin
   inherited;
 
