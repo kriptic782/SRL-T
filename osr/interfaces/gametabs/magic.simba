@@ -226,7 +226,7 @@ procedure TRSMagic._CloseInfoMouseCallback(sender: PMouse; var x, y: Double; var
 Mouse movement callback to stop mouse movement when the spell info box closes.
 Do not touch this if you don't understand it.
 *)
-procedure TRSMagic._CloseInfoMouseCallback({$H-}sender: PMouse; var x, y: Double; {$H+}var done: Boolean);
+procedure TRSMagic._CloseInfoMouseCallback(sender: PMouse; var x, y: Double; var done: Boolean);
 begin
   done := not Self.InfoIsOpen() and SRL.Dice(30);
 end;

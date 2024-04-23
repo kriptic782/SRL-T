@@ -850,4 +850,4 @@ var
 ## var Map
 Global TRSMap variable
 *)
-  {$H-}Map: TRSMap;{$H+}
+  Map: TRSMap;

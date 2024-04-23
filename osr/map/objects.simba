@@ -20,7 +20,9 @@ type
     Finder: TRSObjectFinder;
 
     {%codetools off}
+    //hidden so you don't touch.
     Walker: PRSWalkerV2;
+    Index: Int32;
     {%codetools on}
 
     Filter: record
@@ -36,7 +38,52 @@ type
     RedClicked: Boolean;
   end;
 
-function TRSMapObject.MapToMM(me: TPoint = [0,0]; angle: Single = $FFFF): TPointArray;
+function TRSMapObject.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSMapObject; static;
+var
+  i, x, y, z: Int32;
+begin
+  Result.ID := json.getInt('id');
+  Result.Name := json.getString('name');
+  Result.ObjType := json.getInt('type');
+  Result.Category := json.getInt('category');
+
+  with json.getJSONArray('actions') do
+    for i := 0 to High() do
+      if getString(i) <> 'null' then
+        Result.Actions += getString(i);
+
+  with json.getJSONArray('coordinates') do
+    for i := 0 to High() do
+      with getJSONArray(i) do
+        Result.Coordinates += [getInt(0), getInt(1)];
+
+  with json.getJSONArray('size') do
+  begin
+    x := getInt(0);
+    y := getInt(1);
+    if High() > 1 then
+      z := getInt(3)
+    else
+      z := 0;
+  end;
+
+  Result.Walker := pwalker;
+
+  with json.getJSONArray('rotations') do
+  begin
+    if x = y then
+    begin
+      for i := 0 to High() do
+        Result.Shapes += [[x, y, z], 0];
+      Exit;
+    end;
+
+    for i := 0 to High() do
+      Result.Shapes += [[x, y, z], (90*getInt(i) * PI)/180];
+  end;
+end;
+
+function TRSMapObject.MapToMM(me: TPoint = [0,0]; angle: Single = $FFFF): TPointArray; constref;
 var
   coordinates: TPointArray;
 begin
@@ -52,7 +99,7 @@ begin
   Result := Self.Walker^.Points2MM(me, coordinates, angle);
 end;
 
-function TRSMapObject.MapToMS(me: TPoint = [0,0]; angle: Single = $FFFF): TPointArray;
+function TRSMapObject.MapToMS(me: TPoint = [0,0]; angle: Single = $FFFF): TPointArray; constref;
 var
   coordinates: TPointArray;
 begin
@@ -70,14 +117,14 @@ begin
   Result := Minimap.PointsToMS(coordinates, angle);
 end;
 
-function TRSMapObject.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray;
+function TRSMapObject.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref;
 var
   mmPoints: TPointArray;
 begin
   if angle = $FFFF then
     angle := Minimap.GetCompassAngle(False);
   mmPoints := Self.MapToMM(me, angle);
-  Result := Minimap.GetCuboidArrayMS(coordinates, Self.Shapes, [0, 0], angle);
+  Result := Minimap.GetCuboidArrayMS(mmPoints, Self.Shapes, [0,0], angle);
 end;
 
 (*
@@ -148,51 +195,6 @@ begin
       Exit(True);
 end;
 
-
-function TRSMapObject.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSMapObject; static;
-var
-  i, x, y, z: Int32;
-begin
-  Result.ID := json.getInt('id');
-  Result.Name := json.getString('name');
-  Result.ObjType := json.getInt('type');
-  Result.Category := json.getInt('category');
-
-  with json.getJSONArray('actions') do
-    for i := 0 to High() do
-      if getString(i) <> 'null' then
-        Result.Actions += getString(i);
-
-  with json.getJSONArray('coordinates') do
-    for i := 0 to High() do
-      with getJSONArray(i) do
-        Result.Coordinates += [getInt(0), getInt(1)];
-
-  with json.getJSONArray('size') do
-  begin
-    x := getInt(0);
-    y := getInt(1);
-    if High() > 1 then
-      z := getInt(3)
-    else
-      z := 0;
-  end;
-
-  Result.Walker := pwalker;
-
-  with json.getJSONArray('rotations') do
-  begin
-    if x = y then
-    begin
-      for i := 0 to High() do
-        Result.Shapes += [[x, y, z], 0];
-      Exit;
-    end;
-
-    for i := 0 to High() do
-      Result.Shapes += [[x, y, z], (90*getInt(i) * PI)/180];
-  end;
-end;
 
 type
   TRSMapObjectArray = array of TRSMapObject;
@@ -292,6 +294,7 @@ begin
       if Self.Data.getJSONObject(i).getInt('id') = obj then
       begin
         Result := TRSMapObject.Setup(Self.Walker, Self.Data.getJSONObject(i));
+        Result.Index := Length(Self.Cache);
         Self.Cache += Result;
         Exit;
       end;
@@ -306,6 +309,7 @@ begin
       if Self.Data.getJSONObject(i).getInt('id') = obj then
       begin
         Result := TRSMapObject.Setup(Self.Walker, Self.Data.getJSONObject(i));
+        Result.Index := Length(Self.Cache);
         Self.Cache += Result;
         Exit;
       end;
@@ -316,7 +320,10 @@ begin
     if LowerCase(Self.Data.getJSONObject(i).getString('name')) = str then
     begin
       Result := TRSMapObject.Setup(Self.Walker, Self.Data.getJSONObject(i));
-      Self.Cache += Result;
+        Result.Index := Length(Self.Cache);
+        Self.Cache += Result;
       Exit;
     end;
+
+  TerminateScript('Object: ' + ToStr(obj) + ' doesn''t exist.');
 end;
