@@ -16,7 +16,8 @@ type
     Category: Int32;
     Actions: TStringArray;
     Coordinates: TPointArray;
-    Shapes: TRSMainScreenShapeArray;
+    Size: Vector3;
+    Rotations: TSingleArray;
     Finder: TRSObjectFinder;
 
     {%codetools off}
@@ -26,10 +27,10 @@ type
     {%codetools on}
 
     Filter: record
-      Walker:     Boolean;
-      MinimapDot: Boolean;
-      Finder:     Boolean;
-      UpText:     Boolean;
+      Map:     Boolean;
+      Minimap: Boolean;
+      Finder:  Boolean;
+      UpText:  Boolean;
     end;
 
   class var
@@ -40,8 +41,12 @@ type
 
 function TRSMapObject.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSMapObject; static;
 var
-  i, x, y, z: Int32;
+  i: Int32;
+  x, y: Single;
 begin
+  Result.Walker := pwalker;
+  Result.Filter := [True, True, True, True];
+
   Result.ID := json.getInt('id');
   Result.Name := json.getString('name');
   Result.ObjType := json.getInt('type');
@@ -52,35 +57,30 @@ begin
       if getString(i) <> 'null' then
         Result.Actions += getString(i);
 
+  with json.getJSONArray('size') do
+  begin
+    x := getInt(0) * 0.8;
+    y := getInt(1) * 0.8;
+    Result.Size := [x, y, getInt(2) / 40];
+  end;
+
+  if x <> y then
+  begin
+    with json.getJSONArray('coordinates') do
+      for i := 0 to High() do
+      begin
+        with getJSONArray(i) do
+          Result.Coordinates += [getInt(0), getInt(1)];
+        Result.Rotations += (90*json.getJSONArray('rotations').getInt(i) * PI)/180;
+      end;
+    Exit;
+  end;
+
   with json.getJSONArray('coordinates') do
     for i := 0 to High() do
       with getJSONArray(i) do
         Result.Coordinates += [getInt(0), getInt(1)];
-
-  with json.getJSONArray('size') do
-  begin
-    x := getInt(0);
-    y := getInt(1);
-    if High() > 1 then
-      z := getInt(3)
-    else
-      z := 0;
-  end;
-
-  Result.Walker := pwalker;
-
-  with json.getJSONArray('rotations') do
-  begin
-    if x = y then
-    begin
-      for i := 0 to High() do
-        Result.Shapes += [[x, y, z], 0];
-      Exit;
-    end;
-
-    for i := 0 to High() do
-      Result.Shapes += [[x, y, z], (90*getInt(i) * PI)/180];
-  end;
+  SetLength(Result.Rotations, Length(Result.Coordinates));
 end;
 
 function TRSMapObject.MapToMM(me: TPoint = [0,0]; angle: Single = $FFFF): TPointArray; constref;
@@ -124,7 +124,7 @@ begin
   if angle = $FFFF then
     angle := Minimap.GetCompassAngle(False);
   mmPoints := Self.MapToMM(me, angle);
-  Result := Minimap.GetCuboidArrayMS(mmPoints, Self.Shapes, [0,0], angle);
+  Result := Minimap.GetCuboidArrayMS(mmPoints, Self.Size, [0,0], angle);
 end;
 
 (*
@@ -136,22 +136,18 @@ Internal TRSMapObject method responsible for filtering a TCuboidArray by what's 
 This is meant to filter TRSMapObject.GetCuboidArray() so targets that are outside of the mainscreen are filtered out.
 You will probably never need to use this directly.
 *)
-function TRSMapObject.Find(cuboidArray: TCuboidExArray): T2DPointArray;
+function TRSMapObject.FindOnMainScreen(cuboidArray: TCuboidExArray): T2DPointArray;
 var
   i: Int32;
   tpa: TPointArray;
-  tmpFinder: TRSObjectFinder;
 begin
-  //if Self.Filter.Finder then
-  //  tmpFinder := Self.Finder.Unlimited();
-
   cuboidArray := MainScreen.Filter(cuboidArray);
 
   for i := 0 to High(cuboidArray) do
   begin
     if Self.Filter.Finder then
     begin
-      tpa := MainScreen.FindObject(tmpFinder, cuboidArray[i].Bounds()).Merge();
+      tpa := MainScreen.FindObject(Self.Finder, cuboidArray[i].Bounds()).Merge();
       if tpa = [] then
         Continue;
 
@@ -173,32 +169,133 @@ end;
 ```pascal
 function TRSMapObject.Visible(cuboidArray: TCuboidArray): Boolean;
 ```
-
 Internal TRSMapObject method that returns true or false if we have TCuboids visible on the mainscreen.
 You probably don't need to use this directly.
 *)
-function TRSMapObject.Visible(cuboidArray: TCuboidExArray): Boolean;
+function TRSMapObject.OnMainScreen(cuboidArray: TCuboidExArray): Boolean;
 var
   i: Int32;
-  tempFinder: TRSObjectFinder;
 begin
-  //if Self.Filter.Finder then
-  //  tempFinder := Self.Finder.Unlimited();
-
   cuboidArray := MainScreen.Filter(cuboidArray);
 
   if not Self.Filter.Finder then
     Exit(cuboidArray <> []);
 
   for i := 0 to High(cuboidArray) do
-    if MainScreen.FindObject(tempFinder, cuboidArray[i].Bounds()) <> [] then
+    if MainScreen.FindObject(Self.Finder, cuboidArray[i].Bounds()) <> [] then
       Exit(True);
+end;
+
+
+(*
+## TRSMapObject.Find
+```pascal
+function TRSMapObject.FindEx(out cuboids: TCuboidArray; out atpa: T2DPointArray): Boolean;
+function TRSMapObject.Find(out atpa: T2DPointArray): Boolean;
+```
+TRSMapObject method used to find a {ref}`TRSMapObject`. If found returns true, if not returns false.
+The "extended" method in particular is mostly meant for debugging and is the one used when you call `Debug(TRSObject)`.
+
+Example:
+```pascal
+WriteLn RSObjects.GEBank.Find(atpa); //Be in ge and with a walker setup there.
+Debug(atpa);
+```
+*)
+function TRSMapObject.FindEx(out cuboids: TCuboidExArray; out atpa: T2DPointArray): Boolean;
+begin
+  if Self.Filter.Map then
+  begin
+    cuboids := Self.GetCuboidArray();
+    if cuboids = [] then
+      Exit;
+
+    atpa := Self.FindOnMainScreen(cuboids);
+  end
+  else if Self.Filter.Finder then
+    atpa := MainScreen.FindObject(Self.Finder).SortFrom(MainScreen.GetPlayerBox().Center());
+
+  Result := atpa <> [];
+end;
+
+function TRSMapObject.Find(out atpa: T2DPointArray): Boolean;
+var
+  cuboids: TCuboidExArray;
+begin
+  Result := Self.FindEx(cuboids, atpa);
+end;
+
+(*
+## TRSMapObject.IsVisible
+```pascal
+function TRSMapObject.IsVisible(): Boolean;
+```
+TRSMapObject method used to find a {ref}`TRSMapObject`. If found returns true, if not returns false.
+
+Example:
+```pascal
+WriteLn RSObjects.GEBank.IsVisible(); //Be in ge and with a walker setup there.
+```
+*)
+function TRSMapObject.IsVisible(): Boolean;
+var
+  cuboids: TCuboidExArray;
+begin
+  if Self.Filter.Map then
+  begin
+    cuboids := Self.GetCuboidArray();
+
+    if cuboids = [] then
+      Exit;
+
+    Exit(Self.OnMainScreen(cuboids));
+  end;
+
+  if Self.Filter.Finder then
+    Result := MainScreen.FindObject(Self.Finder) <> [];
+end;
+
+
+
+procedure TRSMapObject.Draw(out bitmap: TMufasaBitmap);
+var
+  me: TPoint;
+  angle: Single;
+  mmPoints: TPointArray;
+  cuboids: TCuboidExArray;
+  atpa: T2DPointArray;
+begin
+  me := Self.Walker^.Position();
+  angle := Minimap.GetCompassAngle(False);
+
+  mmPoints := Self.MapToMM(me, angle);
+  cuboids := Minimap.GetCuboidArrayMS(mmPoints, Self.Size, [-1,-1], angle);
+
+  bitmap.DrawTPA(mmPoints, $FF);
+
+  Self.FindEx(cuboids, atpa);
+
+  bitmap.DrawATPA(atpa);
+  if atpa <> [] then
+    bitmap.DrawTPA(atpa[0], $0);
+
+  bitmap.DrawCuboidArray(cuboids, $00FFFF);
+end;
+
+
+procedure Debug(obj: TRSMapObject); overload;
+var
+  bitmap: TMufasaBitmap;
+begin
+  bitmap.FromClient();
+  obj.Draw(bitmap);
+  bitmap.Debug();
+  bitmap.Free();
 end;
 
 
 type
   TRSMapObjectArray = array of TRSMapObject;
-
 
 function TRSMapObjectArray.FindAnyID(id: Int32): Int32;
 begin
@@ -212,7 +309,7 @@ function TRSMapObjectArray.FindAnyName(name: String): Int32;
 begin
   name := LowerCase(name);
   for Result := 0 to High(Self) do
-    if Self[Result].Name = name then
+    if LowerCase(Self[Result].Name) = name then
       Exit;
   Result := -1;
 end;
@@ -298,7 +395,8 @@ begin
         Self.Cache += Result;
         Exit;
       end;
-    Exit;
+
+    TerminateScript('Object with ID ' + ToStr(obj) + ' doesn''t exist on the loaded maps.');
   end;
 
   str := LowerCase(obj);
@@ -313,17 +411,34 @@ begin
         Self.Cache += Result;
         Exit;
       end;
-    Exit;
+
+    TerminateScript('Object with ID ' + ToStr(obj) + ' doesn''t exist on the loaded maps.');
   end;
 
   for i := 0 to  Self.Data.High() do
     if LowerCase(Self.Data.getJSONObject(i).getString('name')) = str then
     begin
       Result := TRSMapObject.Setup(Self.Walker, Self.Data.getJSONObject(i));
-        Result.Index := Length(Self.Cache);
-        Self.Cache += Result;
+      Result.Index := Length(Self.Cache);
+      Self.Cache += Result;
       Exit;
     end;
 
-  TerminateScript('Object: ' + ToStr(obj) + ' doesn''t exist.');
+  TerminateScript('Object ' + ToStr(obj) + ' doesn''t exist on the loaded maps.');
+end;
+
+function TRSMapObjects.Add(obj: TRSMapObject): TRSMapObject;
+begin
+  Result := obj;
+  Result.Index := Length(Self.Cache);
+  Self.Cache += Result;
+end;
+
+function TRSMapObjects.SetFinder(obj: Variant; finder: TRSObjectFinder): TRSMapObject;
+begin
+  Result := Self.Get(obj);
+  Result.Finder := finder;
+
+  Self.Cache[Result.Index].Finder := finder;
+  WriteLn Self.Cache[Result.Index];
 end;

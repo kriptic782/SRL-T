@@ -16,6 +16,8 @@ const
   RSMAP_PATH: String = {$MACRO CURRENT_DIRECTORY};
   TILE_SIZE:  UInt32 = 4;
   CHUNK_SIZE: UInt32 = 64;
+var
+  GENERATED_GRAPH_DETAIL = 5; //low = better and slower, high = worse and faster
 
 type
   ERSMapType = (NORMAL, HEIGHT, COLLISION);
@@ -264,7 +266,7 @@ begin
 
     skeleton := atpa[i].Erode(1).Skeleton(2, 7);
 
-    RAaSTPA(skeleton, 5);
+    RAaSTPA(skeleton, GENERATED_GRAPH_DETAIL);
 
     for p in skeleton do
       if not matrix[p.Y, p.X] then

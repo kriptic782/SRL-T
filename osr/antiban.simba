@@ -152,24 +152,25 @@ begin
   Self.Breaks += Task;
 end;
 
-procedure TAntiban.TakeSleep(var Task: TSleepTask);
+procedure TAntiban.TakeSleep(var task: TSleepTask);
 var
-  Countdown: TCountDown;
-  I: Int32;
-  ActiveTasks: PAntibanTaskArray;
+  countdown: TCountDown;
+  i: Int32;
+  activeTasks: PAntibanTaskArray;
+  marker: UInt64;
 begin
-  ActiveTasks := Self.GetActiveTasks();
-  for I := 0 to High(ActiveTasks) do
-    ActiveTasks[I]^.Countdown.Pause();
+  activeTasks := Self.GetActiveTasks();
+  for i := 0 to High(activeTasks) do
+    activeTasks[i]^.countdown.Pause();
 
-  Countdown.Init(Abs(Round(SRL.GaussRand(Task.Length, Task.Length * Task.StdVar))));
+  countdown.Init(Abs(Round(SRL.GaussRand(task.Length, task.Length * task.StdVar))));
 
-  Self.DebugLn('Sleeping for ' + SRL.MsToTime(Countdown.TimeRemaining(), TIME_FORMAL));
+  Self.DebugLn('Sleeping for ' + SRL.MsToTime(countdown.TimeRemaining(), TIME_FORMAL));
 
   if (@Self.OnStartSleep <> nil) then
-    Self.OnStartSleep(@Task);
+    Self.OnStartSleep(@task);
 
-  if Random() < Task.LogoutChance then
+  if Random() < task.LogoutChance then
   begin
     Self.DebugLn('Logging out');
 
@@ -179,71 +180,71 @@ begin
   if Random() < 0.50 then
     Self.LoseFocus();
 
-  while not Countdown.IsFinished() do
+  while not countdown.IsFinished() do
   begin
-    Self.DebugLn('Sleep time remaining: ' + SRL.MsToTime(Countdown.TimeRemaining(), TIME_FORMAL));
+    Self.DebugLn('Sleep time remaining: ' + SRL.MsToTime(countdown.TimeRemaining(), TIME_FORMAL));
 
-    if (@Self.OnSleeping <> nil) then
-      Self.OnSleeping(@Task, Countdown);
+    if GetTickCount() > marker  then
+    begin
+      //OnSleeping callback only runs every 5 mins.
+      if (@Self.OnSleeping <> nil) then
+        Self.OnSleeping(@task, countdown);
+      marker := GetTickCount() + 5 * ONE_MINUTE;
+    end;
 
-    Wait(Min(Countdown.TimeRemaining(), 60000 * 5));
+    Wait(Min(countdown.TimeRemaining(), 5 * ONE_SECOND));
   end;
 
   Self.DebugLn('Sleep finished');
 
   if (@Self.OnFinishSleep <> nil) then
-    Self.OnFinishSleep(@Task);
+    Self.OnFinishSleep(@task);
 
-    {
-  if InRange(CurrentPlayer, Low(Players), High(Players)) then
-    Players[CurrentPlayer].Login();
-}
   // Offset all tasks & breaks
-  for I := 0 to High(Self.Breaks) do
-    Self.Breaks[I].NextAtTime += GetTickCount() - (Countdown.Timeout - Countdown.Length);
+  for i := 0 to High(Self.Breaks) do
+    Self.Breaks[i].NextAtTime += GetTickCount() - (countdown.Timeout - countdown.Length);
 
-  for I := 0 to High(ActiveTasks) do
-    ActiveTasks[I]^.Countdown.Resume();
+  for i := 0 to High(activeTasks) do
+    activeTasks[i]^.countdown.Resume();
 
   // Setup next time this break happens
-  Task.NextAtTime := Self.TimeRunningAtClock(Task.Time, Task.StdVar);
+  task.NextAtTime := Self.TimeRunningAtClock(task.Time, task.StdVar);
 end;
 
-procedure TAntiban.TakeBreak(var Task: TBreakTask);
+procedure TAntiban.TakeBreak(var task: TBreakTask);
 var
-  Countdown: TCountDown;
-  I: Int32;
-  ActiveTasks: PAntibanTaskArray;
+  countdown: TCountDown;
+  i: Int32;
+  activeTasks: PAntibanTaskArray;
 begin
-  ActiveTasks := Self.GetActiveTasks();
-  for I := 0 to High(ActiveTasks) do
-    ActiveTasks[I]^.Countdown.Pause();
+  activeTasks := Self.GetActiveTasks();
+  for i := 0 to High(activeTasks) do
+    activeTasks[i]^.countdown.Pause();
 
-  Countdown.Init(Abs(Round(SRL.GaussRand(Task.Length, Task.Length * Task.StdVar))));
+  countdown.Init(Abs(Round(SRL.GaussRand(task.Length, task.Length * task.StdVar))));
 
-  Self.DebugLn('Taking a break for ' + SRL.MsToTime(Countdown.TimeRemaining(), TIME_FORMAL));
+  Self.DebugLn('Taking a break for ' + SRL.MsToTime(countdown.TimeRemaining(), TIME_FORMAL));
 
   if (@Self.OnStartBreak <> nil) then
-    Self.OnStartBreak(@Task);
+    Self.OnStartBreak(@task);
 
-  if Random() < Task.LogoutChance then
+  if Random() < task.LogoutChance then
   begin
     Self.DebugLn('Logging out');
-
     Logout.ClickLogout();
   end;
 
   if Random() < 0.50 then
     Self.LoseFocus();
 
-  I := 0;
-  while not Countdown.IsFinished() do
+  i := 0;
+  while not countdown.IsFinished() do
   begin
-    if (Inc(I) mod 12 = 0) then
-      Self.DebugLn('Break time remaining: ' + ToString(CountDown.TimeRemaining() div 60000) + ' minutes');
+    if (Inc(i) mod 12 = 0) then
+      Self.DebugLn('Break time remaining: ' + ToString(countdown.TimeRemaining() div 60000) + ' minutes');
 
     if (@Self.OnBreaking <> nil) then
-      Self.OnBreaking(@Task, Countdown);
+      Self.OnBreaking(@task, countdown);
 
     Wait(5000);
   end;
@@ -251,20 +252,17 @@ begin
   Self.DebugLn('Break finished');
 
   if (@Self.OnFinishBreak <> nil) then
-    Self.OnFinishBreak(@Task);
-
- // if InRange(CurrentPlayer, Low(Players), High(Players)) then
- //   Players[CurrentPlayer].Login();
+    Self.OnFinishBreak(@task);
 
   // Offset all tasks & breaks
-  for I := 0 to High(Self.Breaks) do
-    Self.Breaks[I].NextAtTime += GetTickCount() - (Countdown.Timeout - Countdown.Length);
+  for i := 0 to High(Self.Breaks) do
+    Self.Breaks[i].NextAtTime += GetTickCount() - (countdown.Timeout - countdown.Length);
 
-  for I := 0 to High(ActiveTasks) do
-    ActiveTasks[I]^.Countdown.Resume();
+  for I := 0 to High(activeTasks) do
+    activeTasks[i]^.countdown.Resume();
 
   // Setup next time this break happens
-  Task.NextAtTime := GetTimeRunning() + Abs(SRL.GaussRand(Task.Interval, Task.Interval * Task.StdVar));
+  task.NextAtTime := GetTimeRunning() + Abs(SRL.GaussRand(task.Interval, task.Interval * task.StdVar));
 end;
 
 (*
