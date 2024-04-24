@@ -1,3 +1,12 @@
+## [4.8.10](https://github.com/Torwent/SRL-T/compare/v4.8.9...v4.8.10) (2024-04-24)
+
+
+### Bug Fixes
+
+* read notes ([8924d89](https://github.com/Torwent/SRL-T/commit/8924d8913b7d3c56e76d29557663961a9900c57b))
+
+
+
 ## [4.8.9](https://github.com/Torwent/SRL-T/compare/v4.8.8...v4.8.9) (2024-04-23)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMapObjects:** more methods for the map objects ([f754db6](https://github.com/Torwent/SRL-T/commit/f754db621f8f3ffdb90543d8a52bbc95162070ca))
-
-
-
-## [4.8.5](https://github.com/Torwent/SRL-T/compare/v4.8.4...v4.8.5) (2024-04-19)
-
-
-### Bug Fixes
-
-* **XPBar:** restore old WL functionality that got lost ([21cd768](https://github.com/Torwent/SRL-T/commit/21cd76845ac6ad1130fac83bef14407cd73916f8))
 
 
 
