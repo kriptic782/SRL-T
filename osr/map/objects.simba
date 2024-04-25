@@ -20,14 +20,13 @@ type
     Rotations: TSingleArray;
     Finder: TRSObjectFinder;
 
-    {%codetools off}
-    //hidden so you don't touch.
+    {%codetools off} //hidden internal properties
     Walker: PRSWalkerV2;
     Index: Int32;
     {%codetools on}
 
     Filter: record
-      Map:     Boolean;
+      Walker:  Boolean;
       Minimap: Boolean;
       Finder:  Boolean;
       UpText:  Boolean;
@@ -37,6 +36,7 @@ type
     CurrentUpText: TStringArray;
     CurrentActionUpText: TStringArray;
     RedClicked: Boolean;
+    TrackTarget: Boolean;
   end;
 
 function TRSMapObject.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSMapObject; static;
@@ -96,7 +96,7 @@ begin
   if angle = $FFFF then
     angle := Minimap.GetCompassAngle(False);
 
-  Result := Self.Walker^.Points2MM(me, coordinates, angle);
+  Result := Self.Walker^.PointsToMM(me, coordinates, angle);
 end;
 
 function TRSMapObject.MapToMS(me: TPoint = [0,0]; angle: Single = $FFFF): TPointArray; constref;
@@ -112,7 +112,7 @@ begin
   if angle = $FFFF then
     angle := Minimap.GetCompassAngle(False);
 
-  coordinates := Self.Walker^.Points2MM(me, coordinates, angle);
+  coordinates := Self.Walker^.PointsToMM(me, coordinates, angle);
 
   Result := Minimap.PointsToMS(coordinates, angle);
 end;
@@ -186,6 +186,152 @@ begin
       Exit(True);
 end;
 
+{%codetools off} //hidden internal methods
+(*
+## TRSMapObject._UpTextCheck
+```pascal
+function TRSMapObject._UpTextCheck(out shouldExit: Boolean): Boolean;
+```
+Internal TRSMapObject helper method that is used by all hovering methods.
+You probably don't need to use this directly.
+*)
+function TRSMapObject._UpTextCheck(out shouldExit: Boolean): Boolean;
+var
+  strArray: TStringArray;
+  upText: String;
+begin
+  shouldExit := True;
+
+  if Self.Filter.UpText then
+  begin
+    strArray += Self.Name;
+
+    if TRSMapObject.CurrentUpText <> strArray then
+      TRSMapObject.CurrentUpText := strArray;
+  end;
+
+  upText := MainScreen.GetUpText();
+
+  if ('>' in upText) and not TRSMapObject.CurrentUpText.Contains('Use') then
+  begin
+    ChooseOption.Select('Cancel');
+    Exit;
+  end;
+
+  if Self.Filter.UpText and (Self.Name in upText) then
+    Exit(True);
+
+  shouldExit := False;
+end;
+
+(*
+## TRSMapObject._WalkUpTextCheck
+```pascal
+function TRSMapObject._WalkUpTextCheck(out shouldExit: Boolean): Boolean;
+```
+Internal TRSMapObject helper method that is used by all walking hover methods.
+You probably don't need to use this directly.
+*)
+function TRSMapObject._WalkUpTextCheck(out shouldExit: Boolean): Boolean;
+var
+  upText: String;
+  strArray: TStringArray;
+begin
+  shouldExit := True;
+
+  if Self.Filter.UpText then
+  begin
+    strArray += Self.Name;
+
+    if TRSMapObject.CurrentUpText <> strArray then
+      TRSMapObject.CurrentUpText := strArray;
+  end;
+
+  upText := MainScreen.GetUpText();
+
+  if ('>' in upText) and not TRSMapObject.CurrentUpText.Contains('Use') then
+  begin
+    ChooseOption.Select('Cancel');
+    Exit;
+  end;
+
+  if TRSMapObject.RedClicked or (Self.Filter.UpText and (Self.Name in upText)) then
+    Exit(True);
+
+  shouldExit := False;
+end;
+
+(*
+## TRSMapObject._ClickHelper
+```pascal
+function TRSMapObject._ClickHelper(leftClick: Boolean): Boolean;
+```
+Internal TRSMapObject helper method that is used by other clicking methods.
+You probably don't need to use this directly.
+
+This is what's responsible for deciding if we click a target we are hovering or not.
+*)
+function TRSMapObject._ClickHelper(leftClick: Boolean): Boolean;
+begin
+  TRSMapObject.CurrentUpText := [];
+  TRSMapObject.CurrentActionUpText := [];
+
+  if TRSMapObject.RedClicked then
+  begin
+    TRSMapObject.RedClicked := False;
+    Exit(True);
+  end;
+
+  if ChooseOption.IsOpen() then
+  begin
+    if Self.Filter.UpText and ChooseOption.Select(Self.Name) then
+      Exit(True);
+    ChooseOption.Close();
+    Exit;
+  end;
+
+  if leftClick then
+    Mouse.Click(MOUSE_LEFT);
+
+  if MainScreen.DidRedClick() then
+    Exit(True);
+
+  Result := not leftClick and Self.Filter.UpText and ChooseOption.Select(Self.Name);
+end;
+
+(*
+## TRSMapObject._SelectHelper
+```pascal
+function TRSMapObject._SelectHelper(action: TStringArray): Boolean;
+```
+Internal TRSMapObject helper method that is used by other select methods.
+You probably don't need to use this directly.
+
+This is what is responsible for deciding if we just left click a target we are hovering or right click it and choose an option.
+*)
+function TRSMapObject._SelectHelper(action: TStringArray): Boolean;
+begin
+  TRSMapObject.CurrentUpText := [];
+  TRSMapObject.CurrentActionUpText := [];
+
+  if TRSMapObject.RedClicked then
+  begin
+    TRSMapObject.RedClicked := False;
+    Exit(True);
+  end;
+
+  if ChooseOption.IsOpen() and ChooseOption.Select(action) then
+    Exit(True);
+
+  if MainScreen.IsUpText(action) then
+  begin
+    Mouse.Click(MOUSE_LEFT);
+    Exit(MainScreen.DidRedClick());
+  end;
+
+  Result := ChooseOption.Select(action);
+end;
+{%codetools on}
 
 (*
 ## TRSMapObject.Find
@@ -194,7 +340,7 @@ function TRSMapObject.FindEx(out cuboids: TCuboidArray; out atpa: T2DPointArray)
 function TRSMapObject.Find(out atpa: T2DPointArray): Boolean;
 ```
 TRSMapObject method used to find a {ref}`TRSMapObject`. If found returns true, if not returns false.
-The "extended" method in particular is mostly meant for debugging and is the one used when you call `Debug(TRSObject)`.
+The "extended" method in particular is mostly meant for debugging and is the one used when you call `Debug(TRSMapObject)`.
 
 Example:
 ```pascal
@@ -204,7 +350,7 @@ Debug(atpa);
 *)
 function TRSMapObject.FindEx(out cuboids: TCuboidExArray; out atpa: T2DPointArray): Boolean;
 begin
-  if Self.Filter.Map then
+  if Self.Filter.Walker then
   begin
     cuboids := Self.GetCuboidArray();
     if cuboids = [] then
@@ -241,7 +387,7 @@ function TRSMapObject.IsVisible(): Boolean;
 var
   cuboids: TCuboidExArray;
 begin
-  if Self.Filter.Map then
+  if Self.Filter.Walker then
   begin
     cuboids := Self.GetCuboidArray();
 
@@ -255,6 +401,27 @@ begin
     Result := MainScreen.FindObject(Self.Finder) <> [];
 end;
 
+(*
+## TRSMapObject.FindFromPosition
+```pascal
+function TRSMapObject.FindFromPosition(me: TPoint; out atpa: T2DPointArray): Boolean;
+```
+Look for a {ref}`TRSMapObject` as if you were on a different position. Great for things like pre-hovering.
+*)
+function TRSMapObject.FindFromPosition(me: TPoint; out atpa: T2DPointArray): Boolean;
+var
+  cuboidArray: TCuboidExArray;
+begin
+  if not Self.Filter.Walker then
+    Exit;
+
+  cuboidArray := Self.GetCuboidArray(me);
+  if cuboidArray = [] then
+    Exit;
+
+  atpa := Self.FindOnMainScreen(cuboidArray);
+  Result := atpa <> [];
+end;
 
 
 procedure TRSMapObject.Draw(out bitmap: TMufasaBitmap);
@@ -282,7 +449,6 @@ begin
   bitmap.DrawCuboidArray(cuboids, $00FFFF);
 end;
 
-
 procedure Debug(obj: TRSMapObject); overload;
 var
   bitmap: TMufasaBitmap;
@@ -292,6 +458,342 @@ begin
   bitmap.Debug();
   bitmap.Free();
 end;
+
+
+(*
+## TRSMapObject._UpdateTarget
+```pascal
+procedure TRSMapObject._UpdateTarget(sender: PMouse; var x, y: Double; var done: Boolean);
+```
+Internal helper method of TMouseMovingEventEx type used to update the target position while the mouse is moving.
+You should probably not touch this if you don't understand it.
+*)
+procedure TRSMapObject._UpdateTarget(sender: PMouse; var x, y: Double; var done: Boolean);
+var
+  i: Int32;
+  atpa: T2DPointArray;
+  p, destination: TPoint;
+begin
+  destination := [Round(x), Round(y)];
+  p := sender^.Position();
+  if p.DistanceTo(destination) > 5 then
+    Exit;
+  sender^.OnMovingEx := nil;
+
+  if Self._UpTextCheck(done) then
+    Exit;
+
+  done := not Self.Find(atpa);
+  if done then
+    Exit;
+
+  for i := 0 to High(atpa) do
+  begin
+    if atpa[i].Contains(destination) then
+      Exit;
+  end;
+
+  p := atpa[0].RandomValue();
+  x := p.X;
+  y := p.Y;
+end;
+
+(*
+## TRSMapObject._HoverHelper
+```pascal
+function TRSMapObject._HoverHelper(attempts: Int32; trackTarget: Boolean): Boolean;
+```
+Internal helper method used to hover a TRSMapObject target.
+You should not use this directly.
+*)
+function TRSMapObject._HoverHelper(attempts: Int32; trackTarget: Boolean): Boolean;
+var
+  shouldExit: Boolean;
+  attempt: Int32;
+  atpa: T2DPointArray;
+  tpa: TPointArray;
+  angle: Double;
+begin
+  Result := Self._UpTextCheck(shouldExit);
+  if shouldExit then
+    Exit;
+
+  for attempt := 0 to attempts do
+  begin
+    if Self.Find(atpa) then
+    begin
+      if attempt < 2 then
+        tpa := atpa[0] // 0 for the closest one.
+      else if Length(atpa) > (attempt - 2) then
+        tpa := atpa[attempt - 2]
+      else
+        tpa := atpa[Random(0, High(atpa))];
+
+      if trackTarget then
+        Mouse.OnMovingEx := @Self._UpdateTarget;
+      Mouse.Move(tpa[Random(0, High(tpa))]);
+
+      if not Self.Filter.UpText then
+        Exit(True);
+    end;
+
+    if MainScreen.IsUpText(Self.Name) then
+      Exit(True);
+
+    //will rotate the screen for the last attempt if hasn't hovered properly yet
+    if attempt = (attempts - 1) then
+    begin
+      angle := Minimap.GetCompassAngle() + Random(-50, 50);
+      Minimap.SetCompassAngle(angle, 10);
+    end;
+  end;
+end;
+
+(*
+## TRSMapObject._WalkHoverHelper
+```pascal
+function TRSMapObject._WalkHoverHelper(attempts: Int32; trackTarget: Boolean): Boolean;
+```
+Internal helper method used to walk and hover a TRSMapObject target.
+You should not use this directly.
+
+This is responsible for deciding wether we should walk to a TRSMapObject target or not before attempting to hover it.
+*)
+function TRSMapObject._WalkHoverHelper(attempts: Int32; trackTarget: Boolean): Boolean;
+var
+  shouldExit: Boolean;
+  attempt: Int32;
+  atpa: T2DPointArray;
+  tpa: TPointArray;
+  angle: Double;
+  me, closest: TPoint;
+begin
+  if not Self.Filter.Walker then
+    Exit(Self._HoverHelper(attempts, trackTarget));
+
+  Result := Self._WalkUpTextCheck(shouldExit);
+  if shouldExit then
+    Exit;
+
+  for attempt := 0 to attempts do
+  begin
+    if Self.Find(atpa) then
+    begin
+      if attempt < 2 then
+        tpa := atpa[0]
+      else if Length(atpa) > (attempt - 2) then
+        tpa := atpa[attempt - 2]
+      else
+        tpa := atpa.RandomValue();
+
+      if trackTarget then
+        Mouse.OnMovingEx := @Self._UpdateTarget;
+      Mouse.Move(tpa.RandomValue());
+
+      if not Self.Filter.UpText then
+        Exit(True);
+    end;
+
+    if MainScreen.IsUpText(Self.Name) then
+      Exit(True);
+
+    me := Self.Walker^.Position();
+    closest := Self.Walker^.GetClosestPointEx(me, Self.Coordinates);
+    if not Self.Walker^.InRangeEx(me, closest, 50) then
+    begin
+      Self.Walker^.WebWalkEx(me, closest, 30, 0.15);
+      Continue;
+    end;
+
+    if attempt = (attempts - 1) then
+    begin
+      if not Self.Walker^.InRangeEx(me, closest, 25) then
+      begin
+        Self.Walker^.WebWalkEx(me, closest, 25, 0.15);
+        Continue;
+      end;
+
+      angle := Minimap.GetCompassAngle() + Random(-50, 50);
+      Minimap.SetCompassAngle(angle, 10);
+    end;
+  end;
+end;
+
+
+(*
+## TRSMapObject.PreHoverHelper
+```pascal
+function TRSMapObject.PreHoverHelper(attempts: Int32): Boolean;
+```
+Internal helper method used to pre-hover a TRSMapObject target.
+You should not use this directly.
+*)
+function TRSMapObject.PreHoverHelper(me: TPoint; attempts: Int32 = 2): Boolean;
+var
+  attempt: Int32;
+  atpa: T2DPointArray;
+  tpa: TPointArray;
+begin
+  for attempt := 0 to attempts do
+  begin
+    if Self.FindFromPosition(me, atpa) then
+    begin
+      tpa := atpa[Random(0, High(atpa))];
+      ASyncMouse.Move(tpa[Random(0, High(tpa))]);
+      Exit(True);
+    end;
+  end;
+end;
+
+(*
+## TRSMapObject.Hover
+```pascal
+function TRSMapObject.Hover(attempts: Int32 = 2; trackTarget: Boolean = TRSMapObject.TrackTarget): Boolean;
+```
+Method used to hover a TRSMapObject target if it's found on the mainscreen.
+It can update the target position while the mouse moves with **trackTarget**.
+
+Example:
+```pascal
+RSW.WebWalk(WaspWeb.LOCATION_VARROCK);
+RSObjects.GEBank.Hover(); //Be in GE with a walker setup there.
+```
+*)
+function TRSMapObject.Hover(attempts: Int32 = 2; trackTarget: Boolean = TRSMapObject.TrackTarget): Boolean;
+begin
+  if ChooseOption.IsOpen() then
+  begin
+    if Self.Filter.UpText and ChooseOption.HasOption(Self.Name) then
+      Exit(True);
+    ChooseOption.Close();
+  end;
+
+  if Self.Filter.Walker and not Self.Walker^.MakePointVisible(Self.Coordinates) then
+    Exit;
+
+  Result := Self._HoverHelper(attempts, trackTarget);
+end;
+
+(*
+## TRSMapObject.WalkHover
+```pascal
+function TRSMapObject.WalkHover(attempts: Int32 = 2; trackTarget: Boolean = TRSMapObject.TrackTarget): Boolean;
+```
+Method used to walk and hover a TRSMapObject target if it's found on the mainscreen after walking.
+It can update the target position while the mouse moves with **trackTarget**.
+
+Example:
+```pascal
+//Be in varrock with a varrock map loaded.
+RSW.WebWalk(WaspWeb.LOCATION_VARROCK);
+RSObjects.GEBank.WalkHover();
+```
+*)
+function TRSMapObject.WalkHover(attempts: Int32 = 2; trackTarget: Boolean = TRSMapObject.TrackTarget): Boolean;
+var
+  p: TPoint;
+begin
+  if ChooseOption.IsOpen() then
+  begin
+    if Self.Filter.UpText and ChooseOption.HasOption(Self.Name) then
+      Exit(True);
+    ChooseOption.Close();
+  end;
+
+  if not Self.Filter.Walker then
+    Exit;
+
+  if Self.Filter.UpText then
+    TRSMapObject.CurrentUpText += Self.Name;
+
+  p := Self.Walker^.GetClosestPoint(Self.Coordinates);
+  if not Self.Walker^.MakePointVisible(p) and
+     not Self.Walker^.WebWalk(p, 30, 0.15) then
+      Exit;
+
+  Result := Self._WalkHoverHelper(attempts, trackTarget);
+end;
+
+
+(*
+## TRSMapObject.Click
+```pascal
+function TRSMapObject.Click(leftClick: Boolean = True; attempts: Int32 = 2): Boolean;
+```
+Method used to click a TRSMapObject target if it's found on the mainscreen.
+
+Example:
+```pascal
+//Be in ge with a ge map loaded.
+WriteLn RSObjects.GEBank.Click();
+```
+*)
+function TRSMapObject.Click(leftClick: Boolean = True; attempts: Int32 = 2): Boolean;
+begin
+  Result := Self.Hover(attempts) and Self._ClickHelper(leftClick);
+end;
+
+
+(*
+## TRSMapObject.SelectOption
+```pascal
+function TRSMapObject.SelectOption(action: TStringArray; attempts: Int32 = 2): Boolean;
+```
+Method used to select an option on a TRSMapObject target if it's found on the mainscreen.
+
+Example:
+```pascal
+//Be in ge with a ge map loaded.
+WriteLn RSObjects.GEBank.SelectOption(['Collect']);
+```
+*)
+function TRSMapObject.SelectOption(action: TStringArray; attempts: Int32 = 2): Boolean;
+begin
+  Self.CurrentActionUpText := action;
+  Result := Self.Hover(attempts) and Self._SelectHelper(action);
+  Self.CurrentActionUpText := [];
+end;
+
+
+(*
+## TRSMapObject.WalkClick
+```pascal
+function TRSMapObject.WalkClick(leftClick: Boolean = True; attempts: Int32 = 2): Boolean;
+```
+Method used to walk and click a TRSMapObject target if it's found on the mainscreen.
+
+Example:
+```pascal
+//Be in ge with a ge map loaded, preferably far away so it has to walk.
+WriteLn RSObjects.GEBank.WalkClick();
+```
+*)
+function TRSMapObject.WalkClick(leftClick: Boolean = True; attempts: Int32 = 2): Boolean;
+begin
+  Result := Self.WalkHover(attempts) and Self._ClickHelper(leftClick);
+end;
+
+(*
+## TRSMapObject.WalkSelectOption
+```pascal
+function TRSMapObject.WalkSelectOption(action: TStringArray; attempts: Int32 = 2): Boolean;
+```
+Method used to walk and select an option on a TRSMapObject target if it's found on the mainscreen.
+
+Example:
+```pascal
+//Be in ge with a ge map loaded, preferably far away so it has to walk.
+WriteLn RSObjects.GEBank.WalkSelectOption(['Collect']);
+```
+*)
+function TRSMapObject.WalkSelectOption(action: TStringArray; attempts: Int32 = 2): Boolean;
+begin
+  Self.CurrentActionUpText := action;
+  Result := Self.WalkHover(attempts) and Self._SelectHelper(action);
+  Self.CurrentActionUpText := [];
+end;
+
+
 
 
 type

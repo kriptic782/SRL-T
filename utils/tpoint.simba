@@ -82,6 +82,44 @@ begin
   end;
 end;
 
+
+function TPoint.EnsureRange(x1, y1, x2, y2: Int32): TPoint;
+begin
+  Result.X := System.EnsureRange(Self.X, Min(x1, x2), Max(x1, x2));
+  Result.Y := System.EnsureRange(Self.Y, Min(y1, y2), Max(y1, y2));
+end;
+
+function TPoint.EnsureRange(box: TBox): TPoint; overload;
+begin
+  Result := Self.EnsureRange(box.X1, box.Y1, box.X2, box.Y2);
+end;
+
+
+function TPoint.InRange(other: TPoint; dist: Double): Boolean;
+begin
+  Result := Self.DistanceTo(other) <= dist;
+end;
+
+function TPoint.AnyInRange(tpa: TPointArray; dist: Double): Boolean;
+var
+  p: TPoint;
+begin
+  for p in tpa do
+    if Self.InRange(p, dist) then
+      Exit(True);
+end;
+
+function TPoint.AllInRange(tpa: TPointArray; dist: Double): Boolean;
+var
+  p: TPoint;
+begin
+  for p in tpa do
+    if not Self.InRange(p, dist) then
+      Exit;
+  Result := True;
+end;
+
+
 // -----------------------------------------------------------------
 // Operator overloads
 operator + (L, R: TPoint): TPoint;

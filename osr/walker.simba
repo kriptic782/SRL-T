@@ -57,7 +57,7 @@ end;
   end;
 
 
-function TRSWalkerV2.Point2MM(playerPoint, p: TPoint; radians: Double): TPoint;
+function TRSWalkerV2.PointToMM(playerPoint, p: TPoint; radians: Double): TPoint;
 begin
   with Minimap.Center() do
   begin
@@ -66,7 +66,7 @@ begin
   end;
 end;
 
-function TRSWalkerV2.Points2MM(playerPoint: TPoint; tpa: TPointArray; radians: Double): TPointArray;
+function TRSWalkerV2.PointsToMM(playerPoint: TPoint; tpa: TPointArray; radians: Double): TPointArray;
 var
   p: TPoint;
 begin
@@ -77,6 +77,40 @@ begin
       Result += p.Rotate(radians, [X, Y]);
     end;
 end;
+
+
+(*
+## TRSWalkerV2.InRange
+```pascal
+function TRSWalkerV2.InRangeEx(me, coordinate: TPoint; distance: Int32 = 4): Boolean;
+function TRSWalkerV2.AnyInRangeEx(me: TPoint; coordinates: TPointArray; distance: Int32 = 4): Boolean; overload;
+function TRSWalkerV2.InRange(coordinate: TPoint; distance: Int32 = 4): Boolean;
+function TRSWalkerV2.AnyInRange(coordinates: TPointArray; distance: Int32 = 4): Boolean; overload;
+```
+Method used to quickly check if we are within distance of a certain `coordinate`.
+This distance is measure in pixels and in a radial way.
+You can optionally pass in a TPA to check if the closest point is within distance.
+*)
+function TRSWalkerV2.InRangeEx(me, coordinate: TPoint; distance: Int32 = 4): Boolean;
+begin
+  Result := me.InRange(coordinate, distance);
+end;
+
+function TRSWalkerV2.AnyInRangeEx(me: TPoint; coordinates: TPointArray; distance: Int32 = 4): Boolean; overload;
+begin
+  Result := me.AnyInRange(coordinates, distance);
+end;
+
+function TRSWalkerV2.InRange(coordinate: TPoint; distance: Int32 = 4): Boolean;
+begin
+  Result := Self.InRangeEx(Self.Position(), coordinate, distance);
+end;
+
+function TRSWalkerV2.AnyInRange(coordinates: TPointArray; distance: Int32 = 4): Boolean; overload;
+begin
+  Result := Self.AnyInRangeEx(Self.Position(), coordinates, distance);
+end;
+
 
 (*
 ## Walker.CheckRunEnergy
@@ -171,7 +205,7 @@ begin
       Exit();
 
   dist := Trunc(flag.DistanceTo(Minimap.Center()));
-  if InRange(dist, Random(5,10), Random(60,70)) then
+  if System.InRange(dist, Random(5,10), Random(60,70)) then
     MouseToNextPoint(Position);
 
   Self.MouseAheadTimer := GetTimeRunning() + SRL.SkewedRand(0,50,500);
@@ -305,7 +339,7 @@ begin
   if not Self.Walking then
     Exit;
 
-  minimapPoint := Self.Point2MM(playerPoint, walkerPoint, Minimap.GetCompassAngle(False));
+  minimapPoint := Self.PointToMM(playerPoint, walkerPoint, Minimap.GetCompassAngle(False));
 
   if Self.ScreenWalk then
   begin
@@ -387,7 +421,7 @@ var
   mmPoint: TPoint;
   b: TBox;
 begin
-  mmPoint := Self.Point2MM(playerPoint, walkerPoint, angle);
+  mmPoint := Self.PointToMM(playerPoint, walkerPoint, angle);
   if not Self.ScreenWalk then
     Exit(Minimap.IsPointOn(mmPoint, -1));
 
@@ -552,45 +586,114 @@ begin
   Result := Self.WalkPath([Destination], WaitUntilDistance);
 end;
 
+
+(*
+## TRSWalkerV2.GetClosestPoint
+```pascal
+function TRSWalkerV2.GetClosestPointEx(me: TPoint; destinations: TPointArray): TPoint;
+function TRSWalkerV2.GetClosestPoint(destinations: TPointArray): TPoint;
+```
+Method used to get the closest Point to the Player out of a TPA.
+*)
+function TRSWalkerV2.GetClosestPointEx(me: TPoint; destinations: TPointArray): TPoint;
+var
+  shortPaths: T2DPointArray;
+  path: TPointArray;
+  shortest, dist: Int32;
+  destination: TPoint;
+begin
+  me := Self.Position();
+  shortest := $FFFFFF;
+
+  for destination in destinations do
+  begin
+    try
+      path := Self.WebGraph^.PathBetween(me, destination, 0);
+    except
+      Continue;
+    end;
+
+    if path = [] then
+      Continue;
+
+    dist := Floor(path.TotalDistance());
+    if dist < shortest then
+    begin
+      shortPaths := [path];
+      shortest := dist;
+    end
+    else if dist = shortest then
+      shortPaths += path;
+
+    path := [];
+  end;
+
+  if shortPaths = [] then
+    Exit(destinations.NearestPoint(me));
+
+  Result := shortPaths.RandomValue().Last();
+end;
+
+function TRSWalkerV2.GetClosestPoint(destinations: TPointArray): TPoint;
+begin
+  Result := Self.GetClosestPointEx(Self.Position(), destinations);
+end;
+
+
 (*
 ## TRSWalkerV2.WebWalk
 ```pascal
-function TRSWalkerV2.WebWalk(Destination: TPoint; WaitUntilDistance: Int32 = 0; PathRandomness: Double = 0): Boolean;
+function TRSWalkerV2.WebWalkEx(me: TPoint; destination: TPoint; waitUntilDistance: Int32 = 0; pathRandomness: Double = 0): Boolean;
+function TRSWalkerV2.WebWalk(destination: TPoint; waitUntilDistance: Int32 = 0; pathRandomness: Double = 0): Boolean;
+function TRSWalkerV2.WebWalk(destinations: TPointArray; waitUntilDistance: Int32 = 0; pathRandomness: Double = 0): Boolean; overload;
 ```
 Web walks to the destination point on the loaded map. Does **not** handle any obstacles.
-Please run ``webber.simba`` to see how webgraphs are built.
-
-Pre built webgraphs are available for "World" and "Zeah" when used.
-
-Parameters:
-- Destination
-	Destination point taken from the loaded map.
-- WaitUntilDistance
-	Determines when the method returns once the final point has been clicked. Default value: 0.
-	| *WaitUntilDistance=0* waits until the player has reached the final point.
-	| *WaitUntilDistance=20* waits until the player is within 20 pixels of the final point.
-- PathRandomness
-	Randomness to add to the path so the absoulte shortest path isn't always taken. Must be between 0..1
-
-Example:
-```pascal
-var Walker: TRSWalker;
-
-Walker.Setup('world');
-Walker.WebWalk([4595, 3575]); // Lumbridge
-
-// Or use a location from the webgraph
-Walker.WebWalk(WorldWeb.LOCATION_LUMBRIDGE);
-```
 *)
-function TRSWalkerV2.WebWalk(Destination: TPoint; WaitUntilDistance: Int32 = 0; PathRandomness: Double = 0): Boolean;
+function TRSWalkerV2.WebWalkEx(me: TPoint; destination: TPoint; waitUntilDistance: Int32 = 0; pathRandomness: Double = 0): Boolean;
 var
-  Path: TPointArray;
+  path: TPointArray;
 begin
-  if not InRange(PathRandomness, 0, 1) then
+  if not System.InRange(pathRandomness, 0, 1) then
     Self.Fatal('TRSWalkerV2.WebWalk `PathRandomness` must be within 0..1');
 
-  Path   := Self.WebGraph^.PathBetween(Self.Position, Destination, PathRandomness);
-  Result := Self.WalkPath(Path, WaitUntilDistance);
+  path   := Self.WebGraph^.PathBetween(me, destination, pathRandomness);
+  Result := Self.WalkPath(path, waitUntilDistance);
+end;
+
+function TRSWalkerV2.WebWalk(destination: TPoint; waitUntilDistance: Int32 = 0; pathRandomness: Double = 0): Boolean;
+begin
+  Result := Self.WebWalkEx(Self.Position(), destination, waitUntilDistance, pathRandomness);
+end;
+
+function TRSWalkerV2.WebWalk(destinations: TPointArray; waitUntilDistance: Int32 = 0; pathRandomness: Double = 0): Boolean; overload;
+var
+  me, destination: TPoint;
+begin
+  me := Self.Position();
+  destination := Self.GetClosestPointEx(me, destinations);
+  Result := Self.WebWalkEx(me, destination, waitUntilDistance, pathRandomness);
+end;
+
+
+(*
+## TRSWalkerV2.MakePointVisible
+```pascal
+function TRSWalkerV2.MakePointVisible(p: TPoint): Boolean;
+function TRSWalkerV2.MakePointVisible(tpa: TPointArray): Boolean; overload;
+```
+Wrapper function used to attempt to make a Point visible on the MainScreen.
+*)
+function TRSWalkerV2.MakePointVisible(p: TPoint): Boolean;
+begin
+  Result := Minimap.MakePointVisible(Self.PointToMM(Self.Position(), p, Minimap.GetCompassAngle(False)));
+end;
+
+function TRSWalkerV2.MakePointVisible(tpa: TPointArray): Boolean; overload;
+var
+  me, p: TPoint;
+begin
+  me := Self.Position();
+  p := Self.GetClosestPointEx(me, tpa);
+  Result := Minimap.MakePointVisible(Self.PointToMM(me, p, Minimap.GetCompassAngle(False)));
 end;
 

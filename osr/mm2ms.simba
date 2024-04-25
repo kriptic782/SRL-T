@@ -528,6 +528,122 @@ begin
     Result := p.Random(-randomness, randomness);
 end;
 
+
+(*
+## Minimap.PointWithinZoom
+```pascal
+function TRSMinimap.InZoomRangeEx(p: TPoint; out corner: TPoint): Boolean;
+function TRSMinimap.InZoomRange(p: TPoint): Boolean;
+function TRSMinimap.AnyInZoomRange(tpa: TPointArray): Boolean; overload;
+```
+Method used to know if a point is within reach of the Zoom rectangle without adjusting the zoom level.
+Check TRSMinimap.GetZoomRectangle for information on the Zoom rectangle.
+
+Example:
+```pascal
+WriteLn Minimap.PointWithinZoom([620, 100]);
+```
+*)
+function TRSMinimap.InZoomRangeEx(p: TPoint; out corner: TPoint): Boolean;
+var
+  tpa: TPointArray;
+begin
+  if not Self.IsPointOn(p) then
+    Exit;
+
+  tpa := Self.GetZoomRectangle().ToTPA().SortFrom(Self.Center());
+  corner := tpa[High(tpa)];
+
+  Result := Self.Center().DistanceTo(P) <= Self.Center().DistanceTo(corner);
+end;
+
+function TRSMinimap.InZoomRange(p: TPoint): Boolean;
+var
+  corner: TPoint;
+begin
+  Result := Self.InZoomRangeEx(p, corner);
+end;
+
+function TRSMinimap.AnyInZoomRange(tpa: TPointArray): Boolean; overload;
+var
+  rect: TPointArray;
+  p, corner: TPoint;
+  dist: Double;
+begin
+  rect := Self.GetZoomRectangle().ToTPA().SortFrom(Self.Center());
+  corner := tpa[High(rect)];
+  dist := Self.Center().DistanceTo(corner);
+
+  for p in tpa do
+    if Self.Center().DistanceTo(P) <= dist then
+      Exit(True);
+end;
+
+
+(*
+## Minimap.GetZoomToPoint
+```pascal
+function TRSMinimap.GetZoomToPoint(p: TPoint; randomness: Int32 = 0): Int32;
+```
+This function gives us a zoom level where **P** would be visible in the MainScreen.
+
+Example:
+```pascal
+p := Minimap.GetDots(ERSMinimapDot.ITEM)[0]; //find an item dot and returns it's coodinates.
+Options.SetZoomLevel(Minimap.ZoomToVisiblePoint(p));
+```
+*)
+function TRSMinimap.GetZoomToPoint(p: TPoint; randomness: Int32 = 0): Int32;
+var
+  distance: Double;
+begin
+  distance := p.DistanceTo(Self.Center());
+
+  Result := Round((73 - distance) / 0.8);
+  Result := Result + randomness;
+end;
+
+(*
+## Minimap.SetZoomToPoint
+```pascal
+function TRSMinimap.SetZoomToPoint(p: TPoint; randomness: Int32 = 0): Boolean;
+```
+This function adjusts the zoom level so **P** TRSMinimap.PointWithinZoom() is true.
+*)
+function TRSMinimap.SetZoomToPoint(p: TPoint; randomness: Int32 = 0): Boolean;
+var
+  level: Int32;
+begin
+  if Self.InZoomRange(p) then
+    Exit(True);
+
+  level := Self.GetZoomToPoint(p, randomness);
+
+  if InRange(level, 0, 100) then
+    Result := Options.SetZoomLevel(level);
+end;
+
+
+(*
+## Minimap.MakePointVisible
+```pascal
+function TRSMinimap.MakePointVisible(p: TPoint): Boolean;
+function TRSMinimap.MakePointVisible(tpa: TPointArray): Boolean; overload;
+```
+Uses both Minimap.ZoomToPoint() and Minimap.FacePoint() to make a point visible on the Mainscreen.
+*)
+function TRSMinimap.MakePointVisible(p: TPoint): Boolean;
+begin
+  Result := Self.SetZoomToPoint(p, Random(-5, 5)) and Self.FacePoint(p, Random(-3, 3));
+end;
+
+function TRSMinimap.MakePointVisible(tpa: TPointArray): Boolean; overload;
+begin
+  Result := Self.MakePointVisible(tpa.SortFrom(Self.Center()));
+end;
+
+
+
 (*
 # Mainscreen Extensions
 Extend the mainscreen-functionality with MS2MM function
@@ -696,7 +812,6 @@ end;
 ```pascal
 function TRSMinimap.FacePoint(p: TPoint; randomness: Int32 = 0): Boolean;
 ```
-
 This method will rotate the camera so that **P** is within the zoom rectangle without adjusting the zoom level.
 
 Example:

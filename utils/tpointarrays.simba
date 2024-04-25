@@ -436,6 +436,16 @@ begin
 end;
 
 
+function TPointArray.TotalDistance(): Double;
+var
+  i: Int32;
+begin
+  for i := 0 to High(Self) do
+    if i < High(Self) then
+      Result += Self[i].DistanceTo(Self[i+1]);
+end;
+
+
 //--| Type helpers (extended) |------------------------------------------------>
 //----------------------------------------------------------------------------->
 (*
@@ -443,7 +453,6 @@ end;
 ```pascal
 function TPointArray.Mean(): TPoint; constref;
 ```
-
 Wraps Simba's TPAMiddle
 *)
 function TPointArray.Mean(): TPoint; constref;
@@ -457,7 +466,6 @@ end;
 ```pascal
 function TPointArray.MeanEx(): Vector2; constref;
 ```
-
 Middle as a Vector.
 *)
 function TPointArray.MeanEx(): Vector2; constref;
@@ -723,7 +731,6 @@ end;
 function TPointArray.Offset(X, Y: Int32): TPointArray; constref;
 function TPointArray.Offset(off: TPoint): TPointArray; constref; overload;
 ```
-
 Wraps Simba's `OffsetTPA`
 *)
 function TPointArray.Offset(X, Y: Int32): TPointArray; constref;
@@ -805,7 +812,6 @@ end;
 ```pascal
 procedure TPointArray.ClearDuplicates();
 ```
-
 Removes all the duplicate points from self.
 *)
 procedure TPointArray.ClearDuplicates();
@@ -826,7 +832,6 @@ function TPointArray.Rotate(angleRad, x, y: Double): TPointArray;
 function TPointArray.Rotate(angleRad: Double; mid: TPoint): TPointArray; constref; overload;
 function TPointArray.Rotate(angleRad: Double; mid: Vector2): TPointArray; constref; overload;
 ```
-
 Returns a copy where all points are rotated around `x` and `y`, a `TPoint` or a `Vector2`.
 Same as Simba's `RotatePoints`.
 *)
@@ -851,7 +856,6 @@ end;
 ```pascal
 function TPointArray.SplitRows(dist:Int32): T2DPointArray; constref;
 ```
-
 Splits a TPA `Arr` into TPAs of each row, it then proceeds to further split the rows
 in to separate TPAs when the given distance ``dist`` is less than the distance between the points
 Same output as `SplitTPAEx(TPA,dist,0)`, but generally faster.
@@ -904,7 +908,6 @@ end;
 ```pascal
 function TPointArray.Connect(): TPointArray; constref;
 ```
-
 Fills a line between all the points (by their order), can be used to get the edges
 around a polygon
 
@@ -943,7 +946,6 @@ end;
 ```pascal
 function TPointArray.ConvexHull(): TPointArray; constref;
 ```
-
 Computes the convex hull around the given TPA. Imagine placing a rubber band around the
 points, the points which strech the band are the points returned by this function.
 
@@ -994,7 +996,6 @@ end;
 ```pascal
 function TPointArray.MinAreaRect(): TRectangle;
 ```
-
 Computes the minimum bounding box (defined by area) around the given shape.
 Four points (which are in order) are always returned.
 
@@ -1093,7 +1094,6 @@ end;
 ```pascal
 function TPointArray.MinAreaCircle(): TCircle;
 ```
-
 Computes the minimum bounding circle around the given shape.
 
 See: https://en.wikipedia.org/wiki/Smallest-circle_problem for more information.
@@ -1218,7 +1218,6 @@ end;
 ```pascal
 function TPointArray.Density(): Double; constref;
 ```
-
 Returns the TPA's density (Length(TPA)/(width*height))
 *)
 function TPointArray.Density: Double; constref;
