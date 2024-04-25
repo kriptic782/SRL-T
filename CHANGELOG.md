@@ -1,3 +1,12 @@
+# [4.9.0](https://github.com/Torwent/SRL-T/compare/v4.8.10...v4.9.0) (2024-04-25)
+
+
+### Features
+
+* **TRSMapObject:** Should be have all functionality now ([d603fdb](https://github.com/Torwent/SRL-T/commit/d603fdb0510d799a455d0943518a409e3d86f1a7))
+
+
+
 ## [4.8.10](https://github.com/Torwent/SRL-T/compare/v4.8.9...v4.8.10) (2024-04-24)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([ecf45dc](https://github.com/Torwent/SRL-T/commit/ecf45dccc9615f7b647304d6b30f85ec456b3898))
-
-
-
-## [4.8.6](https://github.com/Torwent/SRL-T/compare/v4.8.5...v4.8.6) (2024-04-21)
-
-
-### Bug Fixes
-
-* **TRSMapObjects:** more methods for the map objects ([f754db6](https://github.com/Torwent/SRL-T/commit/f754db621f8f3ffdb90543d8a52bbc95162070ca))
 
 
 
