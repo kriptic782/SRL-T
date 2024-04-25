@@ -352,7 +352,7 @@ begin
           ToStr(finish.X) + '-' + ToStr(finish.Y);
 
   cacheroot := Self.Cache + 'graphs' + DirectorySeparator;
-  cachename := cacheroot + ToStr(level) + DirectorySeparator + name;
+  cachename := cacheroot + ToStr(level) + DirectorySeparator + name + '-' + ToStr(GENERATED_GRAPH_DETAIL);
 
   if not FileExists(cachename + '.json') then
   begin
