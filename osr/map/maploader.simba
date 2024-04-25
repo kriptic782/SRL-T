@@ -953,6 +953,7 @@ begin
 
   Self.Map := Self.InternalLoadEx(bitmaps);
   Self.Heightmap := Self.InternalLoadEx(hbitmaps);
+  Self.Graph := WaspWeb;
 
   Self.Map.Downsample(downscale, Self.DownscaledMap);
   AddOnTerminate(@Self.Free);
