@@ -274,7 +274,6 @@ end;
 ```pascal
 function TRSMagic.FindSpell(spell: ERSSpell; out box: TBox): Boolean;
 ```
-
 Return true or false wether we found a spell or not and return it's bounds if found.
 *)
 function TRSMagic.FindSpell(spell: ERSSpell; out b: TBox; attempts: Int32 = 2): Boolean;
@@ -336,7 +335,6 @@ end;
 ```pascal
 function TRSMagic.ContainsSpell(spell: ERSSpell): Boolean;
 ```
-
 Return true or false wether we found a spell or not.
 *)
 function TRSMagic.ContainsSpell(spell: ERSSpell): Boolean;
@@ -392,7 +390,6 @@ end;
 ```pascal
 function TRSMagic.ClickSpell(spell: ERSSpell; option: String = ''): Boolean;
 ```
-
 Used to interact with the specified spell.
 
 Example:
@@ -420,7 +417,6 @@ end;
 ```pascal
 function TRSMagic.FindSelected(out tpa: TPointArray): Boolean;
 ```
-
 Returns the true if we have a selected spell and returns it's tpa.
 
 Example:
@@ -457,7 +453,6 @@ end;
 ```pascal
 function TRSMagic.ContainsSelected(): Boolean;
 ```
-
 Returns the true if we have a selected spell.
 
 Example:
@@ -570,7 +565,6 @@ end;
 ```pascal
 function TRSMagic.SpellWasCast(spell: ERSSpell): Boolean;
 ```
-
 Returns true if we are in a state that casting a spell would leave you.
 
 Example:
@@ -592,7 +586,6 @@ end;
 ```pascal
 function TRSMagic.CastSpell(spell: ERSSpell): Boolean;
 ```
-
 Attempts to cast the specified spell.
 
 Example:
@@ -644,7 +637,7 @@ end;
 
 (*
 ## var Magic
-  Global Magic variable.
+Global Magic variable.
 *)
 var
   Magic: TRSMagic;

@@ -19,11 +19,10 @@ type
     Size: Vector3;
     Rotations: TSingleArray;
     Finder: TRSObjectFinder;
+    Offset: TPoint;
 
-    {%codetools off} //hidden internal properties
     Walker: PRSWalkerV2;
     Index: Int32;
-    {%codetools on}
 
     Filter: record
       Walker:  Boolean;
@@ -51,6 +50,7 @@ begin
   Result.Name := json.getString('name');
   Result.ObjType := json.getInt('type');
   Result.Category := json.getInt('category');
+  Result.Offset := [0,0];
 
   with json.getJSONArray('actions') do
     for i := 0 to High() do
@@ -124,7 +124,7 @@ begin
   if angle = $FFFF then
     angle := Minimap.GetCompassAngle(False);
   mmPoints := Self.MapToMM(me, angle);
-  Result := Minimap.GetCuboidArrayMS(mmPoints, Self.Size, [0,0], angle);
+  Result := Minimap.GetCuboidArrayMS(mmPoints, Self.Size, Self.Offset, angle);
 end;
 
 (*
@@ -186,7 +186,7 @@ begin
       Exit(True);
 end;
 
-{%codetools off} //hidden internal methods
+
 (*
 ## TRSMapObject._UpTextCheck
 ```pascal
@@ -331,7 +331,7 @@ begin
 
   Result := ChooseOption.Select(action);
 end;
-{%codetools on}
+
 
 (*
 ## TRSMapObject.Find
@@ -792,7 +792,6 @@ begin
   Result := Self.WalkHover(attempts) and Self._SelectHelper(action);
   Self.CurrentActionUpText := [];
 end;
-
 
 
 

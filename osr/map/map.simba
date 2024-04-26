@@ -574,6 +574,18 @@ begin
     Result := [X, Y, 0, Self.Region.Level];
 end;
 
+{%codetools off}
+function TRSMap.H2C(height: Int32): Single;
+begin
+  Result := $FFFFFF*(height/2040);
+end;
+
+function TRSMap.C2H(color: Int32): Single;
+begin
+  Result := (color*2040)/$FFFFFF;
+end;
+{%codetools on}
+
 (*
 ## Map.Height
 ```pascal
@@ -590,7 +602,7 @@ WriteLn rsw.GetHeight();
 *)
 function TRSMap.Height(p: TPoint = [-1,-1]; global: Boolean = True): Single;
 const
-  MAX_HEIGHT: UInt32 = 70;
+  MAX_HEIGHT: UInt32 = 2040;
 begin
   if not Assigned(Self.Loader.Heightmap) then
     Exit;
@@ -604,12 +616,13 @@ begin
   if global then
     p := Self.Loader.GetLocal(Self.RegionIndex, p);
 
-  if Self.Loader.Heightmap.getWidth() < Self.Loader.Map.getWidth() then
+  if Self.Loader.UsingChunks then
     p := [p.X div TILE_SIZE, p.Y div TILE_SIZE];
 
   if Self.Loader.Heightmap.Bounds().Contains(p) then
-    Result := Self.Loader.Heightmap.GetPixel(p.X, p.Y) * MAX_HEIGHT / $FFFFFF;
+    Result := Self.C2H(Self.Loader.Heightmap.GetPixel(p));
 end;
+
 
 
 (*

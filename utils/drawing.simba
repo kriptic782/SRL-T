@@ -99,6 +99,11 @@ begin
   Self.DrawBoxFilled(Area, False, 0);
 end;
 
+function TMufasaBitmap.GetPixel(p: TPoint): TColor; overload;
+begin
+  Result := Self.GetPixel(p.X, p.Y);
+end;
+
 
 (*
 ## TMufasaBitmap.ClearAllBut
