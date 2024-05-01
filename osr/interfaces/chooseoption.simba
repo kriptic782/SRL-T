@@ -20,6 +20,12 @@ type
     Bounds: TBox;
   end;
 
+  TOptionCount = record
+    Item: String;
+    Count: Integer;
+  end;
+  TOptionCountArray = array of TOptionCount;
+
 function TRSChooseOption.Find(): Boolean;
 var
   TPA: TPointArray;
@@ -104,6 +110,97 @@ begin
     end;
   end;
 end;
+
+{
+  Counts the occurrences of a specific option within a given array of choices, filtering by an optional action prefix.
+
+  Parameters:
+    optionText: The text of the option to count.
+    choices: An array of options where each item is of type TRSChooseOption_Option.
+    actionFilter: A prefix to filter options by before counting, e.g., 'Take'. Default is 'Take'.
+    caseSensitive: Specifies whether the text comparison should be case-sensitive. Default is true.
+
+  Returns:
+    The count of how many times the specified option appears in the choices array after applying the action filter.
+
+  Example:
+    // Assuming `choices` is already populated with options from the interface:
+    writeln('Number of "Blue dragonhide" options: ', ChooseOption.CountOption('Blue dragonhide', choices));
+}
+function TRSChooseOption.CountOption(optionText: String; choices: TRSChooseOption_OptionArray; actionFilter: String = 'Take'; caseSensitive: Boolean = True): Integer;
+var
+  i: Int32;
+  processedText: String;
+begin
+  Result := 0;
+  if not caseSensitive then
+    optionText := Lowercase(optionText);
+
+  for i := 0 to High(choices) do begin
+    processedText := choices[i].Text;
+    if processedText.StartsWith(actionFilter) then
+      processedText := processedText.Replace(actionFilter + ' ', '');
+
+    if not caseSensitive then
+      processedText := Lowercase(processedText);
+
+    if processedText = optionText then
+      Inc(Result);
+  end;
+end;
+
+{
+  Counts all unique options after applying an action filter from a set of choices presented in a context menu.
+
+  Parameters:
+    actionFilter: The filter to apply before counting, typically to remove a specific prefix like 'Take '. Default is 'Take'.
+
+  Returns:
+    An array where each element contains the item name and its count after filtering and counting each unique item in the choices.
+
+  Example:
+    // Assuming the context menu is open and ready to be read:
+    var counts: TOptionCountArray;
+    counts := ChooseOption.CountOptions();
+    // Output each counted option and its occurrences:
+    for i := 0 to High(counts) do
+      writeln(counts[i].Item, ': ', counts[i].Count);
+}
+function TRSChooseOption.CountOptions(actionFilter: String = 'Take'): TOptionCountArray;
+var
+  choices: TRSChooseOption_OptionArray;
+  i, idx: Int32;
+  processedText: String;
+  found: Boolean;
+begin
+  if not Self.Open() then Exit;
+  Wait(0, 1000, wdLeft);
+  choices := Self.GetOptions();
+
+  for i := 0 to High(choices) do begin
+    processedText := choices[i].Text;
+    if processedText.StartsWith(actionFilter) then begin
+      processedText := processedText.Replace(actionFilter + ' ', '');
+
+      found := False;
+      for idx := 0 to High(Result) do begin
+        if Result[idx].Item = processedText then begin
+          Inc(Result[idx].Count);
+          found := True;
+          Break;
+        end;
+      end;
+
+      if not found then begin
+        idx := Length(Result);
+        SetLength(Result, idx + 1);
+        Result[idx].Item := processedText;
+        Result[idx].Count := 1;
+      end;
+    end;
+  end;
+end;
+
 
 function TRSChooseOption.Close(): Boolean;
 var
@@ -239,4 +336,3 @@ begin
 
   ChooseOption.Setup();
 end;
-
