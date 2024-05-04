@@ -381,7 +381,7 @@ end;
 
 procedure TRSInventory.Draw(Bitmap: TMufasaBitmap); override;
 begin
-  if not Self.Open() then
+  if not Self.IsOpen() then
     Exit;
 
   inherited();
