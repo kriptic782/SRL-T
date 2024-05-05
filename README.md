@@ -5,7 +5,6 @@ SRL is a library that provides an API for writing bots in Simba for the game Old
 Documentation is available [here](https://torwent.github.io/SRL-T)
 
 ## Features
-
 <img src="docs/images/resizable.png" width="738" height="600">\
 *Resizable mode*
 
