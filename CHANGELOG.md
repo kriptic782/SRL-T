@@ -1,3 +1,12 @@
+## [4.9.5](https://github.com/Torwent/SRL-T/compare/v4.9.4...v4.9.5) (2024-05-12)
+
+
+### Bug Fixes
+
+* read notes ([f365844](https://github.com/Torwent/SRL-T/commit/f36584476a71162f36a0509e7dd2d094deef34b5))
+
+
+
 ## [4.9.4](https://github.com/Torwent/SRL-T/compare/v4.9.3...v4.9.4) (2024-05-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMap:** load old graph in legacy mode ([33bdfe3](https://github.com/Torwent/SRL-T/commit/33bdfe34cc9e35c77852f6b25514e5943d221fc0))
-
-
-
-# [4.9.0](https://github.com/Torwent/SRL-T/compare/v4.8.10...v4.9.0) (2024-04-25)
-
-
-### Features
-
-* **TRSMapObject:** Should be have all functionality now ([d603fdb](https://github.com/Torwent/SRL-T/commit/d603fdb0510d799a455d0943518a409e3d86f1a7))
 
 
 
