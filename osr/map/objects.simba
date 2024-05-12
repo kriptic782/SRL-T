@@ -61,7 +61,7 @@ begin
   begin
     x := getInt(0) * 0.8;
     y := getInt(1) * 0.8;
-    Result.Size := [x, y, getInt(2) / 40];
+    Result.Size := [x, y, getInt(2) / 40]; //TODO: build this into the JSONs
   end;
 
   if x <> y then
