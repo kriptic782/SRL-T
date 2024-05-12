@@ -122,7 +122,7 @@ end;
 
 function TRSChunkLoader.GetJSONFile(chunk: String; level: UInt32; jsonType: ERSMapJSON): TJSONArray;
 var
-  name, cacheroot, cachename, zipFile, zipPath: String;
+  name, cacheroot, cachename, zipFile, zipPath, contents: String;
 begin
   case jsonType of
     ERSMapJSON.OBJECTS: name := 'objects';
@@ -145,7 +145,12 @@ begin
       Self.Fatal('Failed to unzip OBJECTS: ' + zipFile);
   end;
 
-  Result.Init(ReadFileContents(cachename + '.json'));
+  contents := ReadFileContents(cachename + '.json');
+
+  if contents <> '' then
+    Result.Init(contents)
+  else
+    Result.Init();
 end;
 
 function TRSChunkLoader.GetJSONFile(chunk: TPoint; level: UInt32; jsonType: ERSMapJSON): TJSONArray; overload;
