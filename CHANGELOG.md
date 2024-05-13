@@ -1,3 +1,12 @@
+## [4.9.7](https://github.com/Torwent/SRL-T/compare/v4.9.6...v4.9.7) (2024-05-13)
+
+
+### Bug Fixes
+
+* read notes ([6fa8d45](https://github.com/Torwent/SRL-T/commit/6fa8d45b35fcd7271b387ebf88571e66395da2df))
+
+
+
 ## [4.9.6](https://github.com/Torwent/SRL-T/compare/v4.9.5...v4.9.6) (2024-05-12)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMap:** read notes ([4af04c2](https://github.com/Torwent/SRL-T/commit/4af04c27fbffc38dbb94520d793ea1fda878c0d3))
-
-
-
-## [4.9.2](https://github.com/Torwent/SRL-T/compare/v4.9.1...v4.9.2) (2024-04-25)
-
-
-### Bug Fixes
-
-* save webgraph with the detail level ([3bd68a0](https://github.com/Torwent/SRL-T/commit/3bd68a04fbf46021f41e6df59cec1f22e01b564e))
 
 
 
