@@ -40,8 +40,9 @@ type
 
 function TRSMapObject.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSMapObject; static;
 var
-  i: Int32;
+  i, c, r, g, b: Int32;
   x, y: Single;
+  colors: TIntegerArray;
 begin
   Result.Walker := pwalker;
   Result.Filter := [True, True, True, True];
@@ -81,6 +82,15 @@ begin
       with getJSONArray(i) do
         Result.Coordinates += [getInt(0), getInt(1)];
   SetLength(Result.Rotations, Length(Result.Coordinates));
+
+  with json.getJSONArray('colors') do
+    for i := 0 to High() do
+    begin
+      ColorToRGB(getInt(i), r,g,b);
+      c := RGBtoColor(b,g,r);
+      if colors.Find(c) = -1 then
+        colors += c;
+    end;
 end;
 
 function TRSMapObject.MapToMM(me: TPoint = [0,0]; angle: Single = $FFFF): TPointArray; constref;
