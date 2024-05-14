@@ -1,3 +1,12 @@
+# [4.10.0](https://github.com/Torwent/SRL-T/compare/v4.9.7...v4.10.0) (2024-05-14)
+
+
+### Features
+
+* added basic object color loading from dumped assets ([01023d5](https://github.com/Torwent/SRL-T/commit/01023d5add406de51e3d77f9fa7deed6cd21330e))
+
+
+
 ## [4.9.7](https://github.com/Torwent/SRL-T/compare/v4.9.6...v4.9.7) (2024-05-13)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * force bump ([bb20348](https://github.com/Torwent/SRL-T/commit/bb20348834c21fda57466a9a608fa33f203d868e))
-
-
-
-## [4.9.3](https://github.com/Torwent/SRL-T/compare/v4.9.2...v4.9.3) (2024-04-26)
-
-
-### Bug Fixes
-
-* **TRSMap:** read notes ([4af04c2](https://github.com/Torwent/SRL-T/commit/4af04c27fbffc38dbb94520d793ea1fda878c0d3))
 
 
 
