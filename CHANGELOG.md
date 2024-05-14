@@ -1,3 +1,12 @@
+## [4.10.1](https://github.com/Torwent/SRL-T/compare/v4.10.0...v4.10.1) (2024-05-14)
+
+
+### Bug Fixes
+
+* **spellfinder:** fix new teleport casing ([b7c8c7d](https://github.com/Torwent/SRL-T/commit/b7c8c7d3ae5ebfb243e96f3a2f138bc6ecf4e963))
+
+
+
 # [4.10.0](https://github.com/Torwent/SRL-T/compare/v4.9.7...v4.10.0) (2024-05-14)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([f365844](https://github.com/Torwent/SRL-T/commit/f36584476a71162f36a0509e7dd2d094deef34b5))
-
-
-
-## [4.9.4](https://github.com/Torwent/SRL-T/compare/v4.9.3...v4.9.4) (2024-05-05)
-
-
-### Bug Fixes
-
-* force bump ([bb20348](https://github.com/Torwent/SRL-T/commit/bb20348834c21fda57466a9a608fa33f203d868e))
 
 
 
