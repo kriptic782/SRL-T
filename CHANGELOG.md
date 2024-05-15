@@ -1,3 +1,12 @@
+## [4.10.2](https://github.com/Torwent/SRL-T/compare/v4.10.1...v4.10.2) (2024-05-15)
+
+
+### Bug Fixes
+
+* **TRSMap:** unwrap the Objects variable, no point having it nested ([56a604e](https://github.com/Torwent/SRL-T/commit/56a604e8d9e96779f38f0443dda505b4163f9c0d))
+
+
+
 ## [4.10.1](https://github.com/Torwent/SRL-T/compare/v4.10.0...v4.10.1) (2024-05-14)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([0f0000b](https://github.com/Torwent/SRL-T/commit/0f0000b5ff40e8dbcf2b006239efa5283573e084))
-
-
-
-## [4.9.5](https://github.com/Torwent/SRL-T/compare/v4.9.4...v4.9.5) (2024-05-12)
-
-
-### Bug Fixes
-
-* read notes ([f365844](https://github.com/Torwent/SRL-T/commit/f36584476a71162f36a0509e7dd2d094deef34b5))
 
 
 
