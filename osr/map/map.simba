@@ -25,7 +25,6 @@ type
 
   TRSMap = record
     Walker: TRSWalkerV2;
-    Objects: TRSMapObjects;
 
     RegionIndex: Int32;
     Region: TRSMapRegion;
@@ -60,8 +59,8 @@ begin
     Self.Walker.Position := @Self.Position;
     Self.Walker.WebGraph := @Self.Loader.Graph;
 
-    Self.Objects.Data := Self.Loader.ObjectData;
-    Self.Objects.Walker := @Self.Walker;
+    Objects.Data := Self.Loader.ObjectData;
+    Objects.Walker := @Self.Walker;
 
     AddOnTerminate(@Self.Loader.Free);
     Self.IsSetup := True;

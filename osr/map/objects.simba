@@ -953,3 +953,6 @@ begin
   Self.Cache[Result.Index].Finder := finder;
   WriteLn Self.Cache[Result.Index];
 end;
+
+var
+  Objects: TRSMapObjects;
