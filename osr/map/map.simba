@@ -13,7 +13,7 @@ Without them, this wouldn't be possible.
 
 type
   TRSPosition = record(TPoint)
-    Z: Int32;
+    Z: Single;
     Plane: Int32;
   end;
 
@@ -37,6 +37,8 @@ type
 
 function TRSMap.Position(): TPoint; forward;
 
+function TRSMap.Height(p: TPoint = [-1,-1]): Single; forward;
+
 (*
 ## Map.InternalSetup
 ```pascal
@@ -57,6 +59,7 @@ begin
   if not Self.IsSetup then
   begin
     Self.Walker.Position := @Self.Position;
+    Self.Walker.Height := @Self.Height;
     Self.Walker.WebGraph := @Self.Loader.Graph;
 
     Objects.Data := Self.Loader.ObjectData;
@@ -567,28 +570,29 @@ begin
   Result := [0,0];
 end;
 
-function TRSMap.FullPosition(): TRSPosition; //TODO: Add height to Z.;
+function TRSMap.FullPosition(): TRSPosition;
 begin
   with Self.Position() do
-    Result := [X, Y, 0, Self.Region.Level];
+    Result := [X, Y, Self.Height([X,Y]), Self.Region.Level];
 end;
 
 {%codetools off}
 function TRSMap.H2C(height: Int32): Single;
 begin
-  Result := $FFFFFF*(height/2040);
+  Result := $FFFFFF*(height/60); //Result := $FFFFFF*(height/2040);
 end;
 
 function TRSMap.C2H(color: Int32): Single;
 begin
-  Result := (color*2040)/$FFFFFF;
+  Result := (color*60)/$FFFFFF; //Result := (color*2040)/$FFFFFF;
 end;
 {%codetools on}
 
 (*
 ## Map.Height
 ```pascal
-function TRSMap.Height(p: TPoint = [-1,-1]; global: Boolean = True): Single;
+function TRSMap.Height(p: TPoint = [-1,-1]; global: Boolean): Single;
+function TRSMap.Height(p: TPoint = [-1,-1]): Single; overload;
 ```
 Returns the height of the player at the specified coordinate if there's a heightmap loaded.
 If p is [-1,-1], which is the default then we will use our current position.
@@ -599,9 +603,7 @@ Example:
 WriteLn rsw.GetHeight();
 ```
 *)
-function TRSMap.Height(p: TPoint = [-1,-1]; global: Boolean = True): Single;
-const
-  MAX_HEIGHT: UInt32 = 2040;
+function TRSMap.Height(p: TPoint = [-1,-1]; global: Boolean): Single; overload;
 begin
   if not Assigned(Self.Loader.Heightmap) then
     Exit;
@@ -620,6 +622,11 @@ begin
 
   if Self.Loader.Heightmap.Bounds().Contains(p) then
     Result := Self.C2H(Self.Loader.Heightmap.GetPixel(p));
+end;
+
+function TRSMap.Height(p: TPoint = [-1,-1]): Single;
+begin
+  Result := Self.Height(p, True);
 end;
 
 

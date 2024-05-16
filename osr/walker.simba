@@ -40,6 +40,7 @@ end;
 
   TRSWalkerV2 = record(TSRLBaseRecord)
     Position: function (): TPoint of object;
+    Height: function (p: TPoint = [-1,-1]): Single of object;
 
     MinEnergy, ClickRandomness, MouseAheadTimer: Int32;
 

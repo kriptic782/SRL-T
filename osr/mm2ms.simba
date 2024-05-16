@@ -224,13 +224,13 @@ begin
   Result := MM2MS.Run([Vec], roll)[0];
 end;
 
-function TRSMinimap.StaticToMS(StaticMMPoint: TPoint; Height:Int32=0): TPoint;
+function TRSMinimap.StaticToMS(staticMMPoint: TPoint; height:Int32=0): TPoint;
 var
   angle: Double;
 begin
   angle := Self.GetCompassAngle(False);
-  with StaticMMPoint.Rotate(angle, Self.Center()) do
-    Result := Self.VectorToMS(Vec3(X,Y, Height), angle);
+  with staticMMPoint.Rotate(angle, Self.Center()) do
+    Result := Self.VectorToMS(Vec3(X,Y, height), angle);
 end;
 
 
@@ -304,13 +304,13 @@ begin
   Result := [Arr[0], Arr[1], Arr[2], Arr[3]];
 end;
 
-function TRSMinimap.StaticToMSRect(staticMMPoint: TPoint; weSize, nsSize: Double = 1; Height: Double = 0): TRectangle;
+function TRSMinimap.StaticToMSRect(staticMMPoint: TPoint; weSize, nsSize: Double = 1; height: Double = 0): TRectangle;
 var
-  Angle: Double;
+  angle: Double;
 begin
-  Angle  := Self.GetCompassAngle(False);
-  with staticMMPoint.Rotate(Angle, Self.Center()) do
-    Result := Self.VectorToMSRect(Vec3(X, Y, Height), weSize, nsSize, Angle);
+  angle  := Self.GetCompassAngle(False);
+  with staticMMPoint.Rotate(angle, Self.Center()) do
+    Result := Self.VectorToMSRect(Vec3(X, Y, height), weSize, nsSize, angle);
 end;
 
 
@@ -333,7 +333,7 @@ Methods with TRSMainScreenShape parameters allow you do have "tilted" rectangles
 `angle` is the compass angle, by leaving it default it will gather the compass angle itself.
 :::
 *)
-function TRSMinimap.GetTileMS(loc: TPoint; tile: Vector3 = [1, 1, 0]; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TRectangle;
+function TRSMinimap.GetTileMS(loc: TPoint; tile: Vector3 = [1, 1, 0]; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TRectangle;
 begin
   if not Self.IsPointOn(loc) then
     Exit;
@@ -347,12 +347,12 @@ begin
     angle := Self.GetCompassAngle(False);
 
   Result := Self.VectorToMSRect(
-              Vec3(loc.x + Offset.X, loc.y + offset.Y, tile.Z),
+              Vec3(loc.x + offset.X, loc.y + offset.Y, tile.Z + offset.Z),
               tile.X, tile.Y, angle
             );
 end;
 
-function TRSMinimap.GetTileArrayMS(locArray: TPointArray; tile: Vector3 = [1, 1, 0]; offset: TPoint = [0, 0]; angle: Single = $FFFF): TRectArray;
+function TRSMinimap.GetTileArrayMS(locArray: TPointArray; tile: Vector3 = [1, 1, 0]; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TRectArray;
 var
   loc: TPoint;
 begin
@@ -367,8 +367,8 @@ end;
 (*
 ## Minimap.GetCuboidMS
 ```pascal
-function TRSMinimap.GetCuboidMSEx(loc: TPoint; shape: vector3; rotation: Single = 0; startHeight: Double = 0; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidEx;
-function TRSMinimap.GetCuboidMS(loc: TPoint; tile: Vector3 = [1, 1, 4]; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidEx;
+function TRSMinimap.GetCuboidMSEx(loc: TPoint; shape: vector3; rotation: Single = 0; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TCuboidEx;
+function TRSMinimap.GetCuboidMS(loc: TPoint; tile: Vector3 = [1, 1, 4]; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TCuboidEx;
 function TRSMinimap.GetCuboidArrayMSEx(locArray: TPointArray; shape: Vector3; rotations: TSingleArray; startHeights: TDoubleArray; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidExArray;
 function TRSMinimap.GetCuboidArrayMS(locArray: TPointArray; tile: Vector3; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidExArray; overload;
 ```
@@ -396,23 +396,21 @@ offset := [2 , 2];                                     //Minimap dots are actual
 Debug(Minimap.GetCuboidMS(P, [1, 1, 7], offset));     //This will draw a polygon around the nearest player.
 ```
 *)
-function TRSMinimap.GetCuboidMSEx(loc: TPoint; shape: Vector3; rotation: Single = 0; startHeight: Double = 0; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidEx;
+function TRSMinimap.GetCuboidMSEx(loc: TPoint; shape: Vector3; rotation: Single = 0; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TCuboidEx;
 begin
   if (angle = $FFFF) then
     angle := Self.GetCompassAngle(False);
   angle += rotation;
 
-  Result.Bottom := Self.GetTileMs(loc, [shape.X, shape.Y, startHeight], offset, angle);
+  Result.Bottom := Self.GetTileMs(loc, [shape.X, shape.Y, 0], offset, angle);
+
   if shape.Z <> 0 then
-  begin
-    shape.Z += startHeight;
-    Result.Top := Self.GetTileMS(loc, shape, offset, angle);
-  end
+    Result.Top := Self.GetTileMS(loc, shape, offset, angle)
   else
     Result.Top := Result.Bottom;
 end;
 
-function TRSMinimap.GetCuboidMS(loc: TPoint; shape: Vector3 = [1, 1, 4]; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidEx;
+function TRSMinimap.GetCuboidMS(loc: TPoint; shape: Vector3 = [1, 1, 4]; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TCuboidEx;
 begin
   if (angle = $FFFF) then
     angle := Self.GetCompassAngle(False);
@@ -424,7 +422,7 @@ begin
     Result.Top := Result.Bottom;
 end;
 
-function TRSMinimap.GetCuboidArrayMSEx(locArray: TPointArray; shape: Vector3; rotations: TSingleArray; startHeights: TDoubleArray; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidExArray;
+function TRSMinimap.GetCuboidArrayMSEx(locArray: TPointArray; shape: Vector3; rotations: TSingleArray; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TCuboidExArray;
 var
   i: Int32;
 begin
@@ -439,11 +437,11 @@ begin
     if not Self.Bounds().Expand(10).Contains(locArray[i]) then
       Continue;
 
-    Result += Self.GetCuboidMSEx(locArray[i], shape, rotations[i], startHeights[i], offset, angle)
+    Result += Self.GetCuboidMSEx(locArray[i], shape, rotations[i], offset, angle)
   end;
 end;
 
-function TRSMinimap.GetCuboidArrayMS(locArray: TPointArray; shape: Vector3; offset: Vector2 = [0, 0]; angle: Single = $FFFF): TCuboidExArray; overload;
+function TRSMinimap.GetCuboidArrayMS(locArray: TPointArray; shape: Vector3; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TCuboidExArray; overload;
 var
   i: Int32;
 begin
