@@ -1,3 +1,12 @@
+# [4.11.0](https://github.com/Torwent/SRL-T/compare/v4.10.2...v4.11.0) (2024-05-16)
+
+
+### Features
+
+* read notes ([6b22f37](https://github.com/Torwent/SRL-T/commit/6b22f37f3c45f8ebcf7a774cd982bb874e7ded1d))
+
+
+
 ## [4.10.2](https://github.com/Torwent/SRL-T/compare/v4.10.1...v4.10.2) (2024-05-15)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([6fa8d45](https://github.com/Torwent/SRL-T/commit/6fa8d45b35fcd7271b387ebf88571e66395da2df))
-
-
-
-## [4.9.6](https://github.com/Torwent/SRL-T/compare/v4.9.5...v4.9.6) (2024-05-12)
-
-
-### Bug Fixes
-
-* read notes ([0f0000b](https://github.com/Torwent/SRL-T/commit/0f0000b5ff40e8dbcf2b006239efa5283573e084))
 
 
 
