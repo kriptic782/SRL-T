@@ -185,7 +185,7 @@ begin
 
   for p in coordinates.Sorted(me) do
   begin
-    offset := Vec3(Self.Offset.X, Self.Offset.Y, -h-Self.Walker^.Height(p));
+    offset := Vec3(Self.Offset.X, Self.Offset.Y, (-h-Self.Walker^.Height(p))*23);
     p := Self.Walker^.PointToMM(me, p, angle);
     Result += Minimap.GetCuboidMS(p, Self.Size, offset, angle);
   end;
@@ -522,7 +522,7 @@ begin
     rect.Left := p.Offset(-q.X, q.Y);
     bitmap.DrawRect(rect, $FF);
 
-    offset := Vec3(Self.Offset.X, Self.Offset.Y, -h-Self.Walker^.Height(p));
+    offset := Vec3(Self.Offset.X, Self.Offset.Y, (-h-Self.Walker^.Height(p))*23);
     cuboids += Minimap.GetCuboidMS(p, Self.Size, offset, angle);
   end;
 

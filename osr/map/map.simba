@@ -577,14 +577,18 @@ begin
 end;
 
 {%codetools off}
-function TRSMap.H2C(height: Int32): Single;
+function TRSMap.H2C(height: Single): Int32;
+const
+  H_VALUE = 2040 / $FFFFFF;
 begin
-  Result := $FFFFFF*(height/60); //Result := $FFFFFF*(height/2040);
+  Result := Round(height / H_VALUE);
 end;
 
 function TRSMap.C2H(color: Int32): Single;
+const
+  H_VALUE = 2040 / $FFFFFF;
 begin
-  Result := (color*60)/$FFFFFF; //Result := (color*2040)/$FFFFFF;
+  Result := color*H_VALUE;
 end;
 {%codetools on}
 
@@ -617,9 +621,6 @@ begin
   if global then
     p := Self.Loader.GetLocal(Self.RegionIndex, p);
 
-  if Self.Loader.UsingChunks then
-    p := [p.X div TILE_SIZE, p.Y div TILE_SIZE];
-
   if Self.Loader.Heightmap.Bounds().Contains(p) then
     Result := Self.C2H(Self.Loader.Heightmap.GetPixel(p));
 end;
@@ -627,6 +628,11 @@ end;
 function TRSMap.Height(p: TPoint = [-1,-1]): Single;
 begin
   Result := Self.Height(p, True);
+end;
+
+function TRSMap.HeightDifference(p, q: TPoint): Single;
+begin
+  Result := Self.Height(p) - Self.Height(q);
 end;
 
 
@@ -750,7 +756,7 @@ end;
 (*
 ## Map.DebugPosition
 ```pascal
-procedure TRSMap.DebugPosition();
+function TRSMap.DebugPosition(): TPoint;
 ```
 Debugs the player position in the currently loaded map.
 
@@ -832,6 +838,72 @@ begin
   bitmap.Free();
 
   UnFreeze();
+end;
+
+procedure TRSMap.DebugHeight();
+var
+  me: TRSPosition;
+  b: TBox;
+  tpa: TPointArray;
+  x1, y1, x2, y2, x, y, w, h: Int32;
+  p, c, local: TPoint;
+  bitmap, map, rotated: TMufasaBitmap;
+  angle, height: Single;
+  tile: Vector3;
+  z: TRectangle;
+begin
+  angle := Minimap.GetCompassAngle(False);
+  me := Self.FullPosition();
+
+  if Self.RegionIndex > -1 then
+    local := Self.Loader.GetLocal(Self.RegionIndex, [me.X, me.Y]);
+
+  bitmap.FromClient();
+
+  b := Minimap.Bounds();
+  w := b.Width();
+  h := b.Height();
+
+  x1 := (local.X - w div 2) - 10;
+  y1 := (local.Y - h div 2) - 10;
+  x2 := (local.X + w div 2) + 10;
+  y2 := (local.Y + h div 2) + 10;
+
+  map := Self.Loader.Heightmap.Copy(x1, y1, x2, y2);
+
+  rotated.Init();
+  map.RotateBitmap(-angle, rotated);
+  rotated.Crop(Box(rotated.getCenter(), w div 2, h div 2));
+
+  tpa := Minimap.GetPolygon().Offset(-b.X1, -b.Y1);
+  tpa := tpa.Connect().ShapeFill().Grow(2);
+  rotated.DrawTPA(tpa.Invert(rotated.Bounds()), $0);
+  rotated.SetTransparentColor(0);
+
+  bitmap.DrawBitmap(rotated, [b.X1, b.Y1]);
+
+  c := Minimap.Center();
+  z := Minimap.GetZoomRectangle().Expand(4);
+  for x := c.X - 25 * 4 to c.X + 25 * 4 with 4 do
+    for y := c.Y - 25 * 4 to c.Y + 25 * 4 with 4 do
+    begin
+      p := Point(me.X, me.Y) + ([x, y] - c);
+      p := p.Rotate(-angle, [me.X, me.Y]);
+      height := (-me.Z - Self.Height(p)) / 23 + 20;
+      tile := Vec3(x, y, height).RotateXY(angle, c.X, c.Y);
+      if not tile.ToPoint().InRect(z) then
+        Continue;
+      tpa := Minimap.VectorToMSRect(tile, 1, 1, angle).ToTPA().Connect();
+
+      bitmap.DrawTPA(MainScreen.Filter(tpa), Round(height * $00FF00 / 2040));
+    end;
+
+
+  bitmap.Debug();
+
+  bitmap.Free();
+  rotated.Free();
+  map.Free();
 end;
 
 (*

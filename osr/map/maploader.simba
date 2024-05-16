@@ -185,9 +185,7 @@ begin
   end;
 
   Result.Init();
-  n := CHUNK_SIZE;
-  if map <> ERSMapType.HEIGHT then
-    n := n * TILE_SIZE;
+  n := CHUNK_SIZE * TILE_SIZE;
 
   Result.SetSize((hi.X-lo.X) * n + 1 + n, (hi.Y-lo.Y) * n + 1 + n);
 
@@ -725,7 +723,7 @@ begin
 end;
 
 
-function TRSMapLoader.InternalLoad(bitmaps: TMufasaBitmapArray): TMufasaBitmap;
+function TRSMapLoader._InternalLoad(bitmaps: TMufasaBitmapArray): TMufasaBitmap;
 var
   i: Int32;
 begin
@@ -737,39 +735,17 @@ begin
     Result.DrawBitmap(bitmaps[i], [Self.Regions[i].Region.X1, Self.Regions[i].Region.Y1]);
     bitmaps[i].Free();
   end;
+end;
 
+function TRSMapLoader.InternalLoad(bitmaps: TMufasaBitmapArray): TMufasaBitmap;
+begin
+  Result := Self._InternalLoad(bitmaps);
   Self.DownscaledMap.Init();
   AddOnTerminate(@Self.Free);
   Result.Downsample(Self.Downscale, Self.DownscaledMap);
 end;
 
-function TRSMapLoader.InternalHeightLoad(bitmaps: TMufasaBitmapArray): TMufasaBitmap;
-var
-  i: Int32;
-begin
-  Result.Init();
-  Result.SetSize(Self.MapBox.Width() div TILE_SIZE, Self.MapBox.Height() div TILE_SIZE);
 
-  for i := 0 to High(bitmaps) do
-  begin
-    Result.DrawBitmap(bitmaps[i], Point(Self.Regions[i].Region.X1 div TILE_SIZE, Self.Regions[i].Region.Y1 div TILE_SIZE));
-    bitmaps[i].Free();
-  end;
-end;
-
-function TRSMapLoader.InternalCollisionLoad(bitmaps: TMufasaBitmapArray): TMufasaBitmap;
-var
-  i: Int32;
-begin
-  Result.Init();
-  Result.SetSize(Self.MapBox.Width(), Self.MapBox.Height());
-
-  for i := 0 to High(bitmaps) do
-  begin
-    Result.DrawBitmap(bitmaps[i], [Self.Regions[i].Region.X1, Self.Regions[i].Region.Y1]);
-    bitmaps[i].Free();
-  end;
-end;
 
 function TRSMapLoader.InternalGraphLoad(graphs: array of TWebGraph; padding: UInt32): TWebGraph;
 var
@@ -854,7 +830,7 @@ begin
       if levels[i] = 0 then
       begin
         hbitmaps += Self.Loader.GetMap(s, f, 0, ERSMapType.HEIGHT);
-        hbitmaps[High(hbitmaps)].Pad(padding div TILE_SIZE);
+        hbitmaps[High(hbitmaps)].Pad(padding);
       end;
 
       cbitmaps += Self.Loader.GetMap(s, f, levels[i], ERSMapType.COLLISION);
@@ -870,8 +846,8 @@ begin
   Self.Pack();
 
   Self.Map := Self.InternalLoad(bitmaps);
-  Self.Heightmap := Self.InternalHeightLoad(hbitmaps);
-  Self.Collision := Self.InternalCollisionLoad(cbitmaps);
+  Self.Heightmap := Self._InternalLoad(hbitmaps);
+  Self.Collision := Self._InternalLoad(cbitmaps);
   Self.Graph := Self.InternalGraphLoad(graphs, padding);
   Self.ObjectData := Self.InternalObjectsLoad(objects);
 
