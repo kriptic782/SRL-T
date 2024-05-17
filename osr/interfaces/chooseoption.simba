@@ -1,9 +1,29 @@
+(*
+# ChooseOption
+This file contains types and methods meant to handle the OldSchool RuneScape
+context menu that opens on right clicking.
+*)
 {$DEFINE SRL_CHOOSEOPTION_INCLUDED}
 {$IFNDEF SRL_OSR}
   {$I SRL-T/osr.simba}
 {$ENDIF}
 
 type
+(*
+(TRSChooseOption_Option)=
+## type TRSChooseOption_Option
+```pascal
+TRSChooseOption_Option = record
+  Text: String;
+  Bounds: TBox;
+  StringIndex, OptionIndex: Int32;
+end;
+
+TRSChooseOption_OptionArray = array of TRSChooseOption_Option;
+```
+Helper type to handle the context menu options.
+You probably won't have to use this directly.
+*)
   TRSChooseOption_Option = record
     Text: String;
     Bounds: TBox;
@@ -12,6 +32,20 @@ type
 
   TRSChooseOption_OptionArray = array of TRSChooseOption_Option;
 
+(*
+(TRSChooseOption)=
+## type TRSChooseOption
+```pascal
+TRSChooseOption = record
+  Bitmap: Int32;
+  BitmapWidth: Int32;
+  BitmapHeight: Int32;
+
+  Bounds: TBox;
+end;
+```
+Main record responsible for handling the ChooseOption menu.
+*)
   TRSChooseOption = record
     Bitmap: Int32;
     BitmapWidth: Int32;
@@ -20,13 +54,20 @@ type
     Bounds: TBox;
   end;
 
-  TOptionCount = record
-    Item: String;
-    Count: Integer;
-  end;
-  TOptionCountArray = array of TOptionCount;
+(*
+## ChooseOption.IsOpen
+```pascal
+function TRSChooseOption.IsOpen(): Boolean;
+function TRSChooseOption.IsOpen(WaitTime: Int32; Interval: Int32 = -1): Boolean; overload;
+```
+Returns True/False if the choose option menu is currently visible/open.
 
-function TRSChooseOption.Find(): Boolean;
+Example:
+```pascal
+WriteLn ChooseOption.IsOpen();
+```
+*)
+function TRSChooseOption.IsOpen(): Boolean;
 var
   TPA: TPointArray;
   ATPA: T2DPointArray;
@@ -51,11 +92,6 @@ begin
   end;
 end;
 
-function TRSChooseOption.IsOpen(): Boolean; overload;
-begin
-  Result := Self.Find();
-end;
-
 function TRSChooseOption.IsOpen(WaitTime: Int32; Interval: Int32 = -1): Boolean; overload;
 begin
   if (Interval = -1) then
@@ -64,6 +100,19 @@ begin
   Result := WaitUntil(Self.IsOpen(), Interval, WaitTime);
 end;
 
+
+(*
+## ChooseOption.IsOpen
+```pascal
+function TRSChooseOption.Open(): Boolean;
+```
+Opens the choose option context menu if it's not currently open.
+
+Example:
+```pascal
+WriteLn ChooseOption.Open();
+```
+*)
 function TRSChooseOption.Open(): Boolean;
 begin
   Result := Self.IsOpen();
@@ -75,11 +124,28 @@ begin
   end;
 end;
 
+(*
+## ChooseOption.Free
+```pascal
+function TRSChooseOption.Free(): Boolean;
+```
+Releases loaded bitmaps that the TRSChooseOption loads to work.
+This is automatically called for you on script termination, you don't have to call it.
+*)
 procedure TRSChooseOption.Free();
 begin
   FreeBitmap(Self.Bitmap);
 end;
 
+(*
+## ChooseOption.Setup
+```pascal
+procedure TRSChooseOption.Setup();
+```
+TRSChooseOption setup method.
+This is responsible for loading the needed bitmaps into memory and is automatically called for you when a script is ran so you
+don't have to call it.
+*)
 procedure TRSChooseOption.Setup();
 begin
   Self.Bitmap := BitmapFromString(20, 18, 'meJxzD4l1pwAxkAsGj15Mv+DyGpogXBmyemL04lEzgHqxhgPxehkwwoEkN9NCLwMRcYRHL5rvSNVLPBhAvWQjAO6IcGE=');
@@ -87,6 +153,14 @@ begin
   AddOnTerminate(@Self.Free);
 end;
 
+(*
+## ChooseOption.GetOptions
+```pascal
+function TRSChooseOption.GetOptions(): TRSChooseOption_OptionArray;
+```
+Returns a `TRSChooseOption_OptionArray` of all available options in the Choose Option context menu.
+This is a internal method, you probably don't need to call it.
+*)
 function TRSChooseOption.GetOptions(): TRSChooseOption_OptionArray;
 var
   i: Int32;
@@ -111,97 +185,19 @@ begin
   end;
 end;
 
-{
-  Counts the occurrences of a specific option within a given array of choices, filtering by an optional action prefix.
+(*
+## ChooseOption.Close
+```pascal
+function TRSChooseOption.Close(): Boolean;
+```
+Closes the Choose option context menu if it's open.
+Returns True on success.
 
-  Parameters:
-    optionText: The text of the option to count.
-    choices: An array of options where each item is of type TRSChooseOption_Option.
-    actionFilter: A prefix to filter options by before counting, e.g., 'Take'. Default is 'Take'.
-    caseSensitive: Specifies whether the text comparison should be case-sensitive. Default is true.
-
-  Returns:
-    The count of how many times the specified option appears in the choices array after applying the action filter.
-
-  Example:
-    // Assuming `choices` is already populated with options from the interface:
-    writeln('Number of "Blue dragonhide" options: ', ChooseOption.CountOption('Blue dragonhide', choices));
-}
-function TRSChooseOption.CountOption(optionText: String; choices: TRSChooseOption_OptionArray; actionFilter: String = 'Take'; caseSensitive: Boolean = True): Integer;
-var
-  i: Int32;
-  processedText: String;
-begin
-  Result := 0;
-  if not caseSensitive then
-    optionText := Lowercase(optionText);
-
-  for i := 0 to High(choices) do begin
-    processedText := choices[i].Text;
-    if processedText.StartsWith(actionFilter) then
-      processedText := processedText.Replace(actionFilter + ' ', '');
-
-    if not caseSensitive then
-      processedText := Lowercase(processedText);
-
-    if processedText = optionText then
-      Inc(Result);
-  end;
-end;
-
-{
-  Counts all unique options after applying an action filter from a set of choices presented in a context menu.
-
-  Parameters:
-    actionFilter: The filter to apply before counting, typically to remove a specific prefix like 'Take '. Default is 'Take'.
-
-  Returns:
-    An array where each element contains the item name and its count after filtering and counting each unique item in the choices.
-
-  Example:
-    // Assuming the context menu is open and ready to be read:
-    var counts: TOptionCountArray;
-    counts := ChooseOption.CountOptions();
-    // Output each counted option and its occurrences:
-    for i := 0 to High(counts) do
-      writeln(counts[i].Item, ': ', counts[i].Count);
-}
-function TRSChooseOption.CountOptions(actionFilter: String = 'Take'): TOptionCountArray;
-var
-  choices: TRSChooseOption_OptionArray;
-  i, idx: Int32;
-  processedText: String;
-  found: Boolean;
-begin
-  if not Self.Open() then Exit;
-  Wait(0, 1000, wdLeft);
-  choices := Self.GetOptions();
-
-  for i := 0 to High(choices) do begin
-    processedText := choices[i].Text;
-    if processedText.StartsWith(actionFilter) then begin
-      processedText := processedText.Replace(actionFilter + ' ', '');
-
-      found := False;
-      for idx := 0 to High(Result) do begin
-        if Result[idx].Item = processedText then begin
-          Inc(Result[idx].Count);
-          found := True;
-          Break;
-        end;
-      end;
-
-      if not found then begin
-        idx := Length(Result);
-        SetLength(Result, idx + 1);
-        Result[idx].Item := processedText;
-        Result[idx].Count := 1;
-      end;
-    end;
-  end;
-end;
-
-
+Example:
+```pascal
+WriteLn ChooseOption.Close();
+```
+*)
 function TRSChooseOption.Close(): Boolean;
 var
   boxes: TBoxArray;
@@ -222,6 +218,22 @@ begin
 end;
 
 
+(*
+## ChooseOption.HasOption
+```pascal
+function TRSChooseOption.HasOption(text: TStringArray; out option: TRSChooseOption_Option; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean;
+function TRSChooseOption.HasOption(text: TStringArray; out index: Int32; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; overload;
+function TRSChooseOption.HasOption(text: TStringArray; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; overload;
+function TRSChooseOption.HasOption(text: String; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; overload;
+```
+Methods to check if an option is available in the choose option context menu.
+Returns true if the option specified is available.
+
+Example:
+```pascal
+WriteLn ChooseOption.HasOption('Take');
+```
+*)
 function TRSChooseOption.HasOption(text: TStringArray; out option: TRSChooseOption_Option; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean;
 var
   choices: TRSChooseOption_OptionArray;
@@ -234,13 +246,14 @@ begin
   choices := Self.GetOptions();
 
   for i := 0 to High(text) do
+  begin
+    if not caseSensitive then
+      text[i] := Lowercase(text[i]);
+
     for j := 0 to High(choices) do
     begin
       if not caseSensitive then
-      begin
-        text[i] := Lowercase(text[i]);
         choices[j].Text := Lowercase(choices[j].Text);
-      end;
 
       if text[i] in choices[j].Text then
       begin
@@ -249,6 +262,7 @@ begin
         Exit(True);
       end;
     end;
+  end;
 
   if closeIfNotFound then
   begin
@@ -281,6 +295,72 @@ begin
 end;
 
 
+(*
+## ChooseOption.CountOption
+```pascal
+function TRSChooseOption.CountOption(text: TStringArray; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Int32;
+function TRSChooseOption.CountOption(text: String; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Int32; overload;
+```
+Count how many times the specified option occurs in the choose option context menu.
+
+Example:
+```pascal
+WriteLn ChooseOption.CountOption('Take Bones');
+```
+*)
+function TRSChooseOption.CountOption(text: TStringArray; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Int32;
+var
+  choices: TRSChooseOption_OptionArray;
+  i, j: Int32;
+begin
+  if not Self.Open() then
+    Exit;
+
+  Wait(0, 1000, wdLeft);
+  choices := Self.GetOptions();
+
+  for i := 0 to High(text) do
+  begin
+    if not caseSensitive then
+      text[i] := Lowercase(text[i]);
+
+    for j := 0 to High(choices) do
+    begin
+      if not caseSensitive then
+        choices[j].Text := Lowercase(choices[j].Text);
+
+      if text[i] in choices[j].Text then
+        Result += 1;
+    end;
+  end;
+
+  if (Result = 0) and closeIfNotFound then
+  begin
+    WaitEx(500, 250);
+    Self.Close();
+  end;
+end;
+
+function TRSChooseOption.CountOption(text: String; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Int32; overload;
+begin
+  Result := Self.CountOption([text], caseSensitive, closeIfNotFound);
+end;
+
+
+(*
+## ChooseOption.Select
+```pascal
+procedure TRSChooseOption.Select(option: TRSChooseOption_Option; mouseAction: Int32 = MOUSE_LEFT);
+function TRSChooseOption.Select(text: TStringArray; mouseAction: Int32 = MOUSE_LEFT; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; overload;
+function TRSChooseOption.Select(text: String; mouseAction: Int32 = MOUSE_LEFT; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; overload;
+```
+Selects the specified option if it exists on the Choose option context menu.
+
+Example:
+```pascal
+WriteLn ChooseOption.Select('Take Bones');
+```
+*)
 procedure TRSChooseOption.Select(option: TRSChooseOption_Option; mouseAction: Int32 = MOUSE_LEFT);
 var
   from: TPoint;
@@ -317,7 +397,20 @@ begin
 end;
 
 
-function TRSChooseOption.Hover(text: TStringArray; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; overload;
+(*
+## ChooseOption.Hover
+```pascal
+function TRSChooseOption.Hover(text: TStringArray; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean;
+function TRSChooseOption.Hover(text: String; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; overload;
+```
+Hovers the specified option if it exists on the Choose option context menu.
+
+Example:
+```pascal
+WriteLn ChooseOption.Hover('Take Bones');
+```
+*)
+function TRSChooseOption.Hover(text: TStringArray; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean;
 begin
   Result := Select(text, MOUSE_MOVE, caseSensitive, closeIfNotFound);
 end;
@@ -328,6 +421,11 @@ begin
 end;
 
 var
+(*
+(ChooseOption)=
+## var ChooseOption
+Global variable for the TRSChooseOption record. You should use this variable when you want to interact with TRSChooseOption.
+*)
   ChooseOption: TRSChooseOption;
 
 procedure TSRL.Setup(); override;
