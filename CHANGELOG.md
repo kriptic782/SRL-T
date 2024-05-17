@@ -1,3 +1,12 @@
+## [4.12.1](https://github.com/Torwent/SRL-T/compare/v4.12.0...v4.12.1) (2024-05-17)
+
+
+### Bug Fixes
+
+* better heightmap math ([cbcba08](https://github.com/Torwent/SRL-T/commit/cbcba08f10e87b3280d71c30664139027f8df8c6))
+
+
+
 # [4.12.0](https://github.com/Torwent/SRL-T/compare/v4.11.1...v4.12.0) (2024-05-17)
 
 
@@ -32,15 +41,6 @@
 ### Bug Fixes
 
 * **TRSMap:** unwrap the Objects variable, no point having it nested ([56a604e](https://github.com/Torwent/SRL-T/commit/56a604e8d9e96779f38f0443dda505b4163f9c0d))
-
-
-
-## [4.10.1](https://github.com/Torwent/SRL-T/compare/v4.10.0...v4.10.1) (2024-05-14)
-
-
-### Bug Fixes
-
-* **spellfinder:** fix new teleport casing ([b7c8c7d](https://github.com/Torwent/SRL-T/commit/b7c8c7d3ae5ebfb243e96f3a2f138bc6ecf4e963))
 
 
 
