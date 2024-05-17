@@ -12,17 +12,71 @@ Without them, this wouldn't be possible.
 {$ENDIF}
 
 type
+(*
+(TRSPosition)=
+## type TRSPosition
+```pascal
+TRSPosition = record(TPoint)
+  Z: Int32;
+  Plane: Int32;
+end;
+```
+Record holding a player's full position:
+- X, Y coordinate
+- Z which is the player height on the current heightmap
+- Plane which is the player's current plane if several planes are being used.
+*)
   TRSPosition = record(TPoint)
     Z: Single;
     Plane: Int32;
   end;
 
+(*
+(TRSMapChunk)=
+## type TRSMapChunk
+```pascal
+TRSMapChunk = record
+  Name: String;
+  Chunk: TBox;
+  Planes: TIntegerArray;
+end;
+```
+Helper record to store chunk data with a name associated with.
+
+Example:
+```pascal
+var
+  VarrockChunk: TRSMapChunk = ['Varrock', [49,54,50,53], [0]];
+begin
+  Map.SetupChunk(VarrockChunk);
+end;
+```
+*)
   TRSMapChunk = record
     Name: String;
     Chunk: TBox;
-    Levels: TIntegerArray;
+    Planes: TIntegerArray;
   end;
 
+(*
+(TRSMap)=
+## type TRSMap
+```pascal
+TRSMap = record
+  Walker: TRSWalkerV2;
+  Objects: TRSMapObjects;
+
+  RegionIndex: Int32;
+  Region: TRSMapRegion;
+  Similarity: Double;
+  Cache: TMatchTemplateRGBCache;
+  Loader: TRSMapLoader;
+
+  IsSetup: Boolean;
+end;
+```
+Record responsible for positioning.
+*)
   TRSMap = record
     Walker: TRSWalkerV2;
 
@@ -170,7 +224,7 @@ begin
   for i := 0 to High(chunks) do
   begin
     boxes += chunks[i].Chunk;
-    for l in chunks[i].Levels do
+    for l in chunks[i].Planes do
       if levels.Find(l) = -1 then
         levels += l;
   end;
@@ -180,7 +234,7 @@ end;
 
 procedure TRSMap.SetupChunk(chunk: TRSMapChunk; downscale: UInt32 = 8);
 begin
-  Self.SetupChunksEx([chunk.Chunk], chunk.Levels, downscale);
+  Self.SetupChunksEx([chunk.Chunk], chunk.Planes, downscale);
 end;
 
 
@@ -280,7 +334,7 @@ begin
   for i := 0 to High(chunks) do
   begin
     boxes += chunks[i].Chunk;
-    for l in chunks[i].Levels do
+    for l in chunks[i].Planes do
       if levels.Find(l) = -1 then
         levels += l;
   end;
@@ -290,7 +344,7 @@ end;
 
 procedure TRSMap.AddChunk(chunk: TRSMapChunk; downscale: UInt32 = 8);
 begin
-  Self.AddChunksEx([chunk.Chunk], chunk.Levels, downscale);
+  Self.AddChunksEx([chunk.Chunk], chunk.Planes, downscale);
 end;
 
 
