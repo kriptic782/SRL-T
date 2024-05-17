@@ -1,3 +1,13 @@
+# [4.12.0](https://github.com/Torwent/SRL-T/compare/v4.11.1...v4.12.0) (2024-05-17)
+
+
+### Bug Fixes
+
+* **ChooseOption:** rework chooseoptions.countoption ([d4c6c35](https://github.com/Torwent/SRL-T/commit/d4c6c35923915be99687f4f3387a2d7188337fbd))
+* **docs:** added some more docs to TRSMap related stuff ([1827eec](https://github.com/Torwent/SRL-T/commit/1827eecf17864bae5785cb7639e8c741d3761a22))
+
+
+
 ## [4.11.1](https://github.com/Torwent/SRL-T/compare/v4.11.0...v4.11.1) (2024-05-16)
 
 
@@ -31,15 +41,6 @@
 ### Bug Fixes
 
 * **spellfinder:** fix new teleport casing ([b7c8c7d](https://github.com/Torwent/SRL-T/commit/b7c8c7d3ae5ebfb243e96f3a2f138bc6ecf4e963))
-
-
-
-# [4.10.0](https://github.com/Torwent/SRL-T/compare/v4.9.7...v4.10.0) (2024-05-14)
-
-
-### Features
-
-* added basic object color loading from dumped assets ([01023d5](https://github.com/Torwent/SRL-T/commit/01023d5add406de51e3d77f9fa7deed6cd21330e))
 
 
 
