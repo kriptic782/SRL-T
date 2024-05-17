@@ -172,7 +172,7 @@ var
   coordinates, mmPoints: TPointArray;
   p: TPoint;
   offset: Vector3;
-  h: Single;
+  h, diff: Single;
 begin
   if me = [0,0] then
     me := Self.Walker^.Position();
@@ -185,9 +185,10 @@ begin
 
   for p in coordinates.Sorted(me) do
   begin
-    offset := Vec3(Self.Offset.X, Self.Offset.Y, (-h-Self.Walker^.Height(p))*23);
+    diff := -(h-Self.Walker^.Height(p));
+    offset := Vec3(Self.Offset.X, Self.Offset.Y, -(h-Self.Walker^.Height(p)));
     p := Self.Walker^.PointToMM(me, p, angle);
-    Result += Minimap.GetCuboidMS(p, Self.Size, offset, angle);
+    Result += Minimap.GetCuboidMS(p + [Round(0.15*diff), Round(0.11*diff)], Self.Size, offset, angle);
   end;
 end;
 
@@ -521,9 +522,6 @@ begin
     rect.Btm := p.Offset(q.X, q.Y);
     rect.Left := p.Offset(-q.X, q.Y);
     bitmap.DrawRect(rect, $FF);
-
-    offset := Vec3(Self.Offset.X, Self.Offset.Y, (-h-Self.Walker^.Height(p))*23);
-    cuboids += Minimap.GetCuboidMS(p, Self.Size, offset, angle);
   end;
 
   Self.FindEx(cuboids, atpa);

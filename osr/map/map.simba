@@ -635,14 +635,14 @@ function TRSMap.H2C(height: Single): Int32;
 const
   H_VALUE = 2040 / $FFFFFF;
 begin
-  Result := Round(height / H_VALUE);
+  Result := Round((height / H_VALUE) * 29.14);
 end;
 
 function TRSMap.C2H(color: Int32): Single;
 const
   H_VALUE = 2040 / $FFFFFF;
 begin
-  Result := color*H_VALUE;
+  Result := (color*H_VALUE) / 29.14;
 end;
 {%codetools on}
 
@@ -943,7 +943,8 @@ begin
     begin
       p := Point(me.X, me.Y) + ([x, y] - c);
       p := p.Rotate(-angle, [me.X, me.Y]);
-      height := (-me.Z - Self.Height(p)) / 23 + 20;
+      height := - (me.Z - Self.Height(p));
+
       tile := Vec3(x, y, height).RotateXY(angle, c.X, c.Y);
       if not tile.ToPoint().InRect(z) then
         Continue;
@@ -951,7 +952,6 @@ begin
 
       bitmap.DrawTPA(MainScreen.Filter(tpa), Round(height * $00FF00 / 2040));
     end;
-
 
   bitmap.Debug();
 
