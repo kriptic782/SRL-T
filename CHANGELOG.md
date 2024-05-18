@@ -1,3 +1,12 @@
+## [4.12.2](https://github.com/Torwent/SRL-T/compare/v4.12.1...v4.12.2) (2024-05-18)
+
+
+### Bug Fixes
+
+* **mainscreen:** hitsplat rework ([00323d1](https://github.com/Torwent/SRL-T/commit/00323d19910f0b47b3529eef4c53901536d0bdea))
+
+
+
 ## [4.12.1](https://github.com/Torwent/SRL-T/compare/v4.12.0...v4.12.1) (2024-05-17)
 
 
@@ -32,15 +41,6 @@
 ### Features
 
 * read notes ([6b22f37](https://github.com/Torwent/SRL-T/commit/6b22f37f3c45f8ebcf7a774cd982bb874e7ded1d))
-
-
-
-## [4.10.2](https://github.com/Torwent/SRL-T/compare/v4.10.1...v4.10.2) (2024-05-15)
-
-
-### Bug Fixes
-
-* **TRSMap:** unwrap the Objects variable, no point having it nested ([56a604e](https://github.com/Torwent/SRL-T/commit/56a604e8d9e96779f38f0443dda505b4163f9c0d))
 
 
 
