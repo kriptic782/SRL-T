@@ -617,19 +617,20 @@ begin
       Result += arr[i];
 end;
 
-
+type
 (*
+(TRSHitsplat)=
 ## type TRSHitsplat
 ```pascal
-type
-  TRSHitsplat = record
-    Position: TPoint;  // Middle of the found hitsplat
-    Hit: Int32;        // Hit amount
-    Red: Boolean;      // True if red, false if blue.
-  end;
+TRSHitsplat = record
+  Position: TPoint;  // Middle of the found hitsplat
+  Hit: Int32;        // Hit amount
+  Red: Boolean;      // True if red, false if blue.
+end;
+
+TRSHitsplatArray = array of TRSHitsplat;
 ```
 *)
-type
   TRSHitsplat = record
     Position: TPoint;
     Hit: Int32;
@@ -642,46 +643,107 @@ type
 ## Mainscreen.FindHitsplats
 ```pascal
 function TRSMainScreen.FindHitsplats(area: TBox): TRSHitsplatArray;
-function TRSMainScreen.FindHitsplats: TRSHitsplatArray; overload;
+function TRSMainScreen.FindHitsplats(): TRSHitsplatArray; overload;
 ```
 Finds hitsplats in the desired `area` if specified or the entire mainscreen.
 Returns an array of TRSHitsplat.
 
 Example:
 ```pascal
-var Splats: TRSHitsplatArray;
-var I: Int32;
-
-Splats := MainScreen.FindHitsplats(MainScreen.Bounds());
-for I := 0 to High(Splats) do
-  WriteLn(Splats[I].Position);
+var
+  splat: TRSHitsplat;
+begin
+  for splat in MainScreen.FindHitsplats() do
+  begin
+    Debug(splat);
+    WriteLn(splat.Hit);
+    Wait(2000);
+  end;
+end;
 ```
 *)
 function TRSMainScreen.FindHitsplats(area: TBox): TRSHitsplatArray;
+const
+  WHITES: TIntegerArray = [$FFFFFF, $FCFCFC, $C7C7C7];
 
-  function Find(color: TCTS2Color; red: Boolean): TRSHitsplatArray;
+  BLUE_SPLATS: T2DIntegerArray = [
+    [$FF4040,$A20A12,$4D0402], [$C73232,$7E070E,$3C0301], [$FC3D3D,$9F070F,$4A0100]
+  ];
+
+  RED_SPLATS: T2DIntegerArray = [
+    [$0000BA,$01018D,$000059], [$000091,$00006E,$000045], [$0000B7,$00008A,$000056]
+  ];
+
+  MAX_SPLATS: T2DIntegerArray = [
+    [$0000F3,$0000BA,$0024B3,$01018D,$004ED3,$0081F8,$0FB5FA],
+    [$0000BD,$000091,$00006E,$001C8B,$003CA4,$0064C1,$0B8DC3],
+    [$0000F0,$0000B7,$00008A,$0021B0,$004BD0,$007EF5,$0CB2F7]
+  ];
+
+  function _Find(out tpa: TPointArray; b: TBox; colors: T2DIntegerArray): Boolean;
   var
-    tpa: TPointArray;
-    b: TBox;
-    hit: Int32;
+    i, j: Int32;
+    found: TPointArray;
   begin
-    if SRL.FindColors(tpa, color, area) = 0 then
-      Exit;
-
-    for b in tpa.Cluster(3).ToTBA() do
-      if (b.Width() >= 10) and (b.Height() >= 10) then
+    for i := 0 to High(colors) do
+    begin
+      for j := 0 to High(colors[i]) do
       begin
-        hit := OCR.RecognizeNumber(b.Expand(5, area), TOCRColorFilter.Create([$FFFFFF]), RS_FONT_PLAIN_11);
+        if SRL.FindColors(found, colors[i,j], b) = 0 then
+        begin
+          tpa := [];
+          Continue(2);
+        end;
 
-        Result += [b.Middle(), hit, red];
+        tpa += found;
       end;
+
+      Break;
+    end;
+
+    Result := tpa <> [];
   end;
 
+var
+  white, black, number, tpa: TPointArray;
+  atpa: T2DPointArray;
+  b: TBox;
+  i, hit: Int32;
 begin
-  //Known red hits used: 957,186,240,243, 659, 189,
-  //Known blue hits used: 16530749, 16728128, 13054514
-  Result := Find(CTS2(707, 10, 0.02, 0.01), True) +
-            Find(CTS2(4079358, 1, 33.34, 2.02), False);
+  for i := 0 to High(WHITES) do
+    if SRL.FindColors(tpa, WHITES[i], area) > 0 then
+      white += tpa;
+
+  if white = [] then Exit;
+  if SRL.FindColors(black, $0, area) = 0 then
+    Exit;
+
+  number := PointsInRangeOf(white, black, 1, 3);
+  atpa := number.Cluster(3);
+
+  for number in atpa do
+  begin
+    if not InRange(Length(number), 4, 40) then
+      Continue;
+
+    b := number.Bounds();
+    if not InRange(b.Height(), 3, 9) or not InRange(b.Width(), 1, 80) then
+      Continue;
+
+    b := b.Expand(10, area);
+
+    if _Find(tpa, b, BLUE_SPLATS) then
+    begin
+      Result += [b.Center(), 0, False];
+      Continue;
+    end;
+
+    if not _Find(tpa, b, RED_SPLATS) and not _Find(tpa, b, MAX_SPLATS) then
+      Continue;
+
+    hit := OCR.RecognizeNumber(b, TOCRColorFilter.Create([$FFFFFF]), RS_FONT_PLAIN_11);
+    Result += [b.Center(), hit, True];
+  end;
 end;
 
 function TRSMainScreen.FindHitsplats(): TRSHitsplatArray; overload;
@@ -690,7 +752,8 @@ begin
 end;
 
 (*
-## TRSHitsplat
+(TRSHPBar)=
+## type TRSHPBar
 ```pascal
 TRSHPBar = record
   Bounds: TBox;       // Bounds of the bar
@@ -844,11 +907,7 @@ begin
 end;
 
 type
-  ERSClickType = (
-    NONE,
-    RED,
-    YELLOW
-  );
+  ERSClickType = (NONE, RED, YELLOW);
 
 (*
 ## Mainscreen.FindClick
@@ -936,40 +995,95 @@ begin
   Result := WaitUntil(SRL.CountColor(CTS1(65535,0), area) > 0, 50, time);
 end;
 
-procedure TRSMainScreen.Draw(Bitmap: TMufasaBitmap); override;
+procedure TRSMainScreen.Draw(bitmap: TMufasaBitmap); override;
 var
-  Splat: TRSHitsplat;
-  Bar: TRSHPBar;
+  splat: TRSHitsplat;
+  bar: TRSHPBar;
 begin
   inherited;
 
-  for Splat in Self.FindHitsplats() do
-    Bitmap.DrawCircle(Splat.Position, 10, $00FF00);
-  for Bar in Self.FindHPBars() do
-    Bitmap.DrawBox(Bar.Bounds, $00FFFF);
+  for splat in Self.FindHitsplats() do
+    bitmap.DrawCircle(splat.Position, 10, $00FF00);
+  for bar in Self.FindHPBars() do
+    bitmap.DrawBox(bar.Bounds, $00FFFF);
 end;
 
 var
   MainScreen: TRSMainScreen;
 
-procedure TRSClient.ClientModeChanged; override;
+procedure TRSClient.ClientModeChanged(); override;
 begin
   inherited;
 
   MainScreen.SetupAlignment(Self.Mode);
 end;
 
-procedure TSRL.Setup; override;
+procedure TSRL.Setup(); override;
 begin
   inherited;
 
   MainScreen.Setup();
 end;
 
-procedure TSRL.Debug(Bitmap: TMufasaBitmap); override;
+procedure TSRL.Debug(bitmap: TMufasaBitmap); override;
 begin
   inherited;
 
-  MainScreen.Draw(Bitmap);
+  MainScreen.Draw(bitmap);
 end;
+
+
+
+procedure Debug(splat: TRSHitsplat); overload;
+var
+  bitmap: TMufasaBitmap;
+begin
+  bitmap.FromClient();
+
+  bitmap.DrawCircle(splat.Position, 10, $00FF00);
+
+  bitmap.Debug();
+  bitmap.Free();
+end;
+
+procedure Debug(splats: TRSHitsplatArray); overload;
+var
+  bitmap: TMufasaBitmap;
+  splat: TRSHitSplat;
+begin
+  bitmap.FromClient();
+
+  for splat in splats do
+    bitmap.DrawCircle(splat.Position, 10, $00FF00);
+
+  bitmap.Debug();
+  bitmap.Free();
+end;
+
+procedure Debug(bar: TRSHPBar); overload;
+var
+  bitmap: TMufasaBitmap;
+begin
+  bitmap.FromClient();
+
+  bitmap.DrawBox(bar.Bounds, $00FFFF);
+
+  bitmap.Debug();
+  bitmap.Free();
+end;
+
+procedure Debug(bars: TRSHPBarArray); overload;
+var
+  bitmap: TMufasaBitmap;
+  bar: TRSHPBar;
+begin
+  bitmap.FromClient();
+
+  for bar in bars do
+    bitmap.DrawBox(bar.Bounds, $00FFFF);
+
+  bitmap.Debug();
+  bitmap.Free();
+end;
+
 
