@@ -415,7 +415,7 @@ begin
 end;
 
 
-procedure PlotGraph(xAxis, yAxis: String; dataNames: TStringArray; data: T2DPointArray; colors: TIntegerArray);
+procedure PlotGraph(xAxis, yAxis: String; dataNames: TStringArray; data: T2DPointArray; colors: TIntegerArray; connect: Boolean = True);
 var
   bmp, tmp, rotated: TMufasaBitmap;
   xMax, yMax, i, j, x, y: Int32;
@@ -469,7 +469,13 @@ begin
 
   for i := 0 to High(data) do
   begin
-    bmp.DrawTPA(data[i], colors[i]);
+    if connect then
+    begin
+      for j := 0 to High(data[i])-1 do
+        bmp.DrawTPA(TPAFromLine(data[i,j], data[i,j+1]), colors[i]);
+    end
+    else
+      bmp.DrawTPA(data[i], colors[i]);
 
     if i <= Length(dataNames) then
     begin
@@ -483,7 +489,7 @@ begin
   bmp.Free();
 end;
 
-procedure PlotGraph(xAxis, yAxis: String; dataNames: TStringArray; data: array of Vector2Array; colors: TIntegerArray); overload;
+procedure PlotGraph(xAxis, yAxis: String; dataNames: TStringArray; data: array of Vector2Array; colors: TIntegerArray; connect: Boolean = True); overload;
 var
   i, j: Int32;
   arr: T2DPointArray;
@@ -496,6 +502,6 @@ begin
       arr[i,j] := [Round(data[i,j].X * 10), Round(data[i,j].Y * 10)];
   end;
 
-  PlotGraph(xAxis, yAxis, dataNames, arr, colors);
+  PlotGraph(xAxis, yAxis, dataNames, arr, colors, connect);
 end;
 
