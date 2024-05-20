@@ -1,3 +1,12 @@
+## [4.12.5](https://github.com/Torwent/SRL-T/compare/v4.12.4...v4.12.5) (2024-05-20)
+
+
+### Bug Fixes
+
+* **Login:** less "techinical" error warnings ([a4d474e](https://github.com/Torwent/SRL-T/commit/a4d474ef0297b84b8b7be9be3c40a3ef064108ee))
+
+
+
 ## [4.12.4](https://github.com/Torwent/SRL-T/compare/v4.12.3...v4.12.4) (2024-05-20)
 
 
@@ -31,16 +40,6 @@
 ### Bug Fixes
 
 * better heightmap math ([cbcba08](https://github.com/Torwent/SRL-T/commit/cbcba08f10e87b3280d71c30664139027f8df8c6))
-
-
-
-# [4.12.0](https://github.com/Torwent/SRL-T/compare/v4.11.1...v4.12.0) (2024-05-17)
-
-
-### Bug Fixes
-
-* **ChooseOption:** rework chooseoptions.countoption ([d4c6c35](https://github.com/Torwent/SRL-T/commit/d4c6c35923915be99687f4f3387a2d7188337fbd))
-* **docs:** added some more docs to TRSMap related stuff ([1827eec](https://github.com/Torwent/SRL-T/commit/1827eecf17864bae5785cb7639e8c741d3761a22))
 
 
 
