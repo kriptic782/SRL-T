@@ -150,7 +150,6 @@ end;
 ```pascal
 function TSRL.PointInTriangle(PT, p1,p2,p3: TPoint): Boolean; static;
 ```
-
 Returns True if the TPoint 'Pt' is inside the triangle
 *)
 function TSRL.PointInTriangle(PT, p1,p2,p3: TPoint): Boolean; static;

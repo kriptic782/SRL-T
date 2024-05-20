@@ -549,19 +549,16 @@ type
   TRSMapLoader = record(TSRLBaseRecord)
     Cache: String;
 
-    Map: TMufasaBitmap;
-    Heightmap: TMufasaBitmap;
-    Collision: TMufasaBitmap;
-
+    Map, Heightmap, Collision,
     DownscaledMap: TMufasaBitmap;
+
     MapBox: TBox;
 
     Graph: TWebGraph;
 
     Regions: array of TRSMapRegion;
 
-    Padding: UInt32;
-    Downscale: UInt32;
+    Padding, Downscale: UInt32;
 
     Loader: TRSChunkLoader;
     LegacyLoader: TRSLegacyMapLoader;

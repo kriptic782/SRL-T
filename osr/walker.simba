@@ -54,6 +54,7 @@ end;
     WalkUpText: TStringArray;
 
     WebGraph: ^TWebGraph;
+    MapImage: TMufasaBitmap;
     OnWalkEvent, OnWalkingEvent: TRSWalkerV2_OnWalkEvent;
   end;
 
@@ -653,11 +654,29 @@ Web walks to the destination point on the loaded map. Does **not** handle any ob
 function TRSWalkerV2.WebWalkEx(me: TPoint; destination: TPoint; waitUntilDistance: Int32 = 0; pathRandomness: Double = 0): Boolean;
 var
   path: TPointArray;
+  bmp: TMufasaBitmap;
 begin
   if not System.InRange(pathRandomness, 0, 1) then
     Self.Fatal('TRSWalkerV2.WebWalk `PathRandomness` must be within 0..1');
 
-  path   := Self.WebGraph^.PathBetween(me, destination, pathRandomness);
+  try
+    path := Self.WebGraph^.PathBetween(me, destination, pathRandomness);
+  except
+    if Assigned(Self.MapImage) then
+    begin
+      bmp := Self.MapImage.Copy();
+      Self.WebGraph^.Draw(bmp);
+
+      if bmp.Bounds().Contains(me) then
+        bmp.DrawCross(me, 6, $FF);
+      if bmp.Bounds().Contains(destination) then
+        bmp.DrawCross(destination, 6, $FF);
+
+      bmp.Debug();
+      bmp.Free();
+    end;
+    TerminateScript(GetExceptionMessage());
+  end;
   Result := Self.WalkPath(path, waitUntilDistance);
 end;
 

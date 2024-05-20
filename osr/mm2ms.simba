@@ -503,7 +503,7 @@ WriteLn Minimap.PointInZoomRadius(p);
 *)
 function TRSMinimap.PointOnZoomRectangle(p: TPoint): Boolean;
 begin
-  Result := p.InRect(Self.GetZoomRectangle());
+  Result := Self.GetZoomRectangle().Contains(p);
 end;
 
 (*

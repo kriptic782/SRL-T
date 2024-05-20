@@ -141,7 +141,8 @@ begin
   begin
     nodes := Self.FindPath(n1,n2,Rnd);
     if (Length(nodes) = 0) then
-      RaiseException('Points `'+ToStr(p)+'` and `'+ToStr(q)+'` does not connect');
+      RaiseException(
+        'Points [' + ToStr(p.X) + ', ' + ToStr(p.Y) + '] and [' + ToStr(q.X) + ', ' + ToStr(q.Y) + '] don''t connect');
   end;
   // if distance between nodes > ??? then Unreliable result
 

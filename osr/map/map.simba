@@ -86,7 +86,7 @@ Record responsible for positioning.
     Cache: TMatchTemplateRGBCache;
     Loader: TRSMapLoader;
 
-    IsSetup: Boolean;
+    IsSetup, DisableHeightmap: Boolean;
   end;
 
 function TRSMap.Position(): TPoint; forward;
@@ -115,6 +115,7 @@ begin
     Self.Walker.Position := @Self.Position;
     Self.Walker.Height := @Self.Height;
     Self.Walker.WebGraph := @Self.Loader.Graph;
+    Self.Walker.MapImage := Self.Loader.Map;
 
     Objects.Data := Self.Loader.ObjectData;
     Objects.Walker := @Self.Walker;
@@ -663,7 +664,7 @@ WriteLn rsw.GetHeight();
 *)
 function TRSMap.Height(p: TPoint = [-1,-1]; global: Boolean): Single; overload;
 begin
-  if not Assigned(Self.Loader.Heightmap) then
+  if Self.DisableHeightmap or not Assigned(Self.Loader.Heightmap) then
     Exit;
 
   if p = [-1,-1] then
@@ -684,9 +685,25 @@ begin
   Result := Self.Height(p, True);
 end;
 
-function TRSMap.HeightDifference(p, q: TPoint): Single;
+function TRSMap.HeightDifference(p, q: TPoint; global: Boolean = True): Single;
+var
+  c1, c2: TColor;
 begin
-  Result := Self.Height(p) - Self.Height(q);
+  if Self.DisableHeightmap or not Assigned(Self.Loader.Heightmap) then
+    Exit;
+
+  if global then
+  begin
+    p := Self.Loader.GetLocal(Self.RegionIndex, p);
+    q := Self.Loader.GetLocal(Self.RegionIndex, q);
+  end;
+
+  c1 := Self.Loader.Heightmap.GetPixel(p);
+  c2 := Self.Loader.Heightmap.GetPixel(q);
+
+  if c1 = c2 then Exit;
+
+  Result := Self.C2H(c1) - Self.C2H(c2);
 end;
 
 
@@ -894,7 +911,7 @@ begin
   UnFreeze();
 end;
 
-procedure TRSMap.DebugHeight();
+procedure TRSMap.DebugHeight(hideCollision: Boolean = True);
 var
   me: TRSPosition;
   b: TBox;
@@ -941,13 +958,21 @@ begin
   for x := c.X - 25 * 4 to c.X + 25 * 4 with 4 do
     for y := c.Y - 25 * 4 to c.Y + 25 * 4 with 4 do
     begin
-      p := Point(me.X, me.Y) + ([x, y] - c);
-      p := p.Rotate(-angle, [me.X, me.Y]);
-      height := - (me.Z - Self.Height(p));
-
-      tile := Vec3(x, y, height).RotateXY(angle, c.X, c.Y);
-      if not tile.ToPoint().InRect(z) then
+      p := [x,y];
+      if not Minimap.PointOnZoomRectangle(p) then
         Continue;
+
+      p := Self.MM2Map([me.X, me.Y], p, angle);
+      p := Self.Loader.GetLocal(Self.RegionIndex, p);
+
+      if hideCollision and (Self.Loader.Collision.GetPixel(p) = $0) then
+        Continue;
+
+      height := - (me.Z - Self.Height(p, False));
+      height := 4 * Pow(height, 2) - 3 * height;
+
+      tile := Vec3(x, y, height).RotateXY(0, c.X, c.Y);
+
       tpa := Minimap.VectorToMSRect(tile, 1, 1, angle).ToTPA().Connect();
 
       bitmap.DrawTPA(MainScreen.Filter(tpa), Round(height * $00FF00 / 2040));
