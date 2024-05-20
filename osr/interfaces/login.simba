@@ -24,17 +24,18 @@ if not Login.LoginPlayer() then
 
 type
 (*
+(TRSLoginPlayer)=
 ## type TRSLoginPlayer
 ```pascal
-  TRSLoginPlayer = record
-    User: String;
-    Password: String;
-    Pin: String;
-    Worlds: TIntegerArray;
-    Active: Boolean;
-    BioHash: Double;
-  end;
-
+TRSLoginPlayer = record
+  User: String;
+  Password: String;
+  Pin: String;
+  Worlds: TIntegerArray;
+  Active: Boolean;
+  BioHash: Double;
+end;
+```
 Type responsible for managing player data.
 You usually don't use this directly but instead use TRSLogin methods to interact with TRSLoginPlayers stored in TRSLogin.Players array.
 The **Active** variable decides wether the player is inteded to be skipped or not by TRSLogin.
@@ -49,15 +50,15 @@ The **Active** variable decides wether the player is inteded to be skipped or no
   end;
 
 (*
+(TRSLogin)=
 ## type TRSLogin
 ```pascal
 TRSLogin = record(TRSInterface)
-Players: array of TRSLoginPlayer;
-PlayerIndex: Int32;
-AllowDangerousWorlds: Boolean;
+  Players: array of TRSLoginPlayer;
+  PlayerIndex: Int32;
+  AllowDangerousWorlds: Boolean;
 end;
 ```
-
 Type responsible for handling login and managing cached TRSLoginPlayers.
 *)
   TRSLogin = record(TRSInterface)
@@ -176,7 +177,6 @@ end;
 ```pascal
 function TRSLogin.IsReady(): Boolean;
 ```
-
 Checks if the login screen is ready to login. In other words, has no dialogs up.
 
 Example:
@@ -195,7 +195,6 @@ end;
 ```pascal
 function TRSLogin.UsingLauncher(): Boolean;
 ```
-
 Checks if the client was launched by a launcher (Steam/Jagex Launcher) or was manually ran by the user.
 
 Example:
@@ -215,7 +214,6 @@ end;
 ```pascal
 function TRSLogin.ClickText(Text: String): Boolean;
 ```
-
 Internal TRSLogin method used to find the specified **Text** on the TRSLogin interface and click it.
 You probably will never to use this directly.
 *)
@@ -233,7 +231,6 @@ end;
 ```pascal
 function TRSLogin.ClickWorld(World: Int32): Boolean;
 ```
-
 Internal TRSLogin method used to click a world on the login interface.
 You probably will never to use this directly.
 *)
@@ -262,7 +259,6 @@ end;
 ```pascal
 function TRSLogin.IsOpen(): Boolean;
 ```
-
 TRSLogin method used to check if we are on the login screen.
 
 Example:
@@ -280,7 +276,6 @@ end;
 ```pascal
 function TRSLogin.IsWorldSwitcherOpen(): Boolean;
 ```
-
 TRSLogin method used to check if the login world switcher is open.
 
 Example:
@@ -298,7 +293,6 @@ end;
 ```pascal
 function TRSLogin.OpenWorldSwitcher(): Boolean;
 ```
-
 TRSLogin method used to open the login screen world switcher.
 
 Example:
@@ -317,7 +311,6 @@ end;
 ```pascal
 function TRSLogin.CloseWorldSwitcher(): Boolean;
 ```
-
 TRSLogin method used to close the login screen world switcher.
 
 Example:
@@ -336,7 +329,6 @@ end;
 ```pascal
 function TRSLogin.GetCurrentWorld(): Int32;
 ```
-
 Returns the currently selected world.
 
 Example:
@@ -361,7 +353,6 @@ end;
 ```pascal
 function TRSLogin.SwitchToWorld(World: Int32): Boolean;
 ```
-
 Attempts to switch the current world to the **World** specified.
 
 Example:
@@ -398,7 +389,6 @@ end;
 ```pascal
 function TRSLogin.HandleDialogs(): Boolean;
 ```
-
 Internal TRSLogin method used to handle the dialog messages.
 You probably will never need to call this directly.
 *)
@@ -474,7 +464,6 @@ end;
 ```pascal
 function TRSLogin.GetLoginMessage(): String;
 ```
-
 Returns the login message that matches any of the messages stored in the constant **LOGIN_MESSAGES**.
 This is not an internal method but you probably will never need to call this directly.
 
@@ -503,7 +492,6 @@ end;
 ```pascal
 function TRSLogin.HandleMessage(Message: String): Boolean;
 ```
-
 Attempts to handle the currently displayed login message.
 This is not an internal method but you probably will never need to call this directly.
 
@@ -597,7 +585,6 @@ end;
 ```pascal
 function TRSLogin.GetPlayer(): TRSLoginPlayer;
 ```
-
 Returns the currently selected TRSLoginPlayer.
 The currently selected TRSLoginPlayer is decided by TRSLogin.PlayerIndex which
 is an index of the TRSLogin.Players array.
@@ -610,9 +597,9 @@ Example:
 function TRSLogin.GetPlayer(): TRSLoginPlayer;
 begin
   if Self.Players = [] then
-    Self.Fatal('No players declared');
+    Self.Fatal('No players declared: Add an account if you want scripts to handle login.');
   if not InRange(Self.PlayerIndex, 0, High(Self.Players)) then
-    Self.Fatal('Player is out of range');
+    Self.Fatal('Player is out of range: Account number selected in script does not exist.');
 
   Result := Self.Players[Self.PlayerIndex];
 end;
@@ -622,7 +609,6 @@ end;
 ```pascal
 function TRSLogin.DoLogin(player: TRSLoginPlayer; launcher: Boolean = False): Boolean;
 ```
-
 Performs a login in the loginscreen with the specified player.
 *)
 function TRSLogin.DoLogin(player: TRSLoginPlayer; launcher: Boolean = False): Boolean;
@@ -663,7 +649,6 @@ end;
 ```pascal
 function TRSLogin.WaitLoginMessage(): Boolean;
 ```
-
 Waits for a login message after a login was performed, returns true if we successfully enter the game lobby.
 *)
 function TRSLogin.WaitLoginMessage(): Boolean;
@@ -769,7 +754,6 @@ end;
 ```pascal
 procedure TRSLogin.AddPlayer(user, pass: String; pin: String = ''; worlds: TIntegerArray = []);
 ```
-
 Adds a TRSLoginPlayer to the TRSLogin.Players array.
 
 Example:
@@ -789,7 +773,6 @@ end;
 ```pascal
 procedure TRSLogin.NextPlayer(DisableCurrentPlayer: Boolean);
 ```
-
 This basically increments TRSLogin.PlayerIndex to the next TRSLoginPlayer that has the **Active** variable set to true.
 If TRSLogin.PlayerIndex is already set to our last TRSLoginPlayer, then it's reset to 0 and set to the first **Active** player.
 
@@ -830,7 +813,6 @@ end;
 ```pascal
 function TRSLogin.GetPlayerPin(): String;
 ```
-
 Get the current player bank pin.
 
 Example:
@@ -851,7 +833,6 @@ end;
 ```pascal
 function TRSLogin.GetPlayerBioHash(): Double;
 ```
-
 Get the current player BioHash.
 
 Example:
@@ -865,9 +846,10 @@ var
   k: String;
 begin
   if Self.Players = [] then
-    Self.Fatal('No players declared');
+    Self.Fatal('No players declared: Add an account if you want scripts to handle login.');
   if not InRange(Self.PlayerIndex, 0, High(Self.Players)) then
-    Self.Fatal('Player is out of range');
+    Self.Fatal('Player is out of range: Account number selected in script does not exist.');
+
 
   if (Self.Players[Self.PlayerIndex].BioHash = 0) then
   begin
@@ -888,7 +870,6 @@ end;
 ```pascal
 procedure TRSLogin.Draw(Bitmap: TMufasaBitmap); override;
 ```
-
 Internal TRSLogin method used for debugging.
 You probably will never need to call this directly but can be useful for debugging.
 This is automatically called with **SRL.Debug()**.
@@ -911,7 +892,6 @@ end;
 ```pascal
 procedure TRSLogin.Setup(); override;
 ```
-
 Internal TRSLogin setup method. This is automatically called by SRL and you
 probably will never need to call this directly.
 *)
@@ -927,7 +907,6 @@ end;
 ```pascal
 procedure TRSLogin.SetupAlignment(Mode: ERSClientMode); override;
 ```
-
 Internal TRSLogin aligment method. This is automatically called by SRL and you
 probably will never need to call this directly.
 
@@ -945,13 +924,14 @@ begin
 end;
 
 (*
+(Login)=
 ## var Login
 Global TRSLogin variable.
 *)
 var
   Login: TRSLogin;
 
-procedure TRSClient.ClientModeChanged; override;
+procedure TRSClient.ClientModeChanged(); override;
 begin
   inherited;
 
