@@ -1,3 +1,12 @@
+## [4.12.4](https://github.com/Torwent/SRL-T/compare/v4.12.3...v4.12.4) (2024-05-20)
+
+
+### Bug Fixes
+
+* small tweak to graph plotting ([a16d81f](https://github.com/Torwent/SRL-T/commit/a16d81fd3fb516f3df248fa201207483a16c20c7))
+
+
+
 ## [4.12.3](https://github.com/Torwent/SRL-T/compare/v4.12.2...v4.12.3) (2024-05-20)
 
 
@@ -32,15 +41,6 @@
 
 * **ChooseOption:** rework chooseoptions.countoption ([d4c6c35](https://github.com/Torwent/SRL-T/commit/d4c6c35923915be99687f4f3387a2d7188337fbd))
 * **docs:** added some more docs to TRSMap related stuff ([1827eec](https://github.com/Torwent/SRL-T/commit/1827eecf17864bae5785cb7639e8c741d3761a22))
-
-
-
-## [4.11.1](https://github.com/Torwent/SRL-T/compare/v4.11.0...v4.11.1) (2024-05-16)
-
-
-### Bug Fixes
-
-* **TRSMap:** read notes ([f388171](https://github.com/Torwent/SRL-T/commit/f3881718670fcf19145bc0900d027dcc84a4f8ec))
 
 
 
