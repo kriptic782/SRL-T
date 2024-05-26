@@ -908,16 +908,9 @@ begin
   minimapPoint := Self.WorldToMM(playerPoint, walkerPoint, Minimap.GetCompassAngle(False));
 
   if Self.ScreenWalk then
-  begin
-    if not Minimap.PointOnZoomRectangle(minimapPoint) then
-      Exit;
-  end
+    Result := Minimap.PointOnZoomRectangle(minimapPoint)
   else
-  begin
-    if not Minimap.IsPointOn(minimapPoint) then
-      Exit;
-  end;
-  Result := True;
+    Result := Minimap.IsPointOn(minimapPoint);
 end;
 
 (*
@@ -963,6 +956,7 @@ begin
     Exit(True);
 
   Result := Self.Click(minimapPoint, Self.ClickRandomness);
+
   if Result then
   begin
     if (Random() < 0.15) then // 15% chance of randomness else mean

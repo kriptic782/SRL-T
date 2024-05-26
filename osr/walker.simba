@@ -326,7 +326,7 @@ You will probably never need to call this directly.
 *)
 function TRSWalkerV2.WalkStepHelper(playerPoint, walkerPoint: TPoint; out minimapPoint: TPoint): Boolean;
 var
-  event_time: Int64;
+  event_time: UInt64;
 begin
   event_time := GetTickCount();
 
@@ -344,16 +344,9 @@ begin
   minimapPoint := Self.PointToMM(playerPoint, walkerPoint, Minimap.GetCompassAngle(False));
 
   if Self.ScreenWalk then
-  begin
-    if not Minimap.PointOnZoomRectangle(minimapPoint) then
-      Exit;
-  end
+    Result := Minimap.PointOnZoomRectangle(minimapPoint)
   else
-  begin
-    if not Minimap.IsPointOn(minimapPoint) then
-      Exit;
-  end;
-  Result := True;
+    Result := Minimap.IsPointOn(minimapPoint);
 end;
 
 (*

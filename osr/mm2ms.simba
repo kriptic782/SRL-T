@@ -520,7 +520,7 @@ var
   bmp: TMufasaBitmap;
 begin
   rect := Self.GetZoomRectangle();
-  if not p.InRect(rect) then
+  if not rect.Contains(p) then
   begin
     bmp.FromClient();
     bmp.DrawRect(rect, $FFFFFF);
