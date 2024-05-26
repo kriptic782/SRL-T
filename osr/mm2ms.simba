@@ -517,10 +517,18 @@ Returns `[0, 0]` if the point couldn't be generated, e.g. it's too far away from
 function TRSMinimap.RandomPointOnZoomRectangle(p: TPoint; randomness: Int32): TPoint;
 var
   rect: TRectangle;
+  bmp: TMufasaBitmap;
 begin
   rect := Self.GetZoomRectangle();
   if not p.InRect(rect) then
+  begin
+    bmp.FromClient();
+    bmp.DrawRect(rect, $FFFFFF);
+    bmp.DrawCross(p, 4, $FF);
+    bmp.Debug();
+    bmp.Free();
     Self.Fatal(ToStr(p) + ' is not a valid point to generate a random point on the zoom rectangle.');
+  end;
 
   while not Result.InRect(rect) do
     Result := p.Random(-randomness, randomness);

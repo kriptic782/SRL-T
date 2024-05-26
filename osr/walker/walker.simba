@@ -266,7 +266,9 @@ end;
 ## Walker.AddRegion
 ```pascal
 procedure TRSWalker.AddRegion(map: String; start: TPoint);
+procedure TRSWalker.AddRegions(map: String; aRegions: TBoxArray);
 procedure TRSWalker.AddRegion(map: String; aRegion: TBox); overload;
+procedure TRSWalker.AddRegions(aRegions: TBoxArray); overload;
 procedure TRSWalker.AddRegion(aRegion: TBox); overload;
 procedure TRSWalker.AddRegionFromURL(url: String; start: TPoint; map: String = ''; force: Boolean = False); overload;
 ```
@@ -283,18 +285,33 @@ begin
   Self.InternalSetup();
 end;
 
-procedure TRSWalker.AddRegion(map: String; aRegion: TBox); overload;
+procedure TRSWalker.AddRegions(map: String; aRegions: TBoxArray);
+var
+  b: TBox;
 begin
   if Self = [] then
     Self.Fatal('Walker has to be setup already to add a single region');
-  Self.Map.Load(map, aRegion, Self.Scaling);
-  Self.Regions += aRegion;
+  for b in aRegions do
+  begin
+    Self.Map.Load(map, b, Self.Scaling);
+    Self.Regions += b;
+  end;
   Self.InternalSetup();
+end;
+
+procedure TRSWalker.AddRegion(map: String; aRegion: TBox); overload;
+begin
+  Self.AddRegions(map, [aRegion]);
+end;
+
+procedure TRSWalker.AddRegions(aRegions: TBoxArray); overload;
+begin
+  Self.AddRegions(WALKER_MAP, aRegions);
 end;
 
 procedure TRSWalker.AddRegion(aRegion: TBox); overload;
 begin
-  Self.AddRegion(WALKER_MAP, aRegion);
+  Self.AddRegions([aRegion]);
 end;
 
 procedure TRSWalker.AddRegionFromURL(url: String; start: TPoint; map: String = ''; force: Boolean = False); overload;
