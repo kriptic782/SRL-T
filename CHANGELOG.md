@@ -1,3 +1,12 @@
+## [4.12.6](https://github.com/Torwent/SRL-T/compare/v4.12.5...v4.12.6) (2024-05-26)
+
+
+### Bug Fixes
+
+* **walker:** add multiple regions method ([63c3bfe](https://github.com/Torwent/SRL-T/commit/63c3bfe82146a28200c472a3962d098379a6d99f))
+
+
+
 ## [4.12.5](https://github.com/Torwent/SRL-T/compare/v4.12.4...v4.12.5) (2024-05-20)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **mainscreen:** hitsplat rework ([00323d1](https://github.com/Torwent/SRL-T/commit/00323d19910f0b47b3529eef4c53901536d0bdea))
-
-
-
-## [4.12.1](https://github.com/Torwent/SRL-T/compare/v4.12.0...v4.12.1) (2024-05-17)
-
-
-### Bug Fixes
-
-* better heightmap math ([cbcba08](https://github.com/Torwent/SRL-T/commit/cbcba08f10e87b3280d71c30664139027f8df8c6))
 
 
 
