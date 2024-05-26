@@ -1,3 +1,12 @@
+## [4.12.7](https://github.com/Torwent/SRL-T/compare/v4.12.6...v4.12.7) (2024-05-26)
+
+
+### Bug Fixes
+
+* some mm2ms and walker tweaks ([947f619](https://github.com/Torwent/SRL-T/commit/947f6190bd40e8cc2971ed8e3a42ea10e5177681))
+
+
+
 ## [4.12.6](https://github.com/Torwent/SRL-T/compare/v4.12.5...v4.12.6) (2024-05-26)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMap:** read notes ([26e2814](https://github.com/Torwent/SRL-T/commit/26e2814d9d320afe5903428def5a8932e52bc4a4))
-
-
-
-## [4.12.2](https://github.com/Torwent/SRL-T/compare/v4.12.1...v4.12.2) (2024-05-18)
-
-
-### Bug Fixes
-
-* **mainscreen:** hitsplat rework ([00323d1](https://github.com/Torwent/SRL-T/commit/00323d19910f0b47b3529eef4c53901536d0bdea))
 
 
 
