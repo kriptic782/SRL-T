@@ -23,10 +23,12 @@ type
     QUANTITY_100,
     QUANTITY_ALL,
     QUANTITY_ENTER,
+    PRICE_DECREASE_PERC_ENTER,
     PRICE_DECREASE,
     PRICE_GUIDE,
     PRICE_ENTER,
     PRICE_INCREASE,
+    PRICE_INCREASE_PERC_ENTER,
     TOTAL,
     CONFIRM
   );
@@ -62,7 +64,7 @@ type
 
 function TRSGrandExchange.GetSetupOfferButtons: TRSButtonArray;
 begin
-  Result := Self.FindButtons([[45,18], [35,25], [152,40],[160,18], [159,18], [210,18], [410,18], [40,36]]);
+  Result := Self.FindButtons([[45,18], [40,36], [151, 18],  [192, 18], [35,25], [410, 18], [152, 40]]);
 end;
 
 function TRSGrandExchange.GetSetupOfferButton(Button: ERSGESetupOfferButton): TRSButton;
