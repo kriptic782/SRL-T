@@ -522,22 +522,21 @@ begin
       fails := 0
     else
     begin
-      Inc(fails);
-
-      // Likely haven't moved far enough to advance to next point
-      if (fails < 5) then begin
+      //Likely haven't moved far enough to advance to next poin
+      if Inc(fails) < 5 then
+      begin
         Wait(300);
         Continue;
-      end else begin
-        // screen walking struggles, so disable it
-        if Self.AdaptiveWalk then
-          Self.ScreenWalk := False
-        else if (fails = 5) then
-          case SRL.Dice(50) of
-            True:  Minimap.SetCompassAngle(Minimap.GetCompassAngle() - SRL.TruncatedGauss(30, 360, 3));
-            False: Minimap.SetCompassAngle(Minimap.GetCompassAngle() + SRL.TruncatedGauss(30, 360, 3));
-          end;
       end;
+
+      //Screen walking struggles, so disable it
+      if Self.AdaptiveWalk then
+        Self.ScreenWalk := False
+      else if (fails = 5) then
+        case SRL.Dice(50) of
+          True:  Minimap.SetCompassAngle(Minimap.GetCompassAngle() - SRL.TruncatedGauss(30, 360, 3));
+          False: Minimap.SetCompassAngle(Minimap.GetCompassAngle() + SRL.TruncatedGauss(30, 360, 3));
+        end;
 
       if (fails mod 2 = 0) then
         Minimap.WaitFlag();
@@ -547,8 +546,10 @@ begin
     begin
       if Self.WalkFinalStep(playerPoint, Self.Path[index], WaitUntilDistance) then
         Exit(True);
-    end else
-      Self.WalkStep(playerPoint, Self.Path[index]);
+      Continue;
+    end;
+
+    Self.WalkStep(playerPoint, Self.Path[index]);
   end;
 
   if fails = 10 then

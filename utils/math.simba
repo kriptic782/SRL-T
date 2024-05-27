@@ -26,7 +26,6 @@ type
 function TSRL.Modulo(X, Y: Double): Double; static;
 function TSRL.Modulo(X, Y: Int32): Int32; static; overload;
 ```
- 
 This function returns the remainder from the division of the first argument by the second.
 It will always returns a result with the same sign as its second operand (or zero).
 
@@ -52,7 +51,6 @@ end;
 function TSRL.CrossProduct(ry,ry, px,py, qx,qy: Double): Double; static;
 function TSRL.CrossProduct(r, p, q: TPoint): Int64; static; overload;
 ```
-
 Cross-product of rp and rq vectors.
 *)
 function TSRL.CrossProduct(rx,ry, px,py, qx,qy: Double): Double; static; overload;
@@ -71,7 +69,6 @@ end;
 ```pascal
 function TSRL.DeltaAngle(DegA, DegB: Double; R: Double = 360): Double; static;
 ```
-
 Returns the shortest difference between two given angles.
 *)
 function TSRL.DeltaAngle(DegA, DegB: Double; R: Double = 360): Double; static;
@@ -83,13 +80,12 @@ end;
 (*
 ## SRL.DistToLine
 ```pascal
-function TSRL.DistToLineEx(Pt, sA, sB: TPoint; out Nearest: TPoint): Double; static;
-function TSRL.DistToLine(Pt, sA, sB: TPoint): Double; static;
+function TSRL.DistToLineEx(pt, sA, sB: TPoint; out Nearest: TPoint): Double; static;
+function TSRL.DistToLine(pt, sA, sB: TPoint): Double; static;
 ```
-
 Returns the distance to the nearest point on the line `sA`..`sB`
 *)
-function TSRL.DistToLineEx(Pt, sA, sB: TPoint; out Nearest: TPoint): Double; static;
+function TSRL.DistToLineEx(pt, sA, sB: TPoint; out Nearest: TPoint): Double; static;
 var
   dx,dy,d:Int32;
   f: Single;
@@ -112,10 +108,10 @@ begin
   Result := Hypot(pt.x-Nearest.x, pt.y-Nearest.y);
 end;
 
-function TSRL.DistToLine(Pt, sA, sB: TPoint): Double; static;
+function TSRL.DistToLine(pt, sA, sB: TPoint): Double; static;
 var qt:TPoint;
 begin
-  Result := TSRL.DistToLineEx(Pt,sA,sB, qt);
+  Result := TSRL.DistToLineEx(pt,sA,sB, qt);
 end;
 
 (*
@@ -123,6 +119,7 @@ end;
 ```pascal
 function TSRL.LinesIntersect(p1,p2, q1,q2:TPoint; out i: TPoint): Boolean; static;
 ```
+Check if 2 lines cross each other.
 *)
 function TSRL.LinesIntersect(p1,p2, q1,q2:TPoint; out i: TPoint): Boolean; static;
 var
@@ -148,11 +145,11 @@ end;
 (*
 ## SRL.PointInTriangle
 ```pascal
-function TSRL.PointInTriangle(PT, p1,p2,p3: TPoint): Boolean; static;
+function TSRL.PointInTriangle(pt, p1,p2,p3: TPoint): Boolean; static;
 ```
-Returns True if the TPoint 'Pt' is inside the triangle
+Returns True if the TPoint 'pt' is inside the triangle
 *)
-function TSRL.PointInTriangle(PT, p1,p2,p3: TPoint): Boolean; static;
+function TSRL.PointInTriangle(pt, p1,p2,p3: TPoint): Boolean; static;
 var
   b1,b2,b3: Boolean;
 begin
@@ -169,59 +166,53 @@ end;
 (*
 ## SRL.PointInRect
 ```pascal
-function TSRL.PointInRect(const Pt: TPoint; const A, B, C, D: TPoint): Boolean; static;
+function TSRL.PointInRect(const pt: TPoint; const A, B, C, D: TPoint): Boolean; static;
+function TSRL.PointInRect(pt: TPoint; rect: TRectangle): Boolean; static; overload;
 ```
-
-Returns true if the TPoint 'Pt' is in a rect (defined by four points).
+Returns true if the TPoint 'pt' is in a rect (defined by four point.
 
 Example:
 ```pascal
-  Writeln(SRL.PointInRect(Point(100, 100), [0,0], [200,1], [201,201], [0,225]));
+Writeln(SRL.PointInRect(Point(100, 100), [0,0], [200,1], [201,201], [0,225]));
 ```
 *)
-function TSRL.PointInRect(M: TPoint; A,B,C,D: TPoint): Boolean; static;
-//function Dot(U,V: TPoint): Int64; begin Result := U.x*V.x + U.y*V.y; end;
-//var
-//  AB,AM,AD: TPoint;
+function TSRL.PointInRect(pt: TPoint; a,b,c,d: TPoint): Boolean; static;
 begin
-  //AB := B-A;
-  //AM := M-A;
-  //AD := D-A;
-  //Result := (InRange(Dot(AM,AB), 0, Dot(AB,AB)) and
-  //           InRange(Dot(AM,AD), 0, Dot(AD,AD)));
-  if SRL.PointInTriangle(M, A,C,B) then Exit(True);
-  if SRL.PointInTriangle(M, A,D,C) then Exit(True);
+  Result := SRL.PointInTriangle(pt, a,c,b) or SRL.PointInTriangle(pt, a,d,c);
+end;
+
+function TSRL.PointInRect(pt: TPoint; rect: TRectangle): Boolean; static; overload;
+begin
+  Result := TSRL.PointInRect(pt, rect.Top, rect.Right, rect.Btm, rect.Left);
 end;
 
 
 (*
 ## SRL.PointInCircle
 ```pascal
-function TSRL.PointInCircle(PT, Center: TPoint; Radius: Double): Boolean; static;
+function TSRL.PointInCircle(pt, Center: TPoint; Radius: Double): Boolean; static;
 ```
-
-Returns True if the TPoint 'Pt' is inside the circle
+Returns True if the TPoint 'pt' is inside the circle
 *)
-function TSRL.PointInCircle(PT, Center: TPoint; Radius: Double): Boolean; static;
+function TSRL.PointInCircle(pt, Center: TPoint; Radius: Double): Boolean; static;
 begin
-  Result := Sqr(PT.X - Center.X) + Sqr(PT.Y - Center.Y) <= Sqr(Radius);
+  Result := Sqr(pt.X - Center.X) + Sqr(pt.Y - Center.Y) <= Sqr(Radius);
 end;
 
   
 (*
 ## SRL.PointInEllipse
 ```pascal
-function TSRL.PointInEllipse(PT, Center:TPoint; YRad, XRad: Double): Boolean; static;
+function TSRL.PointInEllipse(pt, Center:TPoint; YRad, XRad: Double): Boolean; static;
 ```
-    
-Returns True if the TPoint 'Pt' is inside the ellipse
+Returns True if the TPoint 'pt' is inside the ellipse
 *)
-function TSRL.PointInEllipse(PT, Center:TPoint; YRad, XRad: Double): Boolean; static;
+function TSRL.PointInEllipse(pt, Center:TPoint; YRad, XRad: Double): Boolean; static;
 var
   X, Y: Integer;
 begin
-  X := PT.X - Center.X;
-  Y := PT.Y - Center.Y;
+  X := pt.X - Center.X;
+  Y := pt.Y - Center.Y;
   Result := (Sqr(X)*Sqr(YRad))+(Sqr(Y)*Sqr(XRad)) <= (Sqr(YRad)*Sqr(XRad));
 end;
 
@@ -230,12 +221,11 @@ end;
 ```pascal
 function TSRL.PointInPoly(pt: TPoint; Poly: TPointArray): Boolean; static;
 ```
-    
 Check if a point is within a polygon/shape by the given outline points (poly)
 The points must be in order, as if you would draw a line trough each point.
 
 ```{note}
- Uses winding number algorithm
+Uses winding number algorithm
 ```
 *)
 function TSRL.PointInPoly(pt: TPoint; Poly: TPointArray): Boolean; static; 
@@ -266,23 +256,15 @@ end;
 ```pascal
 function TSRL.PointInCuboid(pt: TPoint; Top, Btm: TRectangle): Boolean; static;
 ```
-
 Check if a point is within a cuboid defined by top and bottom rectangle.
 *)
 function TSRL.PointInCuboid(pt: TPoint; Top, Btm: TRectangle): Boolean; static;
-
-  function InRect(P: TPoint; Rect: TRectangle): Boolean;
-  begin
-    Result := SRL.PointInTriangle(P, Rect.Top,Rect.Btm,Rect.Right) or
-              SRL.PointInTriangle(P, Rect.Top,Rect.Left,Rect.Btm);
-  end;
-
 begin
-  if InRect(pt, Top) then Exit(True);
-  if InRect(pt, Btm) then Exit(True);
-  if InRect(pt, [Top.Left, Top.Btm, Btm.Btm, Btm.Left])   then Exit(True);
-  if InRect(pt, [Top.Top, Top.Right, Btm.Right, Btm.Top]) then Exit(True);
-  if InRect(pt, [Top.Top, Btm.Top, Btm.Left, Top.Left])   then Exit(True);
-  if InRect(pt, [Top.Right, Btm.Right, Btm.Btm, Top.Btm]) then Exit(True);
+  if TSRL.PointInRect(pt, Top) then Exit(True);
+  if TSRL.PointInRect(pt, Btm) then Exit(True);
+  if TSRL.PointInRect(pt, [Top.Left, Top.Btm, Btm.Btm, Btm.Left])   then Exit(True);
+  if TSRL.PointInRect(pt, [Top.Top, Top.Right, Btm.Right, Btm.Top]) then Exit(True);
+  if TSRL.PointInRect(pt, [Top.Top, Btm.Top, Btm.Left, Top.Left])   then Exit(True);
+  if TSRL.PointInRect(pt, [Top.Right, Btm.Right, Btm.Btm, Top.Btm]) then Exit(True);
 end;
 

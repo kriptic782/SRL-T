@@ -8,10 +8,18 @@ TPoint related methods
   {$I SRL-T/utils.simba}
 {$ENDIF}
 
-function TPoint.InRect(Rect: TRectangle): Boolean; constref;
+(*
+## TPoint.In
+```pascal
+function TPoint.InRect(rect: TRectangle): Boolean; constref;
+function TPoint.InBox(Box: TBox): Boolean; constref;
+function TPoint.InCircle(circle: TCircle): Boolean; constref;
+```
+Returns true if the `TPoint` is inside the specified TRectangle, TBox or TCircle.
+*)
+function TPoint.InRect(rect: TRectangle): Boolean; constref;
 begin
-  Result := SRL.PointInTriangle(Self, Rect.Top, Rect.Btm, Rect.Right) or
-            SRL.PointInTriangle(Self, Rect.Top, Rect.Left, Rect.Btm);
+  Result := TSRL.PointInRect(Self, rect);
 end;
 
 function TPoint.InBox(Box: TBox): Boolean; constref;
@@ -19,54 +27,132 @@ begin
   Result := PointInBox(Self, Box);
 end;
 
-function TPoint.InCircle(Circle: TCircle): Boolean; constref;
+function TPoint.InCircle(circle: TCircle): Boolean; constref;
 begin
-  Result := Hypot(Self.X - Circle.X, Self.Y - Circle.Y) <= Circle.Radius;
+  Result := Hypot(Self.X - circle.X, Self.Y - circle.Y) <= circle.Radius;
 end;
 
-function TPoint.DistanceTo(Other:TPoint): Double; constref;
+
+(*
+## TPoint.DistanceTo
+```pascal
+function TPoint.DistanceTo(other:TPoint): Double; constref;
+```
+Returns distance between the current TPoint and another one.
+
+Example:
+```pascal
+var
+  p1: TPoint = [100, 100];
+  p2: TPoint = [120, 120];
+
+begin
+  WriteLn p1.DistanceTo(p2);
+end;
+```
+*)
+function TPoint.DistanceTo(other:TPoint): Double; constref;
 begin
   Result := Hypot(Self.x-other.x, Self.y-other.y);
 end;
 
-function TPoint.Rotate(Angle: Double; Mid: TPoint): TPoint; constref;
+(*
+## TPoint.Rotate
+```pascal
+function TPoint.Rotate(angle: Double; mid: TPoint): TPoint; constref;
+```
+Returns the current point rotated around `mid` by the specified `angle`.
+*)
+function TPoint.Rotate(angle: Double; mid: TPoint): TPoint; constref;
 begin
   Result := RotatePoint(Self, Angle, Mid.X, Mid.Y);
 end;
 
+(*
+## TPoint.Magnitude
+```pascal
+function TPoint.Magnitude(): Double; constref;
+```
+Returns the magnitude of the current point.
+*)
 function TPoint.Magnitude(): Double; constref;
 begin
   Result := Sqrt(Sqr(Self.x) + Sqr(Self.y));
 end;
 
-function TPoint.AngleBetween(Other: TPoint): Double; constref;
+(*
+## TPoint.AngleBetween
+```pascal
+function TPoint.AngleBetween(other: TPoint): Double; constref;
+```
+Returns the angle between the current point and `other`.
+*)
+function TPoint.AngleBetween(other: TPoint): Double; constref;
 begin
   Result := SRL.Modulo(Degrees(ArcTan2(other.Y - self.Y, other.X - self.X)) - 90, 360);
 end;
 
-function TPoint.Offset(P: TPoint): TPoint; constref; overload;
+
+(*
+## TPoint.Offset
+```pascal
+function TPoint.Offset(other: TPoint): TPoint; constref;
+function TPoint.Offset(x, y: Int32): TPoint; constref; overload;
+```
+Offsets the current point by the values of `other` or by `x` and `y`.
+
+Example
+```pascal
+var
+  p: TPoint = [100, 100];
+
 begin
-  Result.X := Self.X + P.X;
-  Result.Y := Self.Y + P.Y;
+  p := p.Offset(20, 20);
+  WriteLn p;
+end;
+```
+*)
+function TPoint.Offset(other: TPoint): TPoint; constref;
+begin
+  Result.X := Self.X + other.X;
+  Result.Y := Self.Y + other.Y;
 end;
 
-function TPoint.Offset(X, Y: Int32): TPoint; constref; overload;
+function TPoint.Offset(x, y: Int32): TPoint; constref; overload;
 begin
-  Result.X := Self.X + X;
-  Result.Y := Self.Y + Y;
+  Result := Self.Offset([x,y]);
 end;
 
-function TPoint.Random(Min, Max: Integer; Gauss: Boolean = False): TPoint; constref;
+
+(*
+## TPoint.Random
+```pascal
+function TPoint.Random(min, max: Integer; gauss: Boolean = False): TPoint; constref;
+function TPoint.Random(XMin, XMax: Integer; YMin, YMax: Integer; Gauss: Boolean = False): TPoint; constref; overload;
+```
+Randomizes the current point by a `min` and `max` values.
+
+Example
+```pascal
+var
+  p: TPoint = [100, 100];
+
 begin
-  if (Gauss) then
+  p := p.Random(5, 20);
+  WriteLn p;
+end;
+```
+*)
+function TPoint.Random(min, max: Integer; gauss: Boolean = False): TPoint; constref;
+begin
+  if (gauss) then
   begin
-    Result.X := Self.X + SRL.NormalRange(Min, Max);
-    Result.Y := Self.Y + SRL.NormalRange(Min, Max);
-  end else 
-  begin
-    Result.X := Self.X + System.Random(Min, Max);
-    Result.Y := Self.Y + System.Random(Min, Max);
+    Result.X := Self.X + SRL.NormalRange(min, max);
+    Result.Y := Self.Y + SRL.NormalRange(min, max);
+    Exit;
   end;
+
+  Result := [Self.X + System.Random(min, max), Self.Y + System.Random(min, max)];
 end;
 
 function TPoint.Random(XMin, XMax: Integer; YMin, YMax: Integer; Gauss: Boolean = False): TPoint; constref; overload;
@@ -83,18 +169,36 @@ begin
 end;
 
 
+(*
+## TPoint.Random
+```pascal
+function TPoint.EnsureRange(x1, y1, x2, y2: Int32): TPoint;
+function TPoint.EnsureRange(b: TBox): TPoint; overload;
+```
+Returns a point that is within the specified box by setting the values
+that are outside of it to it's edge.
+*)
 function TPoint.EnsureRange(x1, y1, x2, y2: Int32): TPoint;
 begin
   Result.X := System.EnsureRange(Self.X, Min(x1, x2), Max(x1, x2));
   Result.Y := System.EnsureRange(Self.Y, Min(y1, y2), Max(y1, y2));
 end;
 
-function TPoint.EnsureRange(box: TBox): TPoint; overload;
+function TPoint.EnsureRange(b: TBox): TPoint; overload;
 begin
-  Result := Self.EnsureRange(box.X1, box.Y1, box.X2, box.Y2);
+  Result := Self.EnsureRange(b.X1, b.Y1, b.X2, b.Y2);
 end;
 
 
+(*
+## TPoint.InRange
+```pascal
+function TPoint.InRange(other: TPoint; dist: Double): Boolean;
+function TPoint.AnyInRange(tpa: TPointArray; dist: Double): Boolean;
+function TPoint.AllInRange(tpa: TPointArray; dist: Double): Boolean;
+```
+Checks if the current point is within `dist` distance of `other`.
+*)
 function TPoint.InRange(other: TPoint; dist: Double): Boolean;
 begin
   Result := Self.DistanceTo(other) <= dist;
@@ -164,4 +268,9 @@ end;
 operator in(Left: TPoint; Right: TBox): Boolean;
 begin
   Result := Left.InBox(Right);
+end;
+
+operator in(Left: TPoint; Right: TRectangle): Boolean;
+begin
+  Result := Left.InRect(Right);
 end;

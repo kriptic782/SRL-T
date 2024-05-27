@@ -133,27 +133,13 @@ end;
 (*
 ## TRectangle.Contains
 ```pascal
-function TRectangle.Contains(Pt: TPoint): Boolean; constref;
+function TRectangle.Contains(pt: TPoint): Boolean; constref;
 ```
-Returns true if the point `Pt` is inside the rectangle.
-```{note}
-By slacky
-```
+Returns true if the point `pt` is inside the rectangle.
 *)
-function TRectangle.Contains(Pt: TPoint): Boolean; constref;
-var
-  Vec: TPoint;
-  Dot: Double;
+function TRectangle.Contains(pt: TPoint): Boolean; constref;
 begin
-  Vec := Point(Self.Top.x-Self.Right.x, Self.Top.y-Self.Right.y);
-  Dot := ((Self.Top.x-Pt.x) * Vec.x) + ((Self.Top.y-Pt.y) * Vec.y);
-  if not((0 <= Dot) and (Dot <= (Sqr(Vec.x) + Sqr(Vec.y)))) then
-    Exit(False);
-  Vec := Point(Self.Top.x-Self.Left.x, Self.Top.y-Self.Left.y);
-  Dot := ((Self.Top.x-Pt.x) * Vec.x) + ((Self.Top.y-Pt.y) * Vec.y);
-  if not((0 <= Dot) and (Dot <= (Sqr(Vec.x) + Sqr(Vec.y)))) then
-    Exit(False);
-  Result := True;
+  Result := SRL.PointInRect(pt, Self);
 end;
 
 (*

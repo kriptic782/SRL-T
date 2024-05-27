@@ -1087,22 +1087,21 @@ begin
       Fails := 0
     else
     begin
-      Inc(Fails);
-
       // Likely haven't moved far enough to advance to next point
-      if (Fails < 5) then begin
+      if Inc(Fails) < 5 then
+      begin
         Wait(300);
         Continue;
-      end else begin
-        // screen walking struggles, so disable it
-        if Self.AdaptiveWalk then
-          Self.ScreenWalk := False
-        else if (Fails = 5) then
-          case SRL.Dice(50) of
+      end;
+
+      // screen walking struggles, so disable it
+      if Self.AdaptiveWalk then
+        Self.ScreenWalk := False
+      else if (Fails = 5) then
+        case SRL.Dice(50) of
             True:  Minimap.SetCompassAngle(Minimap.GetCompassAngle() - SRL.TruncatedGauss(30, 360, 3));
             False: Minimap.SetCompassAngle(Minimap.GetCompassAngle() + SRL.TruncatedGauss(30, 360, 3));
           end;
-      end;
 
       if (Fails mod 2 = 0) then
         Minimap.WaitFlag();
@@ -1112,8 +1111,9 @@ begin
     begin
       if Self.WalkFinalStep(playerPoint, Self.Path[Index], WaitUntilDistance) then
         Exit(True);
-    end else
-      Self.WalkStep(playerPoint, Self.Path[Index]);
+    end;
+
+    Self.WalkStep(playerPoint, Self.Path[Index]);
   end;
 
   if Fails = 10 then
@@ -1187,6 +1187,7 @@ begin
   Path   := Self.WebGraph.PathBetween(Self.GetMyPos, Destination, PathRandomness);
   Result := Self.WalkPath(Path, WaitUntilDistance);
 end;
+
 
 (*
 ## TRSWalker.DebugPosition
