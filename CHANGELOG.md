@@ -1,3 +1,12 @@
+## [4.12.9](https://github.com/Torwent/SRL-T/compare/v4.12.8...v4.12.9) (2024-05-27)
+
+
+### Bug Fixes
+
+* **inventory:** added .CountSlotStack ([4025862](https://github.com/Torwent/SRL-T/commit/40258623bacd8e4262c286b28055f080405d1772))
+
+
+
 ## [4.12.8](https://github.com/Torwent/SRL-T/compare/v4.12.7...v4.12.8) (2024-05-27)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **Login:** less "techinical" error warnings ([a4d474e](https://github.com/Torwent/SRL-T/commit/a4d474ef0297b84b8b7be9be3c40a3ef064108ee))
-
-
-
-## [4.12.4](https://github.com/Torwent/SRL-T/compare/v4.12.3...v4.12.4) (2024-05-20)
-
-
-### Bug Fixes
-
-* small tweak to graph plotting ([a16d81f](https://github.com/Torwent/SRL-T/commit/a16d81fd3fb516f3df248fa201207483a16c20c7))
 
 
 
