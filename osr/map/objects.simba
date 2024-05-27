@@ -977,6 +977,12 @@ type
     Cache: TRSMapObjectArray;
   end;
 
+procedure TRSMapObjects.Setup(json: TJSONArray; walker: PRSWalkerV2);
+begin
+  Self.Data := json;
+  Self.Walker := walker;
+end;
+
 function TRSMapObjects.Get(obj: Variant): TRSMapObject;
 var
   i: Int32;

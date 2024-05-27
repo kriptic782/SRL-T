@@ -117,9 +117,6 @@ begin
     Self.Walker.WebGraph := @Self.Loader.Graph;
     Self.Walker.MapImage := Self.Loader.Map;
 
-    Objects.Data := Self.Loader.ObjectData;
-    Objects.Walker := @Self.Walker;
-
     AddOnTerminate(@Self.Loader.Free);
     Self.IsSetup := True;
   end;
@@ -346,6 +343,17 @@ end;
 procedure TRSMap.AddChunk(chunk: TRSMapChunk; downscale: UInt32 = 8);
 begin
   Self.AddChunksEx([chunk.Chunk], chunk.Planes, downscale);
+end;
+
+
+function TRSMap.Objects(): TJSONArray;
+begin
+  Result := Self.Loader.ObjectData;
+end;
+
+function TRSMap.NPCs(): TJSONArray;
+begin
+  Result := Self.Loader.NPCData;
 end;
 
 
