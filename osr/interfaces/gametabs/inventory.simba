@@ -540,16 +540,19 @@ end;
 
 
 (*
-## Inventory.ContainsAny
+## Inventory.Contains
 ```pascal
 function TRSInventory.ContainsAny(items: TRSItemArray): Boolean;
+function TRSInventory.ContainsItem(item: TRSItem): Boolean;
+function TRSInventory.ContainsAll(items: TRSItemArray): Boolean;
 ```
-Returns true if the inventory contains any of the items passed in **items**.
-It's the same as TRSInventory.FindItems() but without requiring a **Slots** parameter.
+Returns true if the inventory contains an `item` or `items`.
 
 Example:
 ```pascal
 WriteLn Inventory.ContainsAny(['Shark', 'Lobster']);
+WriteLn Inventory.ContainsItem('Shark');
+WriteLn Inventory.ContainsAll(['Shark', 'Lobster', 'Tuna']);
 ```
 *)
 function TRSInventory.ContainsAny(items: TRSItemArray): Boolean;
@@ -557,37 +560,11 @@ begin
   Result := Self.Open() and Self.ItemInterface.ContainsAny(items);
 end;
 
-(*
-## Inventory.ContainsItem
-```pascal
-function TRSInventory.ContainsItem(item: TRSItem): Boolean;
-```
-
-Returns true if the inventory contains the item passed in **item**.
-Same as TRSInventory.FindItem() but without requiring **Slots** or **slot** parameter.
-
-Example:
-```pascal
-WriteLn Inventory.ContainsItem('Shark');
-```
-*)
 function TRSInventory.ContainsItem(item: TRSItem): Boolean;
 begin
   Result := Self.Open() and Self.ItemInterface.Contains(item);
 end;
 
-(*
-## Inventory.ContainsAll
-```pascal
-function TRSInventory.ContainsAll(items: TRSItemArray): Boolean;
-```
-Returns true if the inventory contains all items passed in **items**.
-
-Example:
-```pascal
-WriteLn Inventory.ContainsAll('Shark');
-```
-*)
 function TRSInventory.ContainsAll(items: TRSItemArray): Boolean;
 begin
   Result := Self.Open() and Self.ItemInterface.ContainsAll(items);
@@ -649,12 +626,12 @@ begin
 end;
 
 (*
-## Inventory.CountItemStack
+## Inventory.CountStack
 ```pascal
 function TRSInventory.CountItemStack(Item: TRSItem): Int32;
+ function TRSInventory.CountSlotStack(slot: Int32): Int32;
 ```
-
-Returns the stack amount of **Item** in the inventory.
+Returns the stack amount of `item` or `slot` in the inventory.
 
 Example:
 ```pascal
@@ -668,13 +645,18 @@ begin
     Result := Self.ItemInterface.CountStack(item);
 end;
 
+function TRSInventory.CountSlotStack(slot: Int32): Int32;
+begin
+  if Self.Open() then
+    Result := Self.ItemInterface.CountStack(slot);
+end;
+
 
 (*
 ## Inventory.MouseItem
 ```pascal
 function TRSInventory.MouseItem(Item: TRSItem): Boolean;
 ```
-
 Hover **Item** in the inventory.
 
 Example:
@@ -695,7 +677,6 @@ end;
 ```pascal
 function TRSInventory.ClickItem(Item: TRSItem; Option: String = ''): Boolean;
 ```
-
 Clicks **Item** in the inventory. If **Option** is specified that option will be
 selected with right click if it exists.
 

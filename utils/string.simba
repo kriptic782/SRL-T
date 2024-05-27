@@ -17,7 +17,6 @@ const
 ```pascal
 function String.Len(): Int32; constref;
 ```
-
 Returns the length of the string
 *)
 function String.Len: Int32; constref;
@@ -119,7 +118,6 @@ end;
 ```pascal
 function String.Startswith(Prefix: String): Boolean; constref;
 ```
-
 Returns `True` if the string starts with the given string `Prefix`
 *)
 function String.StartsWith(Prefix: String): Boolean; constref;
@@ -132,7 +130,6 @@ end;
 ```pascal
 function String.Endswith(Suffix: String): Boolean; constref;
 ```
-
 Returns `True` if the string ends with the given string `Suffix`
 *)
 function String.EndsWith(Suffix: String): Boolean; constref;
@@ -153,7 +150,6 @@ end;
 ```pascal
 function String.Capitalize(): String; constref;
 ```
-
 Returns the string with every word captalized
 *)
 function String.Capitalize(): String; constref;
@@ -166,7 +162,6 @@ end;
 ```pascal
 function String.Upper(): String; constref;
 ```
-
 Returns the string with every character converted to uppercase
 *)
 function String.Upper(): String; constref;
@@ -214,7 +209,6 @@ end;
 ```pascal
 function String.Before(SubStr: String): String; constref;
 ```
-
 Copy the string from before the first occurrence of SubStr
 *)
 function String.Before(SubStr: String): String; constref;
@@ -249,7 +243,6 @@ end;
 ```pascal
 function String.Count(Str: String): Int32; constref;
 ```
-
 Count the number of occurrences of the given string.
 *)
 function String.Count(Str: String): Int32;
@@ -319,7 +312,6 @@ end;
 ```pascal
 function String.StripL(Chars:String = STR_WHITESPACE): String; constref;
 ```
-
 Return a copy of the string with leading characters removed.
 *}
 function String.StripL(Chars:String = STR_WHITESPACE): String; constref;
@@ -336,7 +328,6 @@ end;
 ```pascal
 function String.StripR(Chars:String = STR_WHITESPACE): String; constref;
 ```
-
 Return a copy of the string with trailing characters removed.
 *}
 function String.StripR(Chars:String = STR_WHITESPACE): String; constref;
@@ -352,7 +343,6 @@ end;
 ```pascal
 function String.IsAlphaNum(): Boolean; constref;
 ```
-
 Test if a string only contains alpha numerical characters.
 *)
 function String.IsAlphaNum(): Boolean; constref;
@@ -379,7 +369,6 @@ end;
 ```pascal
 function String.IsDigit(): Boolean; constref;
 ```
-
 Test if a sting is a digit
 *)
 function String.IsDigit(): Boolean; constref;
@@ -408,7 +397,6 @@ end;
 ```pascal
 function String.IsFloat(): Boolean; constref;
 ```
-
 Test if a string is a floating point number
 *)
 function String.IsFloat(): Boolean; constref;
@@ -448,7 +436,6 @@ end;
 ```pascal
 function String.IsAlpha(): Boolean; constref;
 ```
-
 Test if a string only contains letters a-zA-Z
 *)
 function String.IsAlpha(): Boolean; constref;
@@ -487,7 +474,6 @@ end;
 ```pascal
 function String.ExtractNumbers(): TExtendedArray; constref;
 ```
-
 Extract all the numbers found in the string, as there could be floating point numbers 
 as well it reutnrs a TExtendedArray.
 *)
@@ -523,7 +509,6 @@ end;
 ```pascal
 function String.ExtractNumbersEx(): TExtendedArray; constref;
 ```
-
 Extract all the numbers found in the string, this time every number 
 ends up in each their index. For example ``'1234'`` would return ``[1,2,3,4]``
 *)
@@ -548,7 +533,6 @@ end;
 ```pascal
 function String.FileExt(): String; constref;
 ```
-
 Returns the file extension
 *)
 function String.FileExt(): String; constref;
@@ -593,7 +577,6 @@ end;
 ```pascal
 operator * (left:String; Right:Int32): String;
 ```
-
 Replicates the string the given amount of times. So ``'ho!' * 3`` would generate ``ho!ho!ho!``
 *)
 operator * (left: String; Right: Int32): String;
@@ -619,7 +602,6 @@ end;
 ```pascal
 operator in (left:String; Right:String): Boolean;
 ```
-
 Returns ``True`` if the string exists in the other string. So ``'hell' in 'hello world'`` would be ``True`` 
 *)
 operator in (left:Char; Right:String): Boolean;
