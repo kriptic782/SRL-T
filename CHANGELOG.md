@@ -1,3 +1,12 @@
+## [4.12.8](https://github.com/Torwent/SRL-T/compare/v4.12.7...v4.12.8) (2024-05-27)
+
+
+### Bug Fixes
+
+* **TRectange:** TRectangle.Contains() was bugged ([d620cde](https://github.com/Torwent/SRL-T/commit/d620cde788260a49e4be88c094a44e3d702d4ff4))
+
+
+
 ## [4.12.7](https://github.com/Torwent/SRL-T/compare/v4.12.6...v4.12.7) (2024-05-26)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * small tweak to graph plotting ([a16d81f](https://github.com/Torwent/SRL-T/commit/a16d81fd3fb516f3df248fa201207483a16c20c7))
-
-
-
-## [4.12.3](https://github.com/Torwent/SRL-T/compare/v4.12.2...v4.12.3) (2024-05-20)
-
-
-### Bug Fixes
-
-* **TRSMap:** read notes ([26e2814](https://github.com/Torwent/SRL-T/commit/26e2814d9d320afe5903428def5a8932e52bc4a4))
 
 
 
