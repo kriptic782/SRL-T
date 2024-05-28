@@ -639,22 +639,6 @@ begin
     Result := [X, Y, Self.Height([X,Y]), Self.Region.Level];
 end;
 
-{%codetools off}
-function TRSMap.H2C(height: Single): Int32;
-const
-  H_VALUE = 2040 / $FFFFFF;
-begin
-  Result := Round((height / H_VALUE) * 29.14);
-end;
-
-function TRSMap.C2H(color: Int32): Single;
-const
-  H_VALUE = 2040 / $FFFFFF;
-begin
-  Result := (color*H_VALUE) / 29.14;
-end;
-{%codetools on}
-
 (*
 ## Map.Height
 ```pascal
@@ -685,7 +669,7 @@ begin
     p := Self.Loader.GetLocal(Self.RegionIndex, p);
 
   if Self.Loader.Heightmap.Bounds().Contains(p) then
-    Result := Self.C2H(Self.Loader.Heightmap.GetPixel(p));
+    Result := RSTranslator.Color2Height(Self.Loader.Heightmap.GetPixel(p));
 end;
 
 function TRSMap.Height(p: TPoint = [-1,-1]): Single;
@@ -711,7 +695,7 @@ begin
 
   if c1 = c2 then Exit;
 
-  Result := Self.C2H(c1) - Self.C2H(c2);
+  Result := RSTranslator.Color2Height(c1) - RSTranslator.Color2Height(c2);
 end;
 
 
@@ -977,7 +961,7 @@ begin
         Continue;
 
       height := - (me.Z - Self.Height(p, False));
-      height := 4 * Pow(height, 2) - 3 * height;
+      height := 4 * Power(height, 2) - 3 * height;
 
       tile := Vec3(x, y, height).RotateXY(0, c.X, c.Y);
 

@@ -182,10 +182,9 @@ begin
 
   while not countdown.IsFinished() do
   begin
-    Self.DebugLn('Sleep time remaining: ' + SRL.MsToTime(countdown.TimeRemaining(), TIME_FORMAL));
-
     if GetTickCount() > marker  then
     begin
+      Self.DebugLn('Sleep time remaining: ' + SRL.MsToTime(countdown.TimeRemaining(), TIME_FORMAL));
       //OnSleeping callback only runs every 5 mins.
       if (@Self.OnSleeping <> nil) then
         Self.OnSleeping(@task, countdown);
@@ -246,7 +245,7 @@ begin
     if (@Self.OnBreaking <> nil) then
       Self.OnBreaking(@task, countdown);
 
-    Wait(5000);
+    Wait(Min(countdown.TimeRemaining(), 5 * ONE_SECOND));
   end;
 
   Self.DebugLn('Break finished');

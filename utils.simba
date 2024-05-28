@@ -39,7 +39,9 @@ var
 {$IFNDEF SRL_DATABASE_INCLUDED}      {$I utils/database.simba}
 {$IFNDEF SRL_HTTP_INCLUDED}          {$I utils/http.simba}
 {$IFNDEF SRL_WEBGRAPH_INCLUDED}      {$I utils/webgraph.simba}
+{$IFNDEF SRL_RSTRANSLATOR_INCLUDED}  {$I utils/translator.simba}
 
+{$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}

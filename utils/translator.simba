@@ -1,0 +1,139 @@
+(*
+# RSTranslator
+This file is responsible for conversions or internal RuneScape values to values
+that can be used by Simba and back.
+*)
+
+{$DEFINE SRL_RSTRANSLATOR_INCLUDED}
+{$IFNDEF SRL_UTILS}
+  {$I SRL-T/utils.simba}
+{$ENDIF}
+
+type
+  TRSTranslator = record
+    TileSize, ChunkSize, MaxHeight: UInt32;
+    RSDimensions, MapDimensions: TPoint;
+    RSScope, MapScope: TBox;
+  end;
+
+function TRSTranslator.ChunkArea(): UInt32; constref;
+begin
+  Result := Self.TileSize * Self.ChunkSize;
+end;
+
+procedure TRSTranslator.Setup();
+var
+  area: UInt32;
+begin
+  Self.TileSize := 4;
+  Self.ChunkSize := 64;
+  Self.MaxHeight := 2040;
+
+  area := Self.ChunkArea();
+
+  Self.RSDimensions  := [100, 200];        //chunk numbers
+  Self.RSScope       := [16, 19, 66, 196]; //chunk numbers
+
+  Self.MapDimensions.X := Self.RSDimensions.X * area;
+  Self.MapDimensions.Y := Self.RSDimensions.Y * area;
+
+  Self.MapScope.X1 := Self.RSScope.X1 * area;
+  Self.MapScope.Y1 := Self.RSScope.Y1 * area;
+  Self.MapScope.X2 := Self.RSScope.X2 * area;
+  Self.MapScope.Y2 := Self.RSScope.Y2 * area;
+end;
+
+
+function TRSTranslator.RSWidth(): Int32; constref;
+begin
+  Result := Self.RSScope.Width();
+end;
+
+function TRSTranslator.RSHeight(): Int32; constref;
+begin
+  Result := Self.RSScope.Height();
+end;
+
+function TRSTranslator.MapWidth(): Int32; constref;
+begin
+  Result := Self.RSWidth() * Self.ChunkArea();
+end;
+
+function TRSTranslator.MapHeight(): UInt32; constref;
+begin
+  Result := Self.RSHeight() * Self.ChunkArea();
+end;
+
+
+function TRSTranslator.RSArea(): UInt32; constref;
+begin
+  Result := Self.RSWidth() * Self.RSHeight();
+end;
+
+function TRSTranslator.MapArea(): UInt32; constref;
+begin
+  Result := Self.MapWidth() * Self.MapHeight();
+end;
+
+
+function TRSTranslator.RSCoordinate2Chunk(p: TPoint): TPoint;
+begin
+  Result := [p.X div Self.ChunkSize, p.Y div Self.ChunkSize];
+end;
+
+function TRSTranslator.Coordinate2Chunk(p: TPoint): TPoint;
+const
+  AREA := Self.ChunkArea();
+begin
+  Result.X := Self.RSScope.X1 + Floor(p.X / AREA);
+  Result.Y := Self.RSScope.Y2 - Floor(p.Y / AREA);
+end;
+
+
+function TRSTranslator.Chunk2RSCoordinate(p: TPoint): TPoint;
+begin
+  Result := [p.X * Self.ChunkSize, p.Y * Self.ChunkSize];
+end;
+
+function TRSTranslator.Chunk2Coordinate(p: TPoint): TPoint;
+const
+  AREA := Self.ChunkArea();
+begin
+  Result := [(p.X - Self.MapScope.X1) * AREA, (Self.MapScope.Y2 - p.Y) * AREA];
+end;
+
+
+function TRSTranslator.Coordinate2RSCoordinate(p: TPoint): TPoint;
+begin
+  Result := [p.X div Self.TileSize, p.Y div Self.TileSize];
+end;
+
+function TRSTranslator.RSCoordinate2Coordinate(p: TPoint): TPoint;
+begin
+  Result.X := p.X * Self.TileSize - Self.MapScope.X1;
+  Result.Y := Self.ChunkArea() - (p.Y * Self.TileSize - Self.MapScope.Y2) - Self.TileSize;
+end;
+
+
+
+function TRSTranslator.Height2Color(height: Single): UInt32;
+const
+  H_VALUE := Self.MaxHeight / $FFFFFF;
+begin
+  Result := Round((height / H_VALUE) * 29.14);
+end;
+
+function TRSTranslator.Color2Height(color: Int32): Single;
+const
+  H_VALUE := Self.MaxHeight / $FFFFFF;
+begin
+  Result := (color*H_VALUE) / 29.14;
+end;
+
+
+var
+  RSTranslator: TRSTranslator;
+
+begin
+  RSTranslator.Setup();
+end;

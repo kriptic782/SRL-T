@@ -14,8 +14,7 @@ TRSWalker by Slacky and it's future iterations made by Olly.
 
 const
   RSMAP_PATH: String = {$MACRO CURRENT_DIRECTORY};
-  TILE_SIZE:  UInt32 = 4;
-  CHUNK_SIZE: UInt32 = 64;
+
 var
   GENERATED_GRAPH_DETAIL = 5; //low = better and slower, high = worse and faster
 
@@ -32,27 +31,6 @@ begin
   Self.Name := name;
   Self.Cache := cache;
 end;
-
-function TRSChunkLoader.GetChunk(p: TPoint): TPoint; static;
-const
-  PIXELS: UInt32 = TILE_SIZE * CHUNK_SIZE;
-begin
-  Result.X :=  16 + Floor(p.X / PIXELS); //X starts at 16
-  Result.Y := 196 - Floor(p.Y / PIXELS); //Y starts at 196
-end;
-
-function TRSChunkLoader.GetGlobal(p: TPoint): TPoint; static;
-const
-  PIXELS: UInt32 = TILE_SIZE * CHUNK_SIZE;
-begin
-  Result := [(p.X-16) * PIXELS, (196-p.Y) * PIXELS];
-end;
-
-function TRSChunkLoader.ConvertString(str: String): TPoint;
-begin
-  Result := [StrToInt(str.Before('-')), StrToInt(str.After('-'))];
-end;
-
 
 function TRSChunkLoader.GetBitmap(chunk: String; level: UInt32; map: ERSMapType): TMufasaBitmap;
 var
@@ -185,7 +163,7 @@ begin
   end;
 
   Result.Init();
-  n := CHUNK_SIZE * TILE_SIZE;
+  n := RSTranslator.ChunkArea();
 
   Result.SetSize((hi.X-lo.X) * n + 1 + n, (hi.Y-lo.Y) * n + 1 + n);
 
@@ -818,7 +796,7 @@ begin
       Self.Regions[idx].Original := chunks[j];
       Self.Regions[idx].Level := levels[i];
 
-      tmp := TRSChunkLoader.GetGlobal(s);
+      tmp := RSTranslator.Chunk2Coordinate(s);
       Self.Regions[idx].Offset := [tmp.X-padding, tmp.Y - padding];
 
       bitmaps += Self.Loader.GetMap(s, f, levels[i], ERSMapType.NORMAL);
