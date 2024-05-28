@@ -1,3 +1,12 @@
+# [4.13.0](https://github.com/Torwent/SRL-T/compare/v4.12.10...v4.13.0) (2024-05-28)
+
+
+### Features
+
+* **translator:** read notes ([12b8ec1](https://github.com/Torwent/SRL-T/commit/12b8ec17b7a67ab66cff71c4e6f6361f0843be22))
+
+
+
 ## [4.12.10](https://github.com/Torwent/SRL-T/compare/v4.12.9...v4.12.10) (2024-05-27)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * some mm2ms and walker tweaks ([947f619](https://github.com/Torwent/SRL-T/commit/947f6190bd40e8cc2971ed8e3a42ea10e5177681))
-
-
-
-## [4.12.6](https://github.com/Torwent/SRL-T/compare/v4.12.5...v4.12.6) (2024-05-26)
-
-
-### Bug Fixes
-
-* **walker:** add multiple regions method ([63c3bfe](https://github.com/Torwent/SRL-T/commit/63c3bfe82146a28200c472a3962d098379a6d99f))
 
 
 
