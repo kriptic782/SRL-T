@@ -1,3 +1,12 @@
+# [4.14.0](https://github.com/Torwent/SRL-T/compare/v4.13.0...v4.14.0) (2024-05-29)
+
+
+### Features
+
+* **TRSMap:** add npcs.zip ([51817d6](https://github.com/Torwent/SRL-T/commit/51817d6de2135e45f1bd16c9660f0982f2c2c831))
+
+
+
 # [4.13.0](https://github.com/Torwent/SRL-T/compare/v4.12.10...v4.13.0) (2024-05-28)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRectange:** TRectangle.Contains() was bugged ([d620cde](https://github.com/Torwent/SRL-T/commit/d620cde788260a49e4be88c094a44e3d702d4ff4))
-
-
-
-## [4.12.7](https://github.com/Torwent/SRL-T/compare/v4.12.6...v4.12.7) (2024-05-26)
-
-
-### Bug Fixes
-
-* some mm2ms and walker tweaks ([947f619](https://github.com/Torwent/SRL-T/commit/947f6190bd40e8cc2971ed8e3a42ea10e5177681))
 
 
 
