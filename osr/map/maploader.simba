@@ -415,14 +415,19 @@ begin
         if id = rJSON.getInt('id') then
         begin
           coords    := json.getJSONArray('coordinates');
-          rotations := json.getJSONArray('rotations');
-          if coords.length() <> rotations.length() then
-            Self.Fatal('Coordinates and rotations for object id: ' + ToStr(id) + ' are not the same length.');
+
+          if jsonType = ERSMapJSON.OBJECTS then
+          begin
+            rotations := json.getJSONArray('rotations');
+            if coords.length() <> rotations.length() then
+              Self.Fatal('Coordinates and rotations for object id: ' + ToStr(id) + ' are not the same length.');
+          end;
 
           for l := 0 to coords.High() do
           begin
             rJSON.getJSONArray('coordinates').Put(coords.Get(l));
-            rJSON.getJSONArray('rotations').Put(rotations.Get(l));
+            if jsonType = ERSMapJSON.OBJECTS then
+              rJSON.getJSONArray('rotations').Put(rotations.Get(l));
           end;
 
           Continue(2);

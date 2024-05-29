@@ -100,7 +100,7 @@ function TRSTranslator.Chunk2Coordinate(p: TPoint): TPoint;
 const
   AREA := Self.ChunkArea();
 begin
-  Result := [(p.X - Self.MapScope.X1) * AREA, (Self.MapScope.Y2 - p.Y) * AREA];
+  Result := [p.X * AREA - Self.MapScope.X1, Self.MapScope.Y2 - p.Y * AREA];
 end;
 
 
