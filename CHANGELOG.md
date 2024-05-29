@@ -1,3 +1,12 @@
+# [4.15.0](https://github.com/Torwent/SRL-T/compare/v4.14.0...v4.15.0) (2024-05-29)
+
+
+### Features
+
+* **TRSMap:** full npc data added ([32b82ae](https://github.com/Torwent/SRL-T/commit/32b82aec40bd7bb1ecbda6351595f6b273fa3084))
+
+
+
 # [4.14.0](https://github.com/Torwent/SRL-T/compare/v4.13.0...v4.14.0) (2024-05-29)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **inventory:** added .CountSlotStack ([4025862](https://github.com/Torwent/SRL-T/commit/40258623bacd8e4262c286b28055f080405d1772))
-
-
-
-## [4.12.8](https://github.com/Torwent/SRL-T/compare/v4.12.7...v4.12.8) (2024-05-27)
-
-
-### Bug Fixes
-
-* **TRectange:** TRectangle.Contains() was bugged ([d620cde](https://github.com/Torwent/SRL-T/commit/d620cde788260a49e4be88c094a44e3d702d4ff4))
 
 
 
