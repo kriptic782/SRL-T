@@ -12,17 +12,19 @@ type
   TRSMapObject = record
     ID: Int32;
     Name: String;
-    ObjType:  Int32;
     Category: Int32;
     Actions: TStringArray;
-    Coordinates: TPointArray;
+
     Size: Vector3;
-    Rotations: TSingleArray;
+    Coordinates: TPointArray;
+
     Finder: TRSObjectFinder;
     Offset: TPoint;
 
     Walker: PRSWalkerV2;
     Index: Int32;
+
+    TrackTarget: Boolean;
 
     Filter: record
       Walker:  Boolean;
@@ -35,7 +37,6 @@ type
     CurrentUpText: TStringArray;
     CurrentActionUpText: TStringArray;
     RedClicked: Boolean;
-    TrackTarget: Boolean;
   end;
 
 function TRSMapObject.Merge(json: TJSONObject): TRSMapObject;
@@ -46,22 +47,9 @@ var
 begin
   Result := Self;
 
-  if Result.Size.X <> Result.Size.Y then
-  begin
-    for i := 0 to json.getJSONArray('coordinates').High() do
-    begin
-      with json.getJSONArray('coordinates').getJSONArray(i) do
-        Result.Coordinates += [getInt(0), getInt(1)];
-      Result.Rotations += (90*json.getJSONArray('rotations').getInt(i) * PI)/180;
-    end;
-  end
-  else
-  begin
-    for i := 0 to json.getJSONArray('coordinates').High() do
-      with json.getJSONArray('coordinates').getJSONArray(i) do
-        Result.Coordinates += [getInt(0), getInt(1)];
-    SetLength(Result.Rotations, Length(Result.Coordinates));
-  end;
+  for i := 0 to json.getJSONArray('coordinates').High() do
+    with json.getJSONArray('coordinates').getJSONArray(i) do
+      Result.Coordinates += [getInt(0), getInt(1)];
 
   with json.getJSONArray('colors') do
     for i := 0 to High() do
@@ -86,7 +74,6 @@ begin
 
   Result.ID := json.getInt('id');
   Result.Name := json.getString('name');
-  Result.ObjType := json.getInt('type');
   Result.Category := json.getInt('category');
   Result.Offset := [0,0];
 
@@ -112,8 +99,6 @@ var
   x, y: Single;
 begin
   if Self.Name <> json.getString('name') then
-    Exit;
-  if Self.ObjType <> json.getInt('type') then
     Exit;
   if Self.Category <> json.getInt('category') then
     Exit;
@@ -169,7 +154,7 @@ end;
 
 function TRSMapObject.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref;
 var
-  coordinates, mmPoints: TPointArray;
+  coordinates: TPointArray;
   p: TPoint;
   offset: Vector3;
   h, diff: Single;
@@ -192,6 +177,141 @@ begin
   end;
 end;
 
+
+type
+  TCoordsAngle = record
+    Coordinates: TPointArray;
+    Angles: TSingleArray;
+  end;
+
+procedure TCoordsAngle.FilterCircle(circle: TCircle);
+var
+  i: Int32;
+begin
+  if Length(Self.Coordinates) <> Length(Self.Angles) then
+    TerminateScript('TCoordsAngle.FilterCircle() requires both arrays to be the same length.');
+
+  for i := High(Self.Coordinates) downto 0 do
+    if Self.Coordinates[i].DistanceTo(circle.Mean()) > circle.Radius then
+    begin
+      Delete(Self.Coordinates, i, 1);
+      Delete(Self.Angles, i, 1);
+    end;
+end;
+
+procedure TCoordsAngle.Sort(pt: TPoint);
+var
+  len, i: Int32;
+  weights: TIntegerArray;
+begin
+  len := Length(Self.Coordinates);
+  if len <> Length(Self.Angles) then
+    TerminateScript('TCoordsAngle.FilterCircle() requires both arrays to be the same length.');
+
+  SetLength(weights, len);
+  for i := 0 to High(Self.Coordinates) do
+    weights[i] := Sqr(pt.X - Self.Coordinates[i].X) + Sqr(pt.Y - Self.Coordinates[i].Y);
+
+  Self.Coordinates.WeightedSort(weights, 0, len-1, True);
+  Self.Angles.WeightedSort(weights, 0, len-1, True);
+end;
+
+type
+  TRSObjectV2 = record(TRSMapObject)
+    ObjType:  Int32;
+    Rotations: TSingleArray;
+  end;
+
+  PRSObjectV2 = ^TRSObjectV2;
+
+function TRSObjectV2.Merge(json: TJSONObject): TRSObjectV2; overload;
+var
+  i, c, t: Int32;
+  h, s: Extended;
+  colors: TIntegerArray;
+begin
+  Result := Self;
+
+  if Result.Size.X <> Result.Size.Y then
+  begin
+    for i := 0 to json.getJSONArray('coordinates').High() do
+    begin
+      with json.getJSONArray('coordinates').getJSONArray(i) do
+        Result.Coordinates += [getInt(0), getInt(1)];
+      Result.Rotations += (90*json.getJSONArray('rotations').getInt(i) * PI)/180;
+    end;
+  end
+  else
+  begin
+    for i := 0 to json.getJSONArray('coordinates').High() do
+      with json.getJSONArray('coordinates').getJSONArray(i) do
+        Result.Coordinates += [getInt(0), getInt(1)];
+    SetLength(Result.Rotations, Length(Result.Coordinates));
+  end;
+
+  with json.getJSONArray('colors') do
+    for i := 0 to High() do
+      colors += getInt(i);
+
+  ACA(colors, 2, c, t, h, s);
+
+  for i := 0 to High(Result.Finder.Colors) do
+    if Result.Finder.Colors[i] = CTS2(c, t, h, s) then
+      Exit;
+
+  Result.Finder.Colors := [CTS2(c, t, h, s)];
+end;
+
+function TRSObjectV2.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSObjectV2; static; overload;
+var
+  mapObj: TRSMapObject;
+begin
+  mapObj := TRSMapObject.Setup(pwalker, json);
+  Result := PRSObjectV2(@mapObj)^;
+  Result.ObjType := json.getInt('type');
+end;
+
+function TRSObjectV2.SameObject(json: TJSONObject): Boolean; override;
+begin
+  if Self.ObjType <> json.getInt('type') then
+    Exit;
+  Result := inherited;
+end;
+
+function TRSObjectV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref; override;
+var
+  Locations: TCoordsAngle;
+  p: TPoint;
+  offset: Vector3;
+  h, diff: Single;
+  i: Int32;
+begin
+  if me = [0,0] then
+    me := Self.Walker^.Position();
+  if angle = $FFFF then
+    angle := Minimap.GetCompassAngle(False);
+
+  h := Self.Walker^.Height(me);
+
+  Locations.Coordinates := Copy(Self.Coordinates);
+  Locations.Angles := Copy(Self.Rotations);
+
+  Locations.FilterCircle([me.X, me.Y, 85]);
+  Locations.Sort(me);
+
+  for i := 0 to High(Locations.Coordinates) do
+  begin
+    p := Locations.Coordinates[i];
+    diff := -(h-Self.Walker^.Height(p));
+    offset := Vec3(Self.Offset.X, Self.Offset.Y, diff);
+    p := Self.Walker^.PointToMM(me, p, angle);
+    Result += Minimap.GetCuboidMS(p + [Round(0.15*diff), Round(0.11*diff)], Self.Size, offset, angle - Locations.Angles[i]);
+  end;
+end;
+
+type
+  TRSMMDotV2 = type TRSMapObject;
+  TRSNPCV2 = type TRSMMDotV2;
 
 (*
 ## TRSMapObject.Find
@@ -491,13 +611,13 @@ end;
 
 
 (*
-## TRSMapObject.Draw
+## TRSObjectV2.Draw
 ```pascal
 procedure TRSMapObject.Draw(out bitmap: TMufasaBitmap);
 ```
 Helper method to debug TRSMapObjects used in `Debug(TRSMapObject)`.
 *)
-procedure TRSMapObject.Draw(out bitmap: TMufasaBitmap);
+procedure TRSObjectV2.Draw(out bitmap: TMufasaBitmap);
 var
   me, p, q: TPoint;
   rect: TRectangle;
@@ -505,7 +625,6 @@ var
   mmPoints: TPointArray;
   cuboids: TCuboidExArray;
   atpa: T2DPointArray;
-  offset: Vector3;
   h: Single;
 begin
   me := Self.Walker^.Position();
@@ -536,9 +655,9 @@ end;
 (*
 ## Debug
 ```pascal
-procedure Debug(obj: TRSMapObject); overload;
+procedure Debug(obj: TRSObjectV2); overload;
 ```
-Debugs a TRSMapObject used with the help of `TRSMapObject.Draw()`.
+Debugs a TRSObjectV2 used with the help of `TRSObjectV2.Draw()`.
 
 Example:
 ```pascal
@@ -549,7 +668,7 @@ begin
 end.
 ```
 *)
-procedure Debug(obj: TRSMapObject); overload;
+procedure Debug(obj: TRSObjectV2); overload;
 var
   bitmap: TMufasaBitmap;
 begin
@@ -759,7 +878,7 @@ RSW.WebWalk(WaspWeb.LOCATION_VARROCK);
 RSObjects.GEBank.Hover(); //Be in GE with a walker setup there.
 ```
 *)
-function TRSMapObject.Hover(attempts: Int32 = 2; trackTarget: Boolean = TRSMapObject.TrackTarget): Boolean;
+function TRSMapObject.Hover(attempts: Int32 = 2): Boolean;
 begin
   if ChooseOption.IsOpen() then
   begin
@@ -771,7 +890,7 @@ begin
   if Self.Filter.Walker and not Self.Walker^.MakePointVisible(Self.Coordinates) then
     Exit;
 
-  Result := Self._HoverHelper(attempts, trackTarget);
+  Result := Self._HoverHelper(attempts, Self.TrackTarget);
 end;
 
 (*
@@ -789,7 +908,7 @@ RSW.WebWalk(WaspWeb.LOCATION_VARROCK);
 RSObjects.GEBank.WalkHover();
 ```
 *)
-function TRSMapObject.WalkHover(attempts: Int32 = 2; trackTarget: Boolean = TRSMapObject.TrackTarget): Boolean;
+function TRSMapObject.WalkHover(attempts: Int32 = 2): Boolean;
 var
   p: TPoint;
 begin
@@ -811,7 +930,7 @@ begin
      not Self.Walker^.WebWalk(p, 30, 0.15) then
       Exit;
 
-  Result := Self._WalkHoverHelper(attempts, trackTarget);
+  Result := Self._WalkHoverHelper(attempts, Self.TrackTarget);
 end;
 
 
@@ -894,11 +1013,10 @@ begin
 end;
 
 
-
 type
-  TRSMapObjectArray = array of TRSMapObject;
+  TRSObjectV2Array = array of TRSObjectV2;
 
-function TRSMapObjectArray.FindAnyID(id: Int32): Int32;
+function TRSObjectV2Array.FindAnyID(id: Int32): Int32;
 begin
   for Result := 0 to High(Self) do
     if Self[Result].ID = id then
@@ -906,7 +1024,7 @@ begin
   Result := -1;
 end;
 
-function TRSMapObjectArray.FindAnyName(name: String): Int32;
+function TRSObjectV2Array.FindAnyName(name: String): Int32;
 begin
   name := LowerCase(name);
   for Result := 0 to High(Self) do
@@ -915,7 +1033,7 @@ begin
   Result := -1;
 end;
 
-function TRSMapObjectArray.FindAnyType(objType: Int32): Int32;
+function TRSObjectV2Array.FindAnyType(objType: Int32): Int32;
 begin
   for Result := 0 to High(Self) do
     if Self[Result].ObjType = objType then
@@ -923,7 +1041,7 @@ begin
   Result := -1;
 end;
 
-function TRSMapObjectArray.FindAnyCategory(category: Int32): Int32;
+function TRSObjectV2Array.FindAnyCategory(category: Int32): Int32;
 begin
   for Result := 0 to High(Self) do
     if Self[Result].Category = category then
@@ -932,7 +1050,7 @@ begin
 end;
 
 
-function TRSMapObjectArray.FindAny(obj: Variant): Int32;
+function TRSObjectV2Array.FindAny(obj: Variant): Int32;
 var
   str: String;
 begin
@@ -942,7 +1060,7 @@ begin
   Result := Self.FindAnyName(str);
 end;
 
-function TRSMapObjectArray.FindAllName(name: String): TIntegerArray;
+function TRSObjectV2Array.FindAllName(name: String): TIntegerArray;
 var
   i: Int32;
 begin
@@ -952,7 +1070,7 @@ begin
       Result += i;
 end;
 
-function TRSMapObjectArray.FindAllType(objType: Int32): TIntegerArray;
+function TRSObjectV2Array.FindAllType(objType: Int32): TIntegerArray;
 var
   i: Int32;
 begin
@@ -961,7 +1079,7 @@ begin
       Result += i;
 end;
 
-function TRSMapObjectArray.FindAllCategory(category: Int32): TIntegerArray;
+function TRSObjectV2Array.FindAllCategory(category: Int32): TIntegerArray;
 var
   i: Int32;
 begin
@@ -971,10 +1089,19 @@ begin
 end;
 
 type
+  TRSNPCV2Array = array of TRSNPCV2;
+
+type
   TRSMapObjects = record
     Data: TJSONArray;
     Walker: PRSWalkerV2;
-    Cache: TRSMapObjectArray;
+    Cache: TRSObjectV2Array;
+  end;
+
+  TRSMapNPCs = record
+    Data: TJSONArray;
+    Walker: PRSWalkerV2;
+    Cache: TRSNPCV2Array;
   end;
 
 procedure TRSMapObjects.Setup(json: TJSONArray; walker: PRSWalkerV2);
@@ -983,7 +1110,7 @@ begin
   Self.Walker := walker;
 end;
 
-function TRSMapObjects.Get(obj: Variant): TRSMapObject;
+function TRSMapObjects.Get(obj: Variant): TRSObjectV2;
 var
   i: Int32;
   str: String;
@@ -998,7 +1125,7 @@ begin
     for i := 0 to  Self.Data.High() do
       if Self.Data.getJSONObject(i).getInt('id') = obj then
       begin
-        Result := TRSMapObject.Setup(Self.Walker, Self.Data.getJSONObject(i));
+        Result := TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
         Result.Index := Length(Self.Cache);
         Self.Cache += Result;
         Exit;
@@ -1014,7 +1141,7 @@ begin
     for i := 0 to  Self.Data.High() do
       if Self.Data.getJSONObject(i).getInt('id') = obj then
       begin
-        Result := TRSMapObject.Setup(Self.Walker, Self.Data.getJSONObject(i));
+        Result := TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
         Result.Index := Length(Self.Cache);
         Self.Cache += Result;
         Exit;
@@ -1034,7 +1161,7 @@ begin
         Continue;
       end;
 
-      Result := TRSMapObject.Setup(Self.Walker, Self.Data.getJSONObject(i));
+      Result := TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
       Result.Index := Length(Self.Cache);
       Self.Cache += Result;
       found := True;
@@ -1045,14 +1172,14 @@ begin
     TerminateScript('Object ' + ToStr(obj) + ' doesn''t exist on the loaded maps.');
 end;
 
-function TRSMapObjects.Add(obj: TRSMapObject): TRSMapObject;
+function TRSMapObjects.Add(obj: TRSObjectV2): TRSObjectV2;
 begin
   Result := obj;
   Result.Index := Length(Self.Cache);
   Self.Cache += Result;
 end;
 
-function TRSMapObjects.SetFinder(obj: Variant; finder: TRSObjectFinder): TRSMapObject;
+function TRSMapObjects.SetFinder(obj: Variant; finder: TRSObjectFinder): TRSObjectV2;
 begin
   Result := Self.Get(obj);
   Result.Finder := finder;
