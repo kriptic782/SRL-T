@@ -1,3 +1,12 @@
+## [4.15.1](https://github.com/Torwent/SRL-T/compare/v4.15.0...v4.15.1) (2024-05-29)
+
+
+### Bug Fixes
+
+* **RSTranslator:** fixed math on Chunk2Coordinate() ([b2e464c](https://github.com/Torwent/SRL-T/commit/b2e464ccaf62e30586072907eb5f6284b5420dbc))
+
+
+
 # [4.15.0](https://github.com/Torwent/SRL-T/compare/v4.14.0...v4.15.0) (2024-05-29)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **Objects:** now require to be setup ([a8bbc02](https://github.com/Torwent/SRL-T/commit/a8bbc02b171c0ab176977fa94bf03a4406ae3188))
-
-
-
-## [4.12.9](https://github.com/Torwent/SRL-T/compare/v4.12.8...v4.12.9) (2024-05-27)
-
-
-### Bug Fixes
-
-* **inventory:** added .CountSlotStack ([4025862](https://github.com/Torwent/SRL-T/commit/40258623bacd8e4262c286b28055f080405d1772))
 
 
 
