@@ -1,0 +1,133 @@
+{$I SRL-T/osr.simba}
+
+const
+  PATH       = {$macro CURRENT_DIRECTORY};
+  JSONS_PATH = PATH + 'npc_files' + DirectorySeparator;
+  DATA_URL   = 'https://raw.githubusercontent.com/mejrs/data_osrs/master/NPCList_OSRS.json';
+
+var
+  current, npc, final: TJSONObject;
+  data, actions, coordinates, coords, models, chunkArr: TJSONArray;
+  i, j, hi, id: Int32;
+  chunk: TPoint;
+  chunkStr, plane: String;
+
+begin
+  ClearDebug();
+  DeleteDirectory(JSONS_PATH, False);
+
+  for i := 0 to RSTranslator.Planes do
+    ForceDirectories(JSONS_PATH + ToStr(i));
+
+  data.Init(GetPage(DATA_URL));
+  AddOnTerminate(@data.Free);
+  final.Init();
+
+  WriteLn('Finished setting up. Parsing data now.');
+
+  for i := 0 to hi := data.High() do
+  begin
+    if (i mod 1000 = 0) then
+      WriteLn(i, '/', hi);
+
+    current := data.GetJSONObject(i);
+    id := current.getInt('id');
+    coords.Init();
+
+    coords.Put(current.GetInt('x'));
+    coords.Put(current.GetInt('y'));
+
+    chunk := [current.GetInt('x'), current.GetInt('y')];
+    chunk := RSTranslator.RSCoordinate2Chunk(chunk);
+
+    chunkStr := ToStr(current.GetInt('p')) + '-' +
+                ToStr(chunk.X) + '-' + ToStr(chunk.Y);
+
+    if not final.Has(chunkStr) then
+    begin
+      chunkArr.Init();
+      final.Put(chunkStr, chunkArr);
+    end
+    else
+      chunkArr := final.getJSONArray(chunkStr);
+
+    npc := nil;
+    for j := 0 to chunkArr.High() do
+    begin
+      if chunkArr.getJSONObject(j).getInt('id') = id then
+      begin
+        npc := chunkArr.getJSONObject(j);
+        Break;
+      end;
+    end;
+
+    if npc <> nil then
+    begin
+      npc.getJSONArray('coordinates').Put(coords);
+      Continue;
+    end;
+
+    npc.Init();
+    npc.Put('id', id);
+    npc.Put('name', current.GetString('name'));
+
+    if current.Has('category') then
+      npc.Put('category', current.GetInt('category'))
+    else
+      npc.Put('category', -1);
+
+    npc.Put('minimapdot', current.Has('hasMinimapDot') and current.getBoolean('hasMinimapDot'));
+
+    if current.has('combatlevel') then
+      npc.Put('level', current.GetInt('combatlevel'))
+    else
+      npc.Put('level', 0);
+
+    actions.Init();
+    if current.Has('actions') then
+      for j := 0 to current.getJSONArray('actions').High() do
+        case current.getJSONArray('actions').getString(j) of
+          'hidden', 'Hidden', 'none', 'None': Continue;
+          else
+            actions.Put(current.getJSONArray('actions').getString(j));
+        end;
+
+    npc.Put('actions', actions);
+
+    if actions.High() = -1 then
+      actions.Free();
+
+    coordinates.Init();
+    coordinates.Put(coords);
+    npc.Put('coordinates', coordinates);
+
+    if current.Has('models') then
+      models := current.getJSONArray('models')
+    else
+      models.Init();
+
+    npc.Put('models', models);
+
+    chunkArr.Put(npc);
+  end;
+
+  WriteLn('Finished parsing data. Saving it to files now.');
+
+  hi := final.Keys().getCount() - 1;
+
+  for i := 0 to hi do
+  begin
+    if (i mod 200 = 0) then
+      WriteLn(i, '/', hi);
+    chunkStr := final.Keys().GetStrings(i);
+
+    chunkArr := final.getJSONArray(chunkStr);
+
+    plane := chunkStr.Before('-');
+    chunkStr := JSONS_PATH + plane + DirectorySeparator + chunkStr.After('-') + '.json';
+
+    WriteFileContents(chunkStr, chunkArr.toString(2), False);
+  end;
+
+  WriteLn('Finished saving files.');
+end.
