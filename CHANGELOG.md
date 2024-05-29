@@ -1,3 +1,12 @@
+# [4.16.0](https://github.com/Torwent/SRL-T/compare/v4.15.1...v4.16.0) (2024-05-29)
+
+
+### Features
+
+* **TRSMapObjects:** read notes ([3e49c2d](https://github.com/Torwent/SRL-T/commit/3e49c2da5ad3294a6cbfd35771ab1aa37e72039c))
+
+
+
 ## [4.15.1](https://github.com/Torwent/SRL-T/compare/v4.15.0...v4.15.1) (2024-05-29)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **translator:** read notes ([12b8ec1](https://github.com/Torwent/SRL-T/commit/12b8ec17b7a67ab66cff71c4e6f6361f0843be22))
-
-
-
-## [4.12.10](https://github.com/Torwent/SRL-T/compare/v4.12.9...v4.12.10) (2024-05-27)
-
-
-### Bug Fixes
-
-* **Objects:** now require to be setup ([a8bbc02](https://github.com/Torwent/SRL-T/commit/a8bbc02b171c0ab176977fa94bf03a4406ae3188))
 
 
 
