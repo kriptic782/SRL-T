@@ -491,7 +491,6 @@ end;
 ```pascal
 procedure TPointArray.Sort(From:TPoint=[0,0]);
 ```
-
 Wraps Simba's `SortTPAFrom`
 *)
 procedure TPointArray.Sort(From:TPoint=[0,0]);
@@ -520,12 +519,48 @@ begin
 end;
 
 
+procedure TPointArray.WeightedSort(weights: TIntegerArray; iLo, iHi: Int32; sortUp: Boolean);
+var
+  lo, hi, mid: Int32;
+begin
+  if (Length(weights) <> Length(self)) then Exit;
+  lo := iLo;
+  hi := iHi;
+  Mid := weights[(lo + hi) shr 1];
+  repeat
+    if SortUp then
+    begin
+      while (weights[lo] < mid) do Inc(lo);
+      while (weights[hi] > mid) do Dec(hi);
+    end else
+    begin
+      while (weights[Lo] > mid) do Inc(Lo);
+      while (weights[Hi] < mid) do Dec(Hi);
+    end;
+    if (lo <= hi) then
+    begin
+      Swap(weights[lo], weights[hi]);
+      Swap(self[lo], self[hi]);
+      Inc(lo);
+      Dec(hi);
+    end;
+  until Lo > Hi;
+  if (hi > iLo) then self.WeightedSort(weights, iLo, hi, SortUp);
+  if (lo < iHi) then self.WeightedSort(weights, lo, iHi, SortUp);
+end;
+
+function TPointArray.WeightedSorted(weights: TIntegerArray; iLo, iHi: Int32; sortUp: Boolean): TPointArray; constref;
+begin
+  Result := Copy(Self);
+  Result.WeightedSort(weights, iLo, iHi, sortUp);
+end;
+
+
 (*
 ## TPointArray.SortByX
 ```pascal
 procedure TPointArray.SortByX(LowToHi:Boolean=True);
 ```
-
 Wraps Simba's `SortTPAByX`
 *)
 procedure TPointArray.SortByX(LowToHi:Boolean=True);
@@ -538,7 +573,6 @@ end;
 ```pascal
 procedure TPointArray.SortByY(LowToHi:Boolean=True);
 ```
-
 Wraps Simba's `SortTPAByY`
 *)
 procedure TPointArray.SortByY(LowToHi:Boolean=True);
@@ -552,7 +586,6 @@ end;
 ```pascal
 procedure TPointArray.SortByRow(reverse:Boolean=False);
 ```
-
 Sorts a given TPointArray TPA row-by-row, starting from the smallest Y coordinate to the largest Y coordinate, and for every row from the smallest X coordinate to the largest X coordinate.
 *)
 procedure TPointArray.SortByRow(reverse:Boolean=False);
@@ -577,7 +610,6 @@ end;
 ```pascal
 procedure TPointArray.SortByColumn(reverse:Boolean=False);
 ```
-
 Much like SortByRow, but the order of the column comes first
 *)
 procedure TPointArray.SortByColumn(reverse:Boolean=False);
@@ -601,7 +633,6 @@ end;
 ```pascal
 procedure TPointArray.SortFromLine(p,q:TPoint; reverse:Boolean=False);
 ```
-
 The name tells the story
 *)
 procedure TPointArray.SortFromLine(p,q:TPoint; reverse:Boolean=False);
@@ -627,7 +658,6 @@ end;
 ```pascal
 function TPointArray.Bounds(): TBox; constref;
 ```
-
 Wraps Simba's GetTPABounds
 *)
 function TPointArray.Bounds(): TBox; constref;
@@ -643,7 +673,6 @@ end;
 ```pascal
 function TPointArray.Edges(): TPointArray; constref;
 ```
-
 Filters all points out of the given TPointArray which aren't edge-points. 
 Edge-points are points that are on the edge of the TPA, not completely surrounded by other points. 
 Same as Simba's `FindTPAEdges`
@@ -1375,7 +1404,6 @@ end;
 ```pascal
 function ExpandPolygon(Poly:TPointArray; inc:Int32): TPointArray;
 ```
-
 A method for increasing the size of any convex polygon.
 
 ```{note}

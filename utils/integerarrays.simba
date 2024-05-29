@@ -170,14 +170,14 @@ end;
 procedure TIntegerArray.Sort();
 begin
   if Length(Self) > 0 then
-    Quicksort(Self);
+    QuickSort(Self);
 end;
 
 function TIntegerArray.Sorted(): TIntegerArray; constref;
 begin
   Result := Copy(Self);
   if Length(Result) > 0 then
-    Quicksort(Result);
+    QuickSort(Result);
 end;
 
 function TIntegerArray.Combine(Other: TIntegerArray): TIntegerArray; constref;
@@ -524,3 +524,41 @@ begin
   for i:=0 to High(self) do
     Result.Extend(self[i]);
 end;
+
+
+procedure TSingleArray.WeightedSort(weights: TIntegerArray; iLo, iHi: Int32; sortUp: Boolean);
+var
+  lo, hi, mid: Int32;
+begin
+  if (Length(weights) <> Length(self)) then Exit;
+  lo := iLo;
+  hi := iHi;
+  Mid := weights[(lo + hi) shr 1];
+  repeat
+    if SortUp then
+    begin
+      while (weights[lo] < mid) do Inc(lo);
+      while (weights[hi] > mid) do Dec(hi);
+    end else
+    begin
+      while (weights[Lo] > mid) do Inc(Lo);
+      while (weights[Hi] < mid) do Dec(Hi);
+    end;
+    if (lo <= hi) then
+    begin
+      Swap(weights[lo], weights[hi]);
+      Swap(self[lo], self[hi]);
+      Inc(lo);
+      Dec(hi);
+    end;
+  until Lo > Hi;
+  if (hi > iLo) then self.WeightedSort(weights, iLo, hi, SortUp);
+  if (lo < iHi) then self.WeightedSort(weights, lo, iHi, SortUp);
+end;
+
+function TSingleArray.WeightSorted(weights: TIntegerArray; iLo, iHi: Int32; sortUp: Boolean): TSingleArray; constref;
+begin
+  Result := Copy(Self);
+  Result.WeightedSort(weights, iLo, iHi, sortUp);
+end;
+

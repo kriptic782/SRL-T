@@ -104,7 +104,7 @@ var
 begin
   case jsonType of
     ERSMapJSON.OBJECTS: name := 'objects';
-    ERSMapJSON.NPCS: name := 'npcs';
+    ERSMapJSON.NPCS:    name := 'npcs';
   end;
 
   cacheroot := Self.Cache + name + DirectorySeparator;
@@ -531,7 +531,6 @@ type
     DownscaledMap: TMufasaBitmap;
 
     MapBox: TBox;
-
     Graph: TWebGraph;
 
     Regions: array of TRSMapRegion;
@@ -590,12 +589,13 @@ procedure TRSMapLoader.Init(downscale: UInt32);
 var
   version: String;
 begin
-  Self.Name := 'RSMap';
+  Self.Name := 'RSMap.Loader';
   version := SHA1String(
      SHA1File(RSMAP_PATH + 'files' + DirectorySeparator + 'map.zip') +
      SHA1File(RSMAP_PATH + 'files' + DirectorySeparator + 'heightmap.zip') +
      SHA1File(RSMAP_PATH + 'files' + DirectorySeparator + 'collision.zip') +
-     SHA1File(RSMAP_PATH + 'files' + DirectorySeparator + 'objects.zip')
+     SHA1File(RSMAP_PATH + 'files' + DirectorySeparator + 'objects.zip') +
+     SHA1File(RSMAP_PATH + 'files' + DirectorySeparator + 'npcs.zip')
   );
 
   version := version.SubString(6);
@@ -778,7 +778,7 @@ var
   s, f, tmp: TPoint;
   graphs: array of TWebGraph;
   json: TJSONArray;
-  objects: array of TJSONArray;
+  objects, npcs: array of TJSONArray;
 begin
   Self.Init(downscale);
   SetLength(Self.Regions, Length(chunks) * Length(levels));
@@ -814,17 +814,20 @@ begin
 
       json := Self.Loader.GetJSON(s, f, levels[i], ERSMapJSON.OBJECTS);
       objects += json;
+      json := Self.Loader.GetJSON(s, f, levels[i], ERSMapJSON.NPCS);
+      npcs += json;
 
       Self.Regions[idx].Region := Box(0, 0, bitmaps[idx].GetWidth(), bitmaps[idx].GetHeight());
     end;
 
   Self.Pack();
 
-  Self.Map := Self.InternalLoad(bitmaps);
+  Self.Map       := Self.InternalLoad(bitmaps);
   Self.Heightmap := Self._InternalLoad(hbitmaps);
   Self.Collision := Self._InternalLoad(cbitmaps);
-  Self.Graph := Self.InternalGraphLoad(graphs, padding);
+  Self.Graph     := Self.InternalGraphLoad(graphs, padding);
   Self.ObjectData := Self.InternalObjectsLoad(objects);
+  Self.NPCData := Self.InternalObjectsLoad(npcs);
 
   Self.Map.Downsample(downscale, Self.DownscaledMap);
 

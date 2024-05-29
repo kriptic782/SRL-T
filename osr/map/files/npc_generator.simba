@@ -1,29 +1,49 @@
 {$I SRL-T/osr.simba}
 
 const
-  PATH       = {$macro CURRENT_DIRECTORY};
-  JSONS_PATH = PATH + 'npc_files' + DirectorySeparator;
-  DATA_URL   = 'https://raw.githubusercontent.com/mejrs/data_osrs/master/NPCList_OSRS.json';
+  PATH         = {$macro CURRENT_DIRECTORY};
+  JSONS_PATH   = PATH + 'npcs' + DirectorySeparator;
+  DATA_URL     = 'https://raw.githubusercontent.com/mejrs/data_osrs/master/NPCList_OSRS.json';
+  HELPER_CACHE = PATH + 'cache' + DirectorySeparator;
+
+function LoadHelper(id: Int32): TJSONObject;
+var
+  jsonFile, str: String;
+begin
+  jsonFile := ToStr(id) + '.json'
+  if not FileExists(HELPER_CACHE + jsonFile) then
+    Exit;
+
+  str := ReadFileContents(HELPER_CACHE + jsonFile);
+  if str <> '' then
+    Result.Init(str);
+end;
 
 var
-  current, npc, final: TJSONObject;
-  data, actions, coordinates, coords, models, chunkArr: TJSONArray;
+  current, npc, final, helper: TJSONObject;
+  data, coordinates, coords, chunkArr: TJSONArray;
   i, j, hi, id: Int32;
   chunk: TPoint;
-  chunkStr, plane: String;
+  chunkStr, plane, name: String;
 
 begin
   ClearDebug();
   DeleteDirectory(JSONS_PATH, False);
+  DeleteDirectory(HELPER_CACHE, False);
 
   for i := 0 to RSTranslator.Planes do
     ForceDirectories(JSONS_PATH + ToStr(i));
+
+  ForceDirectories(HELPER_CACHE);
+
 
   data.Init(GetPage(DATA_URL));
   AddOnTerminate(@data.Free);
   final.Init();
 
-  WriteLn('Finished setting up. Parsing data now.');
+  WriteLn('Finished setting up. Unzipping files now.');
+  UnZipFile(PATH + 'npcs_helper.zip', HELPER_CACHE);
+  WriteLn('Finished unzipping files. Parsing data now.');
 
   for i := 0 to hi := data.High() do
   begin
@@ -32,6 +52,16 @@ begin
 
     current := data.GetJSONObject(i);
     id := current.getInt('id');
+
+    helper := LoadHelper(id);
+    if helper = nil then
+      Continue;
+
+    name := helper.GetString('name');
+    if name = '' then
+      Continue;
+
+    coords := nil;
     coords.Init();
 
     coords.Put(current.GetInt('x'));
@@ -69,47 +99,22 @@ begin
 
     npc.Init();
     npc.Put('id', id);
-    npc.Put('name', current.GetString('name'));
+    npc.Put('name', name);
+    npc.Put('level', helper.getString('level'));
+    npc.Put('category', helper.GetInt('category'));
+    npc.Put('minimapdot', helper.getBoolean('minimapdot'));
+    npc.Put('actions', helper.getJSONArray('actions'));
+    npc.Put('size', helper.getJSONArray('size'));
 
-    if current.Has('category') then
-      npc.Put('category', current.GetInt('category'))
-    else
-      npc.Put('category', -1);
-
-    npc.Put('minimapdot', current.Has('hasMinimapDot') and current.getBoolean('hasMinimapDot'));
-
-    if current.has('combatlevel') then
-      npc.Put('level', current.GetInt('combatlevel'))
-    else
-      npc.Put('level', 0);
-
-    actions.Init();
-    if current.Has('actions') then
-      for j := 0 to current.getJSONArray('actions').High() do
-        case current.getJSONArray('actions').getString(j) of
-          'hidden', 'Hidden', 'none', 'None': Continue;
-          else
-            actions.Put(current.getJSONArray('actions').getString(j));
-        end;
-
-    npc.Put('actions', actions);
-
-    if actions.High() = -1 then
-      actions.Free();
-
+    coordinates := nil;
     coordinates.Init();
     coordinates.Put(coords);
     npc.Put('coordinates', coordinates);
-
-    if current.Has('models') then
-      models := current.getJSONArray('models')
-    else
-      models.Init();
-
-    npc.Put('models', models);
-
+    npc.Put('colors', helper.getJSONArray('colors'));
     chunkArr.Put(npc);
   end;
+
+  DeleteDirectory(HELPER_CACHE, False);
 
   WriteLn('Finished parsing data. Saving it to files now.');
 
@@ -126,7 +131,15 @@ begin
     plane := chunkStr.Before('-');
     chunkStr := JSONS_PATH + plane + DirectorySeparator + chunkStr.After('-') + '.json';
 
-    WriteFileContents(chunkStr, chunkArr.toString(2), False);
+    WriteFileContents(
+      chunkStr,
+      chunkArr.ToString()
+        .Replace('\u0020', ' ')
+        .Replace('},{', '},' + LineEnding + '  {')
+        .Replace('[{', '[' + LineEnding + '  {')
+        .Replace('}]', '}' + LineEnding + ']'),
+      False
+    );
   end;
 
   WriteLn('Finished saving files.');
