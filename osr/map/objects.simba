@@ -64,6 +64,7 @@ begin
   Result.Finder.Colors := [CTS2(c, t, h, s)];
 end;
 
+
 function TRSMapObject.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSMapObject; static;
 var
   i: Int32;
@@ -178,141 +179,6 @@ begin
 end;
 
 
-type
-  TCoordsAngle = record
-    Coordinates: TPointArray;
-    Angles: TSingleArray;
-  end;
-
-procedure TCoordsAngle.FilterCircle(circle: TCircle);
-var
-  i: Int32;
-begin
-  if Length(Self.Coordinates) <> Length(Self.Angles) then
-    TerminateScript('TCoordsAngle.FilterCircle() requires both arrays to be the same length.');
-
-  for i := High(Self.Coordinates) downto 0 do
-    if Self.Coordinates[i].DistanceTo(circle.Mean()) > circle.Radius then
-    begin
-      Delete(Self.Coordinates, i, 1);
-      Delete(Self.Angles, i, 1);
-    end;
-end;
-
-procedure TCoordsAngle.Sort(pt: TPoint);
-var
-  len, i: Int32;
-  weights: TIntegerArray;
-begin
-  len := Length(Self.Coordinates);
-  if len <> Length(Self.Angles) then
-    TerminateScript('TCoordsAngle.FilterCircle() requires both arrays to be the same length.');
-
-  SetLength(weights, len);
-  for i := 0 to High(Self.Coordinates) do
-    weights[i] := Sqr(pt.X - Self.Coordinates[i].X) + Sqr(pt.Y - Self.Coordinates[i].Y);
-
-  Self.Coordinates.WeightedSort(weights, 0, len-1, True);
-  Self.Angles.WeightedSort(weights, 0, len-1, True);
-end;
-
-type
-  TRSObjectV2 = record(TRSMapObject)
-    ObjType:  Int32;
-    Rotations: TSingleArray;
-  end;
-
-  PRSObjectV2 = ^TRSObjectV2;
-
-function TRSObjectV2.Merge(json: TJSONObject): TRSObjectV2; overload;
-var
-  i, c, t: Int32;
-  h, s: Extended;
-  colors: TIntegerArray;
-begin
-  Result := Self;
-
-  if Result.Size.X <> Result.Size.Y then
-  begin
-    for i := 0 to json.getJSONArray('coordinates').High() do
-    begin
-      with json.getJSONArray('coordinates').getJSONArray(i) do
-        Result.Coordinates += [getInt(0), getInt(1)];
-      Result.Rotations += (90*json.getJSONArray('rotations').getInt(i) * PI)/180;
-    end;
-  end
-  else
-  begin
-    for i := 0 to json.getJSONArray('coordinates').High() do
-      with json.getJSONArray('coordinates').getJSONArray(i) do
-        Result.Coordinates += [getInt(0), getInt(1)];
-    SetLength(Result.Rotations, Length(Result.Coordinates));
-  end;
-
-  with json.getJSONArray('colors') do
-    for i := 0 to High() do
-      colors += getInt(i);
-
-  ACA(colors, 2, c, t, h, s);
-
-  for i := 0 to High(Result.Finder.Colors) do
-    if Result.Finder.Colors[i] = CTS2(c, t, h, s) then
-      Exit;
-
-  Result.Finder.Colors := [CTS2(c, t, h, s)];
-end;
-
-function TRSObjectV2.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSObjectV2; static; overload;
-var
-  mapObj: TRSMapObject;
-begin
-  mapObj := TRSMapObject.Setup(pwalker, json);
-  Result := PRSObjectV2(@mapObj)^;
-  Result.ObjType := json.getInt('type');
-end;
-
-function TRSObjectV2.SameObject(json: TJSONObject): Boolean; override;
-begin
-  if Self.ObjType <> json.getInt('type') then
-    Exit;
-  Result := inherited;
-end;
-
-function TRSObjectV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref; override;
-var
-  Locations: TCoordsAngle;
-  p: TPoint;
-  offset: Vector3;
-  h, diff: Single;
-  i: Int32;
-begin
-  if me = [0,0] then
-    me := Self.Walker^.Position();
-  if angle = $FFFF then
-    angle := Minimap.GetCompassAngle(False);
-
-  h := Self.Walker^.Height(me);
-
-  Locations.Coordinates := Copy(Self.Coordinates);
-  Locations.Angles := Copy(Self.Rotations);
-
-  Locations.FilterCircle([me.X, me.Y, 85]);
-  Locations.Sort(me);
-
-  for i := 0 to High(Locations.Coordinates) do
-  begin
-    p := Locations.Coordinates[i];
-    diff := -(h-Self.Walker^.Height(p));
-    offset := Vec3(Self.Offset.X, Self.Offset.Y, diff);
-    p := Self.Walker^.PointToMM(me, p, angle);
-    Result += Minimap.GetCuboidMS(p + [Round(0.15*diff), Round(0.11*diff)], Self.Size, offset, angle - Locations.Angles[i]);
-  end;
-end;
-
-type
-  TRSMMDotV2 = type TRSMapObject;
-  TRSNPCV2 = type TRSMMDotV2;
-
 (*
 ## TRSMapObject.Find
 ```pascal
@@ -371,7 +237,6 @@ begin
     if MainScreen.FindObject(Self.Finder, cuboidArray[i].Bounds()) <> [] then
       Exit(True);
 end;
-
 
 (*
 ## TRSMapObject._UpTextCheck
@@ -519,13 +384,146 @@ begin
 end;
 
 
+type
+  TCoordsAngle = record
+    Coordinates: TPointArray;
+    Angles: TSingleArray;
+  end;
+
+procedure TCoordsAngle.FilterCircle(circle: TCircle);
+var
+  i: Int32;
+begin
+  if Length(Self.Coordinates) <> Length(Self.Angles) then
+    TerminateScript('TCoordsAngle.FilterCircle() requires both arrays to be the same length.');
+
+  for i := High(Self.Coordinates) downto 0 do
+    if Self.Coordinates[i].DistanceTo(circle.Mean()) > circle.Radius then
+    begin
+      Delete(Self.Coordinates, i, 1);
+      Delete(Self.Angles, i, 1);
+    end;
+end;
+
+procedure TCoordsAngle.Sort(pt: TPoint);
+var
+  len, i: Int32;
+  weights: TIntegerArray;
+begin
+  len := Length(Self.Coordinates);
+  if len <> Length(Self.Angles) then
+    TerminateScript('TCoordsAngle.FilterCircle() requires both arrays to be the same length.');
+
+  SetLength(weights, len);
+  for i := 0 to High(Self.Coordinates) do
+    weights[i] := Sqr(pt.X - Self.Coordinates[i].X) + Sqr(pt.Y - Self.Coordinates[i].Y);
+
+  Self.Coordinates.WeightedSort(weights, 0, len-1, True);
+  Self.Angles.WeightedSort(weights, 0, len-1, True);
+end;
+
+type
+  TRSObjectV2 = record(TRSMapObject)
+    ObjType:  Int32;
+    Rotations: TSingleArray;
+  end;
+
+  PRSObjectV2 = ^TRSObjectV2;
+
+function TRSObjectV2.Merge(json: TJSONObject): TRSObjectV2; overload;
+var
+  i, c, t: Int32;
+  h, s: Extended;
+  colors: TIntegerArray;
+begin
+  Result := Self;
+
+  if Result.Size.X <> Result.Size.Y then
+  begin
+    for i := 0 to json.getJSONArray('coordinates').High() do
+    begin
+      with json.getJSONArray('coordinates').getJSONArray(i) do
+        Result.Coordinates += [getInt(0), getInt(1)];
+      Result.Rotations += (90*json.getJSONArray('rotations').getInt(i) * PI)/180;
+    end;
+  end
+  else
+  begin
+    for i := 0 to json.getJSONArray('coordinates').High() do
+      with json.getJSONArray('coordinates').getJSONArray(i) do
+        Result.Coordinates += [getInt(0), getInt(1)];
+    SetLength(Result.Rotations, Length(Result.Coordinates));
+  end;
+
+  with json.getJSONArray('colors') do
+    for i := 0 to High() do
+      colors += getInt(i);
+
+  ACA(colors, 2, c, t, h, s);
+
+  for i := 0 to High(Result.Finder.Colors) do
+    if Result.Finder.Colors[i] = CTS2(c, t, h, s) then
+      Exit;
+
+  Result.Finder.Colors := [CTS2(c, t, h, s)];
+end;
+
+function TRSObjectV2.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSObjectV2; static; overload;
+var
+  mapObj: TRSMapObject;
+begin
+  mapObj := TRSMapObject.Setup(pwalker, json);
+  Result := PRSObjectV2(@mapObj)^;
+  Result.ObjType := json.getInt('type');
+end;
+
+function TRSObjectV2.SameObject(json: TJSONObject): Boolean; override;
+begin
+  if Self.ObjType <> json.getInt('type') then
+    Exit;
+  Result := inherited;
+end;
+
+function TRSObjectV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref; override;
+var
+  Locations: TCoordsAngle;
+  p: TPoint;
+  offset: Vector3;
+  h, diff: Single;
+  i: Int32;
+begin
+  if me = [0,0] then
+    me := Self.Walker^.Position();
+  if angle = $FFFF then
+    angle := Minimap.GetCompassAngle(False);
+
+  h := Self.Walker^.Height(me);
+
+  Locations.Coordinates := Copy(Self.Coordinates);
+  Locations.Angles := Copy(Self.Rotations);
+
+  Locations.FilterCircle([me.X, me.Y, 85]);
+  Locations.Sort(me);
+
+  for i := 0 to High(Locations.Coordinates) do
+  begin
+    p := Locations.Coordinates[i];
+    diff := -(h-Self.Walker^.Height(p));
+    offset := Vec3(Self.Offset.X, Self.Offset.Y, diff);
+    p := Self.Walker^.PointToMM(me, p, angle);
+    Result += Minimap.GetCuboidMS(p + [Round(0.15*diff), Round(0.11*diff)], Self.Size, offset, angle - Locations.Angles[i]);
+  end;
+end;
+
+
 (*
-## TRSMapObject.Find
+## TRSObjectV2.Find
 ```pascal
-function TRSMapObject.FindEx(out cuboids: TCuboidArray; out atpa: T2DPointArray): Boolean;
-function TRSMapObject.Find(out atpa: T2DPointArray): Boolean;
+function TRSObjectV2.FindEx(out cuboids: TCuboidArray; out atpa: T2DPointArray): Boolean;
+function TRSObjectV2.Find(out atpa: T2DPointArray): Boolean;
+function TRSObjectV2.FindFromPosition(me: TPoint; out atpa: T2DPointArray): Boolean;
 ```
-TRSMapObject method used to find a {ref}`TRSMapObject`. If found returns true, if not returns false.
+TRSObjectV2 method used to find a {ref}`TRSObjectV2`. If found returns true, if not returns false.
 The "extended" method in particular is mostly meant for debugging and is the one used when you call `Debug(TRSMapObject)`.
 
 Example:
@@ -534,7 +532,7 @@ WriteLn RSObjects.GEBank.Find(atpa); //Be in ge and with a walker setup there.
 Debug(atpa);
 ```
 *)
-function TRSMapObject.FindEx(out cuboids: TCuboidExArray; out atpa: T2DPointArray): Boolean;
+function TRSObjectV2.FindEx(out cuboids: TCuboidExArray; out atpa: T2DPointArray): Boolean;
 begin
   if Self.Filter.Walker then
   begin
@@ -550,26 +548,42 @@ begin
   Result := atpa <> [];
 end;
 
-function TRSMapObject.Find(out atpa: T2DPointArray): Boolean;
+function TRSObjectV2.Find(out atpa: T2DPointArray): Boolean;
 var
   cuboids: TCuboidExArray;
 begin
   Result := Self.FindEx(cuboids, atpa);
 end;
 
+function TRSObjectV2.FindFromPosition(me: TPoint; out atpa: T2DPointArray): Boolean;
+var
+  cuboidArray: TCuboidExArray;
+begin
+  if not Self.Filter.Walker then
+    Exit;
+
+  cuboidArray := Self.GetCuboidArray(me);
+  if cuboidArray = [] then
+    Exit;
+
+  atpa := Self.FindOnMainScreen(cuboidArray);
+  Result := atpa <> [];
+end;
+
+
 (*
-## TRSMapObject.IsVisible
+## TRSObjectV2.IsVisible
 ```pascal
-function TRSMapObject.IsVisible(): Boolean;
+function TRSObjectV2.IsVisible(): Boolean;
 ```
-TRSMapObject method used to find a {ref}`TRSMapObject`. If found returns true, if not returns false.
+TRSObjectV2 method used to find a {ref}`TRSObjectV2`. If found returns true, if not returns false.
 
 Example:
 ```pascal
 WriteLn RSObjects.GEBank.IsVisible(); //Be in ge and with a walker setup there.
 ```
 *)
-function TRSMapObject.IsVisible(): Boolean;
+function TRSObjectV2.IsVisible(): Boolean;
 var
   cuboids: TCuboidExArray;
 begin
@@ -585,28 +599,6 @@ begin
 
   if Self.Filter.Finder then
     Result := MainScreen.FindObject(Self.Finder) <> [];
-end;
-
-(*
-## TRSMapObject.FindFromPosition
-```pascal
-function TRSMapObject.FindFromPosition(me: TPoint; out atpa: T2DPointArray): Boolean;
-```
-Look for a {ref}`TRSMapObject` as if you were on a different position. Great for things like pre-hovering.
-*)
-function TRSMapObject.FindFromPosition(me: TPoint; out atpa: T2DPointArray): Boolean;
-var
-  cuboidArray: TCuboidExArray;
-begin
-  if not Self.Filter.Walker then
-    Exit;
-
-  cuboidArray := Self.GetCuboidArray(me);
-  if cuboidArray = [] then
-    Exit;
-
-  atpa := Self.FindOnMainScreen(cuboidArray);
-  Result := atpa <> [];
 end;
 
 
@@ -652,32 +644,6 @@ begin
   bitmap.DrawCuboidArray(cuboids, $00FFFF);
 end;
 
-(*
-## Debug
-```pascal
-procedure Debug(obj: TRSObjectV2); overload;
-```
-Debugs a TRSObjectV2 used with the help of `TRSObjectV2.Draw()`.
-
-Example:
-```pascal
-{$I SRL-T/osr.simba}
-begin
-  Map.SetupChunkEx([49,52,49,52]);
-  Debug(Objects.Get('clay rocks')); //be in varrock west mine.
-end.
-```
-*)
-procedure Debug(obj: TRSObjectV2); overload;
-var
-  bitmap: TMufasaBitmap;
-begin
-  bitmap.FromClient();
-  obj.Draw(bitmap);
-  bitmap.Debug();
-  bitmap.Free();
-end;
-
 
 (*
 ## TRSMapObject._UpdateTarget
@@ -687,7 +653,7 @@ procedure TRSMapObject._UpdateTarget(sender: PMouse; var x, y: Double; var done:
 Internal helper method of TMouseMovingEventEx type used to update the target position while the mouse is moving.
 You should probably not touch this if you don't understand it.
 *)
-procedure TRSMapObject._UpdateTarget(sender: PMouse; var x, y: Double; var done: Boolean);
+procedure TRSObjectV2._UpdateTarget(sender: PMouse; var x, y: Double; var done: Boolean);
 var
   i: Int32;
   atpa: T2DPointArray;
@@ -725,7 +691,7 @@ function TRSMapObject._HoverHelper(attempts: Int32; trackTarget: Boolean): Boole
 Internal helper method used to hover a TRSMapObject target.
 You should not use this directly.
 *)
-function TRSMapObject._HoverHelper(attempts: Int32; trackTarget: Boolean): Boolean;
+function TRSObjectV2._HoverHelper(attempts: Int32; trackTarget: Boolean): Boolean;
 var
   shouldExit: Boolean;
   attempt: Int32;
@@ -778,7 +744,7 @@ You should not use this directly.
 
 This is responsible for deciding wether we should walk to a TRSMapObject target or not before attempting to hover it.
 *)
-function TRSMapObject._WalkHoverHelper(attempts: Int32; trackTarget: Boolean): Boolean;
+function TRSObjectV2._WalkHoverHelper(attempts: Int32; trackTarget: Boolean): Boolean;
 var
   shouldExit: Boolean;
   attempt: Int32;
@@ -847,7 +813,7 @@ function TRSMapObject.PreHoverHelper(attempts: Int32): Boolean;
 Internal helper method used to pre-hover a TRSMapObject target.
 You should not use this directly.
 *)
-function TRSMapObject.PreHoverHelper(me: TPoint; attempts: Int32 = 2): Boolean;
+function TRSObjectV2.PreHoverHelper(me: TPoint; attempts: Int32 = 2): Boolean;
 var
   attempt: Int32;
   atpa: T2DPointArray;
@@ -878,7 +844,7 @@ RSW.WebWalk(WaspWeb.LOCATION_VARROCK);
 RSObjects.GEBank.Hover(); //Be in GE with a walker setup there.
 ```
 *)
-function TRSMapObject.Hover(attempts: Int32 = 2): Boolean;
+function TRSObjectV2.Hover(attempts: Int32 = 2): Boolean;
 begin
   if ChooseOption.IsOpen() then
   begin
@@ -908,7 +874,7 @@ RSW.WebWalk(WaspWeb.LOCATION_VARROCK);
 RSObjects.GEBank.WalkHover();
 ```
 *)
-function TRSMapObject.WalkHover(attempts: Int32 = 2): Boolean;
+function TRSObjectV2.WalkHover(attempts: Int32 = 2): Boolean;
 var
   p: TPoint;
 begin
@@ -947,11 +913,10 @@ Example:
 WriteLn RSObjects.GEBank.Click();
 ```
 *)
-function TRSMapObject.Click(leftClick: Boolean = True; attempts: Int32 = 2): Boolean;
+function TRSObjectV2.Click(leftClick: Boolean = True; attempts: Int32 = 2): Boolean;
 begin
   Result := Self.Hover(attempts) and Self._ClickHelper(leftClick);
 end;
-
 
 (*
 ## TRSMapObject.SelectOption
@@ -966,7 +931,7 @@ Example:
 WriteLn RSObjects.GEBank.SelectOption(['Collect']);
 ```
 *)
-function TRSMapObject.SelectOption(action: TStringArray; attempts: Int32 = 2): Boolean;
+function TRSObjectV2.SelectOption(action: TStringArray; attempts: Int32 = 2): Boolean;
 begin
   Self.CurrentActionUpText := action;
   Result := Self.Hover(attempts) and Self._SelectHelper(action);
@@ -987,7 +952,7 @@ Example:
 WriteLn RSObjects.GEBank.WalkClick();
 ```
 *)
-function TRSMapObject.WalkClick(leftClick: Boolean = True; attempts: Int32 = 2): Boolean;
+function TRSObjectV2.WalkClick(leftClick: Boolean = True; attempts: Int32 = 2): Boolean;
 begin
   Result := Self.WalkHover(attempts) and Self._ClickHelper(leftClick);
 end;
@@ -1005,12 +970,290 @@ Example:
 WriteLn RSObjects.GEBank.WalkSelectOption(['Collect']);
 ```
 *)
-function TRSMapObject.WalkSelectOption(action: TStringArray; attempts: Int32 = 2): Boolean;
+function TRSObjectV2.WalkSelectOption(action: TStringArray; attempts: Int32 = 2): Boolean;
 begin
   Self.CurrentActionUpText := action;
   Result := Self.WalkHover(attempts) and Self._SelectHelper(action);
   Self.CurrentActionUpText := [];
 end;
+
+
+type
+  TRSMMDotV2 = record(TRSMapObject)
+    DotType: ERSMinimapDot;
+    DotFilters: TRSDotFilterArray;
+  end;
+
+  TRSNPCV2 = record(TRSMMDotV2)
+    Level: Int32;
+  end;
+
+  PRSNPCV2 = ^TRSNPCV2;
+
+function TRSNPCV2.Merge(json: TJSONObject): TRSNPCV2; overload;
+var
+  i, c, t: Int32;
+  h, s: Extended;
+  colors: TIntegerArray;
+begin
+  Result := Self;
+
+  for i := 0 to json.getJSONArray('coordinates').High() do
+    with json.getJSONArray('coordinates').getJSONArray(i) do
+      Result.Coordinates += [getInt(0), getInt(1)];
+
+  with json.getJSONArray('colors') do
+    for i := 0 to High() do
+      colors += getInt(i);
+
+  ACA(colors, 2, c, t, h, s);
+
+  for i := 0 to High(Result.Finder.Colors) do
+    if Result.Finder.Colors[i] = CTS2(c, t, h, s) then
+      Exit;
+
+  Result.Finder.Colors := [CTS2(c, t, h, s)];
+end;
+
+function TRSNPCV2.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSNPCV2; static; overload;
+var
+  mapObj: TRSMapObject;
+begin
+  mapObj := TRSMapObject.Setup(pwalker, json);
+  Result := PRSNPCV2(@mapObj)^;
+
+  Result.DotType := ERSMinimapDot.NPC;
+  Result.Level := json.getInt('level');
+  Result.Filter.Minimap := json.getBoolean('minimapdot');
+end;
+
+function TRSMMDotV2.SameObject(json: TJSONObject): Boolean; override;
+begin
+  Result := inherited;
+end;
+
+function TRSMMDotV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref; override;
+var
+  dots: TPointArray;
+  p: TPoint;
+  offset: Vector3;
+  h, diff: Single;
+  i: Int32;
+begin
+  if Self.Filter.Walker and (me = [0,0]) then
+    me := Self.Walker^.Position();
+
+  if angle = $FFFF then
+    angle := Minimap.GetCompassAngle(False);
+
+  if Self.Filter.Walker and Self.Filter.Minimap then
+  begin
+    h := Self.Walker^.Height(me);
+
+    dots := Minimap.GetFilteredDotArray(Self.DotType, Self.Walker^.FiltersToMM(me, Self.DotFilters, angle));
+    if dots = [] then
+      Exit;
+
+    for i := 0 to High(dots) do
+    begin
+      p := dots[i];
+      diff := -(h-Self.Walker^.Height(p));
+      offset := Vec3(Self.Offset.X, Self.Offset.Y, diff);
+      p := Self.Walker^.PointToMM(me, p, angle);
+      Result += Minimap.GetCuboidMS(p + [Round(0.15*diff), Round(0.11*diff)], Self.Size, offset, angle);
+    end;
+  end;
+
+  if Self.Filter.Walker then
+  begin
+    Result := inherited(me, angle);
+    Exit;
+  end;
+
+  dots := Minimap.GetDots(Self.DotType);
+  if dots = [] then
+    Exit;
+
+  dots := dots.SortFrom(Minimap.Center());
+  if dots = [] then
+    Exit;
+
+  for i := 0 to High(dots) do
+  begin
+    p := dots[i];
+    offset := Vec3(Self.Offset.X, Self.Offset.Y, 0);
+    p := Self.Walker^.PointToMM(me, p, angle);
+    Result += Minimap.GetCuboidMS(p, Self.Size, offset, angle);
+  end;
+end;
+
+
+(*
+## TRSObjectV2.Find
+```pascal
+function TRSObjectV2.FindEx(out cuboids: TCuboidArray; out atpa: T2DPointArray): Boolean;
+function TRSObjectV2.Find(out atpa: T2DPointArray): Boolean;
+function TRSObjectV2.FindFromPosition(me: TPoint; out atpa: T2DPointArray): Boolean;
+```
+TRSObjectV2 method used to find a {ref}`TRSObjectV2`. If found returns true, if not returns false.
+The "extended" method in particular is mostly meant for debugging and is the one used when you call `Debug(TRSMapObject)`.
+
+Example:
+```pascal
+WriteLn RSObjects.GEBank.Find(atpa); //Be in ge and with a walker setup there.
+Debug(atpa);
+```
+*)
+function TRSMMDotV2.FindEx(out cuboids: TCuboidExArray; out atpa: T2DPointArray): Boolean;
+begin
+  if Self.Filter.Walker or Self.Filter.Minimap then
+  begin
+    cuboids := Self.GetCuboidArray();
+    if cuboids = [] then
+      Exit;
+
+    atpa := Self.FindOnMainScreen(cuboids);
+  end
+  else if Self.Filter.Finder then
+    atpa := MainScreen.FindObject(Self.Finder).SortFrom(MainScreen.GetPlayerBox().Center());
+
+  Result := atpa <> [];
+end;
+
+function TRSMMDotV2.Find(out atpa: T2DPointArray): Boolean;
+var
+  cuboids: TCuboidExArray;
+begin
+  Result := Self.FindEx(cuboids, atpa);
+end;
+
+function TRSMMDotV2.FindFromPosition(me: TPoint; out atpa: T2DPointArray): Boolean;
+var
+  cuboidArray: TCuboidExArray;
+begin
+  if not Self.Filter.Walker then
+    Exit;
+
+  cuboidArray := Self.GetCuboidArray(me);
+  if cuboidArray = [] then
+    Exit;
+
+  atpa := Self.FindOnMainScreen(cuboidArray);
+  Result := atpa <> [];
+end;
+
+
+(*
+## TRSObjectV2.IsVisible
+```pascal
+function TRSObjectV2.IsVisible(): Boolean;
+```
+TRSObjectV2 method used to find a {ref}`TRSObjectV2`. If found returns true, if not returns false.
+
+Example:
+```pascal
+WriteLn RSObjects.GEBank.IsVisible(); //Be in ge and with a walker setup there.
+```
+*)
+function TRSMMDotV2.IsVisible(): Boolean;
+var
+  cuboids: TCuboidExArray;
+begin
+  if Self.Filter.Walker then
+  begin
+    cuboids := Self.GetCuboidArray();
+
+    if cuboids = [] then
+      Exit;
+
+    Exit(Self.OnMainScreen(cuboids));
+  end;
+
+  if Self.Filter.Finder then
+    Result := MainScreen.FindObject(Self.Finder) <> [];
+end;
+
+
+(*
+## TRSObjectV2.Draw
+```pascal
+procedure TRSMapObject.Draw(out bitmap: TMufasaBitmap);
+```
+Helper method to debug TRSMapObjects used in `Debug(TRSMapObject)`.
+*)
+procedure TRSMMDotV2.Draw(out bitmap: TMufasaBitmap);
+var
+  me, p, q: TPoint;
+  rect: TRectangle;
+  angle: Single;
+  mmPoints: TPointArray;
+  cuboids: TCuboidExArray;
+  atpa: T2DPointArray;
+  h: Single;
+begin
+  me := Self.Walker^.Position();
+  angle := Minimap.GetCompassAngle(False);
+  h := Self.Walker^.Height(me);
+
+  mmPoints := Self.MapToMM(me, angle);
+
+  for p in mmPoints do
+  begin
+    q := [Round(Self.Size.X * 4 / 2), Round(Self.Size.Y * 4 / 2)];
+    rect.Top := p.Offset(-q.X, -q.Y);
+    rect.Right := p.Offset(q.X, -q.Y);
+    rect.Btm := p.Offset(q.X, q.Y);
+    rect.Left := p.Offset(-q.X, q.Y);
+    bitmap.DrawRect(rect, $FF);
+  end;
+
+  Self.FindEx(cuboids, atpa);
+
+  bitmap.DrawATPA(atpa);
+  if atpa <> [] then
+    bitmap.DrawTPA(atpa[0], $0);
+
+  bitmap.DrawCuboidArray(cuboids, $00FFFF);
+end;
+
+
+(*
+## Debug
+```pascal
+procedure Debug(obj: TRSObjectV2); overload;
+procedure Debug(npc: TRSNPCV2); overload;
+```
+Debugs a TRSMapObject used with the help of it's `.Draw()` method.
+
+Example:
+```pascal
+{$I SRL-T/osr.simba}
+begin
+  Map.SetupChunkEx([49,52,49,52]);
+  Debug(Objects.Get('clay rocks')); //be in varrock west mine.
+end.
+```
+*)
+procedure Debug(obj: TRSObjectV2); overload;
+var
+  bitmap: TMufasaBitmap;
+begin
+  bitmap.FromClient();
+  obj.Draw(bitmap);
+  bitmap.Debug();
+  bitmap.Free();
+end;
+
+procedure Debug(npc: TRSNPCV2); overload;
+var
+  bitmap: TMufasaBitmap;
+begin
+  bitmap.FromClient();
+  npc.Draw(bitmap);
+  bitmap.Debug();
+  bitmap.Free();
+end;
+
 
 
 type
@@ -1185,6 +1428,14 @@ begin
   Result.Finder := finder;
 
   Self.Cache[Result.Index].Finder := finder;
+end;
+
+function TRSMapObjects.SetOffset(obj: Variant; offset: TPoint): TRSObjectV2;
+begin
+  Result := Self.Get(obj);
+  Result.Offset := offset;
+
+  Self.Cache[Result.Index].Offset := offset;
 end;
 
 procedure TRSMapObjects.Debug();

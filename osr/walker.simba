@@ -80,6 +80,34 @@ begin
     end;
 end;
 
+function TRSWalkerV2.FilterToMM(playerPoint: TPoint; dotFilter: TRSDotFilter; roll: Double): TRSDotFilter;
+begin
+  if dotFilter.Circle <> [] then
+    with Self.PointToMM(playerPoint, dotFilter.Circle.Mean(), roll) do
+      Result.Circle := [X, Y, dotFilter.Circle.Radius];
+
+  Result.Bounds  := Self.PointsToMM(playerPoint, dotFilter.Bounds, roll);
+  Result.Inside  := dotFilter.Inside;
+  Result.Timeout := dotFilter.Timeout;
+  Result.Timer   := dotFilter.Timer;
+end;
+
+function TRSWalkerV2.FiltersToMM(playerPoint: TPoint; dotFilters: TRSDotFilterArray; roll: Double): TRSDotFilterArray;
+var
+  i: Int32;
+begin
+  for i := High(dotFilters) downto 0 do
+  begin
+    if dotFilters[i].IsExpired() then
+    begin
+      Delete(dotFilters, i, 1);
+      Continue;
+    end;
+
+    Result += Self.FilterToMM(playerPoint, dotFilters[i], roll);
+  end;
+end;
+
 
 (*
 ## TRSWalkerV2.InRange

@@ -262,6 +262,20 @@ begin
   Result := StringReplace(Self, SubStr, ReplaceStr, Flags);
 end;
 
+function String.ReplaceAll(SubStrReplaceStrArray: array of TStringArray; Flags: TReplaceFlags=[rfReplaceAll]): String; constref;
+var
+  i: Int32;
+begin
+  Result := Self;
+  for i := 0 to High(SubStrReplaceStrArray) do
+  begin
+    if Length(SubStrReplaceStrArray[i]) <> 2 then
+      raise 'SubStrReplaceStrArray children should have only 2 elements, a SubStr and a ReplaceStr.';
+
+    Result := StringReplace(Result, SubStrReplaceStrArray[i,0], SubStrReplaceStrArray[i,1], Flags);
+  end;
+end;
+
 
 (*
 ## String.Split

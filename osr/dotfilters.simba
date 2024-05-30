@@ -1,0 +1,157 @@
+(*
+# DotFilters
+Methods to handle DotFilters. Dot filters are filters that filter in or out ERSMinimapDots.
+*)
+
+{$DEFINE SRL_DOTFILTERS_INCLUDED}
+{$IFNDEF SRL_OSR}
+  {$I SRl-T/osr.simba}
+{$ENDIF}
+
+(*
+(TRSDotFilter)=
+## type TRSDotFilter
+Used to filter minimap dots.
+*)
+type
+  TRSDotFilter = record
+    Bounds: TPointArray;
+    Circle: TCircle;
+    Inside: Boolean;
+
+    Timeout: Boolean;
+    Timer: TCountDown;
+  end;
+
+function TRSDotFilter.IsExpired(): Boolean;
+begin
+  Result := Self.Timeout and Self.Timer.IsFinished();
+end;
+
+function TRSDotFilter.IsValid(p: TPoint): Boolean;
+var
+  inPoly, inCircle: Boolean;
+begin
+  if Self.Bounds <> [] then inPoly := SRL.PointInPoly(p, Self.Bounds);
+  if Self.Circle <> [] then inCircle := Self.Circle.Contains(p);
+
+  if Self.Inside then
+    Result := inPoly or inCircle
+  else
+    Result := not inPoly and not inCircle;
+end;
+
+
+procedure TRSDotFilter.Draw(out bitmap: TMufasaBitmap);
+var
+  color: Int32;
+begin
+  with Self do
+  begin
+    if Inside then color := $BE9625 else color := $FF;
+    if Bounds <> [] then bitmap.DrawTPA(Bounds.Connect(), color);
+    if Circle <> [] then bitmap.DrawCircle(Circle.Mean(), Circle.Radius, color);
+  end;
+end;
+
+type
+  TRSDotFilterArray = array of TRSDotFilter;
+
+procedure TRSDotFilterArray.Setup(bounds: TPointArray; c: TCircle; inside: Boolean; time: Int32 = -1);
+var
+  timer: TCountDown;
+begin
+  timer.Init(time);
+  Self += [bounds, c, inside, (time > 0), timer];
+end;
+
+procedure TRSDotFilterArray.SetupBounds(bounds: TPointArray; inside: Boolean; time: Int32 = -1);
+var
+  c: TCircle;
+begin
+  Self.Setup(bounds, c, inside, time);
+end;
+
+procedure TRSDotFilterArray.SetupCircle(c: TCircle; inside: Boolean; time: Int32 = -1);
+var
+  bounds: TPointArray := [];
+begin
+  Self.Setup(bounds, c, inside, time);
+end;
+
+
+
+procedure TRSDotFilterArray.ClearExpired();
+var
+  i: Int32;
+begin
+  for i := High(Self) downto 0 do
+    if Self[i].IsExpired() then
+      Delete(Self, i, 1);
+end;
+
+
+function TRSDotFilterArray.IsValid(dot: TPoint; clearExpired: Boolean = True): Boolean;
+var
+  i: Int32;
+begin
+  for i := High(Self) downto 0 do
+  begin
+    if clearExpired and Self[i].IsExpired() then
+    begin
+      Delete(Self, i, 1);
+      Continue;
+    end;
+
+    if not Self[i].IsValid(dot) then
+      Exit(False);
+  end;
+
+  Result := True;
+end;
+
+function TRSDotFilterArray.FilterDots(dots: TPointArray): TPointArray;
+var
+  dot: TPoint;
+begin
+  for dot in dots do
+    if Self.IsValid(dot, True) then
+      Result += dot;
+end;
+
+
+procedure TRSDotFilterArray.Draw(out bitmap: TMufasaBitmap);
+var
+  i: Int32;
+begin
+  for i := 0 to High(Self) do
+    Self[i].Draw(bitmap);
+end;
+
+
+function TRSMinimap.GetFilteredDotArray(dot: ERSMinimapDot; dotFilters: TRSDotFilterArray): TPointArray;
+begin
+  Result := dotFilters.FilterDots(Self.GetDots(dot));
+end;
+
+function TRSMinimap.GetFilteredDot(dot: ERSMinimapDot; dotFilters: TRSDotFilterArray): TPoint;
+var
+  dots: TPointArray;
+begin
+  dots := Self.GetFilteredDotArray(dot, dotFilters);
+  if dots <> [] then
+    Result := dots[0];
+end;
+
+
+procedure Debug(filterArray: TRSDotFilterArray); overload;
+var
+  bmp: TMufasaBitmap;
+begin
+  bmp.FromClient();
+  filterArray.Draw(bmp);
+  bmp.Debug();
+  bmp.Free();
+end;
+
+

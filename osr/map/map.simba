@@ -877,22 +877,23 @@ begin
   ];
 
   bitmap.Init();
-  bitmap.SetSize(480 + cleanMinimap.GetWidth(), 420);
+  bitmap.SetSize(560 + cleanMinimap.GetWidth(), 420);
   bitmap.DrawClear($403027);
 
   bitmap.SetFontName('Consolas');
   bitmap.SetFontSize(18);
   bitmap.SetFontAntialiasing(True);
 
-  bitmap.DrawText('Local: ' + Format('(%d, %d)', [local.X, local.Y]), [420, 20 + cleanMinimap.GetHeight()], $FFFFFF);
-  bitmap.DrawText('Global: ' + Format('(%d, %d)', [Result.X, Result.Y]), [420, 40 + cleanMinimap.GetHeight()], $FFFFFF);
+  bitmap.DrawText('Local: ' + Format('(%d, %d)', [local.X, local.Y]), [420, 40 + cleanMinimap.GetHeight()], $FFFFFF);
+  bitmap.DrawText('Global: ' + Format('(%d, %d)', [Result.X, Result.Y]), [420, 60 + cleanMinimap.GetHeight()], $FFFFFF);
 
   for i := 0 to High(lines) do
-    bitmap.DrawText(lines[i], [420, cleanMinimap.GetHeight() + 80 + 20 * i], $FFFFFF);
+    bitmap.DrawText(lines[i], [420, cleanMinimap.GetHeight() + 100 + 20 * i], $FFFFFF);
 
   map.DrawTransparent(10, 10, bitmap);
   map.Free();
 
+  cleanMinimap.SetTransparentColor($0);
   cleanMinimap.DrawTransparent(450, 10, bitmap);
   cleanMinimap.Free();
 

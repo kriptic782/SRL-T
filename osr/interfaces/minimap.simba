@@ -1678,26 +1678,38 @@ end;
 (*
 ## Minimap.GetDots
 ```pascal
-function TRSMinimap.GetDots(Dots: ERSMinimapDots): TPointArray;
+function TRSMinimap.GetDots(dots: ERSMinimapDots; box: TBox): TPointArray;
+function TRSMinimap.GetDots(dots: ERSMinimapDots): TPointArray; overload;
+function TRSMinimap.GetDots(dot: ERSMinimapDot; box: TBox): TPointArray; overload;
 function TRSMinimap.GetDots(Dot: ERSMinimapDot): TPointArray; overload;
 ```
 Returns a TPointArray with the coordinates of the ERSMinimapDots found on the minimap.
 *)
-function TRSMinimap.GetDots(dots: ERSMinimapDots): TPointArray;
+function TRSMinimap.GetDots(dots: ERSMinimapDots; box: TBox): TPointArray;
 var
   bmp: TMufasaBitmap;
 begin
-  bmp.FromClient(Self.Bounds());
+  bmp.FromClient(box);
 
   Result := Self.GetDotsBitmap(bmp, dots);
-  Result := Result.Offset([Self.X1, Self.Y1]);
+  Result := Result.Offset([box.X1, box.Y1]);
 
   bmp.Free();
 end;
 
+function TRSMinimap.GetDots(dots: ERSMinimapDots): TPointArray; overload;
+begin
+  Result := Self.GetDots(dots, Self.Bounds());
+end;
+
+function TRSMinimap.GetDots(dot: ERSMinimapDot; box: TBox): TPointArray; overload;
+begin
+  Result := Self.GetDots([dot], box);
+end;
+
 function TRSMinimap.GetDots(dot: ERSMinimapDot): TPointArray; overload;
 begin
-  Result := Self.GetDots([dot]);
+  Result := Self.GetDots([dot], Self.Bounds());
 end;
 
 
