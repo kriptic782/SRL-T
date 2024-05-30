@@ -1,3 +1,17 @@
+# [5.0.0](https://github.com/Torwent/SRL-T/compare/v4.16.0...v5.0.0) (2024-05-30)
+
+
+### Features
+
+* **TRSMMDotV2:** read notes ([b0d84df](https://github.com/Torwent/SRL-T/commit/b0d84dff2a8b479ac0dcdd820bd4a665e5c1e844))
+
+
+### BREAKING CHANGES
+
+* **TRSMMDotV2:** Moving dot filters from WL to SRL-T is a breaking change.
+
+
+
 # [4.16.0](https://github.com/Torwent/SRL-T/compare/v4.15.1...v4.16.0) (2024-05-29)
 
 
@@ -31,15 +45,6 @@
 ### Features
 
 * **TRSMap:** add npcs.zip ([51817d6](https://github.com/Torwent/SRL-T/commit/51817d6de2135e45f1bd16c9660f0982f2c2c831))
-
-
-
-# [4.13.0](https://github.com/Torwent/SRL-T/compare/v4.12.10...v4.13.0) (2024-05-28)
-
-
-### Features
-
-* **translator:** read notes ([12b8ec1](https://github.com/Torwent/SRL-T/commit/12b8ec17b7a67ab66cff71c4e6f6361f0843be22))
 
 
 
