@@ -1,3 +1,12 @@
+## [5.1.1](https://github.com/Torwent/SRL-T/compare/v5.1.0...v5.1.1) (2024-05-31)
+
+
+### Bug Fixes
+
+* **algorithms:** read notes ([8e43c73](https://github.com/Torwent/SRL-T/commit/8e43c738572979206a188ddb8ff1021bb6b95f82))
+
+
+
 # [5.1.0](https://github.com/Torwent/SRL-T/compare/v5.0.3...v5.1.0) (2024-05-31)
 
 
@@ -31,20 +40,6 @@
 ### Bug Fixes
 
 * **dotfilters:** fixed a small oversight from the dotfilter rework ([9c5cae1](https://github.com/Torwent/SRL-T/commit/9c5cae158cc07b65cbb95d12bd61854f291ad78c))
-
-
-
-# [5.0.0](https://github.com/Torwent/SRL-T/compare/v4.16.0...v5.0.0) (2024-05-30)
-
-
-### Features
-
-* **TRSMMDotV2:** read notes ([b0d84df](https://github.com/Torwent/SRL-T/commit/b0d84dff2a8b479ac0dcdd820bd4a665e5c1e844))
-
-
-### BREAKING CHANGES
-
-* **TRSMMDotV2:** Moving dot filters from WL to SRL-T is a breaking change.
 
 
 
