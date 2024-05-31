@@ -1,0 +1,70 @@
+{$DEFINE SRL_FILE_INCLUDED}
+{$IFNDEF SRL_UTILS}
+  {$I SRL-T/utils.simba}
+{$ENDIF}
+
+function BackupFile(filePath: String): Boolean;
+var
+  f: Int32;
+  contents: String;
+begin
+  f := OpenFile(filePath, False);
+  if not ReadFileString(f, contents, FileSize(f)) then
+    Exit;
+
+  CloseFile(f);
+  Result := WriteFileContents(filePath + '.bak', contents, False);
+end;
+
+function RestoreFile(filePath: String): Boolean;
+var
+  f: Int32;
+  contents: String;
+begin
+  f := OpenFile(filePath + '.bak', False);
+  if not ReadFileString(f, contents, FileSize(f)) then
+    Exit;
+
+  CloseFile(f);
+  Result := WriteFileContents(filePath, contents, False);
+  DeleteFile(filePath + '.bak');
+end;
+
+function DirectoryIsEmpty(const directory: String): Boolean;
+begin
+  Result := (FindFiles(directory, False) = []) and (FindDirectories(directory, False) = []);
+end;
+
+function RMDir(path: String; deleteRoot: Boolean; skip: TStringArray = []): Boolean;
+var
+  files: TStringArray;
+  f, subdirectory: String;
+  i: Int32;
+begin
+  files := FindFiles(path, True);
+
+  for f in files do
+  begin
+    for i := 0 to High(skip) do
+      if skip[i] in f then
+      begin
+        deleteRoot := False;
+        Continue(2);
+      end;
+
+    if not DeleteFile(f) then
+      Exit;
+
+    subdirectory := ExtractFilePath(f);
+    if DirectoryIsEmpty(subdirectory) and not DeleteDirectory(subdirectory, False) then
+      Exit;
+  end;
+
+  Result := not deleteRoot or DeleteDirectory(path, False);
+end;
+
+function RMDir(path: String; deleteRoot: Boolean = True): Boolean; overload;
+begin
+  Result := RMDir(path, deleteRoot, []);
+end;
+

@@ -28,6 +28,8 @@ var
 {$IFNDEF SRL_MATRIX_INCLUDED}        {$I utils/matrix.simba}
 {$IFNDEF SRL_RANDOM_INCLUDED}        {$I utils/random.simba}
 {$IFNDEF SRL_TCUBOID_INCLUDED}       {$I utils/tcuboid.simba}
+{$IFNDEF SRL_FILE_INCLUDED}          {$I utils/file.simba}
+
 
 {$IFNDEF SRL_TIME_INCLUDED}          {$I utils/time.simba}
 {$IFNDEF SRL_BASE_INCLUDED}          {$I utils/base.simba}
@@ -41,6 +43,7 @@ var
 {$IFNDEF SRL_WEBGRAPH_INCLUDED}      {$I utils/webgraph.simba}
 {$IFNDEF SRL_RSTRANSLATOR_INCLUDED}  {$I utils/translator.simba}
 
+{$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
