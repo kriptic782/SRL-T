@@ -475,13 +475,33 @@ end;
 
 function TRSObjectV2.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSObjectV2; static; overload;
 var
-  mapObj: TRSMapObject;
+  i: Int32;
+  x, y: Single;
 begin
-  mapObj := TRSMapObject.Setup(pwalker, json);
-  Result := PRSObjectV2(@mapObj)^;
-  Result.ObjType := json.getInt('type');
-  Result.MapObjectType := ERSMapObjectType.OBJ;
+  Result.Walker := pwalker;
+  Result.Filter := [True, True, True, True];
+
+  Result.ID := json.getInt('id');
+  Result.Name := json.getString('name');
+  Result.Category := json.getInt('category');
+  Result.Offset := [0,0];
+
+  with json.getJSONArray('actions') do
+    for i := 0 to High() do
+      if getString(i) <> 'null' then
+        Result.Actions += getString(i);
+
+  with json.getJSONArray('size') do
+  begin
+    x := getInt(0) * 0.8;
+    y := getInt(1) * 0.8;
+    Result.Size := [x, y, getInt(2) / 40]; //TODO: build this into the JSONs
+  end;
+
+  Result := Result.Merge(json);
+  Result.Finder.ColorClusters := [];
 end;
+
 
 function TRSObjectV2.SameObject(json: TJSONObject): Boolean; override;
 begin
@@ -641,6 +661,8 @@ end;
 function TRSNPCV2.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSNPCV2; static; overload;
 var
   mapObj: TRSMapObject;
+  i: Int32;
+  circle: TCircle;
 begin
   mapObj := TRSMapObject.Setup(pwalker, json);
   Result := PRSNPCV2(@mapObj)^;
@@ -648,7 +670,13 @@ begin
   Result.DotType := ERSMinimapDot.NPC;
   Result.Level := json.getInt('level');
   Result.Filter.Minimap := json.getBoolean('minimapdot');
-  Result.MapObjectType := ERSMapObjectType.MMDOT;
+  SetLength(Result.DotFilters, 0);
+
+  for i := 0 to High(Result.Coordinates) do
+  begin
+    circle := [Result.Coordinates[i].X, Result.Coordinates[i].Y, 40];
+    Result.DotFilters.SetupCircle(circle, True);
+  end;
 end;
 
 function TRSMMDotV2.SameObject(json: TJSONObject): Boolean; override;
@@ -1180,9 +1208,6 @@ begin
   Result := Self.WalkHover(attempts) and Self._SelectHelper(action);
   Self.CurrentActionUpText := [];
 end;
-
-
-
 
 
 (*

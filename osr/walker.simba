@@ -96,6 +96,7 @@ function TRSWalkerV2.FiltersToMM(playerPoint: TPoint; dotFilters: TRSDotFilterAr
 var
   i: Int32;
 begin
+
   for i := High(dotFilters) downto 0 do
   begin
     if dotFilters[i].IsExpired() then
