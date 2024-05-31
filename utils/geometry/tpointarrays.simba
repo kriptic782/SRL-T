@@ -518,7 +518,7 @@ begin
   SortTPAFrom(Result, from);
 end;
 
-
+//Credits to someone from SRL. IDK who sorry.
 procedure TPointArray.WeightedSort(weights: TIntegerArray; iLo, iHi: Int32; sortUp: Boolean);
 var
   lo, hi, mid: Int32;
@@ -526,17 +526,19 @@ begin
   if (Length(weights) <> Length(self)) then Exit;
   lo := iLo;
   hi := iHi;
-  Mid := weights[(lo + hi) shr 1];
+  mid := weights[Int32((lo + hi) shr 1)];
   repeat
-    if SortUp then
+    if sortUp then
     begin
       while (weights[lo] < mid) do Inc(lo);
       while (weights[hi] > mid) do Dec(hi);
-    end else
+    end
+    else
     begin
-      while (weights[Lo] > mid) do Inc(Lo);
-      while (weights[Hi] < mid) do Dec(Hi);
+      while (weights[lo] > mid) do Inc(lo);
+      while (weights[hi] < mid) do Dec(hi);
     end;
+
     if (lo <= hi) then
     begin
       Swap(weights[lo], weights[hi]);
@@ -544,9 +546,10 @@ begin
       Inc(lo);
       Dec(hi);
     end;
-  until Lo > Hi;
-  if (hi > iLo) then self.WeightedSort(weights, iLo, hi, SortUp);
-  if (lo < iHi) then self.WeightedSort(weights, lo, iHi, SortUp);
+  until lo > hi;
+
+  if (hi > iLo) then self.WeightedSort(weights, iLo, hi, sortUp);
+  if (lo < iHi) then self.WeightedSort(weights, lo, iHi, sortUp);
 end;
 
 function TPointArray.WeightedSorted(weights: TIntegerArray; iLo, iHi: Int32; sortUp: Boolean): TPointArray; constref;

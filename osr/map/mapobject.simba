@@ -390,6 +390,7 @@ end;
 
 
 type
+//Helper type to sort and filter coordinates and their respective angles while keeping their indices matching
   TCoordsAngle = record
     Coordinates: TPointArray;
     Angles: TSingleArray;
@@ -423,8 +424,9 @@ begin
   for i := 0 to High(Self.Coordinates) do
     weights[i] := Sqr(pt.X - Self.Coordinates[i].X) + Sqr(pt.Y - Self.Coordinates[i].Y);
 
-  Self.Coordinates.WeightedSort(weights, 0, len-1, True);
-  Self.Angles.WeightedSort(weights, 0, len-1, True);
+  len -= 1;
+  Self.Coordinates.WeightedSort(weights, 0, len, True);
+  Self.Angles.WeightedSort(weights, 0, len, True);
 end;
 
 type
