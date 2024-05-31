@@ -1,3 +1,12 @@
+# [5.1.0](https://github.com/Torwent/SRL-T/compare/v5.0.3...v5.1.0) (2024-05-31)
+
+
+### Features
+
+* **TRSMapObjects:** finished. ([bb8552c](https://github.com/Torwent/SRL-T/commit/bb8552ce557c8c8ff4177fe9e6df9991d305d3cd))
+
+
+
 ## [5.0.3](https://github.com/Torwent/SRL-T/compare/v5.0.2...v5.0.3) (2024-05-31)
 
 
@@ -36,15 +45,6 @@
 ### BREAKING CHANGES
 
 * **TRSMMDotV2:** Moving dot filters from WL to SRL-T is a breaking change.
-
-
-
-# [4.16.0](https://github.com/Torwent/SRL-T/compare/v4.15.1...v4.16.0) (2024-05-29)
-
-
-### Features
-
-* **TRSMapObjects:** read notes ([3e49c2d](https://github.com/Torwent/SRL-T/commit/3e49c2da5ad3294a6cbfd35771ab1aa37e72039c))
 
 
 
