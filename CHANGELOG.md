@@ -1,3 +1,12 @@
+## [5.0.1](https://github.com/Torwent/SRL-T/compare/v5.0.0...v5.0.1) (2024-05-31)
+
+
+### Bug Fixes
+
+* **dotfilters:** fixed a small oversight from the dotfilter rework ([9c5cae1](https://github.com/Torwent/SRL-T/commit/9c5cae158cc07b65cbb95d12bd61854f291ad78c))
+
+
+
 # [5.0.0](https://github.com/Torwent/SRL-T/compare/v4.16.0...v5.0.0) (2024-05-30)
 
 
@@ -36,15 +45,6 @@
 ### Features
 
 * **TRSMap:** full npc data added ([32b82ae](https://github.com/Torwent/SRL-T/commit/32b82aec40bd7bb1ecbda6351595f6b273fa3084))
-
-
-
-# [4.14.0](https://github.com/Torwent/SRL-T/compare/v4.13.0...v4.14.0) (2024-05-29)
-
-
-### Features
-
-* **TRSMap:** add npcs.zip ([51817d6](https://github.com/Torwent/SRL-T/commit/51817d6de2135e45f1bd16c9660f0982f2c2c831))
 
 
 
