@@ -1,3 +1,12 @@
+## [5.0.2](https://github.com/Torwent/SRL-T/compare/v5.0.1...v5.0.2) (2024-05-31)
+
+
+### Bug Fixes
+
+* read notes ([e05b8e8](https://github.com/Torwent/SRL-T/commit/e05b8e842635a86ebcad976bdecc0b6d76a17206))
+
+
+
 ## [5.0.1](https://github.com/Torwent/SRL-T/compare/v5.0.0...v5.0.1) (2024-05-31)
 
 
@@ -36,15 +45,6 @@
 ### Bug Fixes
 
 * **RSTranslator:** fixed math on Chunk2Coordinate() ([b2e464c](https://github.com/Torwent/SRL-T/commit/b2e464ccaf62e30586072907eb5f6284b5420dbc))
-
-
-
-# [4.15.0](https://github.com/Torwent/SRL-T/compare/v4.14.0...v4.15.0) (2024-05-29)
-
-
-### Features
-
-* **TRSMap:** full npc data added ([32b82ae](https://github.com/Torwent/SRL-T/commit/32b82aec40bd7bb1ecbda6351595f6b273fa3084))
 
 
 
