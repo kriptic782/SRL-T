@@ -19,7 +19,7 @@ function String.Len(): Int32; constref;
 ```
 Returns the length of the string
 *)
-function String.Len: Int32; constref;
+function String.Len(): Int32; constref;
 begin
   Result := Length(Self);
 end;

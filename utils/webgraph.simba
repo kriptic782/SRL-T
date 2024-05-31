@@ -3,7 +3,7 @@
 *)
 
 {$DEFINE SRL_WEBGRAPH_INCLUDED}
-{$IFNDEF SRL_OSR}
+{$IFNDEF SRL_UTILS}
   {$I SRL-T/utils.simba}
 {$ENDIF}
 

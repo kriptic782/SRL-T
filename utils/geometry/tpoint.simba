@@ -127,51 +127,6 @@ end;
 (*
 ## TPoint.Random
 ```pascal
-function TPoint.Random(min, max: Integer; gauss: Boolean = False): TPoint; constref;
-function TPoint.Random(XMin, XMax: Integer; YMin, YMax: Integer; Gauss: Boolean = False): TPoint; constref; overload;
-```
-Randomizes the current point by a `min` and `max` values.
-
-Example
-```pascal
-var
-  p: TPoint = [100, 100];
-
-begin
-  p := p.Random(5, 20);
-  WriteLn p;
-end;
-```
-*)
-function TPoint.Random(min, max: Integer; gauss: Boolean = False): TPoint; constref;
-begin
-  if (gauss) then
-  begin
-    Result.X := Self.X + SRL.NormalRange(min, max);
-    Result.Y := Self.Y + SRL.NormalRange(min, max);
-    Exit;
-  end;
-
-  Result := [Self.X + System.Random(min, max), Self.Y + System.Random(min, max)];
-end;
-
-function TPoint.Random(XMin, XMax: Integer; YMin, YMax: Integer; Gauss: Boolean = False): TPoint; constref; overload;
-begin
-  if (Gauss) then
-  begin
-    Result.X := Self.X + SRL.NormalRange(XMin, XMax);
-    Result.Y := Self.Y + SRL.NormalRange(YMin, YMax);
-  end else 
-  begin
-    Result.X := Self.X + System.Random(XMin, XMax);
-    Result.Y := Self.Y + System.Random(YMin, YMax);
-  end;
-end;
-
-
-(*
-## TPoint.Random
-```pascal
 function TPoint.EnsureRange(x1, y1, x2, y2: Int32): TPoint;
 function TPoint.EnsureRange(b: TBox): TPoint; overload;
 ```
@@ -224,53 +179,4 @@ begin
 end;
 
 
-// -----------------------------------------------------------------
-// Operator overloads
-operator + (L, R: TPoint): TPoint;
-begin
-  Result.X := L.X + R.X;
-  Result.Y := L.Y + R.Y;
-end;
 
-operator += (var L: TPoint; R: TPoint): TPoint;
-begin
-  L.X += R.X;
-  L.Y += R.Y;
-  Result := L;
-end;
-
-operator - (L, R:TPoint): TPoint;
-begin
-  Result.X := L.X - R.X;
-  Result.Y := L.Y - R.Y;
-end;
-
-operator -= (var L: TPoint; R: TPoint): TPoint;
-begin
-  L.X -= R.X;
-  L.Y -= R.Y;
-  Result := L;
-end;
-
-operator * (L: TPoint; R: Double): TPoint;
-begin
-  Result.X := Round(L.X * R);
-  Result.Y := Round(L.Y * R);
-end;
-
-operator *= (var L: TPoint; R: Double): TPoint;
-begin
-  L.X := Round(L.X * R);
-  L.Y := Round(L.Y * R);
-  Result := L;
-end;
-
-operator in(Left: TPoint; Right: TBox): Boolean;
-begin
-  Result := Left.InBox(Right);
-end;
-
-operator in(Left: TPoint; Right: TRectangle): Boolean;
-begin
-  Result := Left.InRect(Right);
-end;

@@ -1262,23 +1262,6 @@ begin
 end;
 
 
-function TPointArray.RandomValue(): TPoint; constref;
-begin
-  if Length(Self) = 0 then
-    Exit;
-  Result := Self[Random(0, High(Self))];
-end;
-
-function TPointArray.RandomMean(): TPoint;
-var
-  sorted: TPointArray;
-begin
-  if Length(Self) = 0 then
-    Exit;
-  sorted := Self.Sorted(Self.Mean());
-  Result := sorted[SRL.TruncatedGauss(0, High(sorted))];
-end;
-
 
 function TPointArray.NearestPoint(other: TPoint): TPoint;
 begin

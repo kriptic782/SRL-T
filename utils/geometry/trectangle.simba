@@ -139,7 +139,7 @@ Returns true if the point `pt` is inside the rectangle.
 *)
 function TRectangle.Contains(pt: TPoint): Boolean; constref;
 begin
-  Result := SRL.PointInRect(pt, Self);
+  Result := TSRL.PointInRect(pt, Self);
 end;
 
 (*
@@ -242,11 +242,11 @@ Extract all the points from `testSet` that fits within this rectangle.
 *)
 function TRectangle.Filter(testSet: TPointArray): TPointArray; constref;
 var
-  i: Int32;
+  p: TPoint;
 begin
-  for i := 0 to High(testSet) do
-    if testSet[i].InRect(Self) then
-      Result += testSet[i];
+  for p in testSet do
+    if TSRL.PointInRect(p, Self) then
+      Result += p;
 end;
 
 
@@ -283,15 +283,9 @@ function TRectangle.NearestEdge(P: TPoint): TPoint; constref;
 ```
 Returns the closest edge point (think Rect.ToTPA.Connect) to the TPoint `P`.
 *)
-function TRectangle.NearestEdge(P: TPoint): TPoint; constref;
-var
-  Best, Dist: Double;
-  X: TPoint;
+function TRectangle.NearestEdge(p: TPoint): TPoint; constref;
 begin
-  Best := srl.DistToLineEx(P, Self.Top,  Self.Left, Result);
-  if (dist := srl.DistToLineEx(P, Self.Left, Self.Btm,   X)) < Best then begin Result := X; Best := Dist; end;
-  if (dist := srl.DistToLineEx(P, Self.Btm,  Self.Right, X)) < Best then begin Result := X; Best := Dist; end;
-  if (dist := srl.DistToLineEx(P, Self.Right,Self.Top,   X)) < Best then begin Result := X; Best := Dist; end;
+  Result := TSRL.NearestEdge(p, Self);
 end;
 
 function TRectangle.Area: Int32; constref;

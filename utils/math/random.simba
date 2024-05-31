@@ -176,7 +176,7 @@ The last parameter `Force` defines how much the generated point is to be skewed 
 * Force = 1: Result in the middle of box is most common
 * Force = 2: Result weighs heavily towrads the edge furthest away from `From`
 *)
-function TSRL.RandomPointEx(From: TPoint; B: TBox; Force: Double=0.35): TPoint; constref;
+function TSRL.RandomPointEx(from: TPoint; B: TBox; force: Double=0.35): TPoint; constref;
 var
   p,c: TPoint;
   x,r: Double;
@@ -205,23 +205,23 @@ Final implementation and math done by slacky.
 
 Force ranges from -1 (close to) to 1 (away from), where 0 is mean, but with a bit of a skewiness...
 *)
-function TSRL.ROWP(From: TPoint; Rect: TRectangle; Force: Double=-0.9; Smoothness: Double=PI/12): TPoint; static;
+function TSRL.ROWP(from: TPoint; rect: TRectangle; force: Double=-0.9; smoothness: Double=PI/12): TPoint; static;
 var
   p,e: TPoint;
   t, dist: Double;
 begin
   p := SRL.RandomPoint(rect, SRL_GAUSS_CUTOFF / 1.5);
-  e := Rect.NearestEdge(p);
+  e := rect.NearestEdge(p);
 
   dist := Hypot(p.X - e.X, p.Y - e.Y);
-  t := ArcTan2(p.Y-From.Y, p.X-From.X) + (Random()-0.5) * Smoothness;
+  t := ArcTan2(p.Y-from.Y, p.X-from.X) + (Random()-0.5) * smoothness;
   Result.X := Round(p.x + Cos(t) * SRL.SkewedRand(dist * force, 0, dist));
   Result.Y := Round(p.y + Sin(t) * SRL.SkewedRand(dist * force, 0, dist));
 end;
 
-function TSRL.ROWP(From: TPoint; Box: TBox; Force: Double=-0.9; Smoothness: Double=PI/12): TPoint; static; overload;
+function TSRL.ROWP(from: TPoint; box: TBox; force: Double=-0.9; smoothness: Double=PI/12): TPoint; static; overload;
 begin
-  Result := TSRL.ROWP(From, Box.ToRectangle(), Force, Smoothness);
+  Result := TSRL.ROWP(from, box.ToRectangle(), force, smoothness);
 end;
 
 (*
@@ -289,3 +289,67 @@ procedure WaitEx(Mean, Dev: Double);
 begin
   Wait(Abs(Trunc(SRL.GaussRand(Mean, Dev))));
 end;
+
+
+(*
+## TPoint.Random
+```pascal
+function TPoint.Random(min, max: Integer; gauss: Boolean = False): TPoint; constref;
+function TPoint.Random(XMin, XMax: Integer; YMin, YMax: Integer; Gauss: Boolean = False): TPoint; constref; overload;
+```
+Randomizes the current point by a `min` and `max` values.
+
+Example
+```pascal
+var
+  p: TPoint = [100, 100];
+
+begin
+  p := p.Random(5, 20);
+  WriteLn p;
+end;
+```
+*)
+function TPoint.Random(min, max: Integer; gauss: Boolean = False): TPoint; constref;
+begin
+  if (gauss) then
+  begin
+    Result.X := Self.X + SRL.NormalRange(min, max);
+    Result.Y := Self.Y + SRL.NormalRange(min, max);
+    Exit;
+  end;
+
+  Result := [Self.X + System.Random(min, max), Self.Y + System.Random(min, max)];
+end;
+
+function TPoint.Random(XMin, XMax: Integer; YMin, YMax: Integer; Gauss: Boolean = False): TPoint; constref; overload;
+begin
+  if (Gauss) then
+  begin
+    Result.X := Self.X + SRL.NormalRange(XMin, XMax);
+    Result.Y := Self.Y + SRL.NormalRange(YMin, YMax);
+  end else
+  begin
+    Result.X := Self.X + System.Random(XMin, XMax);
+    Result.Y := Self.Y + System.Random(YMin, YMax);
+  end;
+end;
+
+
+function TPointArray.RandomValue(): TPoint; constref;
+begin
+  if Length(Self) = 0 then
+    Exit;
+  Result := Self[Random(0, High(Self))];
+end;
+
+function TPointArray.RandomMean(): TPoint;
+var
+  sorted: TPointArray;
+begin
+  if Length(Self) = 0 then
+    Exit;
+  sorted := Self.Sorted(Self.Mean());
+  Result := sorted[SRL.TruncatedGauss(0, High(sorted))];
+end;
+

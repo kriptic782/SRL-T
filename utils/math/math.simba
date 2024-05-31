@@ -12,6 +12,7 @@ type
   TRectangle = record
     Top, Right, Btm, Left: TPoint;
   end;
+
   TRectArray = array of TRectangle;
 
   TCircle = record
@@ -114,6 +115,26 @@ begin
   Result := TSRL.DistToLineEx(pt,sA,sB, qt);
 end;
 
+
+(*
+## TRectangle.NearestEdge
+```pascal
+function TRectangle.NearestEdge(P: TPoint): TPoint; constref;
+```
+Returns the closest edge point (think Rect.ToTPA.Connect) to the TPoint `P`.
+*)
+function TSRL.NearestEdge(p: TPoint; rect: TRectangle): TPoint; static;
+var
+  best, dist: Double;
+  q: TPoint;
+begin
+  best := TSRL.DistToLineEx(p, rect.Top,  rect.Left, Result);
+  if (dist := TSRL.DistToLineEx(p, rect.Left, rect.Btm,   q)) < best then begin Result := q; best := dist; end;
+  if (dist := TSRL.DistToLineEx(p, rect.Btm,  rect.Right, q)) < best then begin Result := q; best := dist; end;
+  if (dist := TSRL.DistToLineEx(p, rect.Right,rect.Top,   q)) < best then begin Result := q; best := dist; end;
+end;
+
+
 (*
 ## SRL.LinesIntersect
 ```pascal
@@ -185,7 +206,6 @@ function TSRL.PointInRect(pt: TPoint; rect: TRectangle): Boolean; static; overlo
 begin
   Result := TSRL.PointInRect(pt, rect.Top, rect.Right, rect.Btm, rect.Left);
 end;
-
 
 (*
 ## SRL.PointInCircle
@@ -268,3 +288,62 @@ begin
   if TSRL.PointInRect(pt, [Top.Right, Btm.Right, Btm.Btm, Top.Btm]) then Exit(True);
 end;
 
+
+// -----------------------------------------------------------------
+// Operator overloads
+operator + (L, R: TPoint): TPoint;
+begin
+  Result.X := L.X + R.X;
+  Result.Y := L.Y + R.Y;
+end;
+
+operator += (var L: TPoint; R: TPoint): TPoint;
+begin
+  L.X += R.X;
+  L.Y += R.Y;
+  Result := L;
+end;
+
+operator - (L, R:TPoint): TPoint;
+begin
+  Result.X := L.X - R.X;
+  Result.Y := L.Y - R.Y;
+end;
+
+operator -= (var L: TPoint; R: TPoint): TPoint;
+begin
+  L.X -= R.X;
+  L.Y -= R.Y;
+  Result := L;
+end;
+
+operator * (L: TPoint; R: Double): TPoint;
+begin
+  Result.X := Round(L.X * R);
+  Result.Y := Round(L.Y * R);
+end;
+
+operator *= (var L: TPoint; R: Double): TPoint;
+begin
+  L.X := Round(L.X * R);
+  L.Y := Round(L.Y * R);
+  Result := L;
+end;
+
+operator in(Left: TPoint; Right: TBox): Boolean;
+begin
+  Result := PointInBox(Left, Right);
+end;
+
+operator in(left: TPoint; right: TRectangle): Boolean;
+begin
+  Result := TSRL.PointInRect(left, right);
+end;
+
+operator + (Left, Right: TBox): TBox;
+begin
+  Result.X1 := Min(Min(Left.X1, Right.X2), Min(Right.X1, Left.X2));
+  Result.Y1 := Min(Min(Left.Y1, Right.Y2), Min(Right.Y1, Left.Y2));
+  Result.X2 := Max(Max(Left.X1, Right.X2), Max(Right.X1, Left.X2));
+  Result.Y2 := Max(Max(Left.Y1, Right.Y2), Max(Right.Y1, Left.Y2));
+end;

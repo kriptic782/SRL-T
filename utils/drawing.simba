@@ -418,7 +418,7 @@ end;
 procedure PlotGraph(xAxis, yAxis: String; dataNames: TStringArray; data: T2DPointArray; colors: TIntegerArray; connect: Boolean = True);
 var
   bmp, tmp, rotated: TMufasaBitmap;
-  xMax, yMax, i, j, x, y: Int32;
+  xMax, yMax, i, j, x: Int32;
   p: TPoint;
 begin
   if Length(colors) < Length(data) then

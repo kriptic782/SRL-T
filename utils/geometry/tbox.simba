@@ -338,12 +338,3 @@ begin
   Result := testSet;
   FilterPointsBox(Result, Self.X1, Self.Y1, Self.X2, Self.Y2);
 end;
-
-
-operator + (Left, Right: TBox): TBox;
-begin
-  Result.X1 := Min(Min(Left.X1, Right.X2), Min(Right.X1, Left.X2));
-  Result.Y1 := Min(Min(Left.Y1, Right.Y2), Min(Right.Y1, Left.Y2));
-  Result.X2 := Max(Max(Left.X1, Right.X2), Max(Right.X1, Left.X2));
-  Result.Y2 := Max(Max(Left.Y1, Right.Y2), Max(Right.Y1, Left.Y2));
-end;
