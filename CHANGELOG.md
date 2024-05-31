@@ -1,3 +1,12 @@
+## [5.0.3](https://github.com/Torwent/SRL-T/compare/v5.0.2...v5.0.3) (2024-05-31)
+
+
+### Bug Fixes
+
+* **file:** the new `RMDir()` function should now work properly ([11c4336](https://github.com/Torwent/SRL-T/commit/11c4336bbe4354fea73696d1678f00545746f290))
+
+
+
 ## [5.0.2](https://github.com/Torwent/SRL-T/compare/v5.0.1...v5.0.2) (2024-05-31)
 
 
@@ -36,15 +45,6 @@
 ### Features
 
 * **TRSMapObjects:** read notes ([3e49c2d](https://github.com/Torwent/SRL-T/commit/3e49c2da5ad3294a6cbfd35771ab1aa37e72039c))
-
-
-
-## [4.15.1](https://github.com/Torwent/SRL-T/compare/v4.15.0...v4.15.1) (2024-05-29)
-
-
-### Bug Fixes
-
-* **RSTranslator:** fixed math on Chunk2Coordinate() ([b2e464c](https://github.com/Torwent/SRL-T/commit/b2e464ccaf62e30586072907eb5f6284b5420dbc))
 
 
 
