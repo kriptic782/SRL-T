@@ -1,3 +1,12 @@
+## [5.1.2](https://github.com/Torwent/SRL-T/compare/v5.1.1...v5.1.2) (2024-06-01)
+
+
+### Bug Fixes
+
+* **TRSWalkerV2:** read notes ([cd676a5](https://github.com/Torwent/SRL-T/commit/cd676a5e49a0080798f063b645b39cba98459660))
+
+
+
 ## [5.1.1](https://github.com/Torwent/SRL-T/compare/v5.1.0...v5.1.1) (2024-05-31)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([e05b8e8](https://github.com/Torwent/SRL-T/commit/e05b8e842635a86ebcad976bdecc0b6d76a17206))
-
-
-
-## [5.0.1](https://github.com/Torwent/SRL-T/compare/v5.0.0...v5.0.1) (2024-05-31)
-
-
-### Bug Fixes
-
-* **dotfilters:** fixed a small oversight from the dotfilter rework ([9c5cae1](https://github.com/Torwent/SRL-T/commit/9c5cae158cc07b65cbb95d12bd61854f291ad78c))
 
 
 
