@@ -114,6 +114,7 @@ begin
   begin
     Self.Walker.Position := @Self.Position;
     Self.Walker.Height := @Self.Height;
+    Self.Walker.GetLocal := @Self.Loader.GetLocal;
     Self.Walker.WebGraph := @Self.Loader.Graph;
     Self.Walker.MapImage := Self.Loader.Map;
 
@@ -994,6 +995,7 @@ Map.Debug(ERSMapType.HEIGHT);
 procedure TRSMap.Debug(map: ERSMapType = ERSMapType.NORMAL; graph: Boolean = False);
 var
   bmp: TMufasaBitmap;
+  tmp: TWebGraph;
 begin
   case map of
     ERSMapType.NORMAL:    bmp := Self.Loader.Map.Copy();
@@ -1002,7 +1004,13 @@ begin
   end;
 
   if graph then
-    Self.Loader.Graph.Draw(bmp);
+  begin
+    tmp := Self.Loader.Graph;
+    WriteLn tmp.Nodes;
+    tmp.Nodes := Self.Loader.GetLocal(tmp.Nodes);
+    tmp.Draw(bmp);
+    WriteLn tmp.Nodes;
+  end;
 
   bmp.Debug();
   bmp.Free();

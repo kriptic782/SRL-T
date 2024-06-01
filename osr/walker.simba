@@ -10,6 +10,8 @@ iterations made by Olly.
   {$I SRL-T/osr.simba}
 {$ENDIF}
 
+{.$DEFINE WALKER_PATH_DEBUGGING}
+
 type
 (*
 ## PRSWalkerV2
@@ -41,10 +43,11 @@ end;
   TRSWalkerV2 = record(TSRLBaseRecord)
     Position: function (): TPoint of object;
     Height: function (p: TPoint = [-1,-1]): Single of object;
+    GetLocal: function (tpa: TPointArray): TPointArray of object;
 
     MinEnergy, ClickRandomness, MouseAheadTimer: Int32;
 
-    ScreenWalk, AdaptiveWalk, NearZoomMode, FancyMouse, Walking: Boolean;
+    ScreenWalk, AdaptiveWalk, FancyMouse, Walking: Boolean;
 
     AdaptiveToggleDistances: TPoint;
 
@@ -477,29 +480,28 @@ Walker.WalkPath([[100,100],[120,120],[140,140],[160,160],[180,180]]);
 *)
 function TRSWalkerV2.WalkPath(path: TPointArray; WaitUntilDistance: Int32 = 0): Boolean;
 
-  function BuildPath(TPA: TPointArray): TPointArray;
+  function BuildPath(tpa: TPointArray): TPointArray;
   var
-    I, J: Int32;
-    Line: TPointArray;
+    i, j: Int32;
+    line: TPointArray;
   begin
-    for I := 1 to High(TPA) do
+    for i := 1 to High(tpa) do
     begin
-      Line := TPAFromLine(TPA[I-1], TPA[I]);
+      line := TPAFromLine(tpa[i-1], tpa[i]);
 
-      J := 0;
-      while J < High(Line) do
+      j := 0;
+      while j < High(line) do
       begin
-        Result += Line[J];
+        Result += line[j];
 
-        // keep the steps low, as mainscreen walking might just have a few tiles visible when NearZoomMode is set True
-        if (Self.NearZoomMode) and ((Self.ScreenWalk) or (Self.AdaptiveWalk)) then
-          Inc(J, Random(1, 4))
+        if (Self.ScreenWalk or Self.AdaptiveWalk) and ((MM2MS.ZoomLevel >= 70) and (MM2MS.ZoomLevel <= 100)) then
+          Inc(j, Random(1, 4))
         else
-          Inc(J, Random(3, 12));
+          Inc(j, Random(3, 12));
       end;
     end;
 
-    Result += TPA[High(TPA)];
+    Result += tpa[High(tpa)];
   end;
 
   function AdvancePath(var index: Int32; playerPoint: TPoint): Boolean;
@@ -531,6 +533,11 @@ function TRSWalkerV2.WalkPath(path: TPointArray; WaitUntilDistance: Int32 = 0): 
 var
   playerPoint: TPoint;
   index, fails: Int32;
+  {$IFDEF WALKER_PATH_DEBUGGING}
+  i: Int32;
+  pathDebugger: TPointArray;
+  bmp: TMufasaBitmap;
+  {$ENDIF}
 begin
   Self.Walking := True;
   playerPoint := Self.Position();
@@ -546,6 +553,23 @@ begin
   while Self.Walking and (fails < 10) do
   begin
     playerPoint := Self.Position();
+
+    {$IFDEF WALKER_PATH_DEBUGGING}
+    pathDebugger := Self.Path.FilterCircle([playerPoint.X, playerPoint.Y, 90]);
+    pathDebugger := Self.PointsToMM(playerPoint, pathDebugger, Minimap.GetCompassAngle(False));
+    pathDebugger := Minimap.Filter(pathDebugger);
+    bmp.FromClient();
+    for i := 0 to High(pathDebugger) do
+    begin
+      if (i < High(pathDebugger)) and bmp.Bounds().Contains(pathDebugger[i+1]) then
+        bmp.LineTo(pathDebugger[i], pathDebugger[i+1], $FFFFFF);
+      bmp.DrawBox(pathDebugger[i], 2, $10FF10);
+    end;
+
+    bmp.Debug();
+    bmp.Free();
+    bmp := nil;
+    {$ENDIF}
 
     if AdvancePath(index, playerPoint) then
       fails := 0
@@ -678,6 +702,7 @@ function TRSWalkerV2.WebWalkEx(me: TPoint; destination: TPoint; waitUntilDistanc
 var
   path: TPointArray;
   bmp: TMufasaBitmap;
+  tmp: TWebGraph;
 begin
   if not System.InRange(pathRandomness, 0, 1) then
     Self.Fatal('TRSWalkerV2.WebWalk `PathRandomness` must be within 0..1');
@@ -688,12 +713,32 @@ begin
     if Assigned(Self.MapImage) then
     begin
       bmp := Self.MapImage.Copy();
-      Self.WebGraph^.Draw(bmp);
+      tmp := Self.WebGraph^;
+
+      if (@Self.GetLocal <> nil) then
+      begin
+        tmp.Nodes := Self.GetLocal(tmp.Nodes);
+        me := Self.GetLocal([me])[0];
+        destination := Self.GetLocal([destination])[0];
+      end;
+
+      tmp.Draw(bmp);
 
       if bmp.Bounds().Contains(me) then
-        bmp.DrawCross(me, 6, $FF);
+      begin
+        bmp.DrawCross(me, 4, $00FF00);
+        bmp.DrawCross(me.Offset(1,0), 4, $00FF00);
+        bmp.DrawCross(me.Offset(0,1), 4, $00FF00);
+        bmp.DrawCross(me.Offset(1,1), 4, $00FF00);
+      end;
+
       if bmp.Bounds().Contains(destination) then
-        bmp.DrawCross(destination, 6, $FF);
+      begin
+        bmp.DrawCross(destination, 4, $00FF00);
+        bmp.DrawCross(destination.Offset(1,0), 4, $00FF00);
+        bmp.DrawCross(destination.Offset(0,1), 4, $00FF00);
+        bmp.DrawCross(destination.Offset(1,1), 4, $00FF00);
+      end;
 
       bmp.Debug();
       bmp.Free();
