@@ -10,8 +10,6 @@ iterations made by Olly.
   {$I SRL-T/osr.simba}
 {$ENDIF}
 
-{.$DEFINE WALKER_PATH_DEBUGGING}
-
 type
 (*
 ## PRSWalkerV2
@@ -458,6 +456,33 @@ begin
 end;
 
 
+procedure TRSWalkerV2.DebugPath(index: Int32; playerPoint: TPoint);
+var
+  i: Int32;
+  path: TPointArray;
+  bmp: TMufasaBitmap;
+begin
+  path := Self.Path.FilterCircle([playerPoint.X, playerPoint.Y, 90]);
+  path := Self.PointsToMM(playerPoint, path, Minimap.GetCompassAngle(False));
+  path := Minimap.Filter(path);
+
+  bmp.FromClient();
+
+  for i := 0 to High(path) do
+  begin
+    if (i < High(path)) and bmp.Bounds().Contains(path[i+1]) then
+      bmp.LineTo(path[i], path[i+1], $FFFFFF);
+
+    if index = i then
+      bmp.DrawBox(path[i], 2, $FF1010)
+    else
+      bmp.DrawBox(path[i], 2, $10FF10);
+  end;
+
+  bmp.Debug();
+  bmp.Free();
+end;
+
 (*
 ## TRSWalkerV2.WalkPath
 ```pascal
@@ -478,7 +503,7 @@ Example:
 Walker.WalkPath([[100,100],[120,120],[140,140],[160,160],[180,180]]);
 ```
 *)
-function TRSWalkerV2.WalkPath(path: TPointArray; WaitUntilDistance: Int32 = 0): Boolean;
+function TRSWalkerV2.WalkPath(path: TPointArray; WaitUntilDistance: Int32 = 0; debug: Boolean = False): Boolean;
 
   function BuildPath(tpa: TPointArray): TPointArray;
   var
@@ -533,11 +558,6 @@ function TRSWalkerV2.WalkPath(path: TPointArray; WaitUntilDistance: Int32 = 0): 
 var
   playerPoint: TPoint;
   index, fails: Int32;
-  {$IFDEF WALKER_PATH_DEBUGGING}
-  i: Int32;
-  pathDebugger: TPointArray;
-  bmp: TMufasaBitmap;
-  {$ENDIF}
 begin
   Self.Walking := True;
   playerPoint := Self.Position();
@@ -554,22 +574,8 @@ begin
   begin
     playerPoint := Self.Position();
 
-    {$IFDEF WALKER_PATH_DEBUGGING}
-    pathDebugger := Self.Path.FilterCircle([playerPoint.X, playerPoint.Y, 90]);
-    pathDebugger := Self.PointsToMM(playerPoint, pathDebugger, Minimap.GetCompassAngle(False));
-    pathDebugger := Minimap.Filter(pathDebugger);
-    bmp.FromClient();
-    for i := 0 to High(pathDebugger) do
-    begin
-      if (i < High(pathDebugger)) and bmp.Bounds().Contains(pathDebugger[i+1]) then
-        bmp.LineTo(pathDebugger[i], pathDebugger[i+1], $FFFFFF);
-      bmp.DrawBox(pathDebugger[i], 2, $10FF10);
-    end;
-
-    bmp.Debug();
-    bmp.Free();
-    bmp := nil;
-    {$ENDIF}
+    if debug then
+      Self.DebugPath(index, playerPoint);
 
     if AdvancePath(index, playerPoint) then
       fails := 0
@@ -698,7 +704,7 @@ function TRSWalkerV2.WebWalk(destinations: TPointArray; waitUntilDistance: Int32
 ```
 Web walks to the destination point on the loaded map. Does **not** handle any obstacles.
 *)
-function TRSWalkerV2.WebWalkEx(me: TPoint; destination: TPoint; waitUntilDistance: Int32 = 0; pathRandomness: Double = 0): Boolean;
+function TRSWalkerV2.WebWalkEx(me: TPoint; destination: TPoint; waitUntilDistance: Int32 = 0; pathRandomness: Double = 0; debug: Boolean = False): Boolean;
 var
   path: TPointArray;
   bmp: TMufasaBitmap;
@@ -745,21 +751,21 @@ begin
     end;
     TerminateScript(GetExceptionMessage());
   end;
-  Result := Self.WalkPath(path, waitUntilDistance);
+  Result := Self.WalkPath(path, waitUntilDistance, debug);
 end;
 
-function TRSWalkerV2.WebWalk(destination: TPoint; waitUntilDistance: Int32 = 0; pathRandomness: Double = 0): Boolean;
+function TRSWalkerV2.WebWalk(destination: TPoint; waitUntilDistance: Int32 = 0; pathRandomness: Double = 0; debug: Boolean = False): Boolean;
 begin
-  Result := Self.WebWalkEx(Self.Position(), destination, waitUntilDistance, pathRandomness);
+  Result := Self.WebWalkEx(Self.Position(), destination, waitUntilDistance, pathRandomness, debug);
 end;
 
-function TRSWalkerV2.WebWalk(destinations: TPointArray; waitUntilDistance: Int32 = 0; pathRandomness: Double = 0): Boolean; overload;
+function TRSWalkerV2.WebWalk(destinations: TPointArray; waitUntilDistance: Int32 = 0; pathRandomness: Double = 0; debug: Boolean = False): Boolean; overload;
 var
   me, destination: TPoint;
 begin
   me := Self.Position();
   destination := Self.GetClosestPointEx(me, destinations);
-  Result := Self.WebWalkEx(me, destination, waitUntilDistance, pathRandomness);
+  Result := Self.WebWalkEx(me, destination, waitUntilDistance, pathRandomness, debug);
 end;
 
 

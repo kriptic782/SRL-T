@@ -16,7 +16,17 @@ const
   RSMAP_PATH: String = {$MACRO CURRENT_DIRECTORY};
 
 var
-  GENERATED_GRAPH_DETAIL = 5; //low = better and slower, high = worse and faster
+  GENERATED_GRAPH: record
+    Detail: Int32;
+    SingleNodeRadius: Int32;
+    MaxConnections: Int32;
+  end;
+
+begin
+  GENERATED_GRAPH.Detail := 5;            //low = better/slower, high = worse/faster
+  GENERATED_GRAPH.SingleNodeRadius := 70; //closed space less than SingleNodeRadius pixels will have a single node.
+  GENERATED_GRAPH.MaxConnections := 10;   //Max connections per node.
+end;
 
 type
   ERSMapType = (NORMAL, HEIGHT, COLLISION);
@@ -232,7 +242,7 @@ begin
     len := Length(Result.Nodes);
 
     circle := atpa[i].MinAreaCircle();
-    if circle.Radius < 70 then
+    if circle.Radius < GENERATED_GRAPH.SingleNodeRadius then
     begin
       SetLength(Result.Nodes, len+1);
       SetLength(Result.Paths, len+1);
@@ -245,7 +255,7 @@ begin
 
     skeleton := atpa[i].Erode(1).Skeleton(2, 7);
 
-    RAaSTPA(skeleton, GENERATED_GRAPH_DETAIL);
+    RAaSTPA(skeleton, GENERATED_GRAPH.Detail);
 
     for p in skeleton do
       if not matrix[p.Y, p.X] then
@@ -256,10 +266,10 @@ begin
     sorted := [];
     SetLength(sorted, Length(Result.Nodes));
 
-    for connection := 0 to 10 do
+    for connection := 0 to GENERATED_GRAPH.MaxConnections do
     begin
       if connection mod 3 = 0 then
-        Self.DebugLn('Creating webgraph connections ' + ToStr(connection) + '/10');
+        Self.DebugLn('Creating webgraph connections ' + ToStr(connection) + '/' + ToStr(GENERATED_GRAPH.MaxConnections));
 
       crossings[connection] := [];
       SetLength(crossings[connection], Length(Result.Nodes));
@@ -322,16 +332,16 @@ begin
   SetLength(Result.Names, Length(Result.Nodes));
 end;
 
-function TRSChunkLoader.GetGraph(start, finish: TPoint; level: UInt32; map: TMufasaBitmap): TWebGraph; overload;
+function TRSChunkLoader.GetGraph(name: String; level: UInt32; map: TMufasaBitmap): TWebGraph; overload;
 var
-  cacheroot, cachename, name: String;
+  cacheroot, cachename: String;
   json: TJSONObject;
 begin
-  name := ToStr(start.X) + '-' + ToStr(start.Y) + '_' +
-          ToStr(finish.X) + '-' + ToStr(finish.Y);
-
   cacheroot := Self.Cache + 'graphs' + DirectorySeparator;
-  cachename := cacheroot + ToStr(level) + DirectorySeparator + name + '-' + ToStr(GENERATED_GRAPH_DETAIL);
+  cachename := cacheroot + ToStr(level) + DirectorySeparator + name + '-' +
+               ToStr(GENERATED_GRAPH.Detail) + '-' +
+               ToStr(GENERATED_GRAPH.SingleNodeRadius) + '-' +
+               ToStr(GENERATED_GRAPH.MaxConnections);
 
   if not FileExists(cachename + '.json') then
   begin
@@ -792,6 +802,7 @@ var
   graphs: array of TWebGraph;
   json: TJSONArray;
   objects, npcs: array of TJSONArray;
+  name: String;
 begin
   Self.Init(downscale);
   SetLength(Self.Regions, Length(chunks) * Length(levels));
@@ -805,7 +816,8 @@ begin
 
       idx := i * (High(chunks) + 1) + j;
 
-      Self.Regions[idx].Name :=  ToStr(levels[i]) + '_' + ToStr(s.X) + '-' + ToStr(s.Y) + '_' + ToStr(f.X) + '-' + ToStr(f.Y);
+      name := ToStr(s.X) + '-' + ToStr(s.Y) + '_' + ToStr(f.X) + '-' + ToStr(f.Y);
+      Self.Regions[idx].Name :=  ToStr(levels[i]) + '_' + name;
       Self.Regions[idx].Original := chunks[j];
       Self.Regions[idx].Level := levels[i];
 
@@ -822,8 +834,9 @@ begin
       end;
 
       cbitmaps += Self.Loader.GetMap(s, f, levels[i], ERSMapType.COLLISION);
-      graphs += Self.Loader.GetGraph(s, f, levels[i], cbitmaps[idx]);
+      graphs += Self.Loader.GetGraph(name, levels[i], cbitmaps[idx]);
       graphs[idx].Nodes := Self.GetGlobal(idx, graphs[idx].Nodes);
+
       cbitmaps[idx].Pad(padding);
 
       json := Self.Loader.GetJSON(s, f, levels[i], ERSMapJSON.OBJECTS);
@@ -1053,7 +1066,7 @@ begin
   for Result := 0 to High(Self.Regions) do
   begin
     with Self.Regions[Result] do
-      b := Region.Offset(Offset - [Region.X1, Region.Y1]);
+      b := Region.Offset(Offset);
     if p.InBox(b) then
       Exit;
   end;
@@ -1068,7 +1081,7 @@ begin
     Exit(p);
 
   with Self.Regions[regionIndex] do
-    Result := p - Offset + Point(Region.X1, Region.Y1);
+    Result := p - Offset;
 end;
 
 function TRSMapLoader.GetLocal(p: TPoint): TPoint; overload;
@@ -1085,7 +1098,7 @@ begin
 
   with Self.Regions[regionIndex] do
     for p in tpa do
-      Result += p - Offset + Point(Region.X1, Region.Y1);
+      Result += p - Offset;
 end;
 
 function TRSMapLoader.GetLocal(tpa: TPointArray): TPointArray; overload;

@@ -1006,10 +1006,8 @@ begin
   if graph then
   begin
     tmp := Self.Loader.Graph;
-    WriteLn tmp.Nodes;
     tmp.Nodes := Self.Loader.GetLocal(tmp.Nodes);
     tmp.Draw(bmp);
-    WriteLn tmp.Nodes;
   end;
 
   bmp.Debug();
