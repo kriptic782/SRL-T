@@ -1,3 +1,12 @@
+## [5.1.4](https://github.com/Torwent/SRL-T/compare/v5.1.3...v5.1.4) (2024-06-03)
+
+
+### Bug Fixes
+
+* read notes ([364c525](https://github.com/Torwent/SRL-T/commit/364c5256515aee0e6b63ab0d9b0395a0731f4c6b))
+
+
+
 ## [5.1.3](https://github.com/Torwent/SRL-T/compare/v5.1.2...v5.1.3) (2024-06-02)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **TRSMapObjects:** finished. ([bb8552c](https://github.com/Torwent/SRL-T/commit/bb8552ce557c8c8ff4177fe9e6df9991d305d3cd))
-
-
-
-## [5.0.3](https://github.com/Torwent/SRL-T/compare/v5.0.2...v5.0.3) (2024-05-31)
-
-
-### Bug Fixes
-
-* **file:** the new `RMDir()` function should now work properly ([11c4336](https://github.com/Torwent/SRL-T/commit/11c4336bbe4354fea73696d1678f00545746f290))
 
 
 
