@@ -1675,6 +1675,25 @@ begin
     ;
 end;
 
+procedure TRSMinimap.WaitMoving();
+var
+  timeout, countdown: TCountDown;
+  moving: Boolean;
+begin
+  timeout.Init(Round(SRL.TruncatedGauss(20000, 25000)));
+
+  countdown.Init(Round(SRL.TruncatedGauss(500, 1500)));
+  countdown.timeout := GetTickCount() + Round(SRL.TruncatedGauss(2500, 3500));
+
+  repeat
+    moving := Self.IsPlayerMoving();
+
+    if moving then
+      countdown.Restart();
+
+  until timeout.IsFinished() or (not moving and countdown.IsFinished()) or not Self.HasFlag();
+end;
+
 var
 (*
 (Minimap)=

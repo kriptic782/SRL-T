@@ -4,6 +4,43 @@
 {$ENDIF}
 
 type
+  PRSMapObjectArray = array of Pointer;
+
+function PRSMapObjectArray.GetClosest(): PRSMapObject;
+var
+  meObj, meNPC: TPoint = [0,0];
+  tmp: PRSMapObject;
+  i: Int32;
+  closest: Double = $FFFFFF;
+  current: Double;
+begin
+  for i := High(Self) downto 0 do
+  begin
+    tmp := PRSMapObject(Self[i]);
+
+    case tmp^.MapObjectType of
+      ERSMapObjectType.OBJ:
+      begin
+        if meObj = [0,0] then meObj := tmp^.Walker^.Position();
+        current := tmp^.Coordinates.NearestPoint(meObj).DistanceTo(meObj);
+      end;
+
+      ERSMapObjectType.MMDOT:
+      begin
+        if meNPC = [0,0] then meNPC := tmp^.Walker^.Position();
+        current := tmp^.Coordinates.NearestPoint(meNPC).DistanceTo(meNPC);
+      end;
+    end;
+
+    if current < closest then
+    begin
+      closest := current;
+      Result := tmp;
+    end;
+  end;
+end;
+
+type
   TRSObjectV2Array = array of TRSObjectV2;
 
 function TRSObjectV2Array.FindAnyID(id: Int32): Int32;
@@ -151,25 +188,26 @@ begin
   Self.Walker := walker;
 end;
 
-function TRSMapObjects.Get(obj: Variant): TRSObjectV2;
+
+function TRSMapObjects.GetIndex(obj: Variant): Int32;
 var
   i: Int32;
   str: String;
-  found: Boolean;
+  mapNPC: TRSObjectV2;
 begin
-  i := Self.Cache.FindAny(obj);
-  if i > -1 then
-    Exit(Self.Cache[i]);
+  Result := Self.Cache.FindAny(obj);
+  if Result > -1 then
+    Exit;
 
   if VarIsNumeric(obj) then
   begin
     for i := 0 to  Self.Data.High() do
       if Self.Data.getJSONObject(i).getInt('id') = obj then
       begin
-        Result := TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
-        Result.Index := Length(Self.Cache);
-        Self.Cache += Result;
-        Exit;
+        mapNPC := TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
+        mapNPC.Index := Length(Self.Cache);
+        Self.Cache += mapNPC;
+        Exit(mapNPC.Index);
       end;
 
     TerminateScript('Object with ID ' + ToStr(obj) + ' doesn''t exist on the loaded maps.');
@@ -182,10 +220,10 @@ begin
     for i := 0 to  Self.Data.High() do
       if Self.Data.getJSONObject(i).getInt('id') = obj then
       begin
-        Result := TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
-        Result.Index := Length(Self.Cache);
-        Self.Cache += Result;
-        Exit;
+        mapNPC := TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
+        mapNPC.Index := Length(Self.Cache);
+        Self.Cache += mapNPC;
+        Exit(mapNPC.Index);
       end;
 
     TerminateScript('Object with ID ' + ToStr(obj) + ' doesn''t exist on the loaded maps.');
@@ -195,45 +233,73 @@ begin
   begin
     if LowerCase(Self.Data.getJSONObject(i).getString('name')) = str then
     begin
-      if found then
+      if Result > -1 then
       begin
-        if Result.SameObject(Self.Data.getJSONObject(i)) then
-          Result := Result.Merge(Self.Data.getJSONObject(i));
+        if Self.Cache[Result].SameObject(Self.Data.getJSONObject(i)) then
+          Self.Cache[Result] := Self.Cache[Result].Merge(Self.Data.getJSONObject(i));
         Continue;
       end;
 
-      Result := TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
-      Result.Index := Length(Self.Cache);
-      Self.Cache += Result;
-      found := True;
+      mapNPC := TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
+      mapNPC.Index := Length(Self.Cache);
+      Self.Cache += mapNPC;
+      Result := mapNPC.Index;
     end;
   end;
 
-  if not found then
+  if Result > -1 then
     TerminateScript('Object ' + ToStr(obj) + ' doesn''t exist on the loaded maps.');
 end;
 
-function TRSMapObjects.Add(obj: TRSObjectV2): TRSObjectV2;
+function TRSMapObjects.GetIndices(name: String): TIntegerArray;
+var
+  i: Int32;
+  mapObj: TRSObjectV2;
 begin
-  Result := obj;
-  Result.Index := Length(Self.Cache);
-  Self.Cache += Result;
+  name := LowerCase(name);
+  Result := Self.Cache.FindAllName(name);
+  if Result <> [] then
+    Exit;
+
+  for i := 0 to Self.Data.High() do
+    if LowerCase(Self.Data.getJSONObject(i).getString('name')) = name then
+    begin
+      mapObj := TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
+      mapObj.Index := Length(Self.Cache);
+      Self.Cache += mapObj;
+      Result += mapObj.Index;
+    end;
 end;
 
-function TRSMapObjects.SetFinder(obj: Variant; finder: TRSObjectFinder): TRSObjectV2;
+function TRSMapObjects.GetIndices(names: TStringArray): TIntegerArray; overload;
+var
+  name: String;
 begin
-  Result := Self.Get(obj);
-  Result.Finder := finder;
-
-  Self.Cache[Result.Index].Finder := finder;
+  for name in names do
+    Result += Self.GetIndices(name);
 end;
 
-function TRSMapObjects.SetOffset(obj: Variant; offset: TPoint): TRSObjectV2;
+function TRSMapObjects.Get(obj: Variant): TRSObjectV2;
 begin
-  Result := Self.Get(obj);
-  Result.Offset := offset;
+  Result := Self.Cache[Self.GetIndex(obj)];
+end;
 
-  Self.Cache[Result.Index].Offset := offset;
+
+procedure TRSMapObjects.Add(obj: TRSObjectV2);
+begin
+  obj.Index := Length(Self.Cache);
+  Self.Cache += obj;
+end;
+
+
+procedure TRSMapObjects.SetFinder(obj: Variant; finder: TRSObjectFinder);
+begin
+  Self.Cache[Self.GetIndex(obj)].Finder := finder;
+end;
+
+procedure TRSMapObjects.SetOffset(obj: Variant; offset: TPoint);
+begin
+  Self.Cache[Self.GetIndex(obj)].Offset := offset;
 end;
 
 procedure TRSMapObjects.Debug();
@@ -273,25 +339,26 @@ begin
   Self.Walker := walker;
 end;
 
-function TRSMapNPCs.Get(npc: Variant): TRSNPCV2;
+
+function TRSMapNPCs.GetIndex(npc: Variant): Int32;
 var
   i: Int32;
   str: String;
-  found: Boolean;
+  mapNPC: TRSNPCV2;
 begin
-  i := Self.Cache.FindAny(npc);
-  if i > -1 then
-    Exit(Self.Cache[i]);
+  Result := Self.Cache.FindAny(npc);
+  if Result > -1 then
+    Exit;
 
   if VarIsNumeric(npc) then
   begin
     for i := 0 to  Self.Data.High() do
       if Self.Data.getJSONObject(i).getInt('id') = npc then
       begin
-        Result := TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
-        Result.Index := Length(Self.Cache);
-        Self.Cache += Result;
-        Exit;
+        mapNPC := TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
+        mapNPC.Index := Length(Self.Cache);
+        Self.Cache += mapNPC;
+        Exit(mapNPC.Index);
       end;
 
     TerminateScript('NPC with ID ' + ToStr(npc) + ' doesn''t exist on the loaded maps.');
@@ -304,10 +371,10 @@ begin
     for i := 0 to  Self.Data.High() do
       if Self.Data.getJSONObject(i).getInt('id') = npc then
       begin
-        Result := TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
-        Result.Index := Length(Self.Cache);
-        Self.Cache += Result;
-        Exit;
+        mapNPC := TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
+        mapNPC.Index := Length(Self.Cache);
+        Self.Cache += mapNPC;
+        Exit(mapNPC.Index);
       end;
 
     TerminateScript('NPC with ID ' + ToStr(npc) + ' doesn''t exist on the loaded maps.');
@@ -317,45 +384,74 @@ begin
   begin
     if LowerCase(Self.Data.getJSONObject(i).getString('name')) = str then
     begin
-      if found then
+      if Result > -1 then
       begin
-        if Result.SameObject(Self.Data.getJSONObject(i)) then
-          Result := Result.Merge(Self.Data.getJSONObject(i));
+        if Self.Cache[Result].SameObject(Self.Data.getJSONObject(i)) then
+          Self.Cache[Result] := Self.Cache[Result].Merge(Self.Data.getJSONObject(i));
         Continue;
       end;
 
-      Result := TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
-      Result.Index := Length(Self.Cache);
-      Self.Cache += Result;
-      found := True;
+      mapNPC := TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
+      mapNPC.Index := Length(Self.Cache);
+      Self.Cache += mapNPC;
+      Result := mapNPC.Index
     end;
   end;
 
-  if not found then
+  if Result > -1 then
     TerminateScript('NPC ' + ToStr(npc) + ' doesn''t exist on the loaded maps.');
 end;
 
-function TRSMapNPCs.Add(npc: TRSNPCV2): TRSNPCV2;
+function TRSMapNPCs.GetIndices(name: String): TIntegerArray;
+var
+  i: Int32;
+  resultNPC: TRSNPCV2;
 begin
-  Result := npc;
-  Result.Index := Length(Self.Cache);
-  Self.Cache += Result;
+  name := LowerCase(name);
+  Result := Self.Cache.FindAllName(name);
+
+  if Result <> [] then
+    Exit;
+
+  for i := 0 to Self.Data.High() do
+    if LowerCase(Self.Data.getJSONObject(i).getString('name')) = name then
+    begin
+      resultNPC := TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
+      resultNPC.Index := Length(Self.Cache);
+      Self.Cache += resultNPC;
+      Result += resultNPC.Index;
+    end;
 end;
 
-function TRSMapNPCs.SetFinder(npc: Variant; finder: TRSObjectFinder): TRSNPCV2;
+function TRSMapNPCs.GetIndices(names: TStringArray): TIntegerArray; overload;
+var
+  name: String;
 begin
-  Result := Self.Get(npc);
-  Result.Finder := finder;
-
-  Self.Cache[Result.Index].Finder := finder;
+  for name in names do
+    Result += Self.GetIndices(name);
 end;
 
-function TRSMapNPCs.SetOffset(npc: Variant; offset: TPoint): TRSNPCV2;
-begin
-  Result := Self.Get(npc);
-  Result.Offset := offset;
 
-  Self.Cache[Result.Index].Offset := offset;
+function TRSMapNPCs.Get(npc: Variant): TRSNPCV2;
+begin
+  Result := Self.Cache[Self.GetIndex(npc)];
+end;
+
+
+procedure TRSMapNPCs.Add(npc: TRSNPCV2);
+begin
+  npc.Index := Length(Self.Cache);
+  Self.Cache += npc;
+end;
+
+procedure TRSMapNPCs.SetFinder(npc: Variant; finder: TRSObjectFinder);
+begin
+  Self.Cache[Self.GetIndex(npc)].Finder := finder;
+end;
+
+procedure TRSMapNPCs.SetOffset(npc: Variant; offset: TPoint);
+begin
+  Self.Cache[Self.GetIndex(npc)].Offset := offset;
 end;
 
 procedure TRSMapNPCs.Debug();
@@ -385,3 +481,111 @@ end;
 var
   Objects: TRSMapObjects;
   NPCs: TRSMapNPCs;
+  Banks: PRSMapObjectArray;
+
+{%codetools off}
+procedure TRSBank._SetupMapObjects();
+var
+  i: Int32;
+begin
+  if Objects <> [] then
+    for i in Objects.GetIndices(['Bank booth', 'Bank chest']) do
+      Banks += @Objects.Cache[i];
+
+  if NPCs <> [] then
+    for i in NPCs.GetIndices('Banker') do
+      Banks += @NPCs.Cache[i];
+end;
+{%codetools on}
+
+function TRSBank.HoverV2(mapObj: PRSMapObject = nil): Boolean; overload;
+begin
+  if RSInterface.IsOpen() then
+    Exit;
+
+  if mapObj = nil then
+  begin
+    if Banks = [] then
+      Self._SetupMapObjects();
+    if Banks = [] then
+      Exit;
+
+    mapObj := Banks.GetClosest();
+  end;
+
+  Result := mapObj^.Hover();
+end;
+
+function TRSBank.OpenV2(mapObj: PRSMapObject = nil): Boolean; overload;
+begin
+  if RSInterface.IsOpen() then
+  begin
+    if Self.IsOpen() or BankPin.IsOpen() then
+      Exit(True);
+    RSInterface.Close(True);
+  end;
+
+  if mapObj = nil then
+  begin
+    if Banks = [] then
+      Self._SetupMapObjects();
+    if Banks = [] then
+      Exit;
+
+    mapObj := Banks.GetClosest();
+  end;
+
+  Result := mapObj^.Click() or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Bank B', 'Bank E']));
+
+  if not Result then
+    Exit;
+
+  //Minimap.WaitMoving();
+  Result := WaitUntil(Self.IsOpen() or BankPin.IsOpen(), SRL.TruncatedGauss(50, 1500), 3000);
+end;
+
+function TRSBank.WalkHoverV2(mapObj: PRSMapObject = nil): Boolean; overload;
+begin
+  if RSInterface.IsOpen() then
+    Exit;
+
+  if mapObj = nil then
+  begin
+    if Banks = [] then
+      Self._SetupMapObjects();
+    if Banks = [] then
+      Exit;
+
+    mapObj := Banks.GetClosest();
+  end;
+
+  Result := mapObj^.WalkHover();
+end;
+
+function TRSBank.WalkOpenV2(mapObj: PRSMapObject = nil): Boolean; overload;
+begin
+  if RSInterface.IsOpen() then
+  begin
+    if Self.IsOpen() or BankPin.IsOpen() then
+      Exit(True);
+    RSInterface.Close(True);
+  end;
+
+  if mapObj = nil then
+  begin
+    if Banks = [] then
+      Self._SetupMapObjects();
+    if Banks = [] then
+      Exit;
+
+    mapObj := Banks.GetClosest();
+  end;
+
+  Result := mapObj^.WalkClick() or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Bank B', 'Bank E']));
+
+  if not Result then
+    Exit;
+
+  Minimap.WaitMoving();
+  Result := WaitUntil(Self.IsOpen(), SRL.TruncatedGauss(50, 1500), 3000);
+end;
