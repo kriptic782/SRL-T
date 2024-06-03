@@ -42,7 +42,7 @@ type
 
 procedure TRSInterface.Setup();
 begin
-  Self.Name := 'Unnamed';
+  Self.Name := 'Interface';
   Self.ButtonColors := [CTS1(5334129, 2), CTS1(2303648, 1), CTS1(657930, 20), CTS1(1514268, 10)];
   Self.ButtonEnabledColors := [CTS1(2369440, 5), CTS1(2700350, 5)];
   Self.Cache.Enabled := True;
@@ -617,7 +617,10 @@ end;
 var
   RootInterface: TRSRootInterface;
 
+procedure TSRL.Setup(); override;
 begin
+  inherited;
+
   RootInterface.Name := 'Root Interface';
   RootInterface.Alignment.Left := [@RootInterface.X1];
   RootInterface.Alignment.Top := [@RootInterface.Y1];

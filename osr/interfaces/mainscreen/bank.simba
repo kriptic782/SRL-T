@@ -221,7 +221,6 @@ end;
 ```pascal
 function TRSBank.IsOpen(waitForItems: Boolean = True): Boolean;
 ```
-
 Returns true if the Bank is visible.
 
 **waitForItems** determines if the method waits up to one second for item to appears.
@@ -266,7 +265,6 @@ end;
 ```pascal
 function TRSBank.Close(PressEscape: Boolean = False): Boolean;
 ```
-
 Closes the bank, Depending on `PressEscape` the function will either click the button
 or press backspace.
 

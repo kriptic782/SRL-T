@@ -46,7 +46,7 @@ function DeleteFiles(const directory: String; skip: TStringArray = []): Boolean;
   end;
 
 var
-  f, s: String;
+  f: String;
 begin
   for f in FindFiles(directory, True) do
   begin

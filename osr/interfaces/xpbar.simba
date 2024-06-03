@@ -258,7 +258,7 @@ Example:
 WriteLn XPBar.IsOpen();
 ```
 *)
-function TRSXPBar.IsOpen(): Boolean;
+function TRSXPBar.IsOpen(): Boolean; overload;
 begin
   Result := Self.Read() > 0;
 end;

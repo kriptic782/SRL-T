@@ -88,7 +88,6 @@ end;
 {$IFNDEF SRL_MAPOBJECTARRAY_INCLUDED}       {$I osr/map/mapobjectarray.simba}
 {$IFNDEF SRL_MAP_INCLUDED}                  {$I osr/map/map.simba}
 
-
 {$IFNDEF SRL_DEPRECATED_INCLUDED} {$I osr/deprecated.simba} {$ELSE}{$ENDIF}
 
 

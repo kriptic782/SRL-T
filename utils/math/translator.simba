@@ -11,58 +11,54 @@ that can be used by Simba and back.
 
 type
   TRSTranslator = record
-    TileSize, ChunkSize, MaxHeight, Planes: UInt32;
-    RSDimensions, MapDimensions: TPoint;
-    RSScope, MapScope: TBox;
+    TileSize, MaxHeight, Planes: UInt32;
+
+    RSMap, Map: record
+      ChunkSide: UInt32;
+      Dimensions: TPoint;
+      Scope: TBox;
+    end;
   end;
 
-function TRSTranslator.ChunkArea(): UInt32; constref;
-begin
-  Result := Self.TileSize * Self.ChunkSize;
-end;
-
 procedure TRSTranslator.Setup();
-var
-  area: UInt32;
 begin
   Self.TileSize := 4;
-  Self.ChunkSize := 64;
   Self.MaxHeight := 2040;
   Self.Planes := 3;
 
-  area := Self.ChunkArea();
+  Self.RSMap.ChunkSide := 64;
+  Self.RSMap.Dimensions := [100, 200];
+  Self.RSMap.Scope := [16, 19, 66, 196];
 
-  Self.RSDimensions  := [100, 200];        //chunk numbers
-  Self.RSScope       := [16, 19, 66, 196]; //chunk numbers
+  Self.Map.ChunkSide := Self.TileSize * Self.RSMap.ChunkSide;
+  Self.Map.Dimensions.X := Self.RSMap.Dimensions.X * Self.Map.ChunkSide;
+  Self.Map.Dimensions.Y := Self.RSMap.Dimensions.Y * Self.Map.ChunkSide;
 
-  Self.MapDimensions.X := Self.RSDimensions.X * area;
-  Self.MapDimensions.Y := Self.RSDimensions.Y * area;
-
-  Self.MapScope.X1 := Self.RSScope.X1 * area;
-  Self.MapScope.Y1 := Self.RSScope.Y1 * area;
-  Self.MapScope.X2 := Self.RSScope.X2 * area;
-  Self.MapScope.Y2 := Self.RSScope.Y2 * area;
+  Self.Map.Scope.X1 := Self.RSMap.Scope.X1 * Self.Map.ChunkSide;
+  Self.Map.Scope.Y1 := Self.RSMap.Scope.Y1 * Self.Map.ChunkSide;
+  Self.Map.Scope.X2 := Self.RSMap.Scope.X2 * Self.Map.ChunkSide;
+  Self.Map.Scope.Y2 := Self.RSMap.Scope.Y2 * Self.Map.ChunkSide;
 end;
 
 
 function TRSTranslator.RSWidth(): Int32; constref;
 begin
-  Result := Self.RSScope.Width();
+  Result := Self.RSMap.Scope.Width();
 end;
 
 function TRSTranslator.RSHeight(): Int32; constref;
 begin
-  Result := Self.RSScope.Height();
+  Result := Self.RSMap.Scope.Height();
 end;
 
 function TRSTranslator.MapWidth(): Int32; constref;
 begin
-  Result := Self.RSWidth() * Self.ChunkArea();
+  Result := Self.RSWidth() * Self.Map.ChunkSide;
 end;
 
 function TRSTranslator.MapHeight(): UInt32; constref;
 begin
-  Result := Self.RSHeight() * Self.ChunkArea();
+  Result := Self.RSHeight() * Self.Map.ChunkSide;
 end;
 
 
@@ -79,28 +75,25 @@ end;
 
 function TRSTranslator.RSCoordinate2Chunk(p: TPoint): TPoint;
 begin
-  Result := [p.X div Self.ChunkSize, p.Y div Self.ChunkSize];
+  Result := [p.X div Self.RSMap.ChunkSide, p.Y div Self.RSMap.ChunkSide];
 end;
 
 function TRSTranslator.Coordinate2Chunk(p: TPoint): TPoint;
-const
-  AREA := Self.ChunkArea();
 begin
-  Result.X := Self.RSScope.X1 + Floor(p.X / AREA);
-  Result.Y := Self.RSScope.Y2 - Floor(p.Y / AREA);
+  Result.X := Self.RSMap.Scope.X1 + Floor(p.X / Self.Map.ChunkSide);
+  Result.Y := Self.RSMap.Scope.Y2 - Floor(p.Y / Self.Map.ChunkSide);
 end;
 
 
 function TRSTranslator.Chunk2RSCoordinate(p: TPoint): TPoint;
 begin
-  Result := [p.X * Self.ChunkSize, p.Y * Self.ChunkSize];
+  Result := [p.X * Self.RSMap.ChunkSide, p.Y * Self.RSMap.ChunkSide];
 end;
 
 function TRSTranslator.Chunk2Coordinate(p: TPoint): TPoint;
-const
-  AREA := Self.ChunkArea();
 begin
-  Result := [p.X * AREA - Self.MapScope.X1, Self.MapScope.Y2 - p.Y * AREA];
+  Result.X := p.X * Self.Map.ChunkSide - Self.Map.Scope.X1;
+  Result.Y := Self.Map.Scope.Y2 - p.Y * Self.Map.ChunkSide;
 end;
 
 
@@ -111,8 +104,8 @@ end;
 
 function TRSTranslator.RSCoordinate2Coordinate(p: TPoint): TPoint;
 begin
-  Result.X := p.X * Self.TileSize - Self.MapScope.X1;
-  Result.Y := Self.ChunkArea() - (p.Y * Self.TileSize - Self.MapScope.Y2) - Self.TileSize;
+  Result.X := p.X * Self.TileSize - Self.Map.Scope.X1;
+  Result.Y := Self.Map.ChunkSide - (p.Y * Self.TileSize - Self.Map.Scope.Y2) - Self.RSMap.ChunkSide;
 end;
 
 

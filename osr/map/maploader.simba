@@ -45,6 +45,7 @@ end;
 function TRSChunkLoader.GetBitmap(chunk: String; level: UInt32; map: ERSMapType): TMufasaBitmap;
 var
   cacheroot, cachename, zipFile, zipPath: String;
+  created: Boolean;
 begin
   Result.Init();
 
@@ -74,6 +75,8 @@ begin
     end;
   end;
 
+  Result.SetName(cachename);
+
   if not FileExists(cachename + '.bmp') then
   begin
     Self.DebugLn('Caching ' + chunk + ' ' + ToStr(map) + ' this can take ~10 seconds.');
@@ -88,12 +91,13 @@ begin
 
       if not UnZipOneFile(zipPath, zipFile, cacheroot) then
       begin
-        Result.Free();
-        Self.Fatal('Failed to unzip ' + ToStr(map) + ': ' + zipFile);
+        created := True;
+        Result.SetSize(RSTranslator.Map.ChunkSide, RSTranslator.Map.ChunkSide);
       end;
     end;
 
-    Result.LoadFromFile(cachename + '.png');
+    if not created then
+      Result.LoadFromFile(cachename + '.png');
     Result.SaveToFile(cachename + '.bmp');
     DeleteFile(cachename + '.png');
     Exit;
@@ -171,7 +175,7 @@ begin
   end;
 
   Result.Init();
-  n := RSTranslator.ChunkArea();
+  n := RSTranslator.Map.ChunkSide;
 
   Result.SetSize((hi.X-lo.X) * n + 1 + n, (hi.Y-lo.Y) * n + 1 + n);
 
