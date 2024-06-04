@@ -751,6 +751,21 @@ begin
   Result := Self.FindHitsplats(Self.Bounds());
 end;
 
+
+procedure TRSHitsplat.Draw(bitmap: TMufasaBitmap; color: Int32 = $00FF00);
+begin
+  bitmap.DrawCircle(Self.Position, 10, color);
+end;
+
+procedure TRSHitsplatArray.Draw(bitmap: TMufasaBitmap; color: Int32 = $00FF00);
+var
+  splat: TRSHitSplat;
+begin
+  for splat in Self do
+    splat.Draw(bitmap, color);
+end;
+
+
 (*
 (TRSHPBar)=
 ## type TRSHPBar
@@ -906,6 +921,21 @@ begin
   Result := Self.FindHPBars(Self.Bounds());
 end;
 
+
+procedure TRSHPBar.Draw(bitmap: TMufasaBitmap; color: Int32 = $00FFFF);
+begin
+  bitmap.DrawBox(Self.Bounds, color);
+end;
+
+procedure TRSHPBarArray.Draw(bitmap: TMufasaBitmap; color: Int32 = $00FFFF);
+var
+  bar: TRSHPBar;
+begin
+  for bar in Self do
+    bitmap.DrawBox(bar.Bounds, color);
+end;
+
+
 type
   ERSClickType = (NONE, RED, YELLOW);
 
@@ -997,15 +1027,16 @@ end;
 
 procedure TRSMainScreen.Draw(bitmap: TMufasaBitmap); override;
 var
-  splat: TRSHitsplat;
-  bar: TRSHPBar;
+  splats: TRSHitsplatArray;
+  bars: TRSHPBarArray;
 begin
-  inherited;
+  bitmap.DrawBox(Self.Bounds(), $00FFFF);
 
-  for splat in Self.FindHitsplats() do
-    bitmap.DrawCircle(splat.Position, 10, $00FF00);
-  for bar in Self.FindHPBars() do
-    bitmap.DrawBox(bar.Bounds, $00FFFF);
+  splats := Self.FindHitsplats();
+  splats.Draw(bitmap);
+
+  bars := Self.FindHPBars();
+  bars.Draw(bitmap);
 end;
 
 var
@@ -1033,15 +1064,20 @@ begin
 end;
 
 
-
 procedure Debug(splat: TRSHitsplat); overload;
 var
   bitmap: TMufasaBitmap;
 begin
+  {$IFNDEF SRL_DISABLE_REMOTEINPUT}
+  if RSClient.DebugOnClient then
+  begin
+    RSClient.Image().Clear();
+    splat.Draw(RSClient.Image());
+    Exit;
+  end;
+  {$ENDIF}
   bitmap.FromClient();
-
-  bitmap.DrawCircle(splat.Position, 10, $00FF00);
-
+  splat.Draw(bitmap);
   bitmap.Debug();
   bitmap.Free();
 end;
@@ -1049,13 +1085,17 @@ end;
 procedure Debug(splats: TRSHitsplatArray); overload;
 var
   bitmap: TMufasaBitmap;
-  splat: TRSHitSplat;
 begin
+  {$IFNDEF SRL_DISABLE_REMOTEINPUT}
+  if RSClient.DebugOnClient then
+  begin
+    RSClient.Image().Clear();
+    splats.Draw(RSClient.Image());
+    Exit;
+  end;
+  {$ENDIF}
   bitmap.FromClient();
-
-  for splat in splats do
-    bitmap.DrawCircle(splat.Position, 10, $00FF00);
-
+  splats.Draw(bitmap);
   bitmap.Debug();
   bitmap.Free();
 end;
@@ -1064,10 +1104,16 @@ procedure Debug(bar: TRSHPBar); overload;
 var
   bitmap: TMufasaBitmap;
 begin
+  {$IFNDEF SRL_DISABLE_REMOTEINPUT}
+  if RSClient.DebugOnClient then
+  begin
+    RSClient.Image().Clear();
+    bar.Draw(RSClient.Image());
+    Exit;
+  end;
+  {$ENDIF}
   bitmap.FromClient();
-
-  bitmap.DrawBox(bar.Bounds, $00FFFF);
-
+  bar.Draw(bitmap);
   bitmap.Debug();
   bitmap.Free();
 end;
@@ -1075,15 +1121,17 @@ end;
 procedure Debug(bars: TRSHPBarArray); overload;
 var
   bitmap: TMufasaBitmap;
-  bar: TRSHPBar;
 begin
+  {$IFNDEF SRL_DISABLE_REMOTEINPUT}
+  if RSClient.DebugOnClient then
+  begin
+    RSClient.Image().Clear();
+    bars.Draw(RSClient.Image());
+    Exit;
+  end;
+  {$ENDIF}
   bitmap.FromClient();
-
-  for bar in bars do
-    bitmap.DrawBox(bar.Bounds, $00FFFF);
-
+  bars.Draw(bitmap);
   bitmap.Debug();
   bitmap.Free();
 end;
-
-

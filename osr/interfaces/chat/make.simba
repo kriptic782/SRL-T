@@ -366,15 +366,19 @@ Example:
 SRL.Debug();
 ```
 *)
-procedure TRSMake.Draw(Bitmap: TMufasaBitmap); override;
+procedure TRSMake.Draw(bitmap: TMufasaBitmap); override;
+var
+  buttons: TRSButtonArray;
 begin
   if not Self.IsOpen() then
     Exit;
 
   inherited;
 
-  Bitmap.DrawButtons(Self.GetItemButtons());
-  Bitmap.DrawButtons(Self.GetQuantityButtons());
+  buttons := Self.GetItemButtons();
+  buttons.Draw(bitmap);
+  buttons := Self.GetQuantityButtons();
+  buttons.Draw(bitmap);
 end;
 
 

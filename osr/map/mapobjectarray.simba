@@ -247,7 +247,7 @@ begin
     end;
   end;
 
-  if Result > -1 then
+  if Result = -1 then
     TerminateScript('Object ' + ToStr(obj) + ' doesn''t exist on the loaded maps.');
 end;
 
@@ -302,7 +302,7 @@ begin
   Self.Cache[Self.GetIndex(obj)].Offset := offset;
 end;
 
-procedure TRSMapObjects.Debug();
+procedure TRSMapObjects.Print();
 var
   i, j: Int32;
   actions: TStringArray;
@@ -398,7 +398,7 @@ begin
     end;
   end;
 
-  if Result > -1 then
+  if Result = -1 then
     TerminateScript('NPC ' + ToStr(npc) + ' doesn''t exist on the loaded maps.');
 end;
 
@@ -454,7 +454,7 @@ begin
   Self.Cache[Self.GetIndex(npc)].Offset := offset;
 end;
 
-procedure TRSMapNPCs.Debug();
+procedure TRSMapNPCs.Print();
 var
   i, j: Int32;
   actions: TStringArray;
@@ -535,12 +535,15 @@ begin
     mapObj := Banks.GetClosest();
   end;
 
-  Result := mapObj^.Click() or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Bank B', 'Bank E']));
+  case mapObj^.MapObjectType of
+    ERSMapObjectType.OBJ:   Result := mapObj^.Click() or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Bank B', 'Bank E']));
+    ERSMapObjectType.MMDOT: Result := mapObj^.SelectOption(['Bank B', 'Bank E']) or (MainScreen.IsUpText('Bank') and ChooseOption.Select(['Bank B', 'Bank E']));
+  end;
 
   if not Result then
     Exit;
 
-  //Minimap.WaitMoving();
+  Minimap.WaitMoving();
   Result := WaitUntil(Self.IsOpen() or BankPin.IsOpen(), SRL.TruncatedGauss(50, 1500), 3000);
 end;
 
@@ -581,7 +584,10 @@ begin
     mapObj := Banks.GetClosest();
   end;
 
-  Result := mapObj^.WalkClick() or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Bank B', 'Bank E']));
+  case mapObj^.MapObjectType of
+    ERSMapObjectType.OBJ:   Result := mapObj^.WalkClick() or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Bank B', 'Bank E']));
+    ERSMapObjectType.MMDOT: Result := mapObj^.WalkSelectOption(['Bank B', 'Bank E']) or (MainScreen.IsUpText('Bank') and ChooseOption.Select(['Bank B', 'Bank E']));
+  end;
 
   if not Result then
     Exit;

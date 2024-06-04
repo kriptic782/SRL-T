@@ -86,6 +86,7 @@ begin
     EIOS_SetGraphicsDebugging(Self.EIOS, True);
 
     Self.Image.Init();
+    Self.Image.SetName('client_image');
     client.GetIOManager().GetDimensions(w,h);
     Self.Image.SetPersistentMemory(PtrUInt(EIOS_GetDebugImageBuffer(Self.EIOS)), w, h);
     Self.Image.Clear();

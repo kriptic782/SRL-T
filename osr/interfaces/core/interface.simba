@@ -390,7 +390,48 @@ end;
 
 function TRSButton.FindText(text: TStringArray; constref font: TFontSet; color: Int32; out found: String): Boolean; constref; overload;
 begin
-  Self.FindText(text, font, found, [color]);
+  Result := Self.FindText(text, font, found, [color]);
+end;
+
+
+procedure TRSButton.Draw(bitmap: TMufasaBitmap; color: Int32 = $00FFFF);
+var
+  fontSize: Single;
+  antiAliasing: Boolean;
+begin
+  fontSize := bitmap.getFontSize();
+  antiAliasing := bitmap.getFontAntialiasing();
+
+  bitmap.SetFontSize(20);
+  bitmap.SetFontAntialiasing(False);
+
+  bitmap.DrawBox(Self.Bounds, color);
+  bitmap.DrawText(ToStr(Self.Index), Self.Bounds, True, $00FF00);
+
+  bitmap.SetFontSize(fontSize);
+  bitmap.SetFontAntialiasing(antiAliasing);
+end;
+
+procedure TRSButtonArray.Draw(bitmap: TMufasaBitmap; color: Int32 = $00FFFF); constref;
+var
+  button: TRSButton;
+  fontSize: Single;
+  antiAliasing: Boolean;
+begin
+  fontSize := bitmap.getFontSize();
+  antiAliasing := bitmap.getFontAntialiasing();
+
+  bitmap.SetFontSize(20);
+  bitmap.SetFontAntialiasing(False);
+
+  for button in Self do
+  begin
+    bitmap.DrawBox(button.Bounds, color);
+    bitmap.DrawText(ToStr(button.Index), button.Bounds, True, $00FF00);
+  end;
+
+  bitmap.SetFontSize(fontSize);
+  bitmap.SetFontAntialiasing(antiAliasing);
 end;
 
 
@@ -628,26 +669,39 @@ begin
   RootInterface.Alignment.Bottom := [@RootInterface.Y2];
 end;
 
-procedure TMufasaBitmap.DrawButtons(Buttons: TRSButtonArray);
+
+procedure Debug(buttons: TRSButtonArray); overload;
 var
-  I: Int32;
+  bitmap: TMufasaBitmap;
 begin
-  for I := 0 to High(Buttons) do
+  {$IFNDEF SRL_DISABLE_REMOTEINPUT}
+  if RSClient.DebugOnClient then
   begin
-    Self.SetFontSize(20);
-    Self.SetFontAntialiasing(False);
-    Self.DrawBox(Buttons[I].Bounds, $00FFFF);
-    Self.DrawText(ToStr(Buttons[I].Index), Buttons[I].Bounds, True, $00FF00);
+    RSClient.Image().Clear();
+    buttons.Draw(RSClient.Image());
+    Exit;
   end;
+  {$ENDIF}
+  bitmap.FromClient();
+  buttons.Draw(bitmap);
+  bitmap.Debug();
+  bitmap.Free();
 end;
 
-procedure Debug(Buttons: TRSButtonArray); overload;
+procedure Debug(scroll: TRSScrollBar); overload;
 var
-  BMP: TMufasaBitmap;
+  bitmap: TMufasaBitmap;
 begin
-  BMP.FromClient();
-  BMP.DrawButtons(Buttons);
-  BMP.Debug();
-  BMP.Free();
+  {$IFNDEF SRL_DISABLE_REMOTEINPUT}
+  if RSClient.DebugOnClient then
+  begin
+    RSClient.Image().Clear();
+    scroll.Draw(RSClient.Image());
+    Exit;
+  end;
+  {$ENDIF}
+  bitmap.FromClient();
+  scroll.Draw(bitmap);
+  bitmap.Debug();
+  bitmap.Free();
 end;
-

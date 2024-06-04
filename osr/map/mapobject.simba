@@ -44,7 +44,7 @@ type
 
   PRSMapObject = ^TRSMapObject;
 
-function TRSMapObject.Merge(json: TJSONObject): TRSMapObject;
+function TRSMapObject.Merge(coordinatesJSON, colorsJSON: TJSONArray): TRSMapObject;
 var
   i, c, t: Int32;
   h, s: Extended;
@@ -52,13 +52,12 @@ var
 begin
   Result := Self;
 
-  for i := 0 to json.getJSONArray('coordinates').High() do
-    with json.getJSONArray('coordinates').getJSONArray(i) do
+  for i := 0 to coordinatesJSON.High() do
+    with coordinatesJSON.getJSONArray(i) do
       Result.Coordinates += [getInt(0), getInt(1)];
 
-  with json.getJSONArray('colors') do
-    for i := 0 to High() do
-      colors += getInt(i);
+  for i := 0 to colorsJSON.High() do
+    colors += colorsJSON.getInt(i);
 
   ACA(colors, 2, c, t, h, s);
 
@@ -70,10 +69,23 @@ begin
 end;
 
 
-function TRSMapObject.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSMapObject; static;
+function TRSMapObject.GetActions(json: TJSONArray): TStringArray; static;
 var
   i: Int32;
-  x, y: Single;
+begin
+  for i := 0 to json.High() do
+    Result += json.getString(i);
+end;
+
+function TRSMapObject.GetSize(json: TJSONArray): Vector3; static;
+begin
+  Result.X := json.getInt(0) * 0.8;
+  Result.Y := json.getInt(1) * 0.8;
+  Result.Z := json.getInt(2) / 40; //TODO: build this into the JSONs
+end;
+
+
+function TRSMapObject.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSMapObject; static;
 begin
   Result.Walker := pwalker;
   Result.Filter := [True, True, True, True];
@@ -83,19 +95,10 @@ begin
   Result.Category := json.getInt('category');
   Result.Offset := [0,0];
 
-  with json.getJSONArray('actions') do
-    for i := 0 to High() do
-      if getString(i) <> 'null' then
-        Result.Actions += getString(i);
+  Result.Actions := TRSMapObject.GetActions(json.getJSONArray('actions'));
+  Result.Size := TRSMapObject.GetSize(json.getJSONArray('size'));
 
-  with json.getJSONArray('size') do
-  begin
-    x := getInt(0) * 0.8;
-    y := getInt(1) * 0.8;
-    Result.Size := [x, y, getInt(2) / 40]; //TODO: build this into the JSONs
-  end;
-
-  Result := Result.Merge(json);
+  Result := Result.Merge(json.getJSONArray('coordinates'), json.getJSONArray('colors'));
   Result.Finder.ColorClusters := [];
 end;
 
@@ -437,7 +440,7 @@ type
 
   PRSObjectV2 = ^TRSObjectV2;
 
-function TRSObjectV2.Merge(json: TJSONObject): TRSObjectV2; overload;
+function TRSObjectV2.Merge(coordinatesJSON, rotationsJSON, colorsJSON: TJSONArray): TRSObjectV2; overload;
 var
   i, c, t: Int32;
   h, s: Extended;
@@ -447,24 +450,23 @@ begin
 
   if Result.Size.X <> Result.Size.Y then
   begin
-    for i := 0 to json.getJSONArray('coordinates').High() do
+    for i := 0 to coordinatesJSON.High() do
     begin
-      with json.getJSONArray('coordinates').getJSONArray(i) do
+      with coordinatesJSON.getJSONArray(i) do
         Result.Coordinates += [getInt(0), getInt(1)];
-      Result.Rotations += (90*json.getJSONArray('rotations').getInt(i) * PI)/180;
+      Result.Rotations += (90 * rotationsJSON.getInt(i) * PI)/180;
     end;
   end
   else
   begin
-    for i := 0 to json.getJSONArray('coordinates').High() do
-      with json.getJSONArray('coordinates').getJSONArray(i) do
+    for i := 0 to coordinatesJSON.High() do
+      with coordinatesJSON.getJSONArray(i) do
         Result.Coordinates += [getInt(0), getInt(1)];
     SetLength(Result.Rotations, Length(Result.Coordinates));
   end;
 
-  with json.getJSONArray('colors') do
-    for i := 0 to High() do
-      colors += getInt(i);
+  for i := 0 to colorsJSON.High() do
+    colors += colorsJSON.getInt(i);
 
   ACA(colors, 2, c, t, h, s);
 
@@ -475,10 +477,12 @@ begin
   Result.Finder.Colors := [CTS2(c, t, h, s)];
 end;
 
+function TRSObjectV2.Merge(json: TJSONObject): TRSObjectV2; overload;
+begin
+  Result := Self.Merge(json.getJSONArray('coordinates'), json.getJSONArray('rotations'), json.getJSONArray('colors'));
+end;
+
 function TRSObjectV2.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSObjectV2; static; overload;
-var
-  i: Int32;
-  x, y: Single;
 begin
   Result.Walker := pwalker;
   Result.Filter := [True, True, True, True];
@@ -487,21 +491,12 @@ begin
   Result.Name := json.getString('name');
   Result.Category := json.getInt('category');
   Result.Offset := [0,0];
+  Result.Actions := TRSMapObject.GetActions(json.getJSONArray('actions'));
+  Result.Size := TRSMapObject.GetSize(json.getJSONArray('size'));
 
-  with json.getJSONArray('actions') do
-    for i := 0 to High() do
-      if getString(i) <> 'null' then
-        Result.Actions += getString(i);
-
-  with json.getJSONArray('size') do
-  begin
-    x := getInt(0) * 0.8;
-    y := getInt(1) * 0.8;
-    Result.Size := [x, y, getInt(2) / 40]; //TODO: build this into the JSONs
-  end;
-
-  Result := Result.Merge(json);
+  Result := Result.Merge(json.getJSONArray('coordinates'), json.getJSONArray('rotations'), json.getJSONArray('colors'));
   Result.Finder.ColorClusters := [];
+  Result.MapObjectType := ERSMapObjectType.OBJ;
 end;
 
 
@@ -583,7 +578,7 @@ procedure TRSMapObject.Draw(out bitmap: TMufasaBitmap);
 ```
 Helper method to debug TRSMapObjects used in `Debug(TRSMapObject)`.
 *)
-procedure TRSObjectV2.Draw(out bitmap: TMufasaBitmap);
+procedure TRSObjectV2.Draw(bitmap: TMufasaBitmap);
 var
   me, p, q: TPoint;
   rect: TRectangle;
@@ -635,7 +630,7 @@ type
 
   PRSNPCV2 = ^TRSNPCV2;
 
-function TRSNPCV2.Merge(json: TJSONObject): TRSNPCV2; overload;
+function TRSNPCV2.Merge(coordinatesJSON, colorsJSON: TJSONArray): TRSNPCV2; overload;
 var
   i, c, t: Int32;
   h, s: Extended;
@@ -643,11 +638,11 @@ var
 begin
   Result := Self;
 
-  for i := 0 to json.getJSONArray('coordinates').High() do
-    with json.getJSONArray('coordinates').getJSONArray(i) do
+  for i := 0 to coordinatesJSON.High() do
+    with coordinatesJSON.getJSONArray(i) do
       Result.Coordinates += [getInt(0), getInt(1)];
 
-  with json.getJSONArray('colors') do
+  with colorsJSON do
     for i := 0 to High() do
       colors += getInt(i);
 
@@ -660,14 +655,30 @@ begin
   Result.Finder.Colors := [CTS2(c, t, h, s)];
 end;
 
+function TRSNPCV2.Merge(json: TJSONObject): TRSNPCV2; overload;
+begin
+  Result := Self.Merge(json.getJSONArray('coordinates'), json.getJSONArray('colors'));
+end;
+
 function TRSNPCV2.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSNPCV2; static; overload;
 var
-  mapObj: TRSMapObject;
   i: Int32;
   circle: TCircle;
 begin
-  mapObj := TRSMapObject.Setup(pwalker, json);
-  Result := PRSNPCV2(@mapObj)^;
+  Result.Walker := pwalker;
+  Result.Filter := [True, True, True, True];
+
+  Result.ID := json.getInt('id');
+  Result.Name := json.getString('name');
+  Result.Category := json.getInt('category');
+  Result.Offset := [2,2];
+
+  Result.Actions := TRSMapObject.GetActions(json.getJSONArray('actions'));
+  Result.Size := TRSMapObject.GetSize(json.getJSONArray('size'));
+
+  Result := Result.Merge(json.getJSONArray('coordinates'), json.getJSONArray('colors'));
+  Result.Finder.ColorClusters := [];
+
 
   Result.DotType := ERSMinimapDot.NPC;
   Result.Level := json.getInt('level');
@@ -676,9 +687,11 @@ begin
 
   for i := 0 to High(Result.Coordinates) do
   begin
-    circle := [Result.Coordinates[i].X, Result.Coordinates[i].Y, 40];
+    circle := [Result.Coordinates[i].X, Result.Coordinates[i].Y, 30];
     Result.DotFilters.SetupCircle(circle, True);
   end;
+
+  Result.MapObjectType := ERSMapObjectType.MMDOT;
 end;
 
 function TRSMMDotV2.SameObject(json: TJSONObject): Boolean; override;
@@ -690,7 +703,7 @@ function TRSMMDotV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): T
 var
   dots: TPointArray;
   p: TPoint;
-  offset: Vector3;
+  offsetV: Vector3;
   h, diff: Single;
   i: Int32;
 begin
@@ -708,14 +721,17 @@ begin
     if dots = [] then
       Exit;
 
+    dots := dots.Sorted(Minimap.Center());
     for i := 0 to High(dots) do
     begin
-      p := dots[i];
-      diff := -(h-Self.Walker^.Height(p));
-      offset := Vec3(Self.Offset.X, Self.Offset.Y, diff);
-      p := Self.Walker^.PointToMM(me, p, angle);
-      Result += Minimap.GetCuboidMS(p + [Round(0.15*diff), Round(0.11*diff)], Self.Size, offset, angle);
+      p := Self.Walker^.MMToMap(me, p, angle);
+      diff := -(h-Self.Walker^.Height(p)) / 4;
+      offsetV := Vec3(Self.Offset.X, Self.Offset.Y, diff);
+
+      Result += Minimap.GetCuboidMS(dots[i] + [Round(0.15*diff), Round(0.11*diff)], Self.Size, offsetV, angle);
     end;
+
+    Exit;
   end;
 
   if Self.Filter.Walker then
@@ -735,9 +751,9 @@ begin
   for i := 0 to High(dots) do
   begin
     p := dots[i];
-    offset := Vec3(Self.Offset.X, Self.Offset.Y, 0);
+    offsetV := Vec3(Self.Offset.X, Self.Offset.Y, 0);
     p := Self.Walker^.PointToMM(me, p, angle);
-    Result += Minimap.GetCuboidMS(p, Self.Size, offset, angle);
+    Result += Minimap.GetCuboidMS(p, Self.Size, offsetV, angle);
   end;
 end;
 
@@ -781,7 +797,7 @@ procedure TRSMapObject.Draw(out bitmap: TMufasaBitmap);
 ```
 Helper method to debug TRSMapObjects used in `Debug(TRSMapObject)`.
 *)
-procedure TRSMMDotV2.Draw(out bitmap: TMufasaBitmap);
+procedure TRSMMDotV2.Draw(bitmap: TMufasaBitmap);
 var
   me, p, q: TPoint;
   rect: TRectangle;
@@ -790,15 +806,22 @@ var
   cuboids: TCuboidExArray;
   atpa: T2DPointArray;
   h: Single;
+  filters: TRSDotFilterArray;
 begin
   me := Self.Walker^.Position();
   angle := Minimap.GetCompassAngle(False);
   h := Self.Walker^.Height(me);
 
   mmPoints := Self.MapToMM(me, angle);
+  filters := Self.Walker^.FiltersToMM(me, Self.DotFilters, angle);
+  filters.Draw(bitmap);
 
   for p in mmPoints do
   begin
+    p := p.Rotate(-angle, Minimap.Center());
+    p := p.Offset(Self.Offset);
+    p := p.Rotate(angle, Minimap.Center());
+
     q := [Round(Self.Size.X * 4 / 2), Round(Self.Size.Y * 4 / 2)];
     rect.Top := p.Offset(-q.X, -q.Y);
     rect.Right := p.Offset(q.X, -q.Y);
@@ -1233,6 +1256,14 @@ procedure Debug(obj: TRSObjectV2); overload;
 var
   bitmap: TMufasaBitmap;
 begin
+  {$IFNDEF SRL_DISABLE_REMOTEINPUT}
+  if RSClient.DebugOnClient then
+  begin
+    RSClient.Image().Clear();
+    obj.Draw(RSClient.Image());
+    Exit;
+  end;
+  {$ENDIF}
   bitmap.FromClient();
   obj.Draw(bitmap);
   bitmap.Debug();
@@ -1243,10 +1274,16 @@ procedure Debug(npc: TRSNPCV2); overload;
 var
   bitmap: TMufasaBitmap;
 begin
+  {$IFNDEF SRL_DISABLE_REMOTEINPUT}
+  if RSClient.DebugOnClient then
+  begin
+    RSClient.Image().Clear();
+    npc.Draw(RSClient.Image());
+    Exit;
+  end;
+  {$ENDIF}
   bitmap.FromClient();
   npc.Draw(bitmap);
   bitmap.Debug();
   bitmap.Free();
 end;
-
-

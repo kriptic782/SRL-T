@@ -110,6 +110,14 @@ begin
   end;
 end;
 
+function TRSWalkerV2.MMToMap(playerPoint, minimapPoint: TPoint; radians: Single = $FFFF): TPoint;
+begin
+  Result := playerPoint + minimapPoint - Minimap.Center();
+  if (radians = $FFFF) then
+    radians := Minimap.GetCompassAngle(False);
+  Result := Result.Rotate(-radians, playerPoint);
+end;
+
 
 (*
 ## TRSWalkerV2.InRange
@@ -456,32 +464,45 @@ begin
 end;
 
 
-procedure TRSWalkerV2.DebugPath(index: Int32; playerPoint: TPoint);
+procedure TRSWalkerV2.DrawPath(bitmap: TMufasaBitmap; index: Int32; playerPoint: TPoint);
 var
   i: Int32;
   path: TPointArray;
-  bmp: TMufasaBitmap;
 begin
   path := Self.Path.FilterCircle([playerPoint.X, playerPoint.Y, 90]);
   path := Self.PointsToMM(playerPoint, path, Minimap.GetCompassAngle(False));
   path := Minimap.Filter(path);
 
-  bmp.FromClient();
-
   for i := 0 to High(path) do
   begin
-    if (i < High(path)) and bmp.Bounds().Contains(path[i+1]) then
-      bmp.LineTo(path[i], path[i+1], $FFFFFF);
+    if (i < High(path)) and bitmap.Bounds().Contains(path[i+1]) then
+      bitmap.LineTo(path[i], path[i+1], $FFFFFF);
 
     if index = i then
-      bmp.DrawBox(path[i], 2, $FF1010)
+      bitmap.DrawBox(path[i], 2, $FF1010)
     else
-      bmp.DrawBox(path[i], 2, $10FF10);
+      bitmap.DrawBox(path[i], 2, $10FF10);
   end;
-
-  bmp.Debug();
-  bmp.Free();
 end;
+
+procedure TRSWalkerV2.DebugPath(index: Int32; playerPoint: TPoint);
+var
+  bitmap: TMufasaBitmap;
+begin
+  {$IFNDEF SRL_DISABLE_REMOTEINPUT}
+  if RSClient.DebugOnClient then
+  begin
+    RSClient.Image().Clear();
+    Self.DrawPath(RSClient.Image(), index, playerPoint);
+    Exit;
+  end;
+  {$ENDIF}
+  bitmap.FromClient();
+  Self.DrawPath(bitmap, index, playerPoint);
+  bitmap.Debug();
+  bitmap.Free();
+end;
+
 
 (*
 ## TRSWalkerV2.WalkPath

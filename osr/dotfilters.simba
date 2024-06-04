@@ -90,15 +90,18 @@ procedure TRSDotFilter.Draw(out bitmap: TMufasaBitmap);
 Internal method to draw the current dot filter on a bitmap for debugging.
 You can see this in action by calling `Debug(TRSDotFilter)`.
 *)
-procedure TRSDotFilter.Draw(out bitmap: TMufasaBitmap);
+procedure TRSDotFilter.Draw(bitmap: TMufasaBitmap);
 var
   color: Int32;
 begin
+
   with Self do
   begin
     if Inside then color := $BE9625 else color := $FF;
-    if Bounds <> [] then bitmap.DrawTPA(Bounds.Connect(), color);
-    if Circle <> [] then bitmap.DrawCircle(Circle.Mean(), Circle.Radius, color);
+    if (Bounds <> []) and Minimap.IsPointOn(Bounds.Mean(), Bounds.MinAreaCircle().Radius) then
+      bitmap.DrawTPA(Bounds.Connect(), color);
+    if (Circle <> []) and Minimap.IsPointOn(Circle.Mean(), Circle.Radius) then
+      bitmap.DrawCircle(Circle.Mean(), Circle.Radius, color);
   end;
 end;
 
@@ -208,7 +211,7 @@ procedure TRSDotFilterArray.Draw(out bitmap: TMufasaBitmap);
 Internal method for drawing the TRSDotFilterArray on a bitmap for debugging.
 You can see this in action by calling `Debug(TRSDotFilterArray)`
 *)
-procedure TRSDotFilterArray.Draw(out bitmap: TMufasaBitmap);
+procedure TRSDotFilterArray.Draw(bitmap: TMufasaBitmap);
 var
   i: Int32;
 begin
@@ -252,20 +255,34 @@ procedure Debug(filter: TRSDotFilter); overload;
 var
   bmp: TMufasaBitmap;
 begin
+  {$IFNDEF SRL_DISABLE_REMOTEINPUT}
+  if RSClient.DebugOnClient then
+  begin
+    RSClient.Image().Clear();
+    filter.Draw(RSClient.Image());
+    Exit;
+  end;
+  {$ENDIF}
   bmp.FromClient();
   filter.Draw(bmp);
   bmp.Debug();
   bmp.Free();
 end;
 
-procedure Debug(filterArray: TRSDotFilterArray); overload;
+procedure Debug(filters: TRSDotFilterArray); overload;
 var
   bmp: TMufasaBitmap;
 begin
+  {$IFNDEF SRL_DISABLE_REMOTEINPUT}
+  if RSClient.DebugOnClient then
+  begin
+    RSClient.Image().Clear();
+    filters.Draw(RSClient.Image());
+    Exit;
+  end;
+  {$ENDIF}
   bmp.FromClient();
-  filterArray.Draw(bmp);
+  filters.Draw(bmp);
   bmp.Debug();
   bmp.Free();
 end;
-
-

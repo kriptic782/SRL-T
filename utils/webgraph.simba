@@ -406,7 +406,7 @@ begin
 end;
 
 
-procedure TWebGraph.Draw(out bitmap: TMufasaBitmap);
+procedure TWebGraph.Draw(bitmap: TMufasaBitmap);
 var
   i,j,color: Int32;
   p,q: TPoint;

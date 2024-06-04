@@ -214,26 +214,31 @@ begin
   Result := WaitUntil(Self.GetCurrentTab = Tab, SRL.TruncatedGauss(50, 1500), 3000);
 end;
 
-procedure TRSOptions.Draw(Bitmap: TMufasaBitmap); override;
+procedure TRSOptions.Draw(bitmap: TMufasaBitmap); override;
+var
+  buttons: TRSButtonArray;
 begin
-  if not Self.IsOpen then
+  if not Self.IsOpen() then
     Exit;
 
   inherited;
 
-  if Self.IsHouseOptionsOpen then
-    Bitmap.DrawButtons(Self.GetHouseOptionsButtons)
-  else
+  buttons := Self.GetButtons();
+  buttons.Draw(bitmap);
+
+  if Self.IsHouseOptionsOpen() then
   begin
-    Bitmap.DrawBoxes(Self.GetTabs, $00FFFF);
-    if (Self.GetCurrentTab = ERSOptionsTab.DISPLAY) then
-    begin
-      Bitmap.DrawBox(Self.GetBrightnessSliderBounds(), $00FFFF);
-      Bitmap.DrawBox(Self.GetZoomSliderBounds(), $00FFFF);
-    end;
+    buttons := Self.GetHouseOptionsButtons();
+    buttons.Draw(bitmap);
+    Exit;
   end;
 
-  Bitmap.DrawButtons(Self.GetButtons);
+  bitmap.DrawBoxes(Self.GetTabs(), $00FFFF);
+  if (Self.GetCurrentTab = ERSOptionsTab.DISPLAY) then
+  begin
+    bitmap.DrawBox(Self.GetBrightnessSliderBounds(), $00FFFF);
+    bitmap.DrawBox(Self.GetZoomSliderBounds(), $00FFFF);
+  end;
 end;
 
 var

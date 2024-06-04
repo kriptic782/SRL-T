@@ -425,14 +425,17 @@ end;
 
 
 procedure TRSEquipment.Draw(bitmap: TMufasaBitmap); override;
+var
+  buttons: TRSButtonArray;
 begin
   if not Self.IsOpen() then
     Exit;
 
-  inherited();
+  inherited;
 
   bitmap.DrawBoxes(Self.GetSlotBoxes(), $00FFFF);
-  bitmap.DrawButtons(Self.GetButtons());
+  buttons := Self.GetButtons();
+  buttons.Draw(bitmap);
 end;
 
 var

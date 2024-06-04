@@ -282,13 +282,17 @@ begin
 end;
 
 procedure TRSBank.Draw(Bitmap: TMufasaBitmap); override;
+var
+  buttons: TRSButtonArray;
 begin
-  if not Self.IsOpen then
+  if not Self.IsOpen() then
     Exit;
 
   inherited;
 
-  Bitmap.DrawButtons(Self.GetButtons());
+  buttons := Self.GetButtons();
+  buttons.Draw(bitmap);
+
   Bitmap.DrawBoxes(Self.GetTabBoxes(), $00FFFF);
   Bitmap.DrawBoxes(Self.GetSlotBoxes(), $00FFFF);
 end;

@@ -31,17 +31,17 @@ type
 
 function TRSChatButtons.GetButtons: TRSButtonArray;
 var
-  I: Int32;
+  i: Int32;
   Boxes: TBoxArray;
 begin
   SetLength(Boxes, 7);
-  for I := 0 to High(Boxes) do
-    Boxes[I] := [(Self.X1 + 3 + (I * 62)), Self.Y1, (Self.X1 + 58 + (I * 62)), (Self.Y2 - 1)];
+  for i := 0 to High(Boxes) do
+    Boxes[i] := [(Self.X1 + 3 + (i * 62)), Self.Y1, (Self.X1 + 58 + (i * 62)), (Self.Y2 - 1)];
 
   Boxes += [[(Self.X1 + 436), Self.Y1, (Self.X1 + 515), (Self.Y2 - 1)]];
 
-  for I := 0 to High(Boxes) do
-    Result += [[CTS1(1555, 6), CTS1(5399922, 0), CTS1(795452, 0)], I, Boxes[I], Boxes[I].Middle];
+  for i := 0 to High(Boxes) do
+    Result += [[CTS1(1555, 6), CTS1(5399922, 0), CTS1(795452, 0)], i, Boxes[i], Boxes[i].Middle];
 end;
 
 function TRSChatButtons.GetButton(Button: ERSChatButton): TRSButton;
@@ -73,10 +73,12 @@ end;
 
 
 procedure TRSChatButtons.Draw(Bitmap: TMufasaBitmap); override;
+var
+  buttons: TRSButtonArray;
 begin
-  inherited;
-
-  Bitmap.DrawButtons(Self.GetButtons());
+  bitmap.DrawBox(Self.Bounds(), $00FFFF);
+  buttons := Self.GetButtons();
+  buttons.Draw(bitmap);
 end;
 
 

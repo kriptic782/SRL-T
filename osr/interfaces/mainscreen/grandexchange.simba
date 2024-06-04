@@ -1269,13 +1269,16 @@ begin
 end;
 
 procedure TRSGrandExchange.Draw(Bitmap: TMufasaBitmap); override;
+var
+  buttons: TRSButtonArray;
 begin
   if not Self.IsOpen() then
     Exit;
 
-  Bitmap.DrawButtons(Self.GetSetupOfferButtons);
-
   inherited;
+
+  buttons := Self.GetSetupOfferButtons();
+  buttons.Draw(bitmap);
 end;
 
 procedure TRSGrandExchange.Setup; override;
