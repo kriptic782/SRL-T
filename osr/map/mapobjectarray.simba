@@ -40,6 +40,22 @@ begin
   end;
 end;
 
+procedure PRSMapObjectArray.Print();
+var
+  tmp: PRSMapObject;
+  i: Int32;
+begin
+  for i := High(Self) downto 0 do
+  begin
+    tmp := PRSMapObject(Self[i]);
+    WriteLn(
+      'ID: ', tmp^.ID, ', Name: ', tmp^.Name,
+      ', Category: ', tmp^.Category,
+      ', Actions: ', tmp^.Actions, ', Colors: ', tmp^.Finder.Colors
+    );
+  end;
+end;
+
 type
   TRSObjectV2Array = array of TRSObjectV2;
 
@@ -115,6 +131,18 @@ begin
       Result += i;
 end;
 
+function TRSObjectV2Array.FindAllAction(action: String): TIntegerArray;
+var
+  i, j: Int32;
+begin
+  action := LowerCase(action);
+
+  for i := 0 to High(Self) do
+    for j := 0 to High(Self[i].Actions) do
+      if LowerCase(Self[i].Actions[j]) = action then
+        Result += i;
+end;
+
 
 type
   TRSNPCV2Array = array of TRSNPCV2;
@@ -172,6 +200,18 @@ begin
   for i := 0 to High(Self) do
     if Self[i].Category = category then
       Result += i;
+end;
+
+function TRSNPCV2Array.FindAllAction(action: String): TIntegerArray;
+var
+  i, j: Int32;
+begin
+  action := LowerCase(action);
+
+  for i := 0 to High(Self) do
+    for j := 0 to High(Self[i].Actions) do
+      if LowerCase(Self[i].Actions[j]) = action then
+        Result += i;
 end;
 
 
@@ -277,6 +317,28 @@ var
 begin
   for name in names do
     Result += Self.GetIndices(name);
+end;
+
+function TRSMapObjects.GetIndicesByAction(action: String): TIntegerArray;
+var
+  i, j: Int32;
+  mapObj: TRSObjectV2;
+begin
+  action := LowerCase(action);
+  Result := Self.Cache.FindAllAction(action);
+  if Result <> [] then
+    Exit;
+
+  for i := 0 to Self.Data.High() do
+    for j := 0 to Self.Data.getJSONObject(i).getJSONArray('actions').High() do
+      if LowerCase(Self.Data.getJSONObject(i).getJSONArray('actions').getString(j)) = action then
+      begin
+        mapObj := TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
+        mapObj.Index := Length(Self.Cache);
+        Self.Cache += mapObj;
+        Result += mapObj.Index;
+        Break;
+      end;
 end;
 
 function TRSMapObjects.Get(obj: Variant): TRSObjectV2;
@@ -405,21 +467,20 @@ end;
 function TRSMapNPCs.GetIndices(name: String): TIntegerArray;
 var
   i: Int32;
-  resultNPC: TRSNPCV2;
+  mapNPC: TRSNPCV2;
 begin
   name := LowerCase(name);
   Result := Self.Cache.FindAllName(name);
-
   if Result <> [] then
     Exit;
 
   for i := 0 to Self.Data.High() do
     if LowerCase(Self.Data.getJSONObject(i).getString('name')) = name then
     begin
-      resultNPC := TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
-      resultNPC.Index := Length(Self.Cache);
-      Self.Cache += resultNPC;
-      Result += resultNPC.Index;
+      mapNPC := TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
+      mapNPC.Index := Length(Self.Cache);
+      Self.Cache += mapNPC;
+      Result += mapNPC.Index;
     end;
 end;
 
@@ -429,6 +490,28 @@ var
 begin
   for name in names do
     Result += Self.GetIndices(name);
+end;
+
+function TRSMapNPCs.GetIndicesByAction(action: String): TIntegerArray;
+var
+  i, j: Int32;
+  mapNPC: TRSNPCV2;
+begin
+  action := LowerCase(action);
+  Result := Self.Cache.FindAllAction(action);
+  if Result <> [] then
+    Exit;
+
+  for i := 0 to Self.Data.High() do
+    for j := 0 to Self.Data.getJSONObject(i).getJSONArray('actions').High() do
+      if LowerCase(Self.Data.getJSONObject(i).getJSONArray('actions').getString(j)) = action then
+      begin
+        mapNPC := TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
+        mapNPC.Index := Length(Self.Cache);
+        Self.Cache += mapNPC;
+        Result += mapNPC.Index;
+        Break;
+      end;
 end;
 
 
@@ -489,11 +572,11 @@ var
   i: Int32;
 begin
   if Objects <> [] then
-    for i in Objects.GetIndices(['Bank booth', 'Bank chest']) do
+    for i in Objects.GetIndicesByAction('Bank') do
       Banks += @Objects.Cache[i];
 
   if NPCs <> [] then
-    for i in NPCs.GetIndices('Banker') do
+    for i in NPCs.GetIndicesByAction('Bank') do
       Banks += @NPCs.Cache[i];
 end;
 {%codetools on}
