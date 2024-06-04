@@ -1,3 +1,12 @@
+## [5.3.1](https://github.com/Torwent/SRL-T/compare/v5.3.0...v5.3.1) (2024-06-04)
+
+
+### Bug Fixes
+
+* **TRSMapObjectArray:** find objects by their actions ([5b32d7f](https://github.com/Torwent/SRL-T/commit/5b32d7f8bea8ce6e42c276313acfe4170bf0c0bb))
+
+
+
 # [5.3.0](https://github.com/Torwent/SRL-T/compare/v5.2.0...v5.3.0) (2024-06-04)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMap:** read notes ([5ad4d38](https://github.com/Torwent/SRL-T/commit/5ad4d380462e1fc9f1f8dbeb51bd0e2cc8284a35))
-
-
-
-## [5.1.2](https://github.com/Torwent/SRL-T/compare/v5.1.1...v5.1.2) (2024-06-01)
-
-
-### Bug Fixes
-
-* **TRSWalkerV2:** read notes ([cd676a5](https://github.com/Torwent/SRL-T/commit/cd676a5e49a0080798f063b645b39cba98459660))
 
 
 
