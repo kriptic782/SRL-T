@@ -9,7 +9,7 @@ This file is responsible for interacting with map objects.
 {$ENDIF}
 
 type
-  ERSMapObjectType = (OBJ, MMDOT);
+  ERSMapObjectType = (OBJ, NPC);
 
   TRSMapObject = record
     ID: Int32;
@@ -86,12 +86,17 @@ end;
 
 
 function TRSMapObject.SameObject(json: TJSONObject): Boolean;
+  function _SameName(n1, n2: String): Boolean;
+  begin
+    Result := (n1 = n2) or (n1 = 'null') or (n2 = 'null');
+  end;
 var
   i: Int32;
   x, y: Single;
 begin
-  if Self.Name <> json.getString('name') then
+  if not _SameName(Self.Name, json.getString('name')) then
     Exit;
+
   if Self.Category <> json.getInt('category') then
     Exit;
 
@@ -101,12 +106,13 @@ begin
         if not Self.Actions.Contains(getString(i)) then
           Exit;
 
-  with json.getJSONArray('size') do
-  begin
-    x := getInt(0) * 0.8;
-    y := getInt(1) * 0.8;
-    Result := Self.Size <> [x, y, getInt(2) / 40];
-  end;
+  if json.getString('name') <> 'null' then
+    with json.getJSONArray('size') do
+    begin
+      x := getInt(0) * 0.8;
+      y := getInt(1) * 0.8;
+      Result := Self.Size <> [x, y, getInt(2) / 40];
+    end;
 end;
 
 
@@ -531,8 +537,6 @@ begin
 end;
 
 
-
-
 function TRSObjectV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref; override;
 var
   Locations: TCoordsAngle;
@@ -640,104 +644,33 @@ begin
 end;
 
 
+procedure TRSObjectV2Array.Reduce();
+var
+  i, j: Int32;
+begin
+  for i := High(Self) downto 0 do
+    for j := 0 to i-1 do
+    begin
+      case Self[i].Name of
+        'null', Self[j].Name:
+        begin
+          if not Self[i].Category = Self[j].Category then Continue;
+          if not Self[i].ObjType = Self[j].ObjType then Continue;
+          Self[j].Coordinates += Self[i].Coordinates;
+          Self[j].Rotations += Self[i].Rotations;
+          Delete(Self, i, 1);
+          Break;
+        end;
+      end;
+    end;
+end;
+
+
 type
-  TRSMMDotV2 = record(TRSMapObject)
+  TRSNPCV2 = record(TRSMapObject)
+    Level: Int32;
     DotType: ERSMinimapDot;
     DotFilters: TRSDotFilterArray;
-  end;
-
-  PRSMMDotV2 = ^TRSMMDotV2;
-
-function TRSMMDotV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref; override;
-var
-  dots: TPointArray;
-  p: TPoint;
-  offsetV: Vector3;
-  h, diff: Single;
-  i: Int32;
-begin
-  if Self.Filter.Walker and (me = [0,0]) then
-    me := Self.Walker^.Position();
-
-  if angle = $FFFF then
-    angle := Minimap.GetCompassAngle(False);
-
-  if Self.Filter.Walker and Self.Filter.Minimap then
-  begin
-    h := Self.Walker^.Height(me);
-
-    dots := Minimap.GetFilteredDotArray(Self.DotType, Self.Walker^.FiltersToMM(me, Self.DotFilters, angle));
-    if dots = [] then
-      Exit;
-
-    dots := dots.Sorted(Minimap.Center());
-    for i := 0 to High(dots) do
-    begin
-      p := Self.Walker^.MMToMap(me, p, angle);
-      diff := -(h-Self.Walker^.Height(p)) / 4;
-      offsetV := Vec3(Self.Offset.X, Self.Offset.Y, diff);
-
-      Result += Minimap.GetCuboidMS(dots[i] + [Round(0.15*diff), Round(0.11*diff)], Self.Size, offsetV, angle);
-    end;
-
-    Exit;
-  end;
-
-  if Self.Filter.Walker then
-  begin
-    Result := inherited(me, angle);
-    Exit;
-  end;
-
-  dots := Minimap.GetDots(Self.DotType);
-  if dots = [] then
-    Exit;
-
-  dots := dots.SortFrom(Minimap.Center());
-  if dots = [] then
-    Exit;
-
-  for i := 0 to High(dots) do
-  begin
-    p := dots[i];
-    offsetV := Vec3(Self.Offset.X, Self.Offset.Y, 0);
-    p := Self.Walker^.PointToMM(me, p, angle);
-    Result += Minimap.GetCuboidMS(p, Self.Size, offsetV, angle);
-  end;
-end;
-
-procedure TRSMMDotV2.Filter(polygon: TPointArray; inside: Boolean);
-var
-  i: Int32;
-begin
-  for i := High(Self.Coordinates) downto 0 do
-    if (inside and SRL.PointInPoly(Self.Coordinates[i], polygon)) or
-       (not inside and not SRL.PointInPoly(Self.Coordinates[i], polygon))
-    then
-    begin
-      Delete(Self.Coordinates, i, 1);
-      Delete(Self.DotFilters, i, 1);
-    end;
-end;
-
-procedure TRSMMDotV2.Filter(circle: TCircle; inside: Boolean); overload;
-var
-  i: Int32;
-begin
-  for i := High(Self.Coordinates) downto 0 do
-    if (inside and circle.Contains(Self.Coordinates[i])) or
-       (not inside and not circle.Contains(Self.Coordinates[i]))
-    then
-    begin
-      Delete(Self.Coordinates, i, 1);
-      Delete(Self.DotFilters, i, 1);
-    end;
-end;
-
-
-type
-  TRSNPCV2 = record(TRSMMDotV2)
-    Level: Int32;
   end;
 
   PRSNPCV2 = ^TRSNPCV2;
@@ -805,8 +738,96 @@ begin
     Result.DotFilters.SetupCircle(circle, True);
   end;
 
-  Result.MapObjectType := ERSMapObjectType.MMDOT;
+  Result.MapObjectType := ERSMapObjectType.NPC;
 end;
+
+
+function TRSNPCV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref; override;
+var
+  dots: TPointArray;
+  p: TPoint;
+  offsetV: Vector3;
+  h, diff: Single;
+  i: Int32;
+begin
+  if Self.Filter.Walker and (me = [0,0]) then
+    me := Self.Walker^.Position();
+
+  if angle = $FFFF then
+    angle := Minimap.GetCompassAngle(False);
+
+  if Self.Filter.Walker and Self.Filter.Minimap then
+  begin
+    h := Self.Walker^.Height(me);
+
+    dots := Minimap.GetFilteredDotArray(Self.DotType, Self.Walker^.FiltersToMM(me, Self.DotFilters, angle));
+    if dots = [] then
+      Exit;
+
+    dots := dots.Sorted(Minimap.Center());
+    for i := 0 to High(dots) do
+    begin
+      p := Self.Walker^.MMToMap(me, p, angle);
+      diff := -(h-Self.Walker^.Height(p)) / 4;
+      offsetV := Vec3(Self.Offset.X, Self.Offset.Y, diff);
+
+      Result += Minimap.GetCuboidMS(dots[i] + [Round(0.15*diff), Round(0.11*diff)], Self.Size, offsetV, angle);
+    end;
+
+    Exit;
+  end;
+
+  if Self.Filter.Walker then
+  begin
+    Result := inherited(me, angle);
+    Exit;
+  end;
+
+  dots := Minimap.GetDots(Self.DotType);
+  if dots = [] then
+    Exit;
+
+  dots := dots.SortFrom(Minimap.Center());
+  if dots = [] then
+    Exit;
+
+  for i := 0 to High(dots) do
+  begin
+    p := dots[i];
+    offsetV := Vec3(Self.Offset.X, Self.Offset.Y, 0);
+    p := Self.Walker^.PointToMM(me, p, angle);
+    Result += Minimap.GetCuboidMS(p, Self.Size, offsetV, angle);
+  end;
+end;
+
+procedure TRSNPCV2.Filter(polygon: TPointArray; inside: Boolean);
+var
+  i: Int32;
+begin
+  for i := High(Self.Coordinates) downto 0 do
+    if (inside and SRL.PointInPoly(Self.Coordinates[i], polygon)) or
+       (not inside and not SRL.PointInPoly(Self.Coordinates[i], polygon))
+    then
+    begin
+      Delete(Self.Coordinates, i, 1);
+      Delete(Self.DotFilters, i, 1);
+    end;
+end;
+
+procedure TRSNPCV2.Filter(circle: TCircle; inside: Boolean); overload;
+var
+  i: Int32;
+begin
+  for i := High(Self.Coordinates) downto 0 do
+    if (inside and circle.Contains(Self.Coordinates[i])) or
+       (not inside and not circle.Contains(Self.Coordinates[i]))
+    then
+    begin
+      Delete(Self.Coordinates, i, 1);
+      Delete(Self.DotFilters, i, 1);
+    end;
+end;
+
 
 
 
@@ -826,7 +847,7 @@ WriteLn RSObjects.GEBank.Find(atpa); //Be in ge and with a walker setup there.
 Debug(atpa);
 ```
 *)
-function TRSMMDotV2.FindEx(out cuboids: TCuboidExArray; out atpa: T2DPointArray): Boolean;
+function TRSNPCV2.FindEx(out cuboids: TCuboidExArray; out atpa: T2DPointArray): Boolean;
 begin
   if Self.Filter.Walker or Self.Filter.Minimap then
   begin
@@ -849,7 +870,7 @@ procedure TRSMapObject.Draw(out bitmap: TMufasaBitmap);
 ```
 Helper method to debug TRSMapObjects used in `Debug(TRSMapObject)`.
 *)
-procedure TRSMMDotV2.Draw(bitmap: TMufasaBitmap);
+procedure TRSNPCV2.Draw(bitmap: TMufasaBitmap);
 var
   me, p, q: TPoint;
   rect: TRectangle;
@@ -892,6 +913,24 @@ begin
 end;
 
 
+procedure TRSNPCV2Array.Reduce();
+var
+  i, j: Int32;
+begin
+  for i := High(Self) downto 0 do
+    for j := 0 to i-1 do
+    begin
+      if Self[i].Name <> Self[j].Name then Continue;
+
+      if not Self[i].Category = Self[j].Category then Continue;
+      Self[j].Coordinates += Self[i].Coordinates;
+      Self[j].DotFilters += Self[i].DotFilters;
+      Delete(Self, i, 1);
+      Break;
+    end;
+end;
+
+
 {%codetools off}
 (*
 ## TRSMapObject._Routers
@@ -904,16 +943,24 @@ Helper internal router methods that "route" methods to the right type.
 function TRSMapObject._FindExRouter(out cuboids: TCuboidExArray; out atpa: T2DPointArray): Boolean;
 begin
   case Self.MapObjectType of
-    ERSMapObjectType.OBJ:   Result := PRSObjectV2(@Self)^.FindEx(cuboids, atpa);
-    ERSMapObjectType.MMDOT: Result := PRSMMDotV2(@Self)^.FindEx(cuboids, atpa);
+    ERSMapObjectType.OBJ: Result := PRSObjectV2(@Self)^.FindEx(cuboids, atpa);
+    ERSMapObjectType.NPC: Result := PRSNPCV2(@Self)^.FindEx(cuboids, atpa);
   end;
 end;
 
 function TRSMapObject._GetCuboidArrayRouter(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray;
 begin
   case Self.MapObjectType of
-    ERSMapObjectType.OBJ:   Result := PRSObjectV2(@Self)^.GetCuboidArray(me, angle);
-    ERSMapObjectType.MMDOT: Result := PRSMMDotV2(@Self)^.GetCuboidArray(me, angle);
+    ERSMapObjectType.OBJ: Result := PRSObjectV2(@Self)^.GetCuboidArray(me, angle);
+    ERSMapObjectType.NPC: Result := PRSNPCV2(@Self)^.GetCuboidArray(me, angle);
+  end;
+end;
+
+procedure TRSMapObject._DrawRouter(bitmap: TMufasaBitmap);
+begin
+  case Self.MapObjectType of
+    ERSMapObjectType.OBJ: PRSObjectV2(@Self)^.Draw(bitmap);
+    ERSMapObjectType.NPC: PRSNPCV2(@Self)^.Draw(bitmap);
   end;
 end;
 {%codetools on}
@@ -1320,12 +1367,12 @@ begin
   if RSClient.DebugOnClient then
   begin
     RSClient.Image().Clear();
-    obj.Draw(RSClient.Image());
+    obj._DrawRouter(RSClient.Image());
     Exit;
   end;
   {$ENDIF}
   bitmap.FromClient();
-  obj.Draw(bitmap);
+  obj._DrawRouter(bitmap);
   bitmap.Debug();
   bitmap.Free();
 end;
@@ -1344,6 +1391,24 @@ begin
   {$ENDIF}
   bitmap.FromClient();
   npc.Draw(bitmap);
+  bitmap.Debug();
+  bitmap.Free();
+end;
+
+procedure Debug(mapObj: PRSMapObject); overload;
+var
+  bitmap: TMufasaBitmap;
+begin
+  {$IFNDEF SRL_DISABLE_REMOTEINPUT}
+  if RSClient.DebugOnClient then
+  begin
+    RSClient.Image().Clear();
+    mapObj^._DrawRouter(RSClient.Image());
+    Exit;
+  end;
+  {$ENDIF}
+  bitmap.FromClient();
+  mapObj^._DrawRouter(bitmap);
   bitmap.Debug();
   bitmap.Free();
 end;

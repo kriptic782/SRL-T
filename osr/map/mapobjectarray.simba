@@ -27,7 +27,7 @@ begin
         current := tmp^.Coordinates.NearestPoint(meObj).DistanceTo(meObj);
       end;
 
-      ERSMapObjectType.MMDOT:
+      ERSMapObjectType.NPC:
       begin
         if meNPC = [0,0] then meNPC := tmp^.Walker^.Position();
         current := tmp^.Coordinates.NearestPoint(meNPC).DistanceTo(meNPC);
@@ -105,6 +105,8 @@ begin
     );
   end;
 end;
+
+
 
 
 type
@@ -216,6 +218,11 @@ begin
       Result += TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
       Break;
     end;
+
+  if Result = [] then
+    TerminateScript('Objects with action ' + action + ' don''t exist on the loaded maps.');
+
+  Result.Reduce();
 end;
 
 
@@ -236,8 +243,9 @@ begin
     WriteLn(
       'ID: ', getInt('id'), ', Name: ', getString('name'),
       ', Type: ', getInt('type'), ', Category: ', getInt('category'),
-      ', Actions: ', actions, ', Colors: ', colors
+      ', Actions: ', actions, ', Colors: ', getJSONArray('colors').ToString(), ', Coordinates: ', getJSONArray('coordinates').toString()
     );
+
     actions := [];
     colors := [];
   end;
@@ -369,7 +377,7 @@ begin
     WriteLn(
       'ID: ', getInt('id'), ', Name: ', getString('name'),
       ', Type: ', getInt('type'), ', Category: ', getInt('category'),
-      ', Actions: ', actions, ', Colors: ', colors
+      ', Actions: ', actions, ', Colors: ', colors, ', Coordinates: ', getJSONArray('coordinates').toString()
     );
     actions := [];
     colors := [];
@@ -470,8 +478,8 @@ begin
   end;
 
   case mapObj^.MapObjectType of
-    ERSMapObjectType.OBJ:   Result := mapObj^.Click() or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Bank B', 'Bank E']));
-    ERSMapObjectType.MMDOT: Result := mapObj^.SelectOption(['Bank B', 'Bank E']) or (MainScreen.IsUpText('Bank') and ChooseOption.Select(['Bank B', 'Bank E']));
+    ERSMapObjectType.OBJ: Result := mapObj^.Click() or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Bank B', 'Bank E']));
+    ERSMapObjectType.NPC: Result := mapObj^.SelectOption(['Bank B', 'Bank E']) or (MainScreen.IsUpText('Bank') and ChooseOption.Select(['Bank B', 'Bank E']));
   end;
 
   if not Result then
@@ -519,8 +527,8 @@ begin
   end;
 
   case mapObj^.MapObjectType of
-    ERSMapObjectType.OBJ:   Result := mapObj^.WalkClick() or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Bank B', 'Bank E']));
-    ERSMapObjectType.MMDOT: Result := mapObj^.WalkSelectOption(['Bank B', 'Bank E']) or (MainScreen.IsUpText('Bank') and ChooseOption.Select(['Bank B', 'Bank E']));
+    ERSMapObjectType.OBJ: Result := mapObj^.WalkClick() or (MainScreen.IsUpText('Banker') and ChooseOption.Select(['Bank B', 'Bank E']));
+    ERSMapObjectType.NPC: Result := mapObj^.WalkSelectOption(['Bank B', 'Bank E']) or (MainScreen.IsUpText('Bank') and ChooseOption.Select(['Bank B', 'Bank E']));
   end;
 
   if not Result then
