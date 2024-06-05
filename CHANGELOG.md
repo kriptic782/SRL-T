@@ -1,3 +1,12 @@
+# [5.4.0](https://github.com/Torwent/SRL-T/compare/v5.3.3...v5.4.0) (2024-06-05)
+
+
+### Features
+
+* read notes ([f35adfd](https://github.com/Torwent/SRL-T/commit/f35adfdd43c4fae3190c0a1d601111834fab8b6c))
+
+
+
 ## [5.3.3](https://github.com/Torwent/SRL-T/compare/v5.3.2...v5.3.3) (2024-06-05)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **debug:** read notes ([7d36a94](https://github.com/Torwent/SRL-T/commit/7d36a94bb2db2115b5ba96141a0fa33d618ea821))
-
-
-
-# [5.2.0](https://github.com/Torwent/SRL-T/compare/v5.1.4...v5.2.0) (2024-06-03)
-
-
-### Features
-
-* **TRSMapObjects:** Bank.WalkOpenV2 ([d5b0609](https://github.com/Torwent/SRL-T/commit/d5b06097cc0a00f367d504dddd907fecdb068c07))
 
 
 
