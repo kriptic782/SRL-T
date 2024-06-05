@@ -32,33 +32,6 @@ Record holding a player's full position:
   end;
 
 (*
-(TRSMapChunk)=
-## type TRSMapChunk
-```pascal
-TRSMapChunk = record
-  Name: String;
-  Chunk: TBox;
-  Planes: TIntegerArray;
-end;
-```
-Helper record to store chunk data with a name associated with.
-
-Example:
-```pascal
-var
-  VarrockChunk: TRSMapChunk = ['Varrock', [49,54,50,53], [0]];
-begin
-  Map.SetupChunk(VarrockChunk);
-end;
-```
-*)
-  TRSMapChunk = record
-    Name: String;
-    Chunk: TBox;
-    Planes: TIntegerArray;
-  end;
-
-(*
 (TRSMap)=
 ## type TRSMap
 ```pascal
@@ -132,8 +105,8 @@ procedure TRSMap.SetupRegion(filename: String; region: TBox; downscale: Int32 = 
 procedure TRSMap.SetupFromURL(url: String; filename: String = ''; downscale: Int32 = 8; force: Boolean = False);
 procedure TRSMap.SetupChunksEx(chunks: TBoxArray; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
 procedure TRSMap.SetupChunkEx(chunk: TBox; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
-procedure TRSMap.SetupChunks(chunks: array of TRSMapChunk; downscale: UInt32 = 8);
-procedure TRSMap.SetupChunk(chunk: TRSMapChunk; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunks(chunks: array of ERSChunk; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunk(chunk: ERSChunk; downscale: UInt32 = 8);
 ```
 Setup a TRSMap.
 If for some reason you can't setup all your maps at once, you can later use the `Add` methods.
@@ -214,26 +187,32 @@ begin
   Self.SetupChunksEx([chunk], levels, downscale);
 end;
 
-procedure TRSMap.SetupChunks(chunks: array of TRSMapChunk; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunks(chunks: array of ERSChunk; downscale: UInt32 = 8);
 var
-  i, l: Int32;
+  mapChunk: TRSMapChunk;
+  chunk: ERSChunk;
+  l: Int32;
   boxes: TBoxArray;
   levels: TIntegerArray;
 begin
-  for i := 0 to High(chunks) do
+  for chunk in chunks do
   begin
-    boxes += chunks[i].Chunk;
-    for l in chunks[i].Planes do
-      if levels.Find(l) = -1 then
+    mapChunk := chunk.Get();
+    boxes += mapChunk.Chunk;
+    for l in mapChunk.Planes do
+      if InRange(l, 0, 3) and (levels.Find(l) = -1) then
         levels += l;
   end;
 
   Self.SetupChunksEx(boxes, levels, downscale);
 end;
 
-procedure TRSMap.SetupChunk(chunk: TRSMapChunk; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunk(chunk: ERSChunk; downscale: UInt32 = 8);
+var
+  mapChunk: TRSMapChunk;
 begin
-  Self.SetupChunksEx([chunk.Chunk], chunk.Planes, downscale);
+  mapChunk := chunk.Get();
+  Self.SetupChunksEx([mapChunk.Chunk], mapChunk.Planes, downscale);
 end;
 
 

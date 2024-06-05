@@ -246,6 +246,8 @@ begin
       Exit(True);
 end;
 
+
+{%codetools off}
 (*
 ## TRSMapObject._UpTextCheck
 ```pascal
@@ -260,6 +262,9 @@ var
   upText: String;
 begin
   shouldExit := True;
+
+  if (MainScreen.Mode = ERSClientMode.FIXED) and RSInterface.IsOpen() then
+    Exit;
 
   if Self.Filter.UpText then
   begin
@@ -297,6 +302,9 @@ var
   strArray: TStringArray;
 begin
   shouldExit := True;
+
+  if (MainScreen.Mode = ERSClientMode.FIXED) and RSInterface.IsOpen() then
+    Exit;
 
   if Self.Filter.UpText then
   begin
@@ -390,6 +398,7 @@ begin
 
   Result := ChooseOption.Select(action);
 end;
+{%codetools on}
 
 
 type
@@ -612,8 +621,6 @@ begin
 
   bitmap.DrawCuboidArray(cuboids, $00FFFF);
 end;
-
-
 
 
 type
@@ -840,7 +847,15 @@ begin
 end;
 
 
-
+{%codetools off}
+(*
+## TRSMapObject._Routers
+```pascal
+function TRSMapObject._FindExRouter(out cuboids: TCuboidExArray; out atpa: T2DPointArray): Boolean;
+function TRSMapObject._GetCuboidArrayRouter(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray;
+```
+Helper internal router methods that "route" methods to the right type.
+*)
 function TRSMapObject._FindExRouter(out cuboids: TCuboidExArray; out atpa: T2DPointArray): Boolean;
 begin
   case Self.MapObjectType of
@@ -856,7 +871,7 @@ begin
     ERSMapObjectType.MMDOT: Result := PRSMMDotV2(@Self)^.GetCuboidArray(me, angle);
   end;
 end;
-
+{%codetools on}
 
 
 function TRSMapObject.Find(out atpa: T2DPointArray): Boolean;
@@ -901,7 +916,7 @@ begin
   Result := Self.Find(atpa);
 end;
 
-
+{%codetools off}
 (*
 ## TRSMapObject._UpdateTarget
 ```pascal
@@ -1060,7 +1075,7 @@ begin
     end;
   end;
 end;
-
+{%codetools on}
 
 (*
 ## TRSMapObject.PreHoverHelper

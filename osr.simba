@@ -87,11 +87,12 @@ end;
 {$IFNDEF SRL_WALKERV2_INCLUDED}             {$I osr/walker.simba}
 {$IFNDEF SRL_MAPOBJECT_INCLUDED}            {$I osr/map/mapobject.simba}
 {$IFNDEF SRL_MAPOBJECTARRAY_INCLUDED}       {$I osr/map/mapobjectarray.simba}
+{$IFNDEF SRL_RSCHUNK_INCLUDED}              {$I osr/map/rschunk.simba}
 {$IFNDEF SRL_MAP_INCLUDED}                  {$I osr/map/map.simba}
 
 {$IFNDEF SRL_DEPRECATED_INCLUDED} {$I osr/deprecated.simba} {$ELSE}{$ENDIF}
 
-
+{$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
