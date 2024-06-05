@@ -679,6 +679,25 @@ begin
 end;
 
 
+(*
+## TRSMap.InRange
+```pascal
+function TRSMap.InRange(p: TPoint; distance: Int32 = 4): Boolean;
+function TRSMap.InRange(tpa: TPointArray; distance: Int32 = 4): Boolean; overload;
+```
+Method used to quickly check if we are within distance of a certain point or points.
+This distance is measure in pixels and in a radial way.
+*)
+function TRSMap.InRange(p: TPoint; distance: Int32 = 4): Boolean;
+begin
+  Result := p.InRange(Self.Position(), distance);
+end;
+
+function TRSMap.InRange(tpa: TPointArray; distance: Int32 = 4): Boolean; overload;
+begin
+  Result := tpa.AnyInRange(Self.Position(), distance);
+end;
+
 
 (*
 ## Map.Map2MM

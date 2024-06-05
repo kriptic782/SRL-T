@@ -149,8 +149,8 @@ end;
 ## TPoint.InRange
 ```pascal
 function TPoint.InRange(other: TPoint; dist: Double): Boolean;
-function TPoint.AnyInRange(tpa: TPointArray; dist: Double): Boolean;
-function TPoint.AllInRange(tpa: TPointArray; dist: Double): Boolean;
+function TPoint.AnyInRange(other: TPointArray; dist: Double): Boolean;
+function TPoint.AllInRange(other: TPointArray; dist: Double): Boolean;
 ```
 Checks if the current point is within `dist` distance of `other`.
 *)
@@ -159,20 +159,20 @@ begin
   Result := Self.DistanceTo(other) <= dist;
 end;
 
-function TPoint.AnyInRange(tpa: TPointArray; dist: Double): Boolean;
+function TPoint.AnyInRange(other: TPointArray; dist: Double): Boolean;
 var
   p: TPoint;
 begin
-  for p in tpa do
+  for p in other do
     if Self.InRange(p, dist) then
       Exit(True);
 end;
 
-function TPoint.AllInRange(tpa: TPointArray; dist: Double): Boolean;
+function TPoint.AllInRange(other: TPointArray; dist: Double): Boolean;
 var
   p: TPoint;
 begin
-  for p in tpa do
+  for p in other do
     if not Self.InRange(p, dist) then
       Exit;
   Result := True;

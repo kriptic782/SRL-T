@@ -11,12 +11,14 @@ var
   meObj, meNPC: TPoint = [0,0];
   tmp: PRSMapObject;
   i: Int32;
-  closest: Double = $FFFFFF;
+  closest: Double;
   current: Double;
 begin
+  closest := $FFFFFF;
+
   for i := High(Self) downto 0 do
   begin
-    tmp := PRSMapObject(Self[i]);
+    tmp := Self[i];
 
     case tmp^.MapObjectType of
       ERSMapObjectType.OBJ:
@@ -40,6 +42,54 @@ begin
   end;
 end;
 
+
+procedure PRSMapObjectArray.Filter(polygon: TPointArray; inside: Boolean);
+var
+  tmp: PRSMapObject;
+  i, j: Int32;
+begin
+  for i := High(Self) downto 0 do
+  begin
+    tmp := Self[i];
+    for j := High(tmp^.Coordinates) downto 0 do
+      if (inside and SRL.PointInPoly(tmp^.Coordinates[j], polygon)) or
+         (not inside and not SRL.PointInPoly(tmp^.Coordinates[j], polygon))
+      then
+      begin
+        Delete(tmp^.Coordinates, j, 1);
+        if tmp^.MapObjectType = ERSMapObjectType.OBJ then
+          Delete(PRSObjectV2(tmp)^.Rotations, j, 1);
+      end;
+
+    if Length(tmp^.Coordinates) = 0 then
+      Delete(Self, i, 1);
+  end;
+end;
+
+procedure PRSMapObjectArray.Filter(circle: TCircle; inside: Boolean); overload;
+var
+  tmp: PRSMapObject;
+  i, j: Int32;
+begin
+  for i := High(Self) downto 0 do
+  begin
+    tmp := Self[i];
+    for j := High(tmp^.Coordinates) downto 0 do
+      if (inside and circle.Contains(tmp^.Coordinates[j])) or
+         (not inside and not circle.Contains(tmp^.Coordinates[j]))
+      then
+      begin
+        Delete(tmp^.Coordinates, j, 1);
+        if tmp^.MapObjectType = ERSMapObjectType.OBJ then
+          Delete(PRSObjectV2(tmp)^.Rotations, j, 1);
+      end;
+
+    if Length(tmp^.Coordinates) = 0 then
+      Delete(Self, i, 1);
+  end;
+end;
+
+
 procedure PRSMapObjectArray.Print();
 var
   tmp: PRSMapObject;
@@ -56,313 +106,118 @@ begin
   end;
 end;
 
-type
-  TRSObjectV2Array = array of TRSObjectV2;
-
-function TRSObjectV2Array.FindAnyID(id: Int32): Int32;
-begin
-  for Result := 0 to High(Self) do
-    if Self[Result].ID = id then
-      Exit;
-  Result := -1;
-end;
-
-function TRSObjectV2Array.FindAnyName(name: String): Int32;
-begin
-  name := LowerCase(name);
-  for Result := 0 to High(Self) do
-    if LowerCase(Self[Result].Name) = name then
-      Exit;
-  Result := -1;
-end;
-
-function TRSObjectV2Array.FindAnyType(objType: Int32): Int32;
-begin
-  for Result := 0 to High(Self) do
-    if Self[Result].ObjType = objType then
-      Exit;
-  Result := -1;
-end;
-
-function TRSObjectV2Array.FindAnyCategory(category: Int32): Int32;
-begin
-  for Result := 0 to High(Self) do
-    if Self[Result].Category = category then
-      Exit;
-  Result := -1;
-end;
-
-function TRSObjectV2Array.FindAny(obj: Variant): Int32;
-var
-  str: String;
-begin
-  str := obj;
-  if VarIsNumeric(obj) or str.IsDigit() then
-    Exit(Self.FindAnyID(obj));
-  Result := Self.FindAnyName(str);
-end;
-
-
-function TRSObjectV2Array.FindAllName(name: String): TIntegerArray;
-var
-  i: Int32;
-begin
-  name := LowerCase(name);
-  for i := 0 to High(Self) do
-    if Self[i].Name = name then
-      Result += i;
-end;
-
-function TRSObjectV2Array.FindAllType(objType: Int32): TIntegerArray;
-var
-  i: Int32;
-begin
-  for i := 0 to High(Self) do
-    if Self[i].ObjType = objType then
-      Result += i;
-end;
-
-function TRSObjectV2Array.FindAllCategory(category: Int32): TIntegerArray;
-var
-  i: Int32;
-begin
-  for i := 0 to High(Self) do
-    if Self[i].Category = category then
-      Result += i;
-end;
-
-function TRSObjectV2Array.FindAllAction(action: String): TIntegerArray;
-var
-  i, j: Int32;
-begin
-  action := LowerCase(action);
-
-  for i := 0 to High(Self) do
-    for j := 0 to High(Self[i].Actions) do
-      if LowerCase(Self[i].Actions[j]) = action then
-        Result += i;
-end;
-
-
-type
-  TRSNPCV2Array = array of TRSNPCV2;
-
-function TRSNPCV2Array.FindAnyID(id: Int32): Int32;
-begin
-  for Result := 0 to High(Self) do
-    if Self[Result].ID = id then
-      Exit;
-  Result := -1;
-end;
-
-function TRSNPCV2Array.FindAnyName(name: String): Int32;
-begin
-  name := LowerCase(name);
-  for Result := 0 to High(Self) do
-    if LowerCase(Self[Result].Name) = name then
-      Exit;
-  Result := -1;
-end;
-
-function TRSNPCV2Array.FindAnyCategory(category: Int32): Int32;
-begin
-  for Result := 0 to High(Self) do
-    if Self[Result].Category = category then
-      Exit;
-  Result := -1;
-end;
-
-function TRSNPCV2Array.FindAny(obj: Variant): Int32;
-var
-  str: String;
-begin
-  str := obj;
-  if VarIsNumeric(obj) or str.IsDigit() then
-    Exit(Self.FindAnyID(obj));
-  Result := Self.FindAnyName(str);
-end;
-
-
-function TRSNPCV2Array.FindAllName(name: String): TIntegerArray;
-var
-  i: Int32;
-begin
-  name := LowerCase(name);
-  for i := 0 to High(Self) do
-    if Self[i].Name = name then
-      Result += i;
-end;
-
-function TRSNPCV2Array.FindAllCategory(category: Int32): TIntegerArray;
-var
-  i: Int32;
-begin
-  for i := 0 to High(Self) do
-    if Self[i].Category = category then
-      Result += i;
-end;
-
-function TRSNPCV2Array.FindAllAction(action: String): TIntegerArray;
-var
-  i, j: Int32;
-begin
-  action := LowerCase(action);
-
-  for i := 0 to High(Self) do
-    for j := 0 to High(Self[i].Actions) do
-      if LowerCase(Self[i].Actions[j]) = action then
-        Result += i;
-end;
-
 
 type
   TRSMapObjects = record
     Data: TJSONArray;
     Walker: PRSWalkerV2;
-    Cache: TRSObjectV2Array;
   end;
 
 procedure TRSMapObjects.Setup(json: TJSONArray; walker: PRSWalkerV2);
 begin
-  Self.Data := json;
+  if Self.Data = nil then
+    Self.Data := json
+  else
+    Self.Data.Merge(json);
+
   Self.Walker := walker;
 end;
 
 
-function TRSMapObjects.GetIndex(obj: Variant): Int32;
+function TRSMapObjects.Get(obj: Variant): TRSObjectV2;
 var
   i: Int32;
-  str: String;
-  mapNPC: TRSObjectV2;
+  name: String;
 begin
-  Result := Self.Cache.FindAny(obj);
-  if Result > -1 then
-    Exit;
-
   if VarIsNumeric(obj) then
   begin
     for i := 0 to  Self.Data.High() do
       if Self.Data.getJSONObject(i).getInt('id') = obj then
-      begin
-        mapNPC := TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
-        mapNPC.Index := Length(Self.Cache);
-        Self.Cache += mapNPC;
-        Exit(mapNPC.Index);
-      end;
-
+        Exit(TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i)));
     TerminateScript('Object with ID ' + ToStr(obj) + ' doesn''t exist on the loaded maps.');
   end;
 
-  str := LowerCase(obj);
+  name := LowerCase(obj);
 
-  if str.IsDigit() then
+  if name.IsDigit() then
   begin
     for i := 0 to  Self.Data.High() do
       if Self.Data.getJSONObject(i).getInt('id') = obj then
-      begin
-        mapNPC := TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
-        mapNPC.Index := Length(Self.Cache);
-        Self.Cache += mapNPC;
-        Exit(mapNPC.Index);
-      end;
-
+        Exit(TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i)));
     TerminateScript('Object with ID ' + ToStr(obj) + ' doesn''t exist on the loaded maps.');
   end;
 
   for i := 0 to Self.Data.High() do
   begin
-    if LowerCase(Self.Data.getJSONObject(i).getString('name')) = str then
-    begin
-      if Result > -1 then
-      begin
-        if Self.Cache[Result].SameObject(Self.Data.getJSONObject(i)) then
-          Self.Cache[Result] := Self.Cache[Result].Merge(Self.Data.getJSONObject(i));
-        Continue;
-      end;
+    if LowerCase(Self.Data.getJSONObject(i).getString('name')) <> name then
+      Continue;
 
-      mapNPC := TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
-      mapNPC.Index := Length(Self.Cache);
-      Self.Cache += mapNPC;
-      Result := mapNPC.Index;
+    if Result.Name <> '' then
+    begin
+      if Result.SameObject(Self.Data.getJSONObject(i)) then
+        Result := Result.Merge(Self.Data.getJSONObject(i));
+      Continue;
     end;
+
+    Result := TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
   end;
 
-  if Result = -1 then
+  if Result.Name = '' then
     TerminateScript('Object ' + ToStr(obj) + ' doesn''t exist on the loaded maps.');
 end;
 
-function TRSMapObjects.GetIndices(name: String): TIntegerArray;
+function TRSMapObjects.GetByAction(action: String): TRSObjectV2;
 var
-  i: Int32;
-  mapObj: TRSObjectV2;
+  i, j: Int32;
 begin
-  name := LowerCase(name);
-  Result := Self.Cache.FindAllName(name);
-  if Result <> [] then
-    Exit;
+  action := LowerCase(action);
 
   for i := 0 to Self.Data.High() do
-    if LowerCase(Self.Data.getJSONObject(i).getString('name')) = name then
+    for j := 0 to Self.Data.getJSONObject(i).getJSONArray('actions').High() do
     begin
-      mapObj := TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
-      mapObj.Index := Length(Self.Cache);
-      Self.Cache += mapObj;
-      Result += mapObj.Index;
+      if LowerCase(Self.Data.getJSONObject(i).getJSONArray('actions').getString(j)) <> action then
+        Continue;
+      Exit(TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i)));
     end;
 end;
 
-function TRSMapObjects.GetIndices(names: TStringArray): TIntegerArray; overload;
+function TRSMapObjects.GetAll(name: String): TRSObjectV2Array;
+var
+  i: Int32;
+begin
+  name := LowerCase(name);
+  for i := 0 to Self.Data.High() do
+    if LowerCase(Self.Data.getJSONObject(i).getString('name')) = name then
+      Result += TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
+
+  if Result = [] then
+    TerminateScript('Objects ' + name + ' don''t exist on the loaded maps.');
+end;
+
+function TRSMapObjects.GetAll(names: TStringArray): TRSObjectV2Array; overload;
 var
   name: String;
 begin
   for name in names do
-    Result += Self.GetIndices(name);
+    Result += Self.GetAll(name);
 end;
 
-function TRSMapObjects.GetIndicesByAction(action: String): TIntegerArray;
+function TRSMapObjects.GetAllByAction(action: String): TRSObjectV2Array;
 var
   i, j: Int32;
-  mapObj: TRSObjectV2;
 begin
   action := LowerCase(action);
-  Result := Self.Cache.FindAllAction(action);
-  if Result <> [] then
-    Exit;
 
   for i := 0 to Self.Data.High() do
     for j := 0 to Self.Data.getJSONObject(i).getJSONArray('actions').High() do
-      if LowerCase(Self.Data.getJSONObject(i).getJSONArray('actions').getString(j)) = action then
-      begin
-        mapObj := TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
-        mapObj.Index := Length(Self.Cache);
-        Self.Cache += mapObj;
-        Result += mapObj.Index;
-        Break;
-      end;
+    begin
+      if LowerCase(Self.Data.getJSONObject(i).getJSONArray('actions').getString(j)) <> action then
+        Continue;
+      Result += TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
+      Break;
+    end;
 end;
 
-function TRSMapObjects.Get(obj: Variant): TRSObjectV2;
-begin
-  Result := Self.Cache[Self.GetIndex(obj)];
-end;
-
-
-procedure TRSMapObjects.Add(obj: TRSObjectV2);
-begin
-  obj.Index := Length(Self.Cache);
-  Self.Cache += obj;
-end;
-
-
-procedure TRSMapObjects.SetFinder(obj: Variant; finder: TRSObjectFinder);
-begin
-  Self.Cache[Self.GetIndex(obj)].Finder := finder;
-end;
-
-procedure TRSMapObjects.SetOffset(obj: Variant; offset: TPoint);
-begin
-  Self.Cache[Self.GetIndex(obj)].Offset := offset;
-end;
 
 procedure TRSMapObjects.Print();
 var
@@ -388,154 +243,114 @@ begin
   end;
 end;
 
+
 type
   TRSMapNPCs = record
     Data: TJSONArray;
     Walker: PRSWalkerV2;
-    Cache: TRSNPCV2Array;
   end;
 
 procedure TRSMapNPCs.Setup(json: TJSONArray; walker: PRSWalkerV2);
 begin
-  Self.Data := json;
+  if Self.Data = nil then
+    Self.Data := json
+  else
+    Self.Data.Merge(json);
+
   Self.Walker := walker;
 end;
 
 
-function TRSMapNPCs.GetIndex(npc: Variant): Int32;
+function TRSMapNPCs.Get(npc: Variant): TRSNPCV2;
 var
   i: Int32;
-  str: String;
-  mapNPC: TRSNPCV2;
+  name: String;
 begin
-  Result := Self.Cache.FindAny(npc);
-  if Result > -1 then
-    Exit;
-
   if VarIsNumeric(npc) then
   begin
     for i := 0 to  Self.Data.High() do
       if Self.Data.getJSONObject(i).getInt('id') = npc then
-      begin
-        mapNPC := TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
-        mapNPC.Index := Length(Self.Cache);
-        Self.Cache += mapNPC;
-        Exit(mapNPC.Index);
-      end;
-
+        Exit(TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i)));
     TerminateScript('NPC with ID ' + ToStr(npc) + ' doesn''t exist on the loaded maps.');
   end;
 
-  str := LowerCase(npc);
+  name := LowerCase(npc);
 
-  if str.IsDigit() then
+  if name.IsDigit() then
   begin
     for i := 0 to  Self.Data.High() do
       if Self.Data.getJSONObject(i).getInt('id') = npc then
-      begin
-        mapNPC := TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
-        mapNPC.Index := Length(Self.Cache);
-        Self.Cache += mapNPC;
-        Exit(mapNPC.Index);
-      end;
-
+        Exit(TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i)));
     TerminateScript('NPC with ID ' + ToStr(npc) + ' doesn''t exist on the loaded maps.');
   end;
 
   for i := 0 to Self.Data.High() do
   begin
-    if LowerCase(Self.Data.getJSONObject(i).getString('name')) = str then
-    begin
-      if Result > -1 then
-      begin
-        if Self.Cache[Result].SameObject(Self.Data.getJSONObject(i)) then
-          Self.Cache[Result] := Self.Cache[Result].Merge(Self.Data.getJSONObject(i));
-        Continue;
-      end;
+    if LowerCase(Self.Data.getJSONObject(i).getString('name')) <> name then
+      Continue;
 
-      mapNPC := TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
-      mapNPC.Index := Length(Self.Cache);
-      Self.Cache += mapNPC;
-      Result := mapNPC.Index
+    if Result.Name <> '' then
+    begin
+      if Result.SameObject(Self.Data.getJSONObject(i)) then
+        Result := Result.Merge(Self.Data.getJSONObject(i));
+      Continue;
     end;
+
+    Result := TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
   end;
 
-  if Result = -1 then
-    TerminateScript('NPC ' + ToStr(npc) + ' doesn''t exist on the loaded maps.');
+  if Result.Name = '' then
+    TerminateScript('NPC ' + name + ' doesn''t exist on the loaded maps.');
 end;
 
-function TRSMapNPCs.GetIndices(name: String): TIntegerArray;
+function TRSMapNPCs.GetByAction(action: String): TRSNPCV2;
+var
+  i, j: Int32;
+begin
+  action := LowerCase(action);
+  for i := 0 to Self.Data.High() do
+    for j := 0 to Self.Data.getJSONObject(i).getJSONArray('actions').High() do
+      if LowerCase(Self.Data.getJSONObject(i).getJSONArray('actions').getString(j)) = action then
+        Exit(TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i)));
+
+  TerminateScript('NPCs with action ' + action + ' don''t exist on the loaded maps.');
+end;
+
+function TRSMapNPCs.GetAll(name: String): TRSNPCV2Array;
 var
   i: Int32;
-  mapNPC: TRSNPCV2;
 begin
   name := LowerCase(name);
-  Result := Self.Cache.FindAllName(name);
-  if Result <> [] then
-    Exit;
-
   for i := 0 to Self.Data.High() do
     if LowerCase(Self.Data.getJSONObject(i).getString('name')) = name then
-    begin
-      mapNPC := TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
-      mapNPC.Index := Length(Self.Cache);
-      Self.Cache += mapNPC;
-      Result += mapNPC.Index;
-    end;
+      Result += TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
+
+  if Result = [] then
+    TerminateScript('NPCs ' + name + ' don''t exist on the loaded maps.');
 end;
 
-function TRSMapNPCs.GetIndices(names: TStringArray): TIntegerArray; overload;
+function TRSMapNPCs.GetAll(names: TStringArray): TRSNPCV2Array; overload;
 var
   name: String;
 begin
   for name in names do
-    Result += Self.GetIndices(name);
+    Result += Self.GetAll(name);
 end;
 
-function TRSMapNPCs.GetIndicesByAction(action: String): TIntegerArray;
+function TRSMapNPCs.GetAllByAction(action: String): TRSNPCV2Array;
 var
   i, j: Int32;
-  mapNPC: TRSNPCV2;
 begin
   action := LowerCase(action);
-  Result := Self.Cache.FindAllAction(action);
-  if Result <> [] then
-    Exit;
-
   for i := 0 to Self.Data.High() do
     for j := 0 to Self.Data.getJSONObject(i).getJSONArray('actions').High() do
       if LowerCase(Self.Data.getJSONObject(i).getJSONArray('actions').getString(j)) = action then
-      begin
-        mapNPC := TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
-        mapNPC.Index := Length(Self.Cache);
-        Self.Cache += mapNPC;
-        Result += mapNPC.Index;
-        Break;
-      end;
+        Result += TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
+
+  if Result = [] then
+    TerminateScript('NPCs with action ' + action + ' don''t exist on the loaded maps.');
 end;
 
-
-function TRSMapNPCs.Get(npc: Variant): TRSNPCV2;
-begin
-  Result := Self.Cache[Self.GetIndex(npc)];
-end;
-
-
-procedure TRSMapNPCs.Add(npc: TRSNPCV2);
-begin
-  npc.Index := Length(Self.Cache);
-  Self.Cache += npc;
-end;
-
-procedure TRSMapNPCs.SetFinder(npc: Variant; finder: TRSObjectFinder);
-begin
-  Self.Cache[Self.GetIndex(npc)].Finder := finder;
-end;
-
-procedure TRSMapNPCs.SetOffset(npc: Variant; offset: TPoint);
-begin
-  Self.Cache[Self.GetIndex(npc)].Offset := offset;
-end;
 
 procedure TRSMapNPCs.Print();
 var
@@ -561,25 +376,61 @@ begin
   end;
 end;
 
+
 var
   Objects: TRSMapObjects;
   NPCs: TRSMapNPCs;
-  Banks: PRSMapObjectArray;
 
 {%codetools off}
+var
+  Banks: PRSMapObjectArray;
+  ObjectsCache: TRSObjectV2Array;
+  NPCsCache: TRSNPCV2Array;
+
 procedure TRSBank._SetupMapObjects();
 var
   i: Int32;
 begin
   if Objects <> [] then
-    for i in Objects.GetIndicesByAction('Bank') do
-      Banks += @Objects.Cache[i];
+  begin
+    ObjectsCache := Objects.GetAllByAction('Bank');
+    for i := 0 to High(ObjectsCache)  do
+      Banks += @ObjectsCache[i];
+  end;
 
   if NPCs <> [] then
-    for i in NPCs.GetIndicesByAction('Bank') do
-      Banks += @NPCs.Cache[i];
+  begin
+    NPCsCache := NPCs.GetAllByAction('Bank');
+    for i := 0 to High(NPCsCache)  do
+      Banks += @NPCsCache[i];
+  end;
 end;
 {%codetools on}
+
+procedure TRSBank._FilterLocation(polygon: TPointArray; inside: Boolean);
+begin
+  if Banks = [] then
+  begin
+    Self._SetupMapObjects();
+    if Banks = [] then
+      TerminateScript('No banks available in the loaded TRSMap');
+  end;
+
+  Banks.Filter(polygon, inside);
+end;
+
+procedure TRSBank._FilterLocation(circle: TCircle; inside: Boolean); overload;
+begin
+  if Banks = [] then
+  begin
+    Self._SetupMapObjects();
+    if Banks = [] then
+      TerminateScript('No banks available in the loaded TRSMap');
+  end;
+
+  Banks.Filter(circle, inside);
+end;
+
 
 function TRSBank.HoverV2(mapObj: PRSMapObject = nil): Boolean; overload;
 begin

@@ -1498,12 +1498,43 @@ begin
   Result := System.PointsInRangeOf(Self, Other, MinDistX, MinDistY, MaxDistX, MaxDistY);
 end;
 
-function TPointArray.Frameness: Single;
+function TPointArray.Frameness(): Single;
 var
   Edge: TPointArray := EdgeFromBox(Self.Bounds());
 begin
   Result := (Length(Edge.PointsInRangeOf(Self, 0, 1)) / Length(Edge)) * 100;
 end; 
+
+
+
+(*
+## TPointArray.InRange
+```pascal
+function TPointArray.AnyInRange(other: TPoint; dist: Double): Boolean;
+function TPointArray.AllInRange(other: TPoint; dist: Double): Boolean;
+```
+Checks if the current points are within `dist` distance of `p`.
+*)
+function TPointArray.AnyInRange(other: TPoint; dist: Double): Boolean;
+var
+  p: TPoint;
+begin
+  for p in Self do
+    if other.InRange(p, dist) then
+      Exit(True);
+end;
+
+function TPointArray.AllInRange(other: TPoint; dist: Double): Boolean;
+var
+  p: TPoint;
+begin
+  for p in Self do
+    if not other.InRange(p, dist) then
+      Exit;
+  Result := True;
+end;
+
+
 
 procedure T2DPointArray.Append(const Value: TPointArray);
 var top:Int32;

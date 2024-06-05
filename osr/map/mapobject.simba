@@ -85,23 +85,6 @@ begin
 end;
 
 
-function TRSMapObject.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSMapObject; static;
-begin
-  Result.Walker := pwalker;
-  Result.Filter := [True, True, True, True];
-
-  Result.ID := json.getInt('id');
-  Result.Name := json.getString('name');
-  Result.Category := json.getInt('category');
-  Result.Offset := [0,0];
-
-  Result.Actions := TRSMapObject.GetActions(json.getJSONArray('actions'));
-  Result.Size := TRSMapObject.GetSize(json.getJSONArray('size'));
-
-  Result := Result.Merge(json.getJSONArray('coordinates'), json.getJSONArray('colors'));
-  Result.Finder.ColorClusters := [];
-end;
-
 function TRSMapObject.SameObject(json: TJSONObject): Boolean;
 var
   i: Int32;
@@ -449,6 +432,8 @@ type
 
   PRSObjectV2 = ^TRSObjectV2;
 
+  TRSObjectV2Array = array of TRSObjectV2;
+
 function TRSObjectV2.Merge(coordinatesJSON, rotationsJSON, colorsJSON: TJSONArray): TRSObjectV2; overload;
 var
   i, c, t: Int32;
@@ -491,7 +476,7 @@ begin
   Result := Self.Merge(json.getJSONArray('coordinates'), json.getJSONArray('rotations'), json.getJSONArray('colors'));
 end;
 
-function TRSObjectV2.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSObjectV2; static; overload;
+function TRSObjectV2.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSObjectV2; static;
 begin
   Result.Walker := pwalker;
   Result.Filter := [True, True, True, True];
@@ -515,6 +500,38 @@ begin
     Exit;
   Result := inherited;
 end;
+
+
+procedure TRSObjectV2.Filter(polygon: TPointArray; inside: Boolean);
+var
+  i: Int32;
+begin
+  for i := High(Self.Coordinates) downto 0 do
+    if (inside and SRL.PointInPoly(Self.Coordinates[i], polygon)) or
+       (not inside and not SRL.PointInPoly(Self.Coordinates[i], polygon))
+    then
+    begin
+      Delete(Self.Coordinates, i, 1);
+      Delete(Self.Rotations, i, 1);
+    end;
+end;
+
+procedure TRSObjectV2.Filter(circle: TCircle; inside: Boolean); overload;
+var
+  i: Int32;
+begin
+  for i := High(Self.Coordinates) downto 0 do
+    if (inside and circle.Contains(Self.Coordinates[i])) or
+       (not inside and not circle.Contains(Self.Coordinates[i]))
+    then
+    begin
+      Delete(Self.Coordinates, i, 1);
+      Delete(Self.Rotations, i, 1);
+    end;
+end;
+
+
+
 
 function TRSObjectV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref; override;
 var
@@ -631,81 +648,6 @@ type
 
   PRSMMDotV2 = ^TRSMMDotV2;
 
-  TRSNPCV2 = record(TRSMMDotV2)
-    Level: Int32;
-  end;
-
-  PRSNPCV2 = ^TRSNPCV2;
-
-function TRSNPCV2.Merge(coordinatesJSON, colorsJSON: TJSONArray): TRSNPCV2; overload;
-var
-  i, c, t: Int32;
-  h, s: Extended;
-  colors: TIntegerArray;
-begin
-  Result := Self;
-
-  for i := 0 to coordinatesJSON.High() do
-    with coordinatesJSON.getJSONArray(i) do
-      Result.Coordinates += [getInt(0), getInt(1)];
-
-  with colorsJSON do
-    for i := 0 to High() do
-      colors += getInt(i);
-
-  ACA(colors, 2, c, t, h, s);
-
-  for i := 0 to High(Result.Finder.Colors) do
-    if Result.Finder.Colors[i] = CTS2(c, t, h, s) then
-      Exit;
-
-  Result.Finder.Colors := [CTS2(c, t, h, s)];
-end;
-
-function TRSNPCV2.Merge(json: TJSONObject): TRSNPCV2; overload;
-begin
-  Result := Self.Merge(json.getJSONArray('coordinates'), json.getJSONArray('colors'));
-end;
-
-function TRSNPCV2.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSNPCV2; static; overload;
-var
-  i: Int32;
-  circle: TCircle;
-begin
-  Result.Walker := pwalker;
-  Result.Filter := [True, True, True, True];
-
-  Result.ID := json.getInt('id');
-  Result.Name := json.getString('name');
-  Result.Category := json.getInt('category');
-  Result.Offset := [2,2];
-
-  Result.Actions := TRSMapObject.GetActions(json.getJSONArray('actions'));
-  Result.Size := TRSMapObject.GetSize(json.getJSONArray('size'));
-
-  Result := Result.Merge(json.getJSONArray('coordinates'), json.getJSONArray('colors'));
-  Result.Finder.ColorClusters := [];
-
-
-  Result.DotType := ERSMinimapDot.NPC;
-  Result.Level := json.getInt('level');
-  Result.Filter.Minimap := json.getBoolean('minimapdot');
-  SetLength(Result.DotFilters, 0);
-
-  for i := 0 to High(Result.Coordinates) do
-  begin
-    circle := [Result.Coordinates[i].X, Result.Coordinates[i].Y, 30];
-    Result.DotFilters.SetupCircle(circle, True);
-  end;
-
-  Result.MapObjectType := ERSMapObjectType.MMDOT;
-end;
-
-function TRSMMDotV2.SameObject(json: TJSONObject): Boolean; override;
-begin
-  Result := inherited;
-end;
-
 function TRSMMDotV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref; override;
 var
   dots: TPointArray;
@@ -763,6 +705,109 @@ begin
     Result += Minimap.GetCuboidMS(p, Self.Size, offsetV, angle);
   end;
 end;
+
+procedure TRSMMDotV2.Filter(polygon: TPointArray; inside: Boolean);
+var
+  i: Int32;
+begin
+  for i := High(Self.Coordinates) downto 0 do
+    if (inside and SRL.PointInPoly(Self.Coordinates[i], polygon)) or
+       (not inside and not SRL.PointInPoly(Self.Coordinates[i], polygon))
+    then
+    begin
+      Delete(Self.Coordinates, i, 1);
+      Delete(Self.DotFilters, i, 1);
+    end;
+end;
+
+procedure TRSMMDotV2.Filter(circle: TCircle; inside: Boolean); overload;
+var
+  i: Int32;
+begin
+  for i := High(Self.Coordinates) downto 0 do
+    if (inside and circle.Contains(Self.Coordinates[i])) or
+       (not inside and not circle.Contains(Self.Coordinates[i]))
+    then
+    begin
+      Delete(Self.Coordinates, i, 1);
+      Delete(Self.DotFilters, i, 1);
+    end;
+end;
+
+
+type
+  TRSNPCV2 = record(TRSMMDotV2)
+    Level: Int32;
+  end;
+
+  PRSNPCV2 = ^TRSNPCV2;
+
+  TRSNPCV2Array = array of TRSNPCV2;
+
+function TRSNPCV2.Merge(coordinatesJSON, colorsJSON: TJSONArray): TRSNPCV2; overload;
+var
+  i, c, t: Int32;
+  h, s: Extended;
+  colors: TIntegerArray;
+begin
+  Result := Self;
+
+  for i := 0 to coordinatesJSON.High() do
+    with coordinatesJSON.getJSONArray(i) do
+      Result.Coordinates += [getInt(0), getInt(1)];
+
+  with colorsJSON do
+    for i := 0 to High() do
+      colors += getInt(i);
+
+  ACA(colors, 2, c, t, h, s);
+
+  for i := 0 to High(Result.Finder.Colors) do
+    if Result.Finder.Colors[i] = CTS2(c, t, h, s) then
+      Exit;
+
+  Result.Finder.Colors := [CTS2(c, t, h, s)];
+end;
+
+function TRSNPCV2.Merge(json: TJSONObject): TRSNPCV2; overload;
+begin
+  Result := Self.Merge(json.getJSONArray('coordinates'), json.getJSONArray('colors'));
+end;
+
+function TRSNPCV2.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSNPCV2; static;
+var
+  i: Int32;
+  circle: TCircle;
+begin
+  Result.Walker := pwalker;
+  Result.Filter := [True, True, True, True];
+
+  Result.ID := json.getInt('id');
+  Result.Name := json.getString('name');
+  Result.Category := json.getInt('category');
+  Result.Offset := [2,2];
+
+  Result.Actions := TRSMapObject.GetActions(json.getJSONArray('actions'));
+  Result.Size := TRSMapObject.GetSize(json.getJSONArray('size'));
+
+  Result := Result.Merge(json.getJSONArray('coordinates'), json.getJSONArray('colors'));
+  Result.Finder.ColorClusters := [];
+
+
+  Result.DotType := ERSMinimapDot.NPC;
+  Result.Level := json.getInt('level');
+  Result.Filter.Minimap := json.getBoolean('minimapdot');
+  SetLength(Result.DotFilters, 0);
+
+  for i := 0 to High(Result.Coordinates) do
+  begin
+    circle := [Result.Coordinates[i].X, Result.Coordinates[i].Y, 30];
+    Result.DotFilters.SetupCircle(circle, True);
+  end;
+
+  Result.MapObjectType := ERSMapObjectType.MMDOT;
+end;
+
 
 
 (*
