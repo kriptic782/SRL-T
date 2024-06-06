@@ -1,3 +1,12 @@
+## [5.4.1](https://github.com/Torwent/SRL-T/compare/v5.4.0...v5.4.1) (2024-06-06)
+
+
+### Bug Fixes
+
+* **TRSMap:** adaptive walking enabled by default now ([69f6327](https://github.com/Torwent/SRL-T/commit/69f63272f21b5c9f477984b9281a3063b85044b8))
+
+
+
 # [5.4.0](https://github.com/Torwent/SRL-T/compare/v5.3.3...v5.4.0) (2024-06-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMapObjectArray:** find objects by their actions ([5b32d7f](https://github.com/Torwent/SRL-T/commit/5b32d7f8bea8ce6e42c276313acfe4170bf0c0bb))
-
-
-
-# [5.3.0](https://github.com/Torwent/SRL-T/compare/v5.2.0...v5.3.0) (2024-06-04)
-
-
-### Features
-
-* **debug:** read notes ([7d36a94](https://github.com/Torwent/SRL-T/commit/7d36a94bb2db2115b5ba96141a0fa33d618ea821))
 
 
 
