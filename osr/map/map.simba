@@ -78,7 +78,7 @@ procedure TRSMap.InternalSetup();
 var
   minimapImage, minimapSample: TMufasaBitmap;
 begin
-  minimapImage := TRSWalker.GetCleanMinimap();
+  minimapImage := TRSMap.GetCleanMinimap();
   minimapSample := Self.ScaleMinimap(minimapImage, Self.Loader.Downscale);
 
   Self.Cache := TMatchTemplateRGBCache.Create(Self.Loader.DownscaledMap.ToMatrix(), MinimapSample.ToMatrix());
@@ -90,6 +90,7 @@ begin
     Self.Walker.GetLocal := @Self.Loader.GetLocal;
     Self.Walker.WebGraph := @Self.Loader.Graph;
     Self.Walker.MapImage := Self.Loader.Map;
+    Self.Walker.AdaptiveWalk := True;
 
     AddOnTerminate(@Self.Loader.Free);
     Self.IsSetup := True;
@@ -569,8 +570,8 @@ Returns the players current position on the loaded map.
 
 Example:
 ```pascal
-WriteLn(Walker.Position());
-WriteLn(Walker.Similarity); // Check to see the match percentage if needed
+WriteLn(Map.Position());
+WriteLn(Map.Similarity); // Check to see the match percentage if needed
 ```
 *)
 function TRSMap.Position(): TPoint;

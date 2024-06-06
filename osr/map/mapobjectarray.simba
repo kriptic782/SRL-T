@@ -107,8 +107,6 @@ begin
 end;
 
 
-
-
 type
   TRSMapObjects = record
     Data: TJSONArray;
