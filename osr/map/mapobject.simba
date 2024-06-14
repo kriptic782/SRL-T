@@ -556,6 +556,8 @@ begin
   Locations.Angles := Copy(Self.Rotations);
 
   Locations.FilterCircle([me.X, me.Y, 85]);
+  if (Length(Locations.Coordinates) = 0) or (Length(Locations.Angles) = 0) then
+    Exit;
   Locations.Sort(me);
 
   for i := 0 to High(Locations.Coordinates) do
