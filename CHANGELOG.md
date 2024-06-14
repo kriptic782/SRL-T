@@ -1,3 +1,12 @@
+## [5.4.2](https://github.com/Torwent/SRL-T/compare/v5.4.1...v5.4.2) (2024-06-14)
+
+
+### Bug Fixes
+
+* **TRSObjectV2:** check that the filtered coordinates length before sorting ([8b0ed86](https://github.com/Torwent/SRL-T/commit/8b0ed8651bfefd4c76b17ac02bc60d21e0d45cd1))
+
+
+
 ## [5.4.1](https://github.com/Torwent/SRL-T/compare/v5.4.0...v5.4.1) (2024-06-06)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([10b5c69](https://github.com/Torwent/SRL-T/commit/10b5c69381076bb009018a5df0aaa961afacc579))
-
-
-
-## [5.3.1](https://github.com/Torwent/SRL-T/compare/v5.3.0...v5.3.1) (2024-06-04)
-
-
-### Bug Fixes
-
-* **TRSMapObjectArray:** find objects by their actions ([5b32d7f](https://github.com/Torwent/SRL-T/commit/5b32d7f8bea8ce6e42c276313acfe4170bf0c0bb))
 
 
 
