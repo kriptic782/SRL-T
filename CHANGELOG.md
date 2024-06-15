@@ -1,3 +1,12 @@
+## [5.4.3](https://github.com/Torwent/SRL-T/compare/v5.4.2...v5.4.3) (2024-06-15)
+
+
+### Bug Fixes
+
+* **TRSWalkerV2:** Now 'Walk here' is added to it's uptext checker ([288068c](https://github.com/Torwent/SRL-T/commit/288068c8313748b93e759b147a546f0e65798f56))
+
+
+
 ## [5.4.2](https://github.com/Torwent/SRL-T/compare/v5.4.1...v5.4.2) (2024-06-14)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMapObjects:** removed the cache system ([94e73bf](https://github.com/Torwent/SRL-T/commit/94e73bf9516851921c03313db98b38c1c670aa89))
-
-
-
-## [5.3.2](https://github.com/Torwent/SRL-T/compare/v5.3.1...v5.3.2) (2024-06-05)
-
-
-### Bug Fixes
-
-* read notes ([10b5c69](https://github.com/Torwent/SRL-T/commit/10b5c69381076bb009018a5df0aaa961afacc579))
 
 
 
