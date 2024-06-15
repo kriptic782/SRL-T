@@ -85,12 +85,10 @@ begin
 
   if not Self.IsSetup then
   begin
-    Self.Walker.Position := @Self.Position;
-    Self.Walker.Height := @Self.Height;
-    Self.Walker.GetLocal := @Self.Loader.GetLocal;
-    Self.Walker.WebGraph := @Self.Loader.Graph;
-    Self.Walker.MapImage := Self.Loader.Map;
-    Self.Walker.AdaptiveWalk := True;
+    Self.Walker.Setup(
+      @Self.Position, @Self.Height, @Self.Loader.GetLocal,
+      @Self.Loader.Graph, Self.Loader.Map
+    );
 
     AddOnTerminate(@Self.Loader.Free);
     Self.IsSetup := True;

@@ -59,6 +59,22 @@ end;
     OnWalkEvent, OnWalkingEvent: TRSWalkerV2_OnWalkEvent;
   end;
 
+procedure TRSWalkerV2.Setup(
+  position: function (): TPoint of object;
+  height: function (p: TPoint = [-1,-1]): Single of object;
+  getLocal: function (tpa: TPointArray): TPointArray of object;
+  graph: ^TWebGraph;
+  mapImage: TMufasaBitmap
+);
+begin
+  Self.Position := @position;
+  Self.Height := @height;
+  Self.GetLocal := @getLocal;
+  Self.WebGraph := graph;
+  Self.WalkUpText := ['Walk here', 'alk her'];
+  Self.AdaptiveWalk := True;
+end;
+
 
 function TRSWalkerV2.PointToMM(playerPoint, p: TPoint; radians: Double): TPoint;
 begin
