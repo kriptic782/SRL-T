@@ -149,6 +149,15 @@ begin
 end;
 
 
+function TRSChunkLoader.GetChunks(start, finish: TPoint): TPointArray; static;
+var
+  x, y: Int32;
+begin
+  for x := Min(start.X, finish.X) to Max(start.X, finish.X) do
+    for y := Min(start.Y, finish.Y) to Max(start.Y, finish.Y) do
+      Result += [x,y];
+end;
+
 function TRSChunkLoader.GetMap(chunks: TPointArray; level: UInt32; map: ERSMapType): TMufasaBitmap;
 var
   i, x, y, n: Int32;
@@ -191,13 +200,9 @@ end;
 
 function TRSChunkLoader.GetMap(start, finish: TPoint; level: UInt32; map: ERSMapType): TMufasaBitmap; overload;
 var
-  x, y: Int32;
   chunks: TPointArray;
 begin
-  for x := Min(start.X, finish.X) to Max(start.X, finish.X) do
-    for y := Min(start.Y, finish.Y) to Max(start.Y, finish.Y) do
-      chunks += [x,y];
-
+  chunks := TRSChunkLoader.GetChunks(start, finish);
   Result := Self.GetMap(chunks, level, map);
 end;
 

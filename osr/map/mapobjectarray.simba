@@ -42,6 +42,18 @@ begin
   end;
 end;
 
+function PRSMapObjectArray.GetCoordinates(): TPointArray;
+var
+  tmp: PRSMapObject;
+  i: Int32;
+begin
+  for i := 0 to  High(Self) do
+  begin
+    tmp := Self[i];
+    Result += tmp^.Coordinates;
+  end;
+end;
+
 
 procedure PRSMapObjectArray.Filter(polygon: TPointArray; inside: Boolean);
 var
@@ -435,6 +447,31 @@ begin
   end;
 
   Banks.Filter(circle, inside);
+end;
+
+
+function TRSBank.GetCoordinates(): TPointArray;
+begin
+  if Banks = [] then
+  begin
+    Self._SetupMapObjects();
+    if Banks = [] then
+      TerminateScript('No banks available in the loaded TRSMap');
+  end;
+
+  Result := Banks.GetCoordinates();
+end;
+
+
+function TRSBank.DebugMapObjects(): Boolean;
+var
+  mapObj: PRSMapObject;
+begin
+  mapObj := Banks.GetClosest();
+  case mapObj^.MapObjectType of
+    ERSMapObjectType.OBJ: Debug(PRSObjectV2(mapObj)^);
+    ERSMapObjectType.NPC: Debug(PRSNPCV2(mapObj)^);
+  end;
 end;
 
 
