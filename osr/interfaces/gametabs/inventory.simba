@@ -36,7 +36,6 @@ type
 ```pascal
 function TRSInventory.GetSlotBoxes(): TBoxArray;
 ```
-
 Mainly used internally by TRSInventory methods.
 This function is used to return a TBoxArray of the inventory slots.
 
@@ -85,7 +84,6 @@ end;
 ```pascal
 function TRSInventory.IsOpen(): Boolean;
 ```
-
 Returns true if the inventory gametab is open, false if it's not.
 
 Example:
@@ -103,7 +101,6 @@ end;
 ```pascal
 function TRSInventory.Open(): Boolean;
 ```
-
 Attempts to open the inventory, returns true if it succeeds.
 
 Example:
@@ -122,7 +119,6 @@ end;
 ```pascal
 function TRSInventory.PointToSlot(P: TPoint): Int32;
 ```
-
 Returns the inventory slot index which contains the TPoint `P`.
 Returns -1 if the point does not fall in any slots.
 
@@ -166,7 +162,6 @@ end;
 ```pascal
 function TRSInventory.ClickSlot(slot: Int32; option: String = ''): Boolean;
 ```
-
 Moves the mouse and clicks on the slot. Slot is an Integer between 0 and 27.
 
 If option is empty the slot is left clicked. Else a right click is performed
@@ -202,7 +197,6 @@ end;
 ```pascal
 function TRSInventory.IsSlotSelected(Slot: Int32): Boolean;
 ```
-
 Returns True if the slot is selected (white outline).
 
 Example:
@@ -273,7 +267,6 @@ end;
 ```pascal
 function TRSInventory.SetSelectedSlot(Slot: Int32): Boolean;
 ```
-
 Set the slot as selected (white outline).
 Slot can be **-1** to unselect the currently selected slot.
 
@@ -312,7 +305,6 @@ end;
 ```pascal
 function TRSInventory.RandomPattern(): TIntegerArray;
 ```
-
 Returns a random inventory pattern.
 
 Example:
@@ -339,7 +331,6 @@ end;
 ```pascal
 function TRSInventory.ErrorPattern(Pattern: TIntegerArray=DROP_PATTERN_REGULAR; ErrorChance:Int32=5): TIntegerArray;
 ```
-
 Returns the passed in pattern slightly modified.
 
 Example:
@@ -394,7 +385,6 @@ end;
 ```pascal
 function TRSInventory.Count(): Int32;
 ```
-
 Counts how many items are in the inventory right now.
 
 Example:
@@ -414,7 +404,6 @@ end;
 ```pascal
 function TRSInventory.IsFull(): Boolean;
 ```
-
 Returns true if the inventory is full.
 
 Example:
@@ -432,7 +421,6 @@ end;
 ```pascal
 function TRSInventory.WaitCount(Count: Int32; WaitTime: Int32; Interval: Int32 = -1): Boolean;
 ```
-
 Wait **WaitTime** until the Inventory.Count() matches **Count**.
 
 Example:
@@ -453,7 +441,6 @@ end;
 ```pascal
 function TRSInventory.RandomSlotNearby(Slot: Int32; Slots: TIntegerArray): Int32;
 ```
-
 Randomly returns one of the **Slots** weighted towards **Slot** by distance.
 
 Example:
@@ -476,7 +463,6 @@ end;
 ```pascal
 function TRSInventory.FindItems(Items: TRSItemArray; out Slots: TIntegerArray): Boolean;
 ```
-
 Attempts to find the items passed in **Items**. The function returns true if any item is found and
 the slots of the found items will be returned in **Slots**.
 
@@ -502,8 +488,6 @@ end;
 ## Inventory.FindItem
 ```pascal
 function TRSInventory.FindItem(Item: TRSItem; out Slots: TIntegerArray): Boolean;
-```
-```pascal
 function TRSInventory.FindItem(item: TRSItem; out slot: Int32): Boolean; overload;
 ```
 
@@ -629,7 +613,7 @@ end;
 ## Inventory.CountStack
 ```pascal
 function TRSInventory.CountItemStack(Item: TRSItem): Int32;
- function TRSInventory.CountSlotStack(slot: Int32): Int32;
+function TRSInventory.CountSlotStack(slot: Int32): Int32;
 ```
 Returns the stack amount of `item` or `slot` in the inventory.
 

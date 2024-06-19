@@ -10,9 +10,9 @@ Methods to interact with the XP bar.
 type
   TRSXPBar = record(TRSInterface)
     Tracker: record
-      Start: Int32;
-      Current: Int32;
-      Previous: Int32;
+      Start: Int64;
+      Current: Int64;
+      Previous: Int64;
       IsSetup: Boolean;
     end;
 
@@ -169,7 +169,9 @@ Example:
 WriteLn XPBar.Read();
 ```
 *)
-function TRSXPBar.Read(): Int32;
+function TRSXPBar.Read(): Int64;
+var
+  xpStr: String;
 begin
   if not Self.IsSetup then
     Self._Setup();
@@ -177,7 +179,8 @@ begin
   if not Self.IsSetup or not Self.Enable() then
     Exit;
 
-  Result := OCR.RecognizeNumber(Self.Bounds(), TOCRColorFilter.Create([$FFFFFF]), Self.Font);
+  xpStr := OCR.Recognize(Self.Bounds(), TOCRColorFilter.Create([$FFFFFF]), Self.Font);
+  Result := xpStr.ExtractInteger(0);
 
   Self.Tracker.IsSetup := (Result > 0) and (Result >= Self.Tracker.Current);
 

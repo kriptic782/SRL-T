@@ -351,23 +351,8 @@ end;
 
 
 function TRSItemInterface.Count(): Int32;
-var
-  slots: TBoxArray;
-  tpa: TPointArray;
-  atpa: T2DPointArray;
 begin
-  if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
-
-  slots := Self.GetSearchBoxesFunction();
-
-  if SRL.FindColors(tpa, CTS1(1118740, 35), slots.Merge()) = 0 then
-    Exit;
-
-  atpa := tpa.Cluster(5, 4);
-  atpa.FilterSize(13, __GT__);
-
-  Result := atpa.Len();
+  Result := Length(Self.GetUsedSlots());
 end;
 
 function TRSItemInterface.Count(item: TRSItem): Int32; overload;
@@ -376,22 +361,8 @@ begin
 end;
 
 function TRSItemInterface.CountEmptySlots(): Int32;
-var
-  slots: TBoxArray;
-  tpa: TPointArray;
-  atpa: T2DPointArray;
 begin
-  if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
-
-  slots := Self.GetSearchBoxesFunction();
-
-  if SRL.FindColors(tpa, CTS1(1118740, 35), slots.Merge()) = 0 then
-    Exit;
-
-  atpa := tpa.Cluster(5, 4);
-  atpa.FilterSize(13, __GT__);
-  Result := Length(slots) - Length(atpa);
+  Result := Length(Self.GetEmptySlots());
 end;
 
 
