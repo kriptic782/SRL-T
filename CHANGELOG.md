@@ -1,3 +1,12 @@
+# [5.5.0](https://github.com/Torwent/SRL-T/compare/v5.4.5...v5.5.0) (2024-06-20)
+
+
+### Features
+
+* **TRSBanks:** read notes ([7be685c](https://github.com/Torwent/SRL-T/commit/7be685ca4b6ce916a24651b563541a313377d800))
+
+
+
 ## [5.4.5](https://github.com/Torwent/SRL-T/compare/v5.4.4...v5.4.5) (2024-06-19)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSObjectV2:** check that the filtered coordinates length before sorting ([8b0ed86](https://github.com/Torwent/SRL-T/commit/8b0ed8651bfefd4c76b17ac02bc60d21e0d45cd1))
-
-
-
-## [5.4.1](https://github.com/Torwent/SRL-T/compare/v5.4.0...v5.4.1) (2024-06-06)
-
-
-### Bug Fixes
-
-* **TRSMap:** adaptive walking enabled by default now ([69f6327](https://github.com/Torwent/SRL-T/commit/69f63272f21b5c9f477984b9281a3063b85044b8))
 
 
 
