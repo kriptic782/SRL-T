@@ -205,6 +205,7 @@ begin
     end;
 end;
 
+
 function TRSMapObjects.GetAll(name: String): TRSObjectV2Array;
 var
   i: Int32;
@@ -243,6 +244,29 @@ begin
 
   if Result = [] then
     TerminateScript('Objects with action ' + action + ' don''t exist on the loaded maps.');
+
+  Result.Reduce();
+end;
+
+function TRSMapObjects.GetAllByCoordinate(p: TPoint; dist: Int32): TRSObjectV2Array;
+var
+  i, j: Int32;
+  coordJSON: TJSONArray;
+  coord: TPoint;
+begin
+  for i := 0 to Self.Data.High() do
+    for j := 0 to Self.Data.getJSONObject(i).getJSONArray('coordinates').High() do
+    begin
+      coordJSON := Self.Data.getJSONObject(i).getJSONArray('coordinates').Get(j);
+      coord := [coordJSON.getInt(0), coordJSON.getInt(1)];
+      if p.DistanceTo(coord) >= dist then
+        Continue;
+      Result += TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
+      Break;
+    end;
+
+  if Result = [] then
+    TerminateScript('Objects with close to ' + ToStr(p) + ' don''t exist on the loaded maps.');
 
   Result.Reduce();
 end;
@@ -381,6 +405,29 @@ begin
     TerminateScript('NPCs with action ' + action + ' don''t exist on the loaded maps.');
 end;
 
+function TRSMapNPCs.GetAllByCoordinate(p: TPoint; dist: Int32): TRSNPCV2Array;
+var
+  i, j: Int32;
+  coordJSON: TJSONArray;
+  coord: TPoint;
+begin
+  for i := 0 to Self.Data.High() do
+    for j := 0 to Self.Data.getJSONObject(i).getJSONArray('coordinates').High() do
+    begin
+      coordJSON := Self.Data.getJSONObject(i).getJSONArray('coordinates').Get(j);
+      coord := [coordJSON.getInt(0), coordJSON.getInt(1)];
+      if p.DistanceTo(coord) >= dist then
+        Continue;
+      Result += TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
+      Break;
+    end;
+
+  if Result = [] then
+    TerminateScript('NPCs close to ' + ToStr(p) + ' don''t exist on the loaded maps.');
+
+  Result.Reduce();
+end;
+
 
 procedure TRSMapNPCs.Print();
 var
@@ -398,7 +445,7 @@ begin
 
     WriteLn(
       'ID: ', getInt('id'), ', Name: ', getString('name'),
-      ', Type: ', getInt('type'), ', Category: ', getInt('category'),
+      ', Category: ', getInt('category'),
       ', Actions: ', actions, ', Colors: ', colors, ', Coordinates: ', getJSONArray('coordinates').toString()
     );
     actions := [];

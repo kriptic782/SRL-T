@@ -35,6 +35,7 @@ end;
     ARDOUGNE,
     EDGEVILLE,
     FALADOR,
+    FOSSIL_ISLAND,
     LUMBRIDGE,
     LUNAR_ISLE,
     MOTHERLOADE_MINE,
@@ -48,16 +49,17 @@ end;
 function ERSChunk.Get(): TRSMapChunk;
 begin
   case Self of
-    ERSChunk.ARDOUGNE         : Result := ['Ardougne',         [40,51,41,52], [0,3]];
-    ERSChunk.EDGEVILLE        : Result := ['Edgeville',        [48,54,48,54], [0]];
-    ERSChunk.FALADOR          : Result := ['Falador',          [45,53,47,51], [0]];
-    ERSChunk.LUMBRIDGE        : Result := ['Lumbridge',        [49,51,50,49], [0,1,2]];
-    ERSChunk.LUNAR_ISLE       : Result := ['Lunar Isle',       [32,61,33,60], [0]];
-    ERSChunk.MOTHERLOADE_MINE : Result := ['Motherloade Mine', [57,89,59,87], [0,1]];
-    ERSChunk.PRIFDDINAS       : Result := ['Prifddinas',       [50,95,51,94], [0]];
-    ERSChunk.RUINS_OF_UNKAH   : Result := ['Ruins of Unkah',   [48,44,49,44], [0]];
-    ERSChunk.TEMPOROSS_COVE   : Result := ['Tempoross Cove',   [47,46,47,46], [0]];
-    ERSChunk.VARROCK          : Result := ['Varrock',          [49,54,50,53], [0]];
-    ERSChunk.WINTERTODT       : Result := ['Wintertodt',       [25,61,25,62], [0]];
+    ERSChunk.ARDOUGNE         : Result := ['Ardougne',         [40,51,41,52],  [0,3]    ];
+    ERSChunk.EDGEVILLE        : Result := ['Edgeville',        [48,54,48,54],  [0]      ];
+    ERSChunk.FALADOR          : Result := ['Falador',          [45,53,47,51],  [0]      ];
+    ERSChunk.FOSSIL_ISLAND    : Result := ['Fossil Island',    [56,61, 60,57], [0,1]    ];
+    ERSChunk.LUMBRIDGE        : Result := ['Lumbridge',        [49,51,50,49],  [0,1,2]  ];
+    ERSChunk.LUNAR_ISLE       : Result := ['Lunar Isle',       [32,61,33,60],  [0]      ];
+    ERSChunk.MOTHERLOADE_MINE : Result := ['Motherloade Mine', [57,89,59,87],  [0,1]    ];
+    ERSChunk.PRIFDDINAS       : Result := ['Prifddinas',       [50,95,51,94],  [0]      ];
+    ERSChunk.RUINS_OF_UNKAH   : Result := ['Ruins of Unkah',   [48,44,49,44],  [0]      ];
+    ERSChunk.TEMPOROSS_COVE   : Result := ['Tempoross Cove',   [47,46,47,46],  [0]      ];
+    ERSChunk.VARROCK          : Result := ['Varrock',          [49,54,50,53],  [0]      ];
+    ERSChunk.WINTERTODT       : Result := ['Wintertodt',       [25,61,25,62],  [0]      ];
   end;
 end;
