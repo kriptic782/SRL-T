@@ -1,3 +1,12 @@
+# [5.6.0](https://github.com/Torwent/SRL-T/compare/v5.5.0...v5.6.0) (2024-06-20)
+
+
+### Features
+
+* **MapObjects:** GetByCoordinate() ([f7e7c8d](https://github.com/Torwent/SRL-T/commit/f7e7c8d7e11344db038660a16ee1c13bf7c83ee6))
+
+
+
 # [5.5.0](https://github.com/Torwent/SRL-T/compare/v5.4.5...v5.5.0) (2024-06-20)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSWalkerV2:** Now 'Walk here' is added to it's uptext checker ([288068c](https://github.com/Torwent/SRL-T/commit/288068c8313748b93e759b147a546f0e65798f56))
-
-
-
-## [5.4.2](https://github.com/Torwent/SRL-T/compare/v5.4.1...v5.4.2) (2024-06-14)
-
-
-### Bug Fixes
-
-* **TRSObjectV2:** check that the filtered coordinates length before sorting ([8b0ed86](https://github.com/Torwent/SRL-T/commit/8b0ed8651bfefd4c76b17ac02bc60d21e0d45cd1))
 
 
 
