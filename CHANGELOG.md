@@ -1,3 +1,12 @@
+## [5.6.1](https://github.com/Torwent/SRL-T/compare/v5.6.0...v5.6.1) (2024-06-24)
+
+
+### Bug Fixes
+
+* **bankpin:** BankPin.Enter() rewroten ([62807dc](https://github.com/Torwent/SRL-T/commit/62807dc84ba4768a755573a4f725e84fabea5189))
+
+
+
 # [5.6.0](https://github.com/Torwent/SRL-T/compare/v5.5.0...v5.6.0) (2024-06-20)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([34f66ed](https://github.com/Torwent/SRL-T/commit/34f66ed85235673245f454a3642a1f90c0cf8995))
-
-
-
-## [5.4.3](https://github.com/Torwent/SRL-T/compare/v5.4.2...v5.4.3) (2024-06-15)
-
-
-### Bug Fixes
-
-* **TRSWalkerV2:** Now 'Walk here' is added to it's uptext checker ([288068c](https://github.com/Torwent/SRL-T/commit/288068c8313748b93e759b147a546f0e65798f56))
 
 
 
