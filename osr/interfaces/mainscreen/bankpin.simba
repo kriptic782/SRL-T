@@ -9,7 +9,9 @@ Methods to interact with the bank pin interface.
 {$ENDIF}
 
 type
-  TRSBankPin = type TRSTitledInterface;
+  TRSBankPin = record(TRSTitledInterface)
+    OCRFilter: TOCRColorFilter;
+  end;
 
 procedure TRSBankPin.Setup(); override;
 begin
@@ -17,6 +19,7 @@ begin
   
   Self.Name := 'Bank Pin';
   Self.ButtonColors := [CTS1(988769, 30)];
+  Self.OCRFilter := TOCRColorFilter.Create([$FFFFFF]);
 end;
 
 procedure TRSBankPin.SetupAlignment(Mode: ERSClientMode); override;
@@ -58,7 +61,6 @@ end;
 function TRSBankPin.IsOpen(): Boolean;
 function TRSBankPin.IsOpen(waitTime: Int32; interval: Int32 = -1): Boolean; overload;
 ```
-
 Returns true if the bank pin is open.
 
 Example:
@@ -85,7 +87,6 @@ end;
 ```pascal
 function TRSBankPin.ClickDigit(digit: Char): Boolean; override;
 ```
-
 Clicks a bank pin digit.
 
 ```{note}
@@ -126,7 +127,6 @@ end;
 ```pascal
 function TRSBankPin.Enter(pin: String): Boolean;
 ```
-
 Handles entering the bank pin. Will do 4 attempts before terminating with a fatal error.
 
 Example:
@@ -134,66 +134,59 @@ Example:
 BankPin.Enter('0000');
 ```
 *)
-function TRSBankPin.Enter(pin: String): Boolean;
+function TRSBankPin.Enter(pin: String; attempts: Int32 = 3): Boolean;
 
   function _GetDigitToEnter(): Char;
+  const
+    DIGITS: TStringArray = ['FIRST', 'SECOND', 'THIRD', 'FOURTH'];
+  var
+    i: Int32;
   begin
-    if OCR.LocateText(Self.Bounds, 'FIRST',  RS_FONT_BOLD_12, TOCRColorFilter.Create([$FFFFFF]), 1) then Exit(pin[1]);
-    if OCR.LocateText(Self.Bounds, 'SECOND', RS_FONT_BOLD_12, TOCRColorFilter.Create([$FFFFFF]), 1) then Exit(pin[2]);
-    if OCR.LocateText(Self.Bounds, 'THIRD',  RS_FONT_BOLD_12, TOCRColorFilter.Create([$FFFFFF]), 1) then Exit(pin[3]);
-    if OCR.LocateText(Self.Bounds, 'FOURTH', RS_FONT_BOLD_12, TOCRColorFilter.Create([$FFFFFF]), 1) then Exit(pin[4]);
+    for i := 0 to High(DIGITS) do
+      if OCR.LocateText(Self.Bounds(), DIGITS[i],  RS_FONT_BOLD_12, Self.OCRFilter, 1) then
+        Exit(pin[i]);
   end;
 
   function _IsUnlocked(): Boolean;
-  var
-    chatCache: String;
   begin
     if Self.IsOpen() then
       Exit;
-    chatCache := Chat.GetChat();
-    Result := not chatCache.ContainsAny(['try again', 'forgotten your PIN', 'PIN incorrectly several']);
+    Result := not Chat.GetChat().ContainsAny(['try again', 'forgotten your PIN', 'PIN incorrectly several']);
   end;
 
 var
-  i, j: Int32;
+  i: Int32;
   digit: Char;
   chatCache: String;
 begin
-  for i := 0 to 3 do // 3 Attempts
+  if attempts < 0 then
+    Exit;
+
+  for i := 0 to 3 do
   begin
-    for j := 1 to 4 do
-    begin
-      digit := _GetDigitToEnter();
-      if digit = '' then
-        Break;
-
-      if not Self.ClickDigit(digit) then
-        Break;
-
-      Wait(1000, 2000, wdLeft);
-    end;
-
-    chatCache := Chat.GetChat();
-    if 'try again' in chatCache then
-    begin
-      Chat.ClickContinue(True);
-      Continue;
-    end;
-
-    if 'forgotten your PIN' in chatCache then
-    begin
-      WaitUntil(not ('forgotten your PIN' in Chat.GetChat()), 300, 20000);
-      Continue;
-    end;
-
-    if 'PIN incorrectly several' in chatCache then
-      Self.Fatal('Failed to enter the bank pin several times. Check that the pin is correct.');
-
-    if WaitUntil(_IsUnlocked(), 300, 3000) then
-      Exit(True);
+    digit := _GetDigitToEnter();
+    if (digit = '') or not Self.ClickDigit(digit) then
+      Break;
+    WaitUntil(digit <> _GetDigitToEnter(), 100, 5000);
   end;
 
-  Result := WaitUntil(_IsUnlocked(), 300, 3000); //wait 3 extra seconds before failing.
+  chatCache := Chat.GetChat();
+  if 'try again' in chatCache then
+  begin
+    Chat.ClickContinue(True);
+    Exit(Self.Enter(pin, Dec(attempts)));
+  end;
+
+  if 'forgotten your PIN' in chatCache then
+  begin
+    WaitUntil(not ('forgotten your PIN' in Chat.GetChat()), 300, 20000);
+    Exit(Self.Enter(pin, Dec(attempts)));
+  end;
+
+  if 'PIN incorrectly several' in chatCache then
+    Self.Fatal('Failed to enter the bank pin several times. Check that the pin is correct.');
+
+  Result := WaitUntil(_IsUnlocked(), 300, 3000) or Self.Enter(pin, Dec(attempts));
 end;
 
 procedure TRSBankPin.Draw(Bitmap: TMufasaBitmap); override;

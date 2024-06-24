@@ -70,11 +70,11 @@ end;
 (*
 ## String.Contains
 ```pascal
-function String.Contains(subString: String): Boolean;
+function String.Contains(subString: String): Boolean; constref;
 ```
 Returns true if the substring exists on the string.
 *)
-function String.Contains(subString: String): Boolean;
+function String.Contains(subString: String): Boolean; constref;
 begin
   Result := Self.Pos(subString) > 0;
 end;
@@ -82,11 +82,11 @@ end;
 (*
 ## String.ContainsAny
 ```pascal
-function String.ContainsAny(subStrings: TStringArray): Boolean;
+function String.ContainsAny(subStrings: TStringArray): Boolean; constref;
 ```
 Returns true if any of the substrings exists on the string.
 *)
-function String.ContainsAny(subStrings: TStringArray): Boolean;
+function String.ContainsAny(subStrings: TStringArray): Boolean; constref;
 var
   str: String;
 begin
@@ -98,11 +98,11 @@ end;
 (*
 ## String.ContainsAll
 ```pascal
-function String.ContainsAll(subStrings: TStringArray): Boolean;
+function String.ContainsAll(subStrings: TStringArray): Boolean; constref;
 ```
 Returns true if all of the substrings exist on the string.
 *)
-function String.ContainsAll(subStrings: TStringArray): Boolean;
+function String.ContainsAll(subStrings: TStringArray): Boolean; constref;
 var
   str: String;
 begin
