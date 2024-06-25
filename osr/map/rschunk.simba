@@ -33,6 +33,7 @@ end;
 
   ERSChunk = (
     ARDOUGNE,
+    CRAFTING_GUILD,
     EDGEVILLE,
     FALADOR,
     FOSSIL_ISLAND,
@@ -50,6 +51,7 @@ function ERSChunk.Get(): TRSMapChunk;
 begin
   case Self of
     ERSChunk.ARDOUGNE         : Result := ['Ardougne',         [40,51,41,52],  [0,3]    ];
+    ERSChunk.CRAFTING_GUILD   : Result := ['Crafting guild',   [45,51,46,51],  [0]      ];
     ERSChunk.EDGEVILLE        : Result := ['Edgeville',        [48,54,48,54],  [0]      ];
     ERSChunk.FALADOR          : Result := ['Falador',          [45,53,47,51],  [0]      ];
     ERSChunk.FOSSIL_ISLAND    : Result := ['Fossil Island',    [56,61, 60,57], [0,1]    ];

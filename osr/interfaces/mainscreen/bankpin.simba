@@ -167,6 +167,7 @@ begin
     digit := _GetDigitToEnter();
     if (digit = '') or not Self.ClickDigit(digit) then
       Break;
+    Wait(200, 1500, EWaitDir.wdLeft);
     WaitUntil(digit <> _GetDigitToEnter(), 100, 5000);
   end;
 
