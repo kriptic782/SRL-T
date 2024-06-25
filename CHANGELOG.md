@@ -1,3 +1,12 @@
+## [5.6.2](https://github.com/Torwent/SRL-T/compare/v5.6.1...v5.6.2) (2024-06-25)
+
+
+### Bug Fixes
+
+* **BankPin:** fixed small oversight ([3e04816](https://github.com/Torwent/SRL-T/commit/3e048168f19d863a441996f77b40da220837cbf3))
+
+
+
 ## [5.6.1](https://github.com/Torwent/SRL-T/compare/v5.6.0...v5.6.1) (2024-06-24)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * some tweaks to object arrays ([03861d3](https://github.com/Torwent/SRL-T/commit/03861d3dfe77fa77df08aa523b06403db31f980d))
-
-
-
-## [5.4.4](https://github.com/Torwent/SRL-T/compare/v5.4.3...v5.4.4) (2024-06-19)
-
-
-### Bug Fixes
-
-* read notes ([34f66ed](https://github.com/Torwent/SRL-T/commit/34f66ed85235673245f454a3642a1f90c0cf8995))
 
 
 
