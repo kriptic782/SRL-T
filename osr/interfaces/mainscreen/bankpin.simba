@@ -144,7 +144,7 @@ function TRSBankPin.Enter(pin: String; attempts: Int32 = 3): Boolean;
   begin
     for i := 0 to High(DIGITS) do
       if OCR.LocateText(Self.Bounds(), DIGITS[i],  RS_FONT_BOLD_12, Self.OCRFilter, 1) then
-        Exit(pin[i]);
+        Exit(pin[i+1]);
   end;
 
   function _IsUnlocked(): Boolean;
