@@ -1,3 +1,12 @@
+## [5.6.3](https://github.com/Torwent/SRL-T/compare/v5.6.2...v5.6.3) (2024-06-25)
+
+
+### Bug Fixes
+
+* **BankPin:** add a flat delay to bank pin ([ce11524](https://github.com/Torwent/SRL-T/commit/ce1152406a5b05965c55b0753b3dd5982e01af50))
+
+
+
 ## [5.6.2](https://github.com/Torwent/SRL-T/compare/v5.6.1...v5.6.2) (2024-06-25)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **TRSBanks:** read notes ([7be685c](https://github.com/Torwent/SRL-T/commit/7be685ca4b6ce916a24651b563541a313377d800))
-
-
-
-## [5.4.5](https://github.com/Torwent/SRL-T/compare/v5.4.4...v5.4.5) (2024-06-19)
-
-
-### Bug Fixes
-
-* some tweaks to object arrays ([03861d3](https://github.com/Torwent/SRL-T/commit/03861d3dfe77fa77df08aa523b06403db31f980d))
 
 
 
