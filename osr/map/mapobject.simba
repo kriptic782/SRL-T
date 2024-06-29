@@ -1414,3 +1414,109 @@ begin
   bitmap.Debug();
   bitmap.Free();
 end;
+
+
+
+procedure TRSMapObject._Setup();
+begin
+  Self.Filter.Finder := True;
+  Self.Filter.UpText := True;
+end;
+
+procedure TRSMapObject.SetupCoordinates(coordinates: TPointArray);
+begin
+  Self.Filter.Walker := True;
+  Self.Coordinates := coordinates;
+end;
+
+procedure TRSMapObject.SetupUpText(upText: String);
+begin
+  Self._Setup();
+
+  Self.Name := upText;
+
+  Self.Finder.ClusterDistance := 3;
+  Self.Finder.Erode := 2;
+  Self.Finder.Grow := 4;
+end;
+
+
+procedure TRSObjectV2.SetupEx(size: Vector3; coordinates: TPointArray);
+begin
+  Self.SetupCoordinates(coordinates);
+  Self.Size := size;
+end;
+
+function TRSObjectV2.Setup(size, height: Double; coordinates: TPointArray): TRSObjectV2; static; overload;
+begin
+  Result.SetupEx([size, size, height], coordinates);
+end;
+
+function TRSObjectV2.Setup(height: Double; coordinates: TPointArray): TRSObjectV2; static; overload;
+begin
+  Result.Setup(1, height, coordinates);
+end;
+
+
+
+procedure TRSNPCV2.SetupCoordinates(radii: TIntegerArray; coordinates: TPointArray); overload;
+var
+  i, hi: Int32;
+begin
+  hi := radii[High(radii)];
+  for i := High(radii) to High(coordinates) do
+    radii += hi;
+
+  for i := 0 to High(coordinates) do
+  begin
+    Self.Coordinates += coordinates[i];
+    Self.DotFilters.SetupCircle([coordinates[i].X, coordinates[i].Y, radii[i]], True);
+  end;
+
+  Self.Filter.Walker := True;
+end;
+
+procedure TRSNPCV2.SetupEx(radius: Int32; size: Vector3; coordinates: TPointArray);
+begin
+  Self.SetupCoordinates(coordinates);
+  Self.Size := size;
+end;
+
+function TRSNPCV2.Setup(radius: Int32; size, height: Double; coordinates: TPointArray): TRSNPCV2; static; overload;
+begin
+  Result.SetupEx(radius, [size, size, height], coordinates);
+end;
+
+function TRSNPCV2.Setup(radius: Int32; height: Double; coordinates: TPointArray): TRSNPCV2; static; overload;
+begin
+  Result.Setup(radius, 1, height, coordinates);
+end;
+
+procedure TRSNPCV2.SetupEx(radii: TIntegerArray; shape: Vector3; coordinates: TPointArray); overload;
+begin
+  Self.SetupCoordinates(radii, coordinates);
+end;
+
+function TRSNPCV2.Setup(radii: TIntegerArray; size, height: Double; coordinates: TPointArray): TRSNPCV2; static; overload;
+begin
+  Result.SetupEx(radii, [size, size, height], coordinates);
+end;
+
+function TRSNPCV2.Setup(radii: TIntegerArray; height: Double; coordinates: TPointArray): TRSNPCV2; static; overload;
+begin
+  Result.Setup(radii, 1, height, coordinates);
+end;
+
+procedure TRSNPCV2.SetupUpText(upText: String); override;
+begin
+  Self._Setup();
+  Self.Filter.Minimap := True;
+
+  Self.Name := upText;
+
+  Self.Finder.ClusterDistance := 3;
+  Self.Finder.Erode := 2;
+  Self.Finder.Grow := 4;
+  Self.DotType := ERSMinimapDot.NPC;
+end;
+
