@@ -1,3 +1,12 @@
+# [5.8.0](https://github.com/Torwent/SRL-T/compare/v5.7.1...v5.8.0) (2024-06-29)
+
+
+### Features
+
+* **webber:** new webber for TRSMap ([7bebd98](https://github.com/Torwent/SRL-T/commit/7bebd9865fa2c1c25076bbbffa26bec8f02db1ec))
+
+
+
 ## [5.7.1](https://github.com/Torwent/SRL-T/compare/v5.7.0...v5.7.1) (2024-06-29)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **BankPin:** add a flat delay to bank pin ([ce11524](https://github.com/Torwent/SRL-T/commit/ce1152406a5b05965c55b0753b3dd5982e01af50))
-
-
-
-## [5.6.2](https://github.com/Torwent/SRL-T/compare/v5.6.1...v5.6.2) (2024-06-25)
-
-
-### Bug Fixes
-
-* **BankPin:** fixed small oversight ([3e04816](https://github.com/Torwent/SRL-T/commit/3e048168f19d863a441996f77b40da220837cbf3))
 
 
 
