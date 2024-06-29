@@ -1,3 +1,12 @@
+# [5.7.0](https://github.com/Torwent/SRL-T/compare/v5.6.4...v5.7.0) (2024-06-29)
+
+
+### Features
+
+* add the almost exact same setup methods TRSWalkerObjects had ([53c6039](https://github.com/Torwent/SRL-T/commit/53c60395ee040ad6e277a1200697ad7339013634))
+
+
+
 ## [5.6.4](https://github.com/Torwent/SRL-T/compare/v5.6.3...v5.6.4) (2024-06-29)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **bankpin:** BankPin.Enter() rewroten ([62807dc](https://github.com/Torwent/SRL-T/commit/62807dc84ba4768a755573a4f725e84fabea5189))
-
-
-
-# [5.6.0](https://github.com/Torwent/SRL-T/compare/v5.5.0...v5.6.0) (2024-06-20)
-
-
-### Features
-
-* **MapObjects:** GetByCoordinate() ([f7e7c8d](https://github.com/Torwent/SRL-T/commit/f7e7c8d7e11344db038660a16ee1c13bf7c83ee6))
 
 
 
