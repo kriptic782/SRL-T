@@ -1,3 +1,12 @@
+## [5.7.1](https://github.com/Torwent/SRL-T/compare/v5.7.0...v5.7.1) (2024-06-29)
+
+
+### Bug Fixes
+
+* **objects.zip:** includes a bunch more of "null" objects. ([c030ae1](https://github.com/Torwent/SRL-T/commit/c030ae14de9d62ce70a3d8a841b4c72fa0ce0dec))
+
+
+
 # [5.7.0](https://github.com/Torwent/SRL-T/compare/v5.6.4...v5.7.0) (2024-06-29)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **BankPin:** fixed small oversight ([3e04816](https://github.com/Torwent/SRL-T/commit/3e048168f19d863a441996f77b40da220837cbf3))
-
-
-
-## [5.6.1](https://github.com/Torwent/SRL-T/compare/v5.6.0...v5.6.1) (2024-06-24)
-
-
-### Bug Fixes
-
-* **bankpin:** BankPin.Enter() rewroten ([62807dc](https://github.com/Torwent/SRL-T/commit/62807dc84ba4768a755573a4f725e84fabea5189))
 
 
 
