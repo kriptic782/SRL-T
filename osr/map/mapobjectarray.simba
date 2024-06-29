@@ -214,9 +214,6 @@ begin
   for i := 0 to Self.Data.High() do
     if LowerCase(Self.Data.getJSONObject(i).getString('name')) = name then
       Result += TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
-
-  if Result = [] then
-    TerminateScript('Objects ' + name + ' don''t exist on the loaded maps.');
 end;
 
 function TRSMapObjects.GetAll(names: TStringArray): TRSObjectV2Array; overload;
@@ -242,10 +239,8 @@ begin
       Break;
     end;
 
-  if Result = [] then
-    TerminateScript('Objects with action ' + action + ' don''t exist on the loaded maps.');
-
-  Result.Reduce();
+  if Result <> [] then
+    Result.Reduce();
 end;
 
 function TRSMapObjects.GetAllByCoordinate(p: TPoint; dist: Int32): TRSObjectV2Array;
@@ -265,10 +260,8 @@ begin
       Break;
     end;
 
-  if Result = [] then
-    TerminateScript('Objects with close to ' + ToStr(p) + ' don''t exist on the loaded maps.');
-
-  Result.Reduce();
+  if Result <> [] then
+    Result.Reduce();
 end;
 
 
@@ -378,9 +371,6 @@ begin
   for i := 0 to Self.Data.High() do
     if LowerCase(Self.Data.getJSONObject(i).getString('name')) = name then
       Result += TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
-
-  if Result = [] then
-    TerminateScript('NPCs ' + name + ' don''t exist on the loaded maps.');
 end;
 
 function TRSMapNPCs.GetAll(names: TStringArray): TRSNPCV2Array; overload;
@@ -401,8 +391,8 @@ begin
       if LowerCase(Self.Data.getJSONObject(i).getJSONArray('actions').getString(j)) = action then
         Result += TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
 
-  if Result = [] then
-    TerminateScript('NPCs with action ' + action + ' don''t exist on the loaded maps.');
+  if Result <> [] then
+    Result.Reduce();
 end;
 
 function TRSMapNPCs.GetAllByCoordinate(p: TPoint; dist: Int32): TRSNPCV2Array;
@@ -422,10 +412,8 @@ begin
       Break;
     end;
 
-  if Result = [] then
-    TerminateScript('NPCs close to ' + ToStr(p) + ' don''t exist on the loaded maps.');
-
-  Result.Reduce();
+  if Result <> [] then
+    Result.Reduce();
 end;
 
 
@@ -472,7 +460,7 @@ var
 begin
   if Objects <> [] then
   begin
-    Self.ObjectsCache := Objects.GetAllByAction('Bank');
+    Self.ObjectsCache := Objects.GetAllByAction('Collect');
     for i := 0 to High(Self.ObjectsCache)  do
       Self.MapObjects += @Self.ObjectsCache[i];
   end;
@@ -485,7 +473,7 @@ begin
   end;
 
   if Self.MapObjects = [] then
-    TerminateScript('No banks available in the loaded TRSMap');
+    TerminateScript('No bank objects nor npcs available in the loaded TRSMap');
 end;
 
 procedure TRSBanks._FilterLocation(polygon: TPointArray; inside: Boolean);

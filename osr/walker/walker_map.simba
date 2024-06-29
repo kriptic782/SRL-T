@@ -72,7 +72,6 @@ TRSWalkerMap is the record responsible for handling map loading for TRSWalker an
 ```pascal
 function TRSWalkerMap.FindMap(Map: String): String; static;
 ```
-
 Internal function responsible for finding our map.
 If the **Map** is a path and it exists the function exits.
 Otherwise, it looks for a .png and .bmp file with the map name in Simba/Includes/osr/walker/maps and returns the file path.
@@ -105,7 +104,6 @@ end;
 ```pascal
 function TRSWalkerMap.InternalLoadMap(fileName: String; Region: TBox = []): TMufasaBitmap; static;
 ```
-
 Internal function responsible for loading our map.
 If a "Region" is specified, that region is cropped from the the image file and returned, otherwise the whole file is returned as a TMufasaBitmap.
 You probably will never need to use this directly, but consider the following example for debugging purposes.
@@ -155,7 +153,6 @@ end;
 ```pascal
 procedure TRSWalkerMap.Free();
 ```
-
 Internal function responsible for releasing TRSWalkerMap from memory.
 You probably will never need to use this directly. It's automatically called on script termination.
 *)

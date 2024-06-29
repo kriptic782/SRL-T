@@ -104,8 +104,10 @@ procedure TRSMap.SetupRegion(filename: String; region: TBox; downscale: Int32 = 
 procedure TRSMap.SetupFromURL(url: String; filename: String = ''; downscale: Int32 = 8; force: Boolean = False);
 procedure TRSMap.SetupChunksEx(chunks: TBoxArray; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
 procedure TRSMap.SetupChunkEx(chunk: TBox; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
-procedure TRSMap.SetupChunks(chunks: array of ERSChunk; downscale: UInt32 = 8);
-procedure TRSMap.SetupChunk(chunk: ERSChunk; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunks(chunks: array of TRSMapChunk; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunk(chunk: TRSMapChunk; downscale: UInt32 = 8);
+procedure TRSMap.SetupEChunks(chunks: array of ERSChunk; downscale: UInt32 = 8);
+procedure TRSMap.SetupEChunk(chunk: ERSChunk; downscale: UInt32 = 8);
 ```
 Setup a TRSMap.
 If for some reason you can't setup all your maps at once, you can later use the `Add` methods.
@@ -175,43 +177,66 @@ begin
   Self.Setup(filename, downscale);
 end;
 
-procedure TRSMap.SetupChunksEx(chunks: TBoxArray; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunksEx(chunks: TBoxArray; planes: TIntegerArray = [0]; downscale: UInt32 = 8);
 begin
-  Self.Loader.Load(chunks, levels, downscale);
+  Self.Loader.Load(chunks, planes, downscale);
   Self.InternalSetup();
 end;
 
-procedure TRSMap.SetupChunkEx(chunk: TBox; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunkEx(chunk: TBox; planes: TIntegerArray = [0]; downscale: UInt32 = 8);
 begin
-  Self.SetupChunksEx([chunk], levels, downscale);
+  Self.SetupChunksEx([chunk], planes, downscale);
 end;
 
-procedure TRSMap.SetupChunks(chunks: array of ERSChunk; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunks(chunks: array of TRSMapChunk; downscale: UInt32 = 8);
 var
-  mapChunk: TRSMapChunk;
-  chunk: ERSChunk;
-  l: Int32;
+  chunk: TRSMapChunk;
+  p: Int32;
   boxes: TBoxArray;
-  levels: TIntegerArray;
+  planes: TIntegerArray;
 begin
   for chunk in chunks do
   begin
-    mapChunk := chunk.Get();
-    boxes += mapChunk.Chunk;
-    for l in mapChunk.Planes do
-      if InRange(l, 0, 3) and (levels.Find(l) = -1) then
-        levels += l;
+    boxes += chunk.Chunk;
+    for p in chunk.Planes do
+      if InRange(p, 0, 3) and (planes.Find(p) = -1) then
+        planes += p;
   end;
 
-  Self.SetupChunksEx(boxes, levels, downscale);
+  Self.SetupChunksEx(boxes, planes, downscale);
 end;
 
-procedure TRSMap.SetupChunk(chunk: ERSChunk; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunk(chunk: TRSMapChunk; downscale: UInt32 = 8);
+begin
+  Self.SetupChunksEx([chunk.Chunk], chunk.Planes, downscale);
+end;
+
+procedure TRSMap.SetupEChunks(chunks: array of ERSChunk; downscale: UInt32 = 8);
+var
+  chunk: TRSMapChunk;
+  echunk: ERSChunk;
+  p: Int32;
+  boxes: TBoxArray;
+  planes: TIntegerArray;
+begin
+  for echunk in chunks do
+  begin
+    chunk := echunk.Get();
+    boxes += chunk.Chunk;
+    for p in chunk.Planes do
+      if InRange(p, 0, 3) and (planes.Find(p) = -1) then
+        planes += p;
+  end;
+
+  Self.SetupChunksEx(boxes, planes, downscale);
+end;
+
+procedure TRSMap.SetupEChunk(chunk: ERSChunk; downscale: UInt32 = 8);
 var
   mapChunk: TRSMapChunk;
 begin
   mapChunk := chunk.Get();
-  Self.SetupChunksEx([mapChunk.Chunk], mapChunk.Planes, downscale);
+  Self.SetupChunk(mapChunk, downscale);
 end;
 
 
@@ -226,6 +251,8 @@ procedure TRSMap.AddChunksEx(chunks: TBoxArray; levels: TIntegerArray = [0]; dow
 procedure TRSMap.AddChunkEx(chunk: TBox; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
 procedure TRSMap.AddChunks(chunks: array of TRSMapChunk; downscale: UInt32 = 8);
 procedure TRSMap.AddChunk(chunk: TRSMapChunk; downscale: UInt32 = 8);
+procedure TRSMap.AddEChunks(chunks: array of ERSChunk; downscale: UInt32 = 8);
+procedure TRSMap.AddEChunk(chunk: ERSChunk; downscale: UInt32 = 8);
 ```
 TRSMap to add maps to an already setup TRSMap.
 If it's possible to add all your maps during setup, avoid using this,
@@ -291,37 +318,66 @@ begin
   Self.Add(filename, downscale);
 end;
 
-procedure TRSMap.AddChunksEx(chunks: TBoxArray; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
+procedure TRSMap.AddChunksEx(chunks: TBoxArray; planes: TIntegerArray = [0]; downscale: UInt32 = 8);
 begin
-  Self.Loader.Add(chunks, levels, downscale);
+  Self.Loader.Add(chunks, planes, downscale);
   Self.InternalSetup();
 end;
 
-procedure TRSMap.AddChunkEx(chunk: TBox; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
+procedure TRSMap.AddChunkEx(chunk: TBox; planes: TIntegerArray = [0]; downscale: UInt32 = 8);
 begin
-  Self.AddChunksEx([chunk], levels, downscale);
+  Self.AddChunksEx([chunk], planes, downscale);
 end;
 
 procedure TRSMap.AddChunks(chunks: array of TRSMapChunk; downscale: UInt32 = 8);
 var
-  i, l: Int32;
+  chunk: TRSMapChunk;
+  p: Int32;
   boxes: TBoxArray;
-  levels: TIntegerArray;
+  planes: TIntegerArray;
 begin
-  for i := 0 to High(chunks) do
+  for chunk in chunks do
   begin
-    boxes += chunks[i].Chunk;
-    for l in chunks[i].Planes do
-      if levels.Find(l) = -1 then
-        levels += l;
+    boxes += chunk.Chunk;
+    for p in chunk.Planes do
+      if InRange(p, 0, 3) and (planes.Find(p) = -1) then
+        planes += p;
   end;
 
-  Self.AddChunksEx(boxes, levels, downscale);
+  Self.AddChunksEx(boxes, planes, downscale);
 end;
 
 procedure TRSMap.AddChunk(chunk: TRSMapChunk; downscale: UInt32 = 8);
 begin
   Self.AddChunksEx([chunk.Chunk], chunk.Planes, downscale);
+end;
+
+procedure TRSMap.AddEChunks(chunks: array of ERSChunk; downscale: UInt32 = 8);
+var
+  chunk: TRSMapChunk;
+  echunk: ERSChunk;
+  p: Int32;
+  boxes: TBoxArray;
+  planes: TIntegerArray;
+begin
+  for echunk in chunks do
+  begin
+    chunk := echunk.Get();
+    boxes += chunk.Chunk;
+    for p in chunk.Planes do
+      if InRange(p, 0, 3) and (planes.Find(p) = -1) then
+        planes += p;
+  end;
+
+  Self.AddChunksEx(boxes, planes, downscale);
+end;
+
+procedure TRSMap.AddEChunk(chunk: ERSChunk; downscale: UInt32 = 8);
+var
+  mapChunk: TRSMapChunk;
+begin
+  mapChunk := chunk.Get();
+  Self.AddChunksEx([mapChunk.Chunk], mapChunk.Planes, downscale);
 end;
 
 

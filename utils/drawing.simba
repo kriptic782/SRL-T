@@ -110,7 +110,6 @@ end;
 ```pascal
 procedure TMufasaBitmap.ClearAllBut(Area: TBox);
 ```
-
 Will clear the image, except for the given area.
 *)
 procedure TMufasaBitmap.ClearAllBut(Area: TBox); constref;
@@ -123,7 +122,6 @@ end;
 ```pascal
 procedure TMufasaBitmap.AvgBrightness(Area: TBox = [0,0,-1,-1]);
 ```
-
 Returns a value between 0 and 100 that defines how bright the image is.
 *)
 function TMufasaBitmap.AvgBrightness(Area: TBox = [0,0,-1,-1]): Int32; constref;
@@ -152,7 +150,6 @@ end;
 ```pascal
 procedure TMufasaBitmap.PeakBrightness(Area: TBox = [0,0,-1,-1]);
 ```
-
 Returns the maximum brightness in the image in the range `0..100`.
 *)
 function TMufasaBitmap.PeakBrightness(Area: TBox = [0,0,-1,-1]): Int32; constref;
@@ -218,7 +215,6 @@ end;
 ```pascal
 procedure TMufasaBitmap.DrawRect(Rect: TRectangle; Color: Int32);
 ```
-
 Draws a TRectangle onto the TMufasaBitmap
 *)
 procedure TMufasaBitmap.DrawRect(Rect: TRectangle; Color: Int32); constref;
