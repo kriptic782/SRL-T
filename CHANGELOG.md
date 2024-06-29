@@ -1,3 +1,12 @@
+## [5.6.4](https://github.com/Torwent/SRL-T/compare/v5.6.3...v5.6.4) (2024-06-29)
+
+
+### Bug Fixes
+
+* **TRSMap:** TRSMap can now setup TRSMapChunk ([5822f94](https://github.com/Torwent/SRL-T/commit/5822f94f972f2cd8fb55fa005df0fe877586271d))
+
+
+
 ## [5.6.3](https://github.com/Torwent/SRL-T/compare/v5.6.2...v5.6.3) (2024-06-25)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **MapObjects:** GetByCoordinate() ([f7e7c8d](https://github.com/Torwent/SRL-T/commit/f7e7c8d7e11344db038660a16ee1c13bf7c83ee6))
-
-
-
-# [5.5.0](https://github.com/Torwent/SRL-T/compare/v5.4.5...v5.5.0) (2024-06-20)
-
-
-### Features
-
-* **TRSBanks:** read notes ([7be685c](https://github.com/Torwent/SRL-T/commit/7be685ca4b6ce916a24651b563541a313377d800))
 
 
 
