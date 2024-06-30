@@ -1,3 +1,12 @@
+## [5.8.3](https://github.com/Torwent/SRL-T/compare/v5.8.2...v5.8.3) (2024-06-30)
+
+
+### Bug Fixes
+
+* **TRSMapLoader:** WebGraph generator optimizations ([ff7ef17](https://github.com/Torwent/SRL-T/commit/ff7ef17738b78f501fa345ca6bb715e56a47a153))
+
+
+
 ## [5.8.2](https://github.com/Torwent/SRL-T/compare/v5.8.1...v5.8.2) (2024-06-30)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **objects.zip:** includes a bunch more of "null" objects. ([c030ae1](https://github.com/Torwent/SRL-T/commit/c030ae14de9d62ce70a3d8a841b4c72fa0ce0dec))
-
-
-
-# [5.7.0](https://github.com/Torwent/SRL-T/compare/v5.6.4...v5.7.0) (2024-06-29)
-
-
-### Features
-
-* add the almost exact same setup methods TRSWalkerObjects had ([53c6039](https://github.com/Torwent/SRL-T/commit/53c60395ee040ad6e277a1200697ad7339013634))
 
 
 
