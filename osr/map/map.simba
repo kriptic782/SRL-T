@@ -788,7 +788,7 @@ end;
 
 function TRSMap.Map2MM(mapPoint: TPoint): TPoint; overload;
 begin
-  Result := Self.Map2MM(Self.DebugPosition(), mapPoint, Minimap.GetCompassAngle(False));
+  Result := Self.Map2MM(Self.Position(), mapPoint, Minimap.GetCompassAngle(False));
 end;
 
 (*
@@ -891,27 +891,33 @@ var
   bitmap, map, cleanMinimap: TMufasaBitmap;
   time: Double;
   lines: TStringArray;
+
 begin
   Freeze();
 
   time := PerformanceTimer();
-  Result := local := Self.Position();
+  Result := Self.Position();
   time := PerformanceTimer() - time;
 
   if Self.RegionIndex > -1 then
-    local := Self.Loader.GetLocal(Self.RegionIndex, Result);
+    local := Self.Loader.GetLocal(Self.RegionIndex, Result)
+  else
+    local := Result;
 
-  x1 := Max(0, local.X - 200);
-  y1 := Max(0, local.Y - 200);
+  x := Self.Loader.Regions[Self.RegionIndex].Region.X1;
+  y := Self.Loader.Regions[Self.RegionIndex].Region.Y1;
+
+  x1 := Max(0, local.X - 200 + x);
+  y1 := Max(0, local.Y - 200 + y);
   x2 := Min(x1 + 400, Self.Loader.Map.GetWidth()  - 1);
   y2 := Min(y1 + 400, Self.Loader.Map.GetHeight() - 1);
 
   x := local.X - x1;
-  y := local.Y - y1;
+  y := local.Y - y1 + y;
 
   map := Self.Loader.Map.Copy(x1, y1, x2, y2);
-  map.LineTo(Point(0, Y), Point(x2 - x1, y), $00FF00);
-  map.LineTo(Point(X, 0), Point(x, y2 - y1), $00FF00);
+  map.LineTo(Point(0, y), Point(x2 - x1, y), $00FF00);
+  map.LineTo(Point(x, 0), Point(x, y2 - y1), $00FF00);
   map.DrawBox([x - 2, y - 2, x + 2, y + 2], $FFFFFF);
 
   cleanMinimap := Self.ScaleMinimap(TRSMap.GetCleanMinimap(), 1);
