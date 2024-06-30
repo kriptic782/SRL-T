@@ -278,7 +278,7 @@ begin
     for connection := 0 to GENERATED_GRAPH.MaxConnections do
     begin
       if connection mod 3 = 0 then
-        Self.DebugLn('Creating webgraph connections ' + ToStr(connection) + '/' + ToStr(GENERATED_GRAPH.MaxConnections));
+        Self.DebugLn('Creating webgraph connections ' + ToStr(connection) + '/' + ToStr(GENERATED_GRAPH.MaxConnections) + ' for area '  + ToStr(High(atpa) - i) + '/' + ToStr(High(atpa)));
 
       crossings[connection] := [];
       SetLength(crossings[connection], Length(Result.Nodes));
@@ -289,7 +289,8 @@ begin
 
         if not sorted[j].Setup then
         begin
-          sorted[j].Points := Result.Nodes.FilterDist(0, 80, Result.Nodes[j].X, Result.Nodes[j].Y);
+          sorted[j].Points := Copy(Result.Nodes, len, Length(Result.Nodes)-len);
+          FilterPointsDist(sorted[j].Points, 0, 80, Result.Nodes[j].X, Result.Nodes[j].Y);
           sorted[j].Points.Sort(Result.Nodes[j]);
           Delete(sorted[j].Points, 0, 1);
           sorted[j].Setup := True;
@@ -303,23 +304,25 @@ begin
 
         if crossings[connection, j] then Continue;
 
-        for p in TPAFromLine(Result.Nodes[j], sorted[j].Points[connection]) do
-          if matrix[p.Y,p.X] then
+        if Result.Nodes[j].LineInMatrix(sorted[j].Points[connection], matrix) then
+        begin
+          if Length(sorted[j].Points) = 1 then
           begin
-
-            if Length(sorted[j].Points) = 1 then
-              skip += j
-            else
-            begin
-              Delete(sorted[j].Points, connection, 1);
-              j -= 1;
-            end;
-
-            Continue(2);
+            skip += j;
+            Continue;
           end;
 
+          Delete(sorted[j].Points, connection, 1);
+          j -= 1;
+          Continue;
+        end;
+
         crossings[connection, j] := True;
-        n := Result.Nodes.Find(sorted[j].Points[connection]);
+
+        for n := len to High(Result.Nodes) do
+          if Result.Nodes[n] = sorted[j].Points[connection] then
+            Break;
+
         if InIntArray(Result.Paths[j], n) or Result.ConnectNodes(j, n) then
           Continue;
 
@@ -345,6 +348,7 @@ function TRSChunkLoader.GetGraph(name: String; level: UInt32; map: TMufasaBitmap
 var
   cacheroot, cachename: String;
   json: TJSONObject;
+  t: UInt64;
 begin
   cacheroot := Self.Cache + 'graphs' + DirectorySeparator;
   cachename := cacheroot + ToStr(level) + DirectorySeparator + name + '-' +
@@ -359,7 +363,9 @@ begin
     if not ForceDirectories(cacheroot + ToStr(level) + DirectorySeparator) then
       Self.Fatal('Failed to create path: ' + cacheroot + ToStr(level) + DirectorySeparator);
 
+    t := GetTickCount();
     Result := Self.BuildGraph(name, map);
+    Self.DebugLn('Took ' + ToStr((GetTickCount()-t) div 1000) + ' seconds to generate webgraph.');
     try
       json.Init();
 
