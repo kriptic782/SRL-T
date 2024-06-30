@@ -1,3 +1,12 @@
+## [5.8.2](https://github.com/Torwent/SRL-T/compare/v5.8.1...v5.8.2) (2024-06-30)
+
+
+### Bug Fixes
+
+* **TRSMap:** typo noticed by Flight ([b308786](https://github.com/Torwent/SRL-T/commit/b3087865ca9d9aae83ed2b4066b4b15c8e62bf7a))
+
+
+
 ## [5.8.1](https://github.com/Torwent/SRL-T/compare/v5.8.0...v5.8.1) (2024-06-30)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * add the almost exact same setup methods TRSWalkerObjects had ([53c6039](https://github.com/Torwent/SRL-T/commit/53c60395ee040ad6e277a1200697ad7339013634))
-
-
-
-## [5.6.4](https://github.com/Torwent/SRL-T/compare/v5.6.3...v5.6.4) (2024-06-29)
-
-
-### Bug Fixes
-
-* **TRSMap:** TRSMap can now setup TRSMapChunk ([5822f94](https://github.com/Torwent/SRL-T/commit/5822f94f972f2cd8fb55fa005df0fe877586271d))
 
 
 
