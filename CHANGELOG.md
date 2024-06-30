@@ -1,3 +1,12 @@
+## [5.8.1](https://github.com/Torwent/SRL-T/compare/v5.8.0...v5.8.1) (2024-06-30)
+
+
+### Bug Fixes
+
+* Didn't like the name `.SetupEChunk()` ([107515d](https://github.com/Torwent/SRL-T/commit/107515d042873006a0e52e9b858f6c39b9e3ed65))
+
+
+
 # [5.8.0](https://github.com/Torwent/SRL-T/compare/v5.7.1...v5.8.0) (2024-06-29)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMap:** TRSMap can now setup TRSMapChunk ([5822f94](https://github.com/Torwent/SRL-T/commit/5822f94f972f2cd8fb55fa005df0fe877586271d))
-
-
-
-## [5.6.3](https://github.com/Torwent/SRL-T/compare/v5.6.2...v5.6.3) (2024-06-25)
-
-
-### Bug Fixes
-
-* **BankPin:** add a flat delay to bank pin ([ce11524](https://github.com/Torwent/SRL-T/commit/ce1152406a5b05965c55b0753b3dd5982e01af50))
 
 
 
