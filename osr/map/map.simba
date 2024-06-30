@@ -106,8 +106,8 @@ procedure TRSMap.SetupChunksEx(chunks: TBoxArray; levels: TIntegerArray = [0]; d
 procedure TRSMap.SetupChunkEx(chunk: TBox; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
 procedure TRSMap.SetupChunks(chunks: array of TRSMapChunk; downscale: UInt32 = 8);
 procedure TRSMap.SetupChunk(chunk: TRSMapChunk; downscale: UInt32 = 8);
-procedure TRSMap.SetupEChunks(chunks: array of ERSChunk; downscale: UInt32 = 8);
-procedure TRSMap.SetupEChunk(chunk: ERSChunk; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunks(chunks: array of ERSChunk; downscale: UInt32 = 8); overload;
+procedure TRSMap.SetupChunk(chunk: ERSChunk; downscale: UInt32 = 8); overload;
 ```
 Setup a TRSMap.
 If for some reason you can't setup all your maps at once, you can later use the `Add` methods.
@@ -211,7 +211,7 @@ begin
   Self.SetupChunksEx([chunk.Chunk], chunk.Planes, downscale);
 end;
 
-procedure TRSMap.SetupEChunks(chunks: array of ERSChunk; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunks(chunks: array of ERSChunk; downscale: UInt32 = 8); overload;
 var
   chunk: TRSMapChunk;
   echunk: ERSChunk;
@@ -231,7 +231,7 @@ begin
   Self.SetupChunksEx(boxes, planes, downscale);
 end;
 
-procedure TRSMap.SetupEChunk(chunk: ERSChunk; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunk(chunk: ERSChunk; downscale: UInt32 = 8); overload;
 var
   mapChunk: TRSMapChunk;
 begin
@@ -251,8 +251,8 @@ procedure TRSMap.AddChunksEx(chunks: TBoxArray; levels: TIntegerArray = [0]; dow
 procedure TRSMap.AddChunkEx(chunk: TBox; levels: TIntegerArray = [0]; downscale: UInt32 = 8);
 procedure TRSMap.AddChunks(chunks: array of TRSMapChunk; downscale: UInt32 = 8);
 procedure TRSMap.AddChunk(chunk: TRSMapChunk; downscale: UInt32 = 8);
-procedure TRSMap.AddEChunks(chunks: array of ERSChunk; downscale: UInt32 = 8);
-procedure TRSMap.AddEChunk(chunk: ERSChunk; downscale: UInt32 = 8);
+procedure TRSMap.AddChunks(chunks: array of ERSChunk; downscale: UInt32 = 8); overload;
+procedure TRSMap.AddChunk(chunk: ERSChunk; downscale: UInt32 = 8); overload;
 ```
 TRSMap to add maps to an already setup TRSMap.
 If it's possible to add all your maps during setup, avoid using this,
@@ -352,7 +352,7 @@ begin
   Self.AddChunksEx([chunk.Chunk], chunk.Planes, downscale);
 end;
 
-procedure TRSMap.AddEChunks(chunks: array of ERSChunk; downscale: UInt32 = 8);
+procedure TRSMap.AddChunks(chunks: array of ERSChunk; downscale: UInt32 = 8); overload;
 var
   chunk: TRSMapChunk;
   echunk: ERSChunk;
@@ -372,7 +372,7 @@ begin
   Self.AddChunksEx(boxes, planes, downscale);
 end;
 
-procedure TRSMap.AddEChunk(chunk: ERSChunk; downscale: UInt32 = 8);
+procedure TRSMap.AddChunk(chunk: ERSChunk; downscale: UInt32 = 8); overload;
 var
   mapChunk: TRSMapChunk;
 begin
