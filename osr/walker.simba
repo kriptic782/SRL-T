@@ -747,17 +747,22 @@ var
   path: TPointArray;
   bmp: TMufasaBitmap;
   tmp: TWebGraph;
+  closestMe, closestDest: TIntegerArray;
+  i: Int32;
 begin
   if not System.InRange(pathRandomness, 0, 1) then
     Self.Fatal('TRSWalkerV2.WebWalk `PathRandomness` must be within 0..1');
 
   try
-    path := Self.WebGraph^.PathBetween(me, destination, pathRandomness);
+    path := Self.WebGraph^.PathBetweenEx(me, destination, pathRandomness, 4);
   except
     if Assigned(Self.MapImage) then
     begin
       bmp := Self.MapImage.Copy();
       tmp := Self.WebGraph^;
+
+      closestMe   := Self.WebGraph^.FindNearestNodes(me, 4);
+      closestDest := Self.WebGraph^.FindNearestNodes(destination, 4);
 
       if (@Self.GetLocal <> nil) then
       begin
@@ -768,21 +773,17 @@ begin
 
       tmp.Draw(bmp);
 
-      if bmp.Bounds().Contains(me) then
+      for i := 0 to 3 do
       begin
-        bmp.DrawCross(me, 4, $00FF00);
-        bmp.DrawCross(me.Offset(1,0), 4, $00FF00);
-        bmp.DrawCross(me.Offset(0,1), 4, $00FF00);
-        bmp.DrawCross(me.Offset(1,1), 4, $00FF00);
+        bmp.DrawCircle(tmp.Nodes[closestMe[i]], 4, $FF00FF);
+        bmp.DrawCircle(tmp.Nodes[closestDest[i]], 4, $FF0000);
       end;
 
+      if bmp.Bounds().Contains(me) then
+        bmp.DrawBorderedCross(me, 4, $00FF00, $0);
+
       if bmp.Bounds().Contains(destination) then
-      begin
-        bmp.DrawCross(destination, 4, $00FF00);
-        bmp.DrawCross(destination.Offset(1,0), 4, $00FF00);
-        bmp.DrawCross(destination.Offset(0,1), 4, $00FF00);
-        bmp.DrawCross(destination.Offset(1,1), 4, $00FF00);
-      end;
+        bmp.DrawBorderedCross(destination, 4, $00FF00,  $0);
 
       bmp.Debug();
       bmp.Free();

@@ -18,14 +18,14 @@ const
 var
   GENERATED_GRAPH: record
     Detail: Int32;
-    SingleNodeRadius: Int32;
+    NodeRadius: Int32;
     MaxConnections: Int32;
   end;
 
 begin
-  GENERATED_GRAPH.Detail := 5;            //low = better/slower, high = worse/faster
-  GENERATED_GRAPH.SingleNodeRadius := 70; //closed space less than SingleNodeRadius pixels will have a single node.
-  GENERATED_GRAPH.MaxConnections := 10;   //Max connections per node.
+  GENERATED_GRAPH.Detail := 5;           //low = better/slower, high = worse/faster
+  GENERATED_GRAPH.NodeRadius := 50;      //closed space less than NodeRadius pixels will have a single node.
+  GENERATED_GRAPH.MaxConnections := 8;   //Max connections per node.
 end;
 
 type
@@ -251,7 +251,7 @@ begin
     len := Length(Result.Nodes);
 
     circle := atpa[i].MinAreaCircle();
-    if circle.Radius < GENERATED_GRAPH.SingleNodeRadius then
+    if circle.Radius < GENERATED_GRAPH.NodeRadius then
     begin
       SetLength(Result.Nodes, len+1);
       SetLength(Result.Paths, len+1);
@@ -290,7 +290,7 @@ begin
         if not sorted[j].Setup then
         begin
           sorted[j].Points := Copy(Result.Nodes, len, Length(Result.Nodes)-len);
-          FilterPointsDist(sorted[j].Points, 0, 80, Result.Nodes[j].X, Result.Nodes[j].Y);
+          FilterPointsDist(sorted[j].Points, 0, GENERATED_GRAPH.NodeRadius, Result.Nodes[j].X, Result.Nodes[j].Y);
           sorted[j].Points.Sort(Result.Nodes[j]);
           Delete(sorted[j].Points, 0, 1);
           sorted[j].Setup := True;
@@ -353,7 +353,7 @@ begin
   cacheroot := Self.Cache + 'graphs' + DirectorySeparator;
   cachename := cacheroot + ToStr(level) + DirectorySeparator + name + '-' +
                ToStr(GENERATED_GRAPH.Detail) + '-' +
-               ToStr(GENERATED_GRAPH.SingleNodeRadius) + '-' +
+               ToStr(GENERATED_GRAPH.NodeRadius) + '-' +
                ToStr(GENERATED_GRAPH.MaxConnections);
 
   if not FileExists(cachename + '.json') then
@@ -574,7 +574,7 @@ type
     Loader: TRSChunkLoader;
     LegacyLoader: TRSLegacyMapLoader;
 
-    UsingChunks: Boolean;
+    UsingChunks, SkipGraph: Boolean;
 
     ObjectData: TJSONArray;
     NPCData: TJSONArray;
@@ -849,8 +849,11 @@ begin
       end;
 
       cbitmaps += Self.Loader.GetMap(s, f, levels[i], ERSMapType.COLLISION);
-      graphs += Self.Loader.GetGraph(name, levels[i], cbitmaps[idx]);
-      graphs[idx].Nodes := Self.GetGlobal(idx, graphs[idx].Nodes);
+      if not Self.SkipGraph then
+      begin
+        graphs += Self.Loader.GetGraph(name, levels[i], cbitmaps[idx]);
+        graphs[idx].Nodes := Self.GetGlobal(idx, graphs[idx].Nodes);
+      end;
 
       cbitmaps[idx].Pad(padding);
 
@@ -867,7 +870,8 @@ begin
   Self.Map        := Self.InternalLoad(bitmaps);
   Self.Heightmap  := Self._InternalLoad(hbitmaps);
   Self.Collision  := Self._InternalLoad(cbitmaps);
-  Self.Graph      := Self.InternalGraphLoad(graphs, padding);
+  if not Self.SkipGraph then
+    Self.Graph      := Self.InternalGraphLoad(graphs, padding);
   Self.ObjectData := Self.InternalJSONLoad(objects);
   Self.NPCData    := Self.InternalJSONLoad(npcs);
 

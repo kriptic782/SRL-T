@@ -521,7 +521,7 @@ end;
 //Credits to someone from SRL. IDK who sorry.
 procedure TPointArray.WeightedSort(weights: TIntegerArray; iLo, iHi: Int32; sortUp: Boolean);
 var
-  lo, hi, mid, idx: Int32;
+  lo, hi, mid: Int32;
 begin
   if (Length(weights) <> Length(self)) then Exit;
   lo := iLo;

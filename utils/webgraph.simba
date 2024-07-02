@@ -100,6 +100,7 @@ begin
   end;
 end;
 
+
 function TWebGraph.FindNearestNode(P: TPoint): Int32; constref;
 var
   i,j: Int32;
@@ -123,6 +124,49 @@ begin
     end;
 end;
 
+function TWebGraph.FindNearestNodes(p: TPoint; amount: Int32): TIntegerArray; constref;
+var
+  i,j,l: Int32;
+  d,dn1,dn2: Double;
+  lines: array of record
+    I: Int32;
+    J: Int32;
+    Dist: Double;
+  end;
+begin
+  for i := 1 to amount do
+    lines += [-1, -1, $FFFFFF];
+
+  for i := 0 to High(Self.Paths) do
+    for j in Self.Paths[i] do
+    begin
+      d := SRL.DistToLine(p, Self.Nodes[i], Self.Nodes[j]);
+
+      for l := 0 to High(lines) do
+        if (i = lines[l].I) or (i = lines[l].J) or (j = lines[l].I) or (j = lines[l].J) then
+          Continue(2);
+
+      for l := 0 to High(lines) do
+        if lines[l].Dist > d then
+        begin
+          lines[l] := [i, j, d];
+          Break;
+        end;
+    end;
+
+  for i := 0 to High(lines) do
+  begin
+    dn1 := Hypot(Self.Nodes[lines[i].I].x-P.x, Self.Nodes[lines[i].I].y-P.y);
+    dn2 := Hypot(Self.Nodes[lines[i].J].x-P.x, Self.Nodes[lines[i].J].y-P.y);
+
+    if dn1 < dn2 then
+      Result += lines[i].I
+    else
+      Result += lines[i].J;
+  end;
+end;
+
+
 function TWebGraph.NodesToPoints(NodeList: TIntegerArray): TPointArray; constref;
 var node: Int32;
 begin
@@ -130,26 +174,57 @@ begin
     Result += Self.Nodes[node];
 end;
 
-function TWebGraph.PathBetween(p,q: TPoint; Rnd:Double=0): TPointArray; constref;
+
+function TWebGraph.PathBetween(p,q: TPoint; rnd: Double = 0): TPointArray; constref;
 var
-  n1,n2: Int32;
+  n1, n2: Int32;
   nodes: TIntegerArray;
 begin
   n1 := Self.FindNearestNode(p);
   n2 := Self.FindNearestNode(q);
-  if (n1 <> n2) then
-  begin
-    nodes := Self.FindPath(n1,n2,Rnd);
-    if (Length(nodes) = 0) then
-      RaiseException(
-        'Points [' + ToStr(p.X) + ', ' + ToStr(p.Y) + '] and [' + ToStr(q.X) + ', ' + ToStr(q.Y) + '] don''t connect');
-  end;
-  // if distance between nodes > ??? then Unreliable result
+
+  nodes := Self.FindPath(n1, n2, rnd);
+
+  if (Length(nodes) = 0) then
+    RaiseException(
+      'Points [' + ToStr(p.X) + ', ' + ToStr(p.Y) + '] and [' + ToStr(q.X) + ', ' + ToStr(q.Y) + '] don''t connect'
+    );
 
   Result += p;
   Result += NodesToPoints(nodes);
   Result += q;
 end;
+
+function TWebGraph.PathBetweenEx(p,q: TPoint; rnd: Double = 0; attempts: Int32 = 4): TPointArray; constref;
+var
+  i, j: Int32;
+  n1,n2, nodes: TIntegerArray;
+begin
+  n1 := Self.FindNearestNodes(p, attempts);
+  n2 := Self.FindNearestNodes(q, attempts);
+
+  attempts -= 1;
+  for i := 0 to attempts do
+    for j := 0 to attempts do
+    begin
+      if (n1[i] <> n2[j]) then
+      begin
+        nodes := Self.FindPath(n1[i],n2[j], rnd);
+        if Length(nodes) > 0 then Break(2);
+      end;
+    end;
+
+  if (Length(nodes) = 0) then
+    RaiseException(
+      'Points [' + ToStr(p.X) + ', ' + ToStr(p.Y) + '] and [' + ToStr(q.X) + ', ' + ToStr(q.Y) + '] don''t connect'
+    );
+
+  Result += p;
+  Result += NodesToPoints(nodes);
+  Result += q;
+end;
+
+
 
 function TWebGraph.InvalidConnection(p,q: TPoint): Boolean;
 
@@ -288,7 +363,7 @@ begin
 end;
 
 
-function TWebGraph.NodesToString: String;
+function TWebGraph.NodesToString(): String;
 var
   I: Int32;
 begin
@@ -315,7 +390,7 @@ begin
   end;
 end;
 
-function TWebGraph.PathsToString: String;
+function TWebGraph.PathsToString(): String;
 var
   I, J: Int32;
 begin
@@ -360,7 +435,7 @@ begin
   end;
 end;
 
-function TWebGraph.NamesToString: String;
+function TWebGraph.NamesToString(): String;
 var
   I: Int32;
 begin

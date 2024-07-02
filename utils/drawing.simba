@@ -278,12 +278,29 @@ end;
 procedure TMufasaBitmap.DrawCross(Center: TPoint; Radius: Integer; Color: Int32); constref;
 begin
   Radius := Round(Radius/2*Sqrt(2));
-  
+
   if (Radius > 1) then
     with Center do
     begin
       Self.LineTo(Point(X - Radius, Y - Radius), Point(X + Radius, Y + Radius), Color);
       Self.LineTo(Point(X + Radius, Y - Radius), Point(X - Radius, Y + Radius), Color);
+    end;
+end;
+
+procedure TMufasaBitmap.DrawBorderedCross(Center: TPoint; Radius: Integer; Color: Int32; Border: Int32 = $0); constref;
+var
+  cross, tpa: TPointArray;
+begin
+  Radius := Round(Radius/2*Sqrt(2));
+
+  if (Radius > 1) then
+    with Center do
+    begin
+      cross := TPAFromLine(Point(X - Radius, Y - Radius), Point(X + Radius, Y + Radius)) +
+             TPAFromLine(Point(X + Radius, Y - Radius), Point(X - Radius, Y + Radius));
+      tpa := cross.Grow(1);
+      Self.DrawTPA(tpa, border);
+      Self.DrawTPA(cross, Color);
     end;
 end;
 
