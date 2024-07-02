@@ -1,3 +1,17 @@
+# [6.0.0](https://github.com/Torwent/SRL-T/compare/v5.8.3...v6.0.0) (2024-07-02)
+
+
+### Bug Fixes
+
+* read notes ([b2b9eea](https://github.com/Torwent/SRL-T/commit/b2b9eea40cbf2fb2a5dac998565e9321d37ffc90))
+
+
+### BREAKING CHANGES
+
+* `GENERATED_GRAPH.SingleNodeRadius` renamed to `GENERATED_GRAPH.NodeRadius`, because why not
+
+
+
 ## [5.8.3](https://github.com/Torwent/SRL-T/compare/v5.8.2...v5.8.3) (2024-06-30)
 
 
@@ -31,15 +45,6 @@
 ### Features
 
 * **webber:** new webber for TRSMap ([7bebd98](https://github.com/Torwent/SRL-T/commit/7bebd9865fa2c1c25076bbbffa26bec8f02db1ec))
-
-
-
-## [5.7.1](https://github.com/Torwent/SRL-T/compare/v5.7.0...v5.7.1) (2024-06-29)
-
-
-### Bug Fixes
-
-* **objects.zip:** includes a bunch more of "null" objects. ([c030ae1](https://github.com/Torwent/SRL-T/commit/c030ae14de9d62ce70a3d8a841b4c72fa0ce0dec))
 
 
 
