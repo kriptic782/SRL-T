@@ -1,3 +1,12 @@
+# [6.1.0](https://github.com/Torwent/SRL-T/compare/v6.0.1...v6.1.0) (2024-07-03)
+
+
+### Features
+
+* **MapLoader:** webgraph generation optimizations ([ac85b41](https://github.com/Torwent/SRL-T/commit/ac85b418f54b8d1a32eb6fc5c176c01629224971))
+
+
+
 ## [6.0.1](https://github.com/Torwent/SRL-T/compare/v6.0.0...v6.0.1) (2024-07-03)
 
 
@@ -36,15 +45,6 @@
 ### Bug Fixes
 
 * **TRSMap:** typo noticed by Flight ([b308786](https://github.com/Torwent/SRL-T/commit/b3087865ca9d9aae83ed2b4066b4b15c8e62bf7a))
-
-
-
-## [5.8.1](https://github.com/Torwent/SRL-T/compare/v5.8.0...v5.8.1) (2024-06-30)
-
-
-### Bug Fixes
-
-* Didn't like the name `.SetupEChunk()` ([107515d](https://github.com/Torwent/SRL-T/commit/107515d042873006a0e52e9b858f6c39b9e3ed65))
 
 
 
