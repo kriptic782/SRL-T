@@ -1,3 +1,12 @@
+## [6.1.1](https://github.com/Torwent/SRL-T/compare/v6.1.0...v6.1.1) (2024-07-03)
+
+
+### Bug Fixes
+
+* fix caching infinite loop ([65e7b61](https://github.com/Torwent/SRL-T/commit/65e7b61ad9e55674ec2d6c757a2242aa3271db8a))
+
+
+
 # [6.1.0](https://github.com/Torwent/SRL-T/compare/v6.0.1...v6.1.0) (2024-07-03)
 
 
@@ -36,15 +45,6 @@
 ### Bug Fixes
 
 * **TRSMapLoader:** WebGraph generator optimizations ([ff7ef17](https://github.com/Torwent/SRL-T/commit/ff7ef17738b78f501fa345ca6bb715e56a47a153))
-
-
-
-## [5.8.2](https://github.com/Torwent/SRL-T/compare/v5.8.1...v5.8.2) (2024-06-30)
-
-
-### Bug Fixes
-
-* **TRSMap:** typo noticed by Flight ([b308786](https://github.com/Torwent/SRL-T/commit/b3087865ca9d9aae83ed2b4066b4b15c8e62bf7a))
 
 
 
