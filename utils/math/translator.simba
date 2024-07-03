@@ -78,11 +78,24 @@ begin
   Result := [p.X div Self.RSMap.ChunkSide, p.Y div Self.RSMap.ChunkSide];
 end;
 
-function TRSTranslator.Coordinate2Chunk(p: TPoint): TPoint;
+
+
+function TRSTranslator.Global2Chunk(p: TPoint): TPoint;
 begin
   Result.X := Self.RSMap.Scope.X1 + Floor(p.X / Self.Map.ChunkSide);
   Result.Y := Self.RSMap.Scope.Y2 - Floor(p.Y / Self.Map.ChunkSide);
 end;
+
+function TRSTranslator.Global2Chunk(b: TBox): TBox; overload;
+var
+  s, f: TPoint;
+begin
+  s := Self.Global2Chunk([b.X1, b.Y1]);
+  f := Self.Global2Chunk([b.X2, b.Y2]);
+  Result := [s.X, s.Y, f.X, f.Y];
+end;
+
+
 
 
 function TRSTranslator.Chunk2RSCoordinate(p: TPoint): TPoint;

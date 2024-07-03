@@ -883,7 +883,7 @@ begin
     if levels.Find(Self.Regions[i].Level) = -1 then
       levels += Self.Regions[i].Level;
     if chunks.Find(Self.Regions[i].Original) = -1 then
-      chunks += Self.Regions[i].Original;
+      chunks += RSTranslator.Global2Chunk(Self.Regions[i].Original);
   end;
 
   Self.Free();
