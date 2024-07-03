@@ -140,11 +140,11 @@ begin
   for i := 0 to High(Self.Paths) do
     for j in Self.Paths[i] do
     begin
-      d := SRL.DistToLine(p, Self.Nodes[i], Self.Nodes[j]);
-
       for l := 0 to High(lines) do
         if (i = lines[l].I) or (i = lines[l].J) or (j = lines[l].I) or (j = lines[l].J) then
           Continue(2);
+
+      d := SRL.DistToLine(p, Self.Nodes[i], Self.Nodes[j]);
 
       for l := 0 to High(lines) do
         if lines[l].Dist > d then
@@ -154,15 +154,15 @@ begin
         end;
     end;
 
-  for i := 0 to High(lines) do
+  for l := 0 to High(lines) do
   begin
-    dn1 := Hypot(Self.Nodes[lines[i].I].x-P.x, Self.Nodes[lines[i].I].y-P.y);
-    dn2 := Hypot(Self.Nodes[lines[i].J].x-P.x, Self.Nodes[lines[i].J].y-P.y);
+    dn1 := Hypot(Self.Nodes[lines[l].I].x-P.x, Self.Nodes[lines[l].I].y-P.y);
+    dn2 := Hypot(Self.Nodes[lines[l].J].x-P.x, Self.Nodes[lines[l].J].y-P.y);
 
     if dn1 < dn2 then
-      Result += lines[i].I
+      Result += lines[l].I
     else
-      Result += lines[i].J;
+      Result += lines[l].J;
   end;
 end;
 

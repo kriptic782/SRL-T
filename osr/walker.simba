@@ -41,7 +41,7 @@ end;
   TRSWalkerV2 = record(TSRLBaseRecord)
     Position: function (): TPoint of object;
     Height: function (p: TPoint = [-1,-1]): Single of object;
-    GetLocal: function (tpa: TPointArray): TPointArray of object;
+    GetLocal: function (tpa: TPointArray; offset: TPoint = [0,0]): TPointArray of object;
 
     MinEnergy, ClickRandomness, MouseAheadTimer: Int32;
 
@@ -62,7 +62,7 @@ end;
 procedure TRSWalkerV2.Setup(
   position: function (): TPoint of object;
   height: function (p: TPoint = [-1,-1]): Single of object;
-  getLocal: function (tpa: TPointArray): TPointArray of object;
+  getLocal: function (tpa: TPointArray; offset: TPoint = [0,0]): TPointArray of object;
   graph: ^TWebGraph;
   mapImage: TMufasaBitmap
 );

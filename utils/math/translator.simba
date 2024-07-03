@@ -96,6 +96,15 @@ begin
   Result.Y := Self.Map.Scope.Y2 - p.Y * Self.Map.ChunkSide;
 end;
 
+function TRSTranslator.Chunk2Coordinate(b: TBox): TBox; overload;
+var
+  s, f: TPoint;
+begin
+  s := Self.Chunk2Coordinate([b.X1, b.Y1]);
+  f := Self.Chunk2Coordinate([b.X2+1, b.Y2-1]);
+  Result := [s.X, s.Y, f.X-1, f.Y-1];
+end;
+
 
 function TRSTranslator.Coordinate2RSCoordinate(p: TPoint): TPoint;
 begin

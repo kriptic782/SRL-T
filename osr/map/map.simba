@@ -658,7 +658,7 @@ begin
 
   cleanMinimap.Free();
 
-  Self.RegionIndex := Self.Loader.GetRegion(Result);
+  Self.RegionIndex := Self.Loader.LocalIndex(Result);
   if Self.RegionIndex > -1 then
   begin
     Self.Region := Self.Loader.Regions[Self.RegionIndex];
@@ -1065,7 +1065,7 @@ begin
   if graph then
   begin
     tmp := Self.Loader.Graph;
-    tmp.Nodes := Self.Loader.GetLocal(tmp.Nodes);
+    tmp.Nodes := Self.Loader.GetLocal(tmp.Nodes, [-Self.Loader.Padding,-Self.Loader.Padding]);
     tmp.Draw(bmp);
   end;
 
