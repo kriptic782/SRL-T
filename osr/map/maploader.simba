@@ -214,8 +214,7 @@ var
   white, black, red, skeleton: TPointArray;
   p: TPoint;
   circle: TCircle;
-  matrix: array of TBoolArray;
-  crossings: array [0..12] of TBoolArray;
+  matrix, crossings: array of TBoolArray;
   skip: TIntegerArray;
   filtered: array of record
     Points: TPointArray;
@@ -227,6 +226,7 @@ begin
   black += red;
 
   SetLength(matrix, map.GetHeight(), map.GetWidth());
+  SetLength(crossings, GENERATED_GRAPH.MaxConnections+1);
 
   for p in black do matrix[p.Y, p.X] := True;
 
@@ -261,13 +261,12 @@ begin
       Continue;
     end;
 
+    //Skeletonize the tpa
     skeleton := atpa[i].Erode(1).Skeleton(2, 7);
-
+    //clear points within GENERATED_GRAPH.Detail distance of each other
     RAaSTPA(skeleton, GENERATED_GRAPH.Detail);
 
-    for p in skeleton do
-      if not matrix[p.Y, p.X] then
-        Result.Nodes += p;
+    Result.Nodes := Result.Nodes.Combine(skeleton);
 
     SetLength(Result.Paths, Length(Result.Nodes));
 
@@ -288,7 +287,7 @@ begin
 
         if filtered[j].Points = [] then
         begin
-          Delete(skeleton, len - j, 1);
+          Delete(skeleton, len - j, 1); //delete Result.Nodes[j] from skeleton. Makes next iterations faster.
           filtered[j].Points := skeleton;
           FilterPointsDist(filtered[j].Points, 0, GENERATED_GRAPH.Detail*2+2, Result.Nodes[j].X, Result.Nodes[j].Y);
         end;
@@ -320,7 +319,7 @@ begin
           if Result.Nodes[n] = filtered[j].Points[connection] then
             Break;
 
-        if InIntArray(Result.Paths[j], n) or Result.ConnectNodes(j, n) then
+        if Result.ConnectNodes(j, n) then
           Continue;
 
         if Length(filtered[j].Points) = 1 then
@@ -753,7 +752,7 @@ end;
 
 
 
-function TRSMapLoader.InternalGraphLoad(graphs: array of TWebGraph; padding: UInt32): TWebGraph;
+function TRSMapLoader.InternalGraphLoad(graphs: array of TWebGraph): TWebGraph;
 var
   i: Int32;
 begin
@@ -865,7 +864,7 @@ begin
   Self.Heightmap  := Self._InternalLoad(hbitmaps);
   Self.Collision  := Self._InternalLoad(cbitmaps);
   if not Self.SkipGraph then
-    Self.Graph      := Self.InternalGraphLoad(graphs, padding);
+    Self.Graph      := Self.InternalGraphLoad(graphs);
   Self.ObjectData := Self.InternalJSONLoad(objects);
   Self.NPCData    := Self.InternalJSONLoad(npcs);
 
