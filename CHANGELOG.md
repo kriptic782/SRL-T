@@ -1,3 +1,12 @@
+## [6.0.1](https://github.com/Torwent/SRL-T/compare/v6.0.0...v6.0.1) (2024-07-03)
+
+
+### Bug Fixes
+
+* **TRSMap:** fixed some issues with region index calculation ([cca1083](https://github.com/Torwent/SRL-T/commit/cca108388befa5f880e552f203f58fb1fde58ecb))
+
+
+
 # [6.0.0](https://github.com/Torwent/SRL-T/compare/v5.8.3...v6.0.0) (2024-07-02)
 
 
@@ -36,15 +45,6 @@
 ### Bug Fixes
 
 * Didn't like the name `.SetupEChunk()` ([107515d](https://github.com/Torwent/SRL-T/commit/107515d042873006a0e52e9b858f6c39b9e3ed65))
-
-
-
-# [5.8.0](https://github.com/Torwent/SRL-T/compare/v5.7.1...v5.8.0) (2024-06-29)
-
-
-### Features
-
-* **webber:** new webber for TRSMap ([7bebd98](https://github.com/Torwent/SRL-T/commit/7bebd9865fa2c1c25076bbbffa26bec8f02db1ec))
 
 
 
