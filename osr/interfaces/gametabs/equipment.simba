@@ -194,6 +194,32 @@ begin
   Result := Self.ItemInterface.Find([item], bounds);
 end;
 
+(*
+## Equipment.FindItems
+```pascal
+function TRSEquipment.FindItems(Items: TRSItemArray; out Slots: TIntegerArray): Boolean;
+```
+
+Attempts to find the items passed in **Items**. The function returns true if any item is found and
+the slots of the found items will be returned in **Slots**.
+
+Example:
+```pascal
+var
+  slots: TIntegerArray;
+begin
+  if Equipment.FindItems(['Slayer helmet', 'Dragon scimitar'], slots) then
+    WriteLn('The slots that have Slayer helmet and Dragon scimitar are: ', slots);
+end;
+```
+*)
+function TRSEquipment.FindItems(items: TRSItemArray; out slots: TIntegerArray): Boolean;
+begin
+  if not Self.Open() then
+    Exit;
+  slots := Self.ItemInterface.IndicesOf(items);
+  Result := Length(slots) > 0;
+end;
 
 (*
 ## Equipment.Contains
