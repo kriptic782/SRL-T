@@ -101,7 +101,6 @@ begin
   until (current.Y = other.Y);
 end;
 
-
 (*
 ## TPoint.DistanceTo
 ```pascal

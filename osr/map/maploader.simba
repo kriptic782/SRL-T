@@ -217,9 +217,8 @@ var
   matrix: array of TBoolArray;
   crossings: array [0..12] of TBoolArray;
   skip: TIntegerArray;
-  sorted: array of record
+  filtered: array of record
     Points: TPointArray;
-    Setup: Boolean;
   end;
 begin
   map.FindColors(white, $FFFFFF);
@@ -272,8 +271,8 @@ begin
 
     SetLength(Result.Paths, Length(Result.Nodes));
 
-    sorted := [];
-    SetLength(sorted, Length(Result.Nodes));
+    filtered := [];
+    SetLength(filtered, Length(Result.Nodes));
 
     for connection := 0 to GENERATED_GRAPH.MaxConnections do
     begin
@@ -287,16 +286,14 @@ begin
       begin
         if InIntArray(skip, j) then Continue;
 
-        if not sorted[j].Setup then
+        if filtered[j].Points = [] then
         begin
-          sorted[j].Points := Copy(Result.Nodes, len, Length(Result.Nodes)-len);
-          FilterPointsDist(sorted[j].Points, 0, GENERATED_GRAPH.NodeRadius, Result.Nodes[j].X, Result.Nodes[j].Y);
-          sorted[j].Points.Sort(Result.Nodes[j]);
-          Delete(sorted[j].Points, 0, 1);
-          sorted[j].Setup := True;
+          Delete(skeleton, len - j, 1);
+          filtered[j].Points := skeleton;
+          FilterPointsDist(filtered[j].Points, 0, GENERATED_GRAPH.Detail*2+2, Result.Nodes[j].X, Result.Nodes[j].Y);
         end;
 
-        if High(sorted[j].Points) < connection then
+        if High(filtered[j].Points) < connection then
         begin
           skip += j;
           Continue;
@@ -304,15 +301,15 @@ begin
 
         if crossings[connection, j] then Continue;
 
-        if Result.Nodes[j].LineInMatrix(sorted[j].Points[connection], matrix) then
+        if Result.Nodes[j].LineInMatrix(filtered[j].Points[connection], matrix) then
         begin
-          if Length(sorted[j].Points) = 1 then
+          if Length(filtered[j].Points) = 1 then
           begin
             skip += j;
             Continue;
           end;
 
-          Delete(sorted[j].Points, connection, 1);
+          Delete(filtered[j].Points, connection, 1);
           j -= 1;
           Continue;
         end;
@@ -320,17 +317,17 @@ begin
         crossings[connection, j] := True;
 
         for n := len to High(Result.Nodes) do
-          if Result.Nodes[n] = sorted[j].Points[connection] then
+          if Result.Nodes[n] = filtered[j].Points[connection] then
             Break;
 
         if InIntArray(Result.Paths[j], n) or Result.ConnectNodes(j, n) then
           Continue;
 
-        if Length(sorted[j].Points) = 1 then
+        if Length(filtered[j].Points) = 1 then
           skip += j
         else
         begin
-          Delete(sorted[j].Points, connection, 1);
+          Delete(filtered[j].Points, connection, 1);
           j -= 1;
         end;
       end;

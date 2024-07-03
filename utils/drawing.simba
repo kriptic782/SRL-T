@@ -105,6 +105,13 @@ begin
 end;
 
 
+function TMufasaBitmap.Data(): TIntegerArray;
+begin
+  SetLength(Result, Self.getWidth()*Self.getHeight()*4);
+  Move(Self.getData()^, Result[0], length(Result));
+end;
+
+
 (*
 ## TMufasaBitmap.ClearAllBut
 ```pascal
