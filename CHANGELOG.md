@@ -1,3 +1,12 @@
+## [6.1.2](https://github.com/Torwent/SRL-T/compare/v6.1.1...v6.1.2) (2024-07-04)
+
+
+### Bug Fixes
+
+* **graph generator:** more performance improvements. Speed shouldn't really be an issue anymore ([2b80d06](https://github.com/Torwent/SRL-T/commit/2b80d0632696bbdc7c90b1f91b5f836e7b58dac3))
+
+
+
 ## [6.1.1](https://github.com/Torwent/SRL-T/compare/v6.1.0...v6.1.1) (2024-07-03)
 
 
@@ -36,15 +45,6 @@
 ### BREAKING CHANGES
 
 * `GENERATED_GRAPH.SingleNodeRadius` renamed to `GENERATED_GRAPH.NodeRadius`, because why not
-
-
-
-## [5.8.3](https://github.com/Torwent/SRL-T/compare/v5.8.2...v5.8.3) (2024-06-30)
-
-
-### Bug Fixes
-
-* **TRSMapLoader:** WebGraph generator optimizations ([ff7ef17](https://github.com/Torwent/SRL-T/commit/ff7ef17738b78f501fa345ca6bb715e56a47a153))
 
 
 
