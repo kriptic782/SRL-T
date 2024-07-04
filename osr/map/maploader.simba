@@ -209,7 +209,7 @@ end;
 
 function TRSChunkLoader.BuildGraph(name: String; map: TMufasaBitmap): TWebGraph;
 var
-  i, j, n, len, connection, w, hi: Int32;
+  i, j, n, len, connection, w: Int32;
   atpa: T2DPointArray;
   white, red, skeleton: TPointArray;
   p: TPoint;
