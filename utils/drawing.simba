@@ -111,6 +111,67 @@ begin
   Move(Self.getData()^, Result[0], length(Result));
 end;
 
+//credits: https://github.com/Torwent/Simba/blob/27ae9e3459e0614b07eb1309ae223c303c46e05c/Source/MML/simba.tpa.pas#L2440C10-L2440C21
+function TMufasaBitmap.ColorsInLine(p, q: TPoint; colors: TIntegerArray): Boolean;
+var
+  Xinc, YInc: Int32;
+  TwoDxAccumulatedError, TwoDyAccumulatedError: Integer;
+  current, d, twoD: TPoint;
+begin
+  d := [(q.X-p.X), (q.Y-p.Y)];
+  twoD := [d.X + d.X, d.Y + d.Y];
+  current := p;
+  Xinc := 1;
+  Yinc := 1;
+
+  if (d.X < 0) then
+  begin
+    Xinc := -1;
+    d.X := - d.X;
+    twoD.X := - twoD.X;
+  end;
+
+  if (d.Y < 0) then
+  begin
+    Yinc := -1;
+    d.Y := -d.Y;
+    twoD.Y := - twoD.Y;
+  end;
+
+  if ((d.X = 0) and (D.Y = 0)) then
+    Exit;
+
+  if (d.Y <= d.X) then
+  begin
+    repeat
+      Inc(current.X, Xinc);
+      Inc(TwoDxAccumulatedError, twoD.Y);
+      if (TwoDxAccumulatedError > d.X) then
+      begin
+        Inc(current.Y, Yinc);
+        Dec(TwoDxAccumulatedError, twoD.X);
+      end;
+
+      if Self.GetPixel(current) in colors then Exit(True);
+    until (current.X = q.X);
+
+    Exit;
+  end;
+
+  repeat
+    Inc(current.Y, Yinc);
+    Inc(TwoDyAccumulatedError, twoD.X);
+
+    if (TwoDyAccumulatedError > d.Y) then
+    begin
+      Inc(current.X, Xinc);
+      Dec(TwoDyAccumulatedError, twoD.Y);
+    end;
+
+    if Self.GetPixel(current) in colors then Exit(True);
+  until (current.Y = q.Y);
+end;
+
 
 (*
 ## TMufasaBitmap.ClearAllBut

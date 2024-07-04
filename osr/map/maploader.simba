@@ -209,19 +209,15 @@ end;
 
 function TRSChunkLoader.BuildGraph(name: String; map: TMufasaBitmap): TWebGraph;
 var
-  i, j, n, len, connection, w: Int32;
+  i, j, n, len, connection, w, hi: Int32;
   atpa: T2DPointArray;
   white, red, skeleton: TPointArray;
   p: TPoint;
   circle: TCircle;
-  matrix: TIntegerArray;
 begin
-  matrix := map.GetColors();
   w := map.getWidth();
   map.FindColors(white, $FFFFFF);
   map.FindColors(red, $FF);
-
-  for p in red do matrix[p.Y * w + p.X] := $0; //doors can't be walked through.
 
   Self.DebugLn('Generating webgraph for region: ' + name);
 
@@ -229,17 +225,11 @@ begin
   for i := High(atpa) downto 0 do
   begin
     if Length(atpa[i]) < 17 then //remove small spaces
-    begin
-      for p in atpa[i] do matrix[p.Y * w + p.X] := $0;
       Continue;
-    end;
 
     //closed areas with no door
     if (red <> []) and (atpa[i].PointsInRangeOf(red,0,1) = []) then
-    begin
-      for p in atpa[i] do matrix[p.Y * w + p.X] := $0;
       Continue;
-    end;
 
     len := Length(Result.Nodes);
 
@@ -250,8 +240,6 @@ begin
       SetLength(Result.Paths, len+1);
 
       Result.Nodes[len] := atpa[i].Sorted(atpa[i].Mean())[0];
-
-      for p in atpa[i] do matrix[p.Y * w + p.X] := $0;
       Continue;
     end;
 
@@ -270,24 +258,28 @@ begin
       connection := 0;
 
       for n := 0 to j-1 do
-        if skeleton[j].InRange(skeleton[n], GENERATED_GRAPH.Detail*3) then
-        begin
-          if Result.Nodes[j+len].LineInMatrix(Result.Nodes[n+len], w, $0, matrix) then
-            Continue;
+      begin
+        if Max(Abs(skeleton[j].X - skeleton[n].X), Abs(skeleton[j].Y - skeleton[n].Y)) > GENERATED_GRAPH.Detail * 3 then
+          Continue;
 
-          Result.Nodes[j+len] := skeleton[j];
-          Result.Nodes[n+len] := skeleton[n];
-          Result.Paths[j+len] += n+len;
-          Result.Paths[n+len] += j+len;
+        if map.ColorsInLine(skeleton[j], skeleton[n], [$0, $FF]) then
+          Continue;
 
-          if Inc(connection) = GENERATED_GRAPH.MaxConnections then
-            Break;
-        end;
+        Result.Nodes[j+len] := skeleton[j];
+        Result.Nodes[n+len] := skeleton[n];
+        Result.Paths[j+len] += n+len;
+        Result.Paths[n+len] += j+len;
+
+        if Inc(connection) = GENERATED_GRAPH.MaxConnections then
+          Break;
+      end;
       Delete(skeleton, j, 1);
     end;
   end;
 
-  SetLength(Result.Names, Length(Result.Nodes));
+  len := Length(Result.Nodes);
+  SetLength(Result.Paths, len);
+  SetLength(Result.Names, len);
 end;
 
 function TRSChunkLoader.GetGraph(name: String; level: UInt32; map: TMufasaBitmap): TWebGraph; overload;
