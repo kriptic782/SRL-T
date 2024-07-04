@@ -269,6 +269,7 @@ begin
   end;
 end;
 
+
 function TWebGraph.AddNode(p: TPoint; FromNode: Int32): Boolean;
 var
   c: Int32;
