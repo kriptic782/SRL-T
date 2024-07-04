@@ -1,3 +1,12 @@
+## [6.1.4](https://github.com/Torwent/SRL-T/compare/v6.1.3...v6.1.4) (2024-07-04)
+
+
+### Bug Fixes
+
+* final tweaks to web generation with some of bootje recommendations ([10d096b](https://github.com/Torwent/SRL-T/commit/10d096b79fd02a43ec14191e6fdef23a348afb46))
+
+
+
 ## [6.1.3](https://github.com/Torwent/SRL-T/compare/v6.1.2...v6.1.3) (2024-07-04)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **MapLoader:** webgraph generation optimizations ([ac85b41](https://github.com/Torwent/SRL-T/commit/ac85b418f54b8d1a32eb6fc5c176c01629224971))
-
-
-
-## [6.0.1](https://github.com/Torwent/SRL-T/compare/v6.0.0...v6.0.1) (2024-07-03)
-
-
-### Bug Fixes
-
-* **TRSMap:** fixed some issues with region index calculation ([cca1083](https://github.com/Torwent/SRL-T/commit/cca108388befa5f880e552f203f58fb1fde58ecb))
 
 
 
