@@ -1,3 +1,12 @@
+## [6.1.3](https://github.com/Torwent/SRL-T/compare/v6.1.2...v6.1.3) (2024-07-04)
+
+
+### Bug Fixes
+
+* removed unneed variables ([f269678](https://github.com/Torwent/SRL-T/commit/f26967846eb5fa8d9c2fe0cb0899b88df07d0f9a))
+
+
+
 ## [6.1.2](https://github.com/Torwent/SRL-T/compare/v6.1.1...v6.1.2) (2024-07-04)
 
 
@@ -31,20 +40,6 @@
 ### Bug Fixes
 
 * **TRSMap:** fixed some issues with region index calculation ([cca1083](https://github.com/Torwent/SRL-T/commit/cca108388befa5f880e552f203f58fb1fde58ecb))
-
-
-
-# [6.0.0](https://github.com/Torwent/SRL-T/compare/v5.8.3...v6.0.0) (2024-07-02)
-
-
-### Bug Fixes
-
-* read notes ([b2b9eea](https://github.com/Torwent/SRL-T/commit/b2b9eea40cbf2fb2a5dac998565e9321d37ffc90))
-
-
-### BREAKING CHANGES
-
-* `GENERATED_GRAPH.SingleNodeRadius` renamed to `GENERATED_GRAPH.NodeRadius`, because why not
 
 
 
