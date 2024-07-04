@@ -1,3 +1,12 @@
+## [6.1.5](https://github.com/Torwent/SRL-T/compare/v6.1.4...v6.1.5) (2024-07-04)
+
+
+### Bug Fixes
+
+* **webgraph generator:** now considers L shaped pathing to connect nodes ([7d61f2a](https://github.com/Torwent/SRL-T/commit/7d61f2a2498ffe4a44ab1c936992ea77398b6ef9))
+
+
+
 ## [6.1.4](https://github.com/Torwent/SRL-T/compare/v6.1.3...v6.1.4) (2024-07-04)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * fix caching infinite loop ([65e7b61](https://github.com/Torwent/SRL-T/commit/65e7b61ad9e55674ec2d6c757a2242aa3271db8a))
-
-
-
-# [6.1.0](https://github.com/Torwent/SRL-T/compare/v6.0.1...v6.1.0) (2024-07-03)
-
-
-### Features
-
-* **MapLoader:** webgraph generation optimizations ([ac85b41](https://github.com/Torwent/SRL-T/commit/ac85b418f54b8d1a32eb6fc5c176c01629224971))
 
 
 
