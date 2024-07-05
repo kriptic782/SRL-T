@@ -1,3 +1,17 @@
+# [7.0.0](https://github.com/Torwent/SRL-T/compare/v6.1.5...v7.0.0) (2024-07-05)
+
+
+### Bug Fixes
+
+* more webgraph improvements ([a637d21](https://github.com/Torwent/SRL-T/commit/a637d21f7b744d48bf5a5e0cfb9c541e4f58de43))
+
+
+### BREAKING CHANGES
+
+* `GENERATED_GRAPH.Detail` renamed to `GENERATED_GRAPH.Fidelity`, sorry!
+
+
+
 ## [6.1.5](https://github.com/Torwent/SRL-T/compare/v6.1.4...v6.1.5) (2024-07-04)
 
 
@@ -31,15 +45,6 @@
 ### Bug Fixes
 
 * **graph generator:** more performance improvements. Speed shouldn't really be an issue anymore ([2b80d06](https://github.com/Torwent/SRL-T/commit/2b80d0632696bbdc7c90b1f91b5f836e7b58dac3))
-
-
-
-## [6.1.1](https://github.com/Torwent/SRL-T/compare/v6.1.0...v6.1.1) (2024-07-03)
-
-
-### Bug Fixes
-
-* fix caching infinite loop ([65e7b61](https://github.com/Torwent/SRL-T/commit/65e7b61ad9e55674ec2d6c757a2242aa3271db8a))
 
 
 
