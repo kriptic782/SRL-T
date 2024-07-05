@@ -100,7 +100,7 @@ end;
 
 function TRSGrandExchange.GetOfferStatusButtons: TRSButtonArray;
 begin
-  Result := Self.FindButtons([[45,18], [36,32], [40,36],[292,15], [160,18], [159,18], [410,18], [210,18]]);
+  Result := Self.FindButtons([[45,18], [36,32], [40,36],[292,15], [151,18], [192,18], [410,18], [210,18]]);
 end;
 
 function TRSGrandExchange.GetOfferStatusButton(Button: ERSGEOfferStatusButton): TRSButton;
