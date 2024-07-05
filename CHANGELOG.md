@@ -1,3 +1,12 @@
+## [7.0.2](https://github.com/Torwent/SRL-T/compare/v7.0.1...v7.0.2) (2024-07-05)
+
+
+### Bug Fixes
+
+* more fixes ([dba2020](https://github.com/Torwent/SRL-T/commit/dba20202c88da55fba3a20ecd2a3b195e03c5672))
+
+
+
 ## [7.0.1](https://github.com/Torwent/SRL-T/compare/v7.0.0...v7.0.1) (2024-07-05)
 
 
@@ -36,15 +45,6 @@
 ### Bug Fixes
 
 * final tweaks to web generation with some of bootje recommendations ([10d096b](https://github.com/Torwent/SRL-T/commit/10d096b79fd02a43ec14191e6fdef23a348afb46))
-
-
-
-## [6.1.3](https://github.com/Torwent/SRL-T/compare/v6.1.2...v6.1.3) (2024-07-04)
-
-
-### Bug Fixes
-
-* removed unneed variables ([f269678](https://github.com/Torwent/SRL-T/commit/f26967846eb5fa8d9c2fe0cb0899b88df07d0f9a))
 
 
 
