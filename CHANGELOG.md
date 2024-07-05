@@ -1,3 +1,12 @@
+## [7.0.1](https://github.com/Torwent/SRL-T/compare/v7.0.0...v7.0.1) (2024-07-05)
+
+
+### Bug Fixes
+
+* typo ([4d5efdd](https://github.com/Torwent/SRL-T/commit/4d5efdddcfe72584473d6bddea918277ead3c775))
+
+
+
 # [7.0.0](https://github.com/Torwent/SRL-T/compare/v6.1.5...v7.0.0) (2024-07-05)
 
 
@@ -36,15 +45,6 @@
 ### Bug Fixes
 
 * removed unneed variables ([f269678](https://github.com/Torwent/SRL-T/commit/f26967846eb5fa8d9c2fe0cb0899b88df07d0f9a))
-
-
-
-## [6.1.2](https://github.com/Torwent/SRL-T/compare/v6.1.1...v6.1.2) (2024-07-04)
-
-
-### Bug Fixes
-
-* **graph generator:** more performance improvements. Speed shouldn't really be an issue anymore ([2b80d06](https://github.com/Torwent/SRL-T/commit/2b80d0632696bbdc7c90b1f91b5f836e7b58dac3))
 
 
 
