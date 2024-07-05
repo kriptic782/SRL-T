@@ -50,7 +50,6 @@ var
   visited: TBoolArray;
   cIdx, pathIdx, i: Int32;
   current, node: TNode;
-  altPaths: array of TIntegerArray;
   p,q: TPoint;
   hyp: Double;
 

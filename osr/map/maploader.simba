@@ -23,9 +23,9 @@ var
   end;
 
 begin
-  GENERATED_GRAPH.Detail := 5;           //low = better/slower, high = worse/faster
+  GENERATED_GRAPH.Fidelity := 18;        //low = better/slower, high = worse/faster
   GENERATED_GRAPH.NodeRadius := 50;      //closed space less than NodeRadius pixels will have a single node.
-  GENERATED_GRAPH.MaxConnections := 8;   //Max connections per node.
+  GENERATED_GRAPH.MaxConnections := 6;   //Max connections per node.
 end;
 
 type
@@ -208,32 +208,9 @@ end;
 
 
 function TRSChunkLoader.BuildGraph(name: String; map: TMufasaBitmap): TWebGraph;
-  function _AllCross(p, q, offset: TPoint; bounds: TBox): Boolean;
-  var
-    offsets: TPointArray;
-    tmp: TPoint;
-  begin
-    tmp := p.Offset(offset.X, 0);
-    if bounds.Contains(tmp) then offsets += tmp;
-
-    tmp := p.Offset(0, offset.Y);
-    if bounds.Contains(tmp) then offsets += tmp;
-
-    tmp := q.Offset(offset.X, 0);
-    if bounds.Contains(tmp) then offsets += tmp;
-
-    tmp := q.Offset(0, offset.Y);
-    if bounds.Contains(tmp) then offsets += tmp;
-
-    for tmp in offsets do
-      if not map.ColorsInLine(p, tmp, [$0, $FF]) and not map.ColorsInLine(tmp, q, [$0, $FF]) then
-        Exit;
-    Result := True;
-  end;
-
 var
   i, j, n, len, connection, hi, x, y: Int32;
-  atpa: T2DPointArray;
+  atpa, parts, clusters: T2DPointArray;
   white, red, skeleton, nodes: TPointArray;
   b: TBox;
 begin
@@ -262,11 +239,21 @@ begin
 
     len := Length(Result.Nodes);
 
-    //Skeletonize the tpa
     skeleton := atpa[i].Erode(1).Skeleton(2, 7);
+    parts := PartitionTPA(skeleton, GENERATED_GRAPH.Detail, GENERATED_GRAPH.Detail);
+
+    for j := 0 to High(parts) do //fix parts that are joined but separated by walls
+    begin
+      clusters := parts[j].Cluster(1);
+      if Length(clusters) > 1 then
+      begin
+        parts[j] := clusters[0];
+        for n := 1 to High(clusters) do parts += clusters[n];
+      end;
+    end;
+
     //clear points within GENERATED_GRAPH.Detail distance of each other
-    nodes := skeleton;
-    RAaSTPA(nodes, GENERATED_GRAPH.Detail);
+    nodes := parts.Means();
 
     SetLength(Result.Nodes, len + Length(nodes));
     SetLength(Result.Paths, Length(Result.Nodes));
@@ -281,11 +268,12 @@ begin
       begin
         x := nodes[j].X - nodes[n].X;
         y := nodes[j].Y - nodes[n].Y;
-        if Max(Abs(x), Abs(y)) > GENERATED_GRAPH.Detail * 3 then
+
+        if Max(Abs(x), Abs(y)) > GENERATED_GRAPH.Detail * 2 then
           Continue;
 
-        if map.ColorsInLine(nodes[j], nodes[n], [$0, $FF]) then
-          if _AllCross(nodes[j], nodes[n], [x, y], b) then
+        if map.ColorsInLineEx(nodes[j], nodes[n], [$0, $FF]) then
+          if Length(PointsInRangeOf(parts[j], parts[n], 0, Sqrt(2))) = 0 then
             Continue;
 
         Result.Nodes[j+len] := nodes[j];
@@ -296,6 +284,7 @@ begin
         if Inc(connection) = GENERATED_GRAPH.MaxConnections then
           Break;
       end;
+
       Delete(nodes, j, 1);
     end;
   end;

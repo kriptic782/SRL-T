@@ -172,6 +172,29 @@ begin
   until (current.Y = q.Y);
 end;
 
+//manhatten line.
+function TMufasaBitmap.ColorsInLineEx(p, q: TPoint; colors: TIntegerArray): Boolean;
+var
+  x, y: Int32;
+  pXCross, pYCross, qXCross, qYCross: Boolean;
+begin
+  for x := Min(p.X, q.X) to Max(p.X, q.X) do
+  begin
+    if not pXCross then pXCross := Self.GetPixel(x, p.Y) in colors;
+    if not qXCross then qXCross := Self.GetPixel(x, q.Y) in colors;
+    if pXCross and qXCross then Exit(True);
+  end;
+
+  for y := Min(p.Y, q.Y) to Max(p.Y, q.Y) do
+  begin
+    if not pYCross then pYCross := Self.GetPixel(p.X, y) in colors;
+    if not qYCross then qYCross := Self.GetPixel(q.X, y) in colors;
+    if pYCross and qYCross then Exit(True);
+  end;
+
+  Result := (pXCross and pYCross) or (qXCross and qYCross);
+end;
+
 
 (*
 ## TMufasaBitmap.ClearAllBut

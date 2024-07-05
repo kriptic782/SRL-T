@@ -1505,8 +1505,6 @@ begin
   Result := (Length(Edge.PointsInRangeOf(Self, 0, 1)) / Length(Edge)) * 100;
 end; 
 
-
-
 (*
 ## TPointArray.InRange
 ```pascal
