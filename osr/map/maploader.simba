@@ -17,13 +17,13 @@ const
 
 var
   GENERATED_GRAPH: record
-    Fidelity: Int32;
+    Spacing: Int32;
     NodeRadius: Int32;
     MaxConnections: Int32;
   end;
 
 begin
-  GENERATED_GRAPH.Fidelity := 18;        //low = better/slower, high = worse/faster
+  GENERATED_GRAPH.Spacing := 18;        //low = better/slower, high = worse/faster
   GENERATED_GRAPH.NodeRadius := 50;      //closed space less than NodeRadius pixels will have a single node.
   GENERATED_GRAPH.MaxConnections := 6;   //Max connections per node.
 end;
@@ -240,7 +240,7 @@ begin
     len := Length(Result.Nodes);
 
     skeleton := atpa[i].Erode(1).Skeleton(2, 7);
-    parts := PartitionTPA(skeleton, GENERATED_GRAPH.Detail, GENERATED_GRAPH.Detail);
+    parts := PartitionTPA(skeleton, GENERATED_GRAPH.Spacing, GENERATED_GRAPH.Spacing);
 
     for j := 0 to High(parts) do //fix parts that are joined but separated by walls
     begin
@@ -252,7 +252,7 @@ begin
       end;
     end;
 
-    //clear points within GENERATED_GRAPH.Detail distance of each other
+    //clear points within GENERATED_GRAPH.Spacing distance of each other
     nodes := parts.Means();
 
     SetLength(Result.Nodes, len + Length(nodes));
@@ -269,7 +269,7 @@ begin
         x := nodes[j].X - nodes[n].X;
         y := nodes[j].Y - nodes[n].Y;
 
-        if Max(Abs(x), Abs(y)) > GENERATED_GRAPH.Detail * 2 then
+        if Max(Abs(x), Abs(y)) > GENERATED_GRAPH.Spacing * 2 then
           Continue;
 
         if map.ColorsInLineEx(nodes[j], nodes[n], [$0, $FF]) then
@@ -302,7 +302,7 @@ var
 begin
   cacheroot := Self.Cache + 'graphs' + DirectorySeparator;
   cachename := cacheroot + ToStr(level) + DirectorySeparator + name + '-' +
-               ToStr(GENERATED_GRAPH.Detail) + '-' +
+               ToStr(GENERATED_GRAPH.Spacing) + '-' +
                ToStr(GENERATED_GRAPH.NodeRadius) + '-' +
                ToStr(GENERATED_GRAPH.MaxConnections);
 
