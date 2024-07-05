@@ -17,7 +17,7 @@ const
 
 var
   GENERATED_GRAPH: record
-    Detail: Int32;
+    Fidelity: Int32;
     NodeRadius: Int32;
     MaxConnections: Int32;
   end;
