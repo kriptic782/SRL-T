@@ -1,3 +1,12 @@
+# [7.1.0](https://github.com/Torwent/SRL-T/compare/v7.0.2...v7.1.0) (2024-07-06)
+
+
+### Features
+
+* **TRSMap:** read notes ([ad624cf](https://github.com/Torwent/SRL-T/commit/ad624cf41b6a5c4a91bc5939cf70c9cc89e0746e))
+
+
+
 ## [7.0.2](https://github.com/Torwent/SRL-T/compare/v7.0.1...v7.0.2) (2024-07-05)
 
 
@@ -36,15 +45,6 @@
 ### Bug Fixes
 
 * **webgraph generator:** now considers L shaped pathing to connect nodes ([7d61f2a](https://github.com/Torwent/SRL-T/commit/7d61f2a2498ffe4a44ab1c936992ea77398b6ef9))
-
-
-
-## [6.1.4](https://github.com/Torwent/SRL-T/compare/v6.1.3...v6.1.4) (2024-07-04)
-
-
-### Bug Fixes
-
-* final tweaks to web generation with some of bootje recommendations ([10d096b](https://github.com/Torwent/SRL-T/commit/10d096b79fd02a43ec14191e6fdef23a348afb46))
 
 
 
