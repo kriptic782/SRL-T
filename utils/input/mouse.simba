@@ -719,15 +719,15 @@ begin
   end;
 end;
 
-procedure TMouse.Scroll(P: TPoint; amount: Int32; down: Boolean); overload;
+procedure TMouse.Scroll(p: TPoint; amount: Int32; down: Boolean); overload;
 begin
-  Self.Move(P);
+  Self.Move(p);
   Self.Scroll(amount, down);
 end;
 
-procedure TMouse.Scroll(b: TBox; amount: Int32; down: Boolean); overload;
+procedure TMouse.Scroll(b: TBox; amount: Int32; down: Boolean; forceMove: Boolean = False); overload;
 begin
-  Self.Move(b);
+  Self.Move(b, forceMove);
   Self.Scroll(amount, down);
 end;
 
