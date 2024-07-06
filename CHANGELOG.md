@@ -1,3 +1,12 @@
+## [7.1.2](https://github.com/Torwent/SRL-T/compare/v7.1.1...v7.1.2) (2024-07-06)
+
+
+### Bug Fixes
+
+* force bump ([8d2720a](https://github.com/Torwent/SRL-T/commit/8d2720a27225cd8405066b41116a4d872aab1dc0))
+
+
+
 ## [7.1.1](https://github.com/Torwent/SRL-T/compare/v7.1.0...v7.1.1) (2024-07-06)
 
 
@@ -31,20 +40,6 @@
 ### Bug Fixes
 
 * typo ([4d5efdd](https://github.com/Torwent/SRL-T/commit/4d5efdddcfe72584473d6bddea918277ead3c775))
-
-
-
-# [7.0.0](https://github.com/Torwent/SRL-T/compare/v6.1.5...v7.0.0) (2024-07-05)
-
-
-### Bug Fixes
-
-* more webgraph improvements ([a637d21](https://github.com/Torwent/SRL-T/commit/a637d21f7b744d48bf5a5e0cfb9c541e4f58de43))
-
-
-### BREAKING CHANGES
-
-* `GENERATED_GRAPH.Detail` renamed to `GENERATED_GRAPH.Fidelity`, sorry!
 
 
 
