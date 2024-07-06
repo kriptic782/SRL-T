@@ -189,21 +189,9 @@ begin
 end;
 
 procedure TRSMap.SetupChunks(chunks: array of TRSMapChunk; downscale: UInt32 = 8);
-var
-  chunk: TRSMapChunk;
-  p: Int32;
-  boxes: TBoxArray;
-  planes: TIntegerArray;
 begin
-  for chunk in chunks do
-  begin
-    boxes += chunk.Chunk;
-    for p in chunk.Planes do
-      if InRange(p, 0, 3) and (planes.Find(p) = -1) then
-        planes += p;
-  end;
-
-  Self.SetupChunksEx(boxes, planes, downscale);
+  Self.Loader.Load(chunks, downscale);
+  Self.InternalSetup();
 end;
 
 procedure TRSMap.SetupChunk(chunk: TRSMapChunk; downscale: UInt32 = 8);
@@ -211,24 +199,15 @@ begin
   Self.SetupChunksEx([chunk.Chunk], chunk.Planes, downscale);
 end;
 
-procedure TRSMap.SetupChunks(chunks: array of ERSChunk; downscale: UInt32 = 8); overload;
+procedure TRSMap.SetupChunks(echunks: array of ERSChunk; downscale: UInt32 = 8); overload;
 var
-  chunk: TRSMapChunk;
+  chunks: array of TRSMapChunk;
   echunk: ERSChunk;
-  p: Int32;
-  boxes: TBoxArray;
-  planes: TIntegerArray;
 begin
-  for echunk in chunks do
-  begin
-    chunk := echunk.Get();
-    boxes += chunk.Chunk;
-    for p in chunk.Planes do
-      if InRange(p, 0, 3) and (planes.Find(p) = -1) then
-        planes += p;
-  end;
+  for echunk in echunks do
+    chunks += echunk.Get();
 
-  Self.SetupChunksEx(boxes, planes, downscale);
+  Self.SetupChunks(chunks, downscale);
 end;
 
 procedure TRSMap.SetupChunk(chunk: ERSChunk; downscale: UInt32 = 8); overload;
@@ -671,7 +650,7 @@ end;
 function TRSMap.FullPosition(): TRSPosition;
 begin
   with Self.Position() do
-    Result := [X, Y, Self.Height([X,Y]), Self.Region.Level];
+    Result := [X, Y, Self.Height([X,Y]), Self.Region.Plane];
 end;
 
 (*
@@ -931,7 +910,7 @@ begin
   lines := [
     'RegionIndex: ' + ToStr(Self.RegionIndex),
     'RegionName: '  + ToStr(Self.Region.Name),
-    'Level: '       + ToStr(Self.Region.Level),
+    'Plane: '       + ToStr(Self.Region.Plane),
     'Accuracy: '    + ToStr(Round(Self.Similarity, 3)),
     'Time: '        + ToStr(Round(time)) + ' ms'
   ];

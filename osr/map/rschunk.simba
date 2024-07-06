@@ -4,32 +4,6 @@
 {$ENDIF}
 
 type
-(*
-(TRSMapChunk)=
-## type TRSMapChunk
-```pascal
-TRSMapChunk = record
-  Name: String;
-  Chunk: TBox;
-  Planes: TIntegerArray;
-end;
-```
-Helper record to store chunk data with a name associated with.
-
-Example:
-```pascal
-var
-  VarrockChunk: TRSMapChunk = ['Varrock', [49,54,50,53], [0]];
-begin
-  Map.SetupChunk(VarrockChunk);
-end;
-```
-*)
-  TRSMapChunk = record
-    Chunk: TBox;
-    Planes: TIntegerArray;
-  end;
-
   ERSChunk = (
     ARDOUGNE,
     CRAFTING_GUILD,

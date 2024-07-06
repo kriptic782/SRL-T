@@ -7,7 +7,7 @@
 
 {$I utils.simba}
 
-procedure TSRL.Setup;
+procedure TSRL.Setup();
 begin
   { override me to setup things }
   Self.IsSetup := True;

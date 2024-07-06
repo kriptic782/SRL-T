@@ -15,20 +15,22 @@ TRSWalker by Slacky and it's future iterations made by Olly.
 const
   RSMAP_PATH: String = {$MACRO CURRENT_DIRECTORY};
 
-var
-  GENERATED_GRAPH: record
-    Spacing: Int32;
-    NodeRadius: Int32;
-    MaxConnections: Int32;
-  end;
-
-begin
-  GENERATED_GRAPH.Spacing := 18;        //low = better/slower, high = worse/faster
-  GENERATED_GRAPH.NodeRadius := 50;      //closed space less than NodeRadius pixels will have a single node.
-  GENERATED_GRAPH.MaxConnections := 6;   //Max connections per node.
-end;
-
 type
+(*
+(TRSMapChunk)=
+## type TRSMapChunk
+```pascal
+TRSMapChunk = record
+  Chunk: TBox;
+  Planes: TIntegerArray;
+end;
+```
+Helper record to store chunk data with a name associated with.
+*)
+  TRSMapChunk = record
+    Chunk: TBox;
+    Planes: TIntegerArray;
+  end;
   ERSMapType = (NORMAL, HEIGHT, COLLISION);
   ERSMapJSON = (OBJECTS, NPCS);
 
@@ -209,7 +211,7 @@ end;
 
 function TRSChunkLoader.BuildGraph(name: String; map: TMufasaBitmap): TWebGraph;
 var
-  i, j, n, len, connection, hi, x, y: Int32;
+  i, j, n, len, connection, hi: Int32;
   atpa, parts, clusters: T2DPointArray;
   white, red, skeleton, nodes: TPointArray;
   b: TBox;
@@ -266,15 +268,18 @@ begin
 
       for n := 0 to j-1 do
       begin
-        x := nodes[j].X - nodes[n].X;
-        y := nodes[j].Y - nodes[n].Y;
-
-        if Max(Abs(x), Abs(y)) > GENERATED_GRAPH.Spacing * 2 then
+        if Max(Abs(nodes[j].X - nodes[n].X), Abs(nodes[j].Y - nodes[n].Y)) > GENERATED_GRAPH.Spacing * 2 then
           Continue;
 
-        if map.ColorsInLineEx(nodes[j], nodes[n], [$0, $FF]) then
-          if Length(PointsInRangeOf(parts[j], parts[n], 0, Sqrt(2))) = 0 then
-            Continue;
+        if GENERATED_GRAPH.WallCrossings then
+        begin
+          if map.ColorsInLineEx(nodes[j], nodes[n], [$0, $FF]) then
+            if not parts[j].AnyInRange(parts[n], Sqrt(2)) then
+              Continue;
+        end
+        else
+          if not parts[j].AnyInRange(parts[n], Sqrt(2)) then
+              Continue;
 
         Result.Nodes[j+len] := nodes[j];
         Result.Nodes[n+len] := nodes[n];
@@ -301,10 +306,7 @@ var
   t: UInt64;
 begin
   cacheroot := Self.Cache + 'graphs' + DirectorySeparator;
-  cachename := cacheroot + ToStr(level) + DirectorySeparator + name + '-' +
-               ToStr(GENERATED_GRAPH.Spacing) + '-' +
-               ToStr(GENERATED_GRAPH.NodeRadius) + '-' +
-               ToStr(GENERATED_GRAPH.MaxConnections);
+  cachename := cacheroot + ToStr(level) + DirectorySeparator + name + '-' + GENERATED_GRAPH.Hash();
 
   if not FileExists(cachename + '.json') then
   begin
@@ -504,7 +506,7 @@ type
     Name: String;
     Original: TBox;
     Region: TBox;
-    Level: UInt32;
+    Plane: UInt32;
     Offset: TPoint;
   end;
 
@@ -757,7 +759,7 @@ begin
 end;
 
 
-procedure TRSMapLoader.Load(chunks: TBoxArray; levels: TIntegerArray = [0]; downscale: UInt32 = 8; padding: UInt32 = 40); overload;
+procedure TRSMapLoader.Load(chunks: TBoxArray; planes: TIntegerArray = [0]; downscale: UInt32 = 8; padding: UInt32 = 40);
 var
   i, j, idx: Int32;
   bitmaps, hbitmaps, cbitmaps: TMufasaBitmapArray;
@@ -768,45 +770,46 @@ var
   name: String;
 begin
   Self.Init(downscale);
-  SetLength(Self.Regions, Length(chunks) * Length(levels));
+  SetLength(Self.Regions, Length(chunks) * Length(planes));
   Self.Padding := padding;
+  idx := -1;
 
-  for i := 0 to High(levels) do
+  for i := 0 to High(planes) do
     for j := 0 to High(chunks) do
     begin
       s := [chunks[j].X1, chunks[j].Y1];
       f := [chunks[j].X2, chunks[j].Y2];
 
-      idx := i * (High(chunks) + 1) + j;
+      idx += 1;
 
       name := ToStr(s.X) + '-' + ToStr(s.Y) + '_' + ToStr(f.X) + '-' + ToStr(f.Y);
-      Self.Regions[idx].Name :=  ToStr(levels[i]) + '_' + name;
+      Self.Regions[idx].Name :=  ToStr(planes[i]) + '_' + name;
       Self.Regions[idx].Original := RSTranslator.Chunk2Coordinate(chunks[j]);
 
-      Self.Regions[idx].Level := levels[i];
+      Self.Regions[idx].Plane := planes[i];
 
       tmp :=  RSTranslator.Chunk2Coordinate(s);
       Self.Regions[idx].Offset := [tmp.X-padding, tmp.Y - padding];
 
-      bitmaps += Self.Loader.GetMap(s, f, levels[i], ERSMapType.NORMAL);
+      bitmaps += Self.Loader.GetMap(s, f, planes[i], ERSMapType.NORMAL);
       bitmaps[idx].Pad(padding);
 
-      if levels[i] = 0 then
+      if planes[i] = 0 then
       begin
         hbitmaps += Self.Loader.GetMap(s, f, 0, ERSMapType.HEIGHT);
         hbitmaps[High(hbitmaps)].Pad(padding);
       end;
 
-      cbitmaps += Self.Loader.GetMap(s, f, levels[i], ERSMapType.COLLISION);
+      cbitmaps += Self.Loader.GetMap(s, f, planes[i], ERSMapType.COLLISION);
       if not Self.SkipGraph then
       begin
-        graphs += Self.Loader.GetGraph(name, levels[i], cbitmaps[idx]);
+        graphs += Self.Loader.GetGraph(name, planes[i], cbitmaps[idx]);
         graphs[idx].Nodes := Self.GetGlobal(idx, graphs[idx].Nodes, [padding, padding]);
       end;
 
-      json := Self.Loader.GetJSON(s, f, levels[i], ERSMapJSON.OBJECTS);
+      json := Self.Loader.GetJSON(s, f, planes[i], ERSMapJSON.OBJECTS);
       objects += json;
-      json := Self.Loader.GetJSON(s, f, levels[i], ERSMapJSON.NPCS);
+      json := Self.Loader.GetJSON(s, f, planes[i], ERSMapJSON.NPCS);
       npcs += json;
 
       Self.Regions[idx].Region := Box(0, 0, bitmaps[idx].GetWidth(), bitmaps[idx].GetHeight());
@@ -827,14 +830,90 @@ begin
   Self.UsingChunks := True;
 end;
 
-procedure TRSMapLoader.Add(chunks: TBoxArray; levels: TIntegerArray = [0]; downscale: UInt32 = 8; padding: UInt32 = 40); overload;
+procedure TRSMapLoader.Load(chunks: array of TRSMapChunk; downscale: UInt32 = 8; padding: UInt32 = 40); overload;
+var
+  i, j, idx: Int32;
+  bitmaps, hbitmaps, cbitmaps: TMufasaBitmapArray;
+  s, f, tmp: TPoint;
+  graphs: array of TWebGraph;
+  json: TJSONArray;
+  objects, npcs: array of TJSONArray;
+  name: String;
+begin
+  Self.Init(downscale);
+
+  for i := 0 to High(chunks) do j += Length(chunks[i].Planes);
+
+  SetLength(Self.Regions, j);
+
+  Self.Padding := padding;
+  idx := -1;
+
+  for i := 0 to High(chunks) do
+    for j := 0 to High(chunks[i].Planes) do
+    begin
+      s := [chunks[i].Chunk.X1, chunks[i].Chunk.Y1];
+      f := [chunks[i].Chunk.X2, chunks[i].Chunk.Y2];
+
+      idx += 1;
+      name := ToStr(s.X) + '-' + ToStr(s.Y) + '_' + ToStr(f.X) + '-' + ToStr(f.Y);
+
+      Self.Regions[idx].Name :=  ToStr(chunks[i].Planes[j]) + '_' + name;
+      Self.Regions[idx].Original := RSTranslator.Chunk2Coordinate(chunks[i].Chunk);
+
+      Self.Regions[idx].Plane := chunks[i].Planes[j];
+
+      tmp :=  RSTranslator.Chunk2Coordinate(s);
+      Self.Regions[idx].Offset := [tmp.X-padding, tmp.Y - padding];
+
+      bitmaps += Self.Loader.GetMap(s, f, chunks[i].Planes[j], ERSMapType.NORMAL);
+      bitmaps[idx].Pad(padding);
+
+      if chunks[i].Planes[j] = 0 then
+      begin
+        hbitmaps += Self.Loader.GetMap(s, f, 0, ERSMapType.HEIGHT);
+        hbitmaps[High(hbitmaps)].Pad(padding);
+      end;
+
+      cbitmaps += Self.Loader.GetMap(s, f, chunks[i].Planes[j], ERSMapType.COLLISION);
+      if not Self.SkipGraph then
+      begin
+        graphs += Self.Loader.GetGraph(name, chunks[i].Planes[j], cbitmaps[idx]);
+        graphs[idx].Nodes := Self.GetGlobal(idx, graphs[idx].Nodes, [padding, padding]);
+      end;
+
+      json := Self.Loader.GetJSON(s, f, chunks[i].Planes[j], ERSMapJSON.OBJECTS);
+      objects += json;
+      json := Self.Loader.GetJSON(s, f, chunks[i].Planes[j], ERSMapJSON.NPCS);
+      npcs += json;
+
+      Self.Regions[idx].Region := Box(0, 0, bitmaps[idx].GetWidth(), bitmaps[idx].GetHeight());
+    end;
+
+  Self.Pack();
+
+  Self.Map        := Self.InternalLoad(bitmaps);
+  Self.Heightmap  := Self._InternalLoad(hbitmaps);
+  Self.Collision  := Self._InternalLoad(cbitmaps);
+  if not Self.SkipGraph then
+    Self.Graph      := Self.InternalGraphLoad(graphs);
+  Self.ObjectData := Self.InternalJSONLoad(objects);
+  Self.NPCData    := Self.InternalJSONLoad(npcs);
+
+  Self.Map.Downsample(downscale, Self.DownscaledMap);
+
+  Self.UsingChunks := True;
+end;
+
+
+procedure TRSMapLoader.Add(chunks: TBoxArray; planes: TIntegerArray = [0]; downscale: UInt32 = 8; padding: UInt32 = 40);
 var
   i: Int32;
 begin
   for i := 0 to High(Self.Regions) do
   begin
-    if levels.Find(Self.Regions[i].Level) = -1 then
-      levels += Self.Regions[i].Level;
+    if planes.Find(Self.Regions[i].Plane) = -1 then
+      planes += Self.Regions[i].Plane;
     if chunks.Find(Self.Regions[i].Original) = -1 then
       chunks += RSTranslator.Global2Chunk(Self.Regions[i].Original);
   end;
@@ -842,7 +921,7 @@ begin
   Self.Free();
   Self.Regions := [];
 
-  Self.Load(chunks, levels, downscale, padding);
+  Self.Load(chunks, planes, downscale, padding);
 end;
 
 

@@ -127,6 +127,7 @@ function TWebGraph.FindNearestNodes(p: TPoint; amount: Int32): TIntegerArray; co
 var
   i,j,l: Int32;
   d,dn1,dn2: Double;
+  weights: TIntegerArray;
   lines: array of record
     I: Int32;
     J: Int32;
@@ -163,6 +164,13 @@ begin
     else
       Result += lines[l].J;
   end;
+
+  SetLength(weights, Length(Result));
+
+  for i := 0 to High(Result) do
+    weights[i] := Sqr(p.X - Self.Nodes[Result[i]].X) + Sqr(p.Y - Self.Nodes[Result[i]].Y);
+
+  Result.SortWeighted(weights, 0, High(Result), True);
 end;
 
 
@@ -194,23 +202,24 @@ begin
   Result += q;
 end;
 
-function TWebGraph.PathBetweenEx(p,q: TPoint; rnd: Double = 0; attempts: Int32 = 4): TPointArray; constref;
+
+
+function TWebGraph.PathBetweenEx(p,q: TPoint; rnd: Double = 0; attempts: Int32 = 3): TPointArray; constref;
 var
   i, j: Int32;
-  n1,n2, nodes: TIntegerArray;
+  nS, nG, nodes: TIntegerArray;
 begin
-  n1 := Self.FindNearestNodes(p, attempts);
-  n2 := Self.FindNearestNodes(q, attempts);
+  nS := Self.FindNearestNodes(p, attempts);
+  nG := Self.FindNearestNodes(q, attempts);
 
   attempts -= 1;
+
   for i := 0 to attempts do
     for j := 0 to attempts do
     begin
-      if (n1[i] <> n2[j]) then
-      begin
-        nodes := Self.FindPath(n1[i],n2[j], rnd);
-        if Length(nodes) > 0 then Break(2);
-      end;
+      if nS[i] = nG[j] then Continue;
+      nodes := Self.FindPath(nS[i],nG[j], rnd);
+      if Length(nodes) > 0 then Break(2);
     end;
 
   if (Length(nodes) = 0) then
@@ -509,4 +518,42 @@ begin
     p := Self.Nodes[i];
     bitmap.DrawBox(p, 1, color);
   end;
+end;
+
+type
+  TWebGraphSettings = record
+    Spacing: Int32;
+    NodeRadius: Int32;
+    MaxConnections: Int32;
+    WallCrossings: Boolean;
+  end;
+
+function TWebGraphSettings.Hash(): String;
+var
+  data: TIntegerArray;
+  h, i: Int32;
+  str: String;
+begin
+  data := [Self.Spacing, Self.NodeRadius, Self.MaxConnections, Int32(WallCrossings)];
+
+  h := $811C9DC5;
+  for i:=0 to High(data) do
+  begin
+    if data[i] = $0 then
+      Continue;
+    h := (h * $1000193) xor data[i];
+  end;
+
+  str := LowerCase(IntToHex(h, 16));
+  Result := str.SubString(Length(str)-8, Length(str));
+end;
+
+var
+  GENERATED_GRAPH: TWebGraphSettings;
+
+begin
+  GENERATED_GRAPH.Spacing := 18;         //low = better/slower, high = worse/faster
+  GENERATED_GRAPH.NodeRadius := 50;      //closed space less than NodeRadius pixels will have a single node.
+  GENERATED_GRAPH.MaxConnections := 6;   //Max connections per node.
+  GENERATED_GRAPH.WallCrossings := True; //Whether to allow wall crossings when there's a close path around it.
 end;
