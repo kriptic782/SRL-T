@@ -1,3 +1,12 @@
+## [7.1.1](https://github.com/Torwent/SRL-T/compare/v7.1.0...v7.1.1) (2024-07-06)
+
+
+### Bug Fixes
+
+* **mousezoom:** wasn't currectly force moving to the mainscreen area when it should have been ([3707387](https://github.com/Torwent/SRL-T/commit/3707387ca1aa707ef848ad3c625d0d1920f321fb))
+
+
+
 # [7.1.0](https://github.com/Torwent/SRL-T/compare/v7.0.2...v7.1.0) (2024-07-06)
 
 
@@ -36,15 +45,6 @@
 ### BREAKING CHANGES
 
 * `GENERATED_GRAPH.Detail` renamed to `GENERATED_GRAPH.Fidelity`, sorry!
-
-
-
-## [6.1.5](https://github.com/Torwent/SRL-T/compare/v6.1.4...v6.1.5) (2024-07-04)
-
-
-### Bug Fixes
-
-* **webgraph generator:** now considers L shaped pathing to connect nodes ([7d61f2a](https://github.com/Torwent/SRL-T/commit/7d61f2a2498ffe4a44ab1c936992ea77398b6ef9))
 
 
 
