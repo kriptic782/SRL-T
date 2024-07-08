@@ -53,16 +53,16 @@ type
     Skills: array of ERSSkill;
     MinZoom, MaxZoom: Int32;
 
-    OnStartSleep: procedure(Task: PSleepTask);
-    OnSleeping: procedure(Task: PSleepTask; var Countdown: TCountdown);
-    OnFinishSleep: procedure(Task: PSleepTask);
+    OnStartSleep: procedure(Task: PSleepTask) of object;
+    OnSleeping: procedure(Task: PSleepTask; var Countdown: TCountdown) of object;
+    OnFinishSleep: procedure(Task: PSleepTask) of object;
 
-    OnStartBreak: procedure(Task: PBreakTask);
-    OnBreaking: procedure(Task: PBreakTask; var Countdown: TCountdown);
-    OnFinishBreak: procedure(Task: PBreakTask);
+    OnStartBreak: procedure(Task: PBreakTask) of object;
+    OnBreaking: procedure(Task: PBreakTask; var Countdown: TCountdown) of object;
+    OnFinishBreak: procedure(Task: PBreakTask) of object;
 
-    OnStartTask: procedure(Task: PAntibanTask);
-    OnFinishTask: procedure(Task: PAntibanTask);
+    OnStartTask: procedure(Task: PAntibanTask) of object;
+    OnFinishTask: procedure(Task: PAntibanTask) of object;
   end;
 
 function TAntiban.TimeRunningAtClock(TimeOfDay: String; Randomness: Double = 0.10): Int64;

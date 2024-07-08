@@ -147,7 +147,10 @@ begin
   if k = -1 then
     TerminateScript('Column ' + key + ' does not exist!');
 
-  index := Self.Maps[k].ValueFromName(search);
+  try
+    index := Self.Maps[k].ValueFromName(search);
+  except
+  end;
   Result := index > 0;
 end;
 
