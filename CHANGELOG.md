@@ -1,3 +1,12 @@
+## [7.3.1](https://github.com/Torwent/SRL-T/compare/v7.3.0...v7.3.1) (2024-07-09)
+
+
+### Bug Fixes
+
+* **webgraph:** biggest performance boost in a while ([da89266](https://github.com/Torwent/SRL-T/commit/da892662db44e71b0d6a124db286d948a1a9ccd1))
+
+
+
 # [7.3.0](https://github.com/Torwent/SRL-T/compare/v7.2.0...v7.3.0) (2024-07-09)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * force bump ([8d2720a](https://github.com/Torwent/SRL-T/commit/8d2720a27225cd8405066b41116a4d872aab1dc0))
-
-
-
-## [7.1.1](https://github.com/Torwent/SRL-T/compare/v7.1.0...v7.1.1) (2024-07-06)
-
-
-### Bug Fixes
-
-* **mousezoom:** wasn't currectly force moving to the mainscreen area when it should have been ([3707387](https://github.com/Torwent/SRL-T/commit/3707387ca1aa707ef848ad3c625d0d1920f321fb))
 
 
 
