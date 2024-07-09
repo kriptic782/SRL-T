@@ -11,7 +11,7 @@ that can be used by Simba and back.
 
 type
   TRSTranslator = record
-    TileSize, MaxHeight, Planes: UInt32;
+    TileSize, TileArea, MaxHeight, Planes: UInt32;
 
     RSMap, Map: record
       ChunkSide: UInt32;
@@ -23,6 +23,7 @@ type
 procedure TRSTranslator.Setup();
 begin
   Self.TileSize := 4;
+  Self.TileArea := Self.TileSize * Self.TileSize;
   Self.MaxHeight := 2040;
   Self.Planes := 3;
 

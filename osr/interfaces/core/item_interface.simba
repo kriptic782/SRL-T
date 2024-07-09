@@ -357,7 +357,12 @@ end;
 
 function TRSItemInterface.Count(item: TRSItem): Int32; overload;
 begin
-  Result := Length(Self.IndicesOf([Item]));
+  Result := Length(Self.IndicesOf([item]));
+end;
+
+function TRSItemInterface.Count(items: TRSItemArray): Int32; overload;
+begin
+  Result := Length(Self.IndicesOf(items));
 end;
 
 function TRSItemInterface.CountEmptySlots(): Int32;

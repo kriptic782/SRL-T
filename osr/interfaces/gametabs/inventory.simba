@@ -384,12 +384,18 @@ end;
 ## Inventory.Count
 ```pascal
 function TRSInventory.Count(): Int32;
+function TRSInventory.CountItem(Item: TRSItem): Int32;
+function TRSInventory.CountItems(items: TRSItemArray): Int32;
+function TRSInventory.CountItemStack(item: TRSItem): Int32;
+function TRSInventory.CountSlotStack(slot: Int32): Int32;
 ```
-Counts how many items are in the inventory right now.
+Counts how many items are in the inventory right now or slack amounts.
 
 Example:
 ```pascal
 WriteLn Inventory.Count();
+WriteLn Inventory.CountItem('Shark');
+WriteLn Inventory.CountItemStack('Air rune');
 ```
 *)
 function TRSInventory.Count(): Int32;
@@ -398,6 +404,31 @@ begin
     Exit;
   Result := Self.ItemInterface.Count();
 end;
+
+function TRSInventory.CountItem(item: TRSItem): Int32;
+begin
+  if Self.Open() then
+    Result := Self.ItemInterface.Count(item);
+end;
+
+function TRSInventory.CountItems(items: TRSItemArray): Int32;
+begin
+  if Self.Open() then
+    Result := Self.ItemInterface.Count(items);
+end;
+
+function TRSInventory.CountItemStack(item: TRSItem): Int32;
+begin
+  if Self.Open() then
+    Result := Self.ItemInterface.CountStack(item);
+end;
+
+function TRSInventory.CountSlotStack(slot: Int32): Int32;
+begin
+  if Self.Open() then
+    Result := Self.ItemInterface.CountStack(slot);
+end;
+
 
 (*
 ## Inventory.IsFull
@@ -587,52 +618,6 @@ end;
 function TRSInventory.Discover(slot: Int32): TRSItemArray;
 begin
   Result := Self.ItemInterface.Discover(slot);
-end;
-
-
-(*
-## Inventory.CountItem
-```pascal
-function TRSInventory.CountItem(Item: TRSItem): Int32;
-```
-Returns the amount of **Item** in the inventory.
-Keep in mind this does not count a stack number, but every single item that occupies an inventory slot.
-
-Example:
-```pascal
-WriteLn Inventory.CountItem('Shark');
-```
-*)
-function TRSInventory.CountItem(item: TRSItem): Int32;
-begin
-  if Self.Open() then
-    Result := Self.ItemInterface.Count(item);
-end;
-
-(*
-## Inventory.CountStack
-```pascal
-function TRSInventory.CountItemStack(Item: TRSItem): Int32;
-function TRSInventory.CountSlotStack(slot: Int32): Int32;
-```
-Returns the stack amount of `item` or `slot` in the inventory.
-
-Example:
-```pascal
-WriteLn Inventory.CountItemStack('Bronze arrows'); //will print the stack amount
-WriteLn Inventory.CountItemStack('Shark'); //will print 0 because sharks are not stackable.
-```
-*)
-function TRSInventory.CountItemStack(item: TRSItem): Int32;
-begin
-  if Self.Open() then
-    Result := Self.ItemInterface.CountStack(item);
-end;
-
-function TRSInventory.CountSlotStack(slot: Int32): Int32;
-begin
-  if Self.Open() then
-    Result := Self.ItemInterface.CountStack(slot);
 end;
 
 

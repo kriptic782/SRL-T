@@ -20,7 +20,7 @@ Keep in mind that unless you send a PR with your additions, they will be lost wi
 {$I WaspLib/osr.simba}
 {$H-}
 const
-  CHUNK: TBox = [49,54,50,53];
+  CHUNK: TBox = [48, 51, 52, 48];
   PLANE: Int32 = 0;
   GRAPH_OFFSET: TPoint = [0, 0];
 
@@ -29,9 +29,11 @@ const
   NAMES_STR: String = '';
 
 begin
-  GENERATED_GRAPH.Detail := 5;
-  GENERATED_GRAPH.SingleNodeRadius := 70;
-  GENERATED_GRAPH.MaxConnections := 10;
+  GENERATED_GRAPH.Spacing := 18;         //low = better/slower, high = worse/faster
+  GENERATED_GRAPH.MinimumTiles := 4;     //spaces with less tiles than this will be ignored.
+  GENERATED_GRAPH.NodeRadius := 50;      //closed space less than NodeRadius pixels will have a single node.
+  GENERATED_GRAPH.MaxConnections := 6;   //Max connections per node.
+  GENERATED_GRAPH.WallCrossings := True;
 end;
 
 type

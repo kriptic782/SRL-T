@@ -233,7 +233,7 @@ begin
     if i mod 50 = 0 then
       Self.DebugLn('Creating webgraph connections for area '  + ToStr(i) + '/' + ToStr(hi));
 
-    if Length(atpa[i]) < 20 then Continue; //remove very small spaces
+    if Length(atpa[i]) <= GENERATED_GRAPH.MinimumTiles * RSTranslator.TileArea then Continue; //remove very small spaces
     if (Length(atpa[i]) > 25000) and (atpa[i].Density() > 0.65) then Continue;
 
     bounds := atpa[i].Bounds();
