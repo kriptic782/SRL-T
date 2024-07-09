@@ -211,87 +211,111 @@ end;
 
 function TRSChunkLoader.BuildGraph(name: String; map: TMufasaBitmap): TWebGraph;
 var
-  i, j, n, len, connection, hi: Int32;
-  atpa, parts, clusters: T2DPointArray;
-  white, red, skeleton, nodes: TPointArray;
-  b: TBox;
+  a, b, i, j, n, len, hi: Int32;
+  atpa, parts: T2DPointArray;
+  white, red, skeleton, nodes, tpa: TPointArray;
+  bounds: TBox;
+  p, q: TPoint;
+  nodesTree, skeletonTree: TSlackTree;
+  jInRange, nInRange: Boolean;
+  connectionMap: array of array of TIntegerArray;
 begin
   map.FindColors(white, $FFFFFF);
   map.FindColors(red, $FF);
 
   Self.DebugLn('Generating webgraph for region: ' + name);
 
-  atpa := white.ClusterEx(1);
+  atpa := white.Erode(1).Grow(1).Cluster(1);
+
   hi := High(atpa);
   for i := 0 to hi do
   begin
-    if Length(atpa[i]) < 17 then //remove small spaces
-      Continue;
+    if i mod 40 = 0 then
+      Self.DebugLn('Creating webgraph connections for area '  + ToStr(i) + '/' + ToStr(hi));
 
-    //closed areas with no door
-    if (red <> []) and (atpa[i].PointsInRangeOf(red,0,1) = []) then
-      Continue;
+    if Length(atpa[i]) < 18 then Continue; //remove very small spaces
+    if (red <> []) and not atpa[i].AnyInRange(red, Sqrt(2)) then Continue; //closed areas with no door
 
-    b := atpa[i].Bounds();
-    if Max(b.Width(), b.Height()) < GENERATED_GRAPH.NodeRadius then //mark spaces less than NodeRadius with a single node and continue
+    bounds := atpa[i].Bounds();
+    if Max(bounds.Width(), bounds.Height()) < GENERATED_GRAPH.NodeRadius then //mark spaces less than NodeRadius with a single node and continue
     begin
-      Result.Nodes += atpa[i].Sorted(atpa[i].Mean())[0];
+      Result.Nodes += atpa[i].Median();
       Continue;
     end;
-
-    len := Length(Result.Nodes);
 
     skeleton := atpa[i].Erode(1).Skeleton(2, 7);
-    parts := PartitionTPA(skeleton, GENERATED_GRAPH.Spacing, GENERATED_GRAPH.Spacing);
 
-    for j := 0 to High(parts) do //fix parts that are joined but separated by walls
-    begin
-      clusters := parts[j].Cluster(1);
-      if Length(clusters) > 1 then
-      begin
-        parts[j] := clusters[0];
-        for n := 1 to High(clusters) do parts += clusters[n];
-      end;
-    end;
+    nodes := skeleton;
+    RAaSTPA(nodes, GENERATED_GRAPH.Spacing);
 
-    //clear points within GENERATED_GRAPH.Spacing distance of each other
-    nodes := parts.Means();
-
+    len := Length(Result.Nodes);
     SetLength(Result.Nodes, len + Length(nodes));
     SetLength(Result.Paths, Length(Result.Nodes));
 
-    Self.DebugLn('Creating webgraph connections for area '  + ToStr(i) + '/' + ToStr(hi));
+    skeletonTree.Init(skeleton);
+    nodesTree.Init(nodes);
 
-    for j := High(nodes) downto 0 do
+    connectionMap := [];
+    SetLength(connectionMap, bounds.X2, bounds.Y2);
+
+    for j := High(nodesTree.Data) downto 0 do
     begin
-      connection := 0;
+      p := nodesTree.Data[j].split;
+      tpa := nodesTree.KNearest(p, GENERATED_GRAPH.MaxConnections, True);
 
-      for n := 0 to j-1 do
+      for q in tpa do
       begin
-        if Max(Abs(nodes[j].X - nodes[n].X), Abs(nodes[j].Y - nodes[n].Y)) > GENERATED_GRAPH.Spacing * 2 then
+        if Max(Abs(p.X - q.X), Abs(p.Y - q.Y)) > GENERATED_GRAPH.Spacing * 2 then
           Continue;
 
-        if GENERATED_GRAPH.WallCrossings then
+        if GENERATED_GRAPH.WallCrossings and not map.ColorsInLineEx(p, q, [$0, $FF]) then
         begin
-          if map.ColorsInLineEx(nodes[j], nodes[n], [$0, $FF]) then
-            if not parts[j].AnyInRange(parts[n], Sqrt(2)) then
-              Continue;
-        end
-        else
-          if not parts[j].AnyInRange(parts[n], Sqrt(2)) then
-              Continue;
+          connectionMap[q.X, q.Y] += j;
+          Continue;
+        end;
 
-        Result.Nodes[j+len] := nodes[j];
-        Result.Nodes[n+len] := nodes[n];
+        bounds := Box(p, q).Expand(GENERATED_GRAPH.Spacing);
+        parts := skeletonTree.RangeQuery(bounds).Cluster(1);
+
+        for a := 0 to High(parts) do
+        begin
+          jInRange := False;
+          nInRange := False;
+
+          for b := 0 to High(parts[a]) do
+          begin
+            jInRange := jInRange or parts[a,b].InRange(p, Sqrt(2));
+            nInRange := nInRange or parts[a,b].InRange(q, Sqrt(2));
+
+            if jInRange and nInRange then Break(2);
+          end;
+
+          if jInRange <> nInRange then Break;
+        end;
+
+        if not jInRange or not nInRange then Continue;
+
+        connectionMap[q.X, q.Y] += j;
+      end;
+    end;
+
+    for j := 0 to High(nodesTree.Data) do
+    begin
+      if nodesTree.Data[j].hidden then Continue;
+      p := nodesTree.Data[j].split;
+
+      for n in connectionMap[p.X, p.Y] do
+      begin
+        q := nodesTree.Data[n].split;
+        Result.Nodes[j+len] := p;
+        Result.Nodes[n+len] := q;
         Result.Paths[j+len] += n+len;
         Result.Paths[n+len] += j+len;
-
-        if Inc(connection) = GENERATED_GRAPH.MaxConnections then
-          Break;
       end;
-
-      Delete(nodes, j, 1);
     end;
+
+    nodesTree.Free();
+    skeletonTree.Free();
   end;
 
   len := Length(Result.Nodes);

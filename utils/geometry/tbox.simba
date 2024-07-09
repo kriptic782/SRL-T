@@ -18,6 +18,11 @@ begin
   Result := [mid.x-xr, mid.y-yr, mid.x+xr, mid.y+yr];
 end;
 
+function Box(p, q: TPoint): TBox; overload;
+begin
+  Result := Box(Min(p.X, q.X), Min(p.Y, q.Y), Max(p.X, q.X), Max(p.Y, q.Y));
+end;
+
 function TBox.ToRectangle(): TRectangle; constref;
 begin
   Result.Top   := [Self.X1, Self.Y1];

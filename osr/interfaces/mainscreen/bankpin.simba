@@ -10,7 +10,7 @@ Methods to interact with the bank pin interface.
 
 type
   TRSBankPin = record(TRSTitledInterface)
-    OCRFilter: TOCRColorFilter;
+    DigitFilter, ButtonFilter: TOCRColorFilter;
   end;
 
 procedure TRSBankPin.Setup(); override;
@@ -19,7 +19,8 @@ begin
   
   Self.Name := 'Bank Pin';
   Self.ButtonColors := [CTS1(988769, 30)];
-  Self.OCRFilter := TOCRColorFilter.Create([$FFFFFF]);
+  Self.DigitFilter := TOCRColorFilter.Create([$FFFFFF]);
+  Self.ButtonFilter := TOCRColorFilter.Create([$007FFF])
 end;
 
 procedure TRSBankPin.SetupAlignment(Mode: ERSClientMode); override;
@@ -55,6 +56,28 @@ begin
 end;
 
 
+function TRSBankPin.ButtonsLoaded(): Boolean;
+const
+  DIGITS: TStringArray = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+var
+  buttons: TRSButtonArray;
+  i: Int32;
+  loaded: TBoolArray;
+  digit: String;
+begin
+  buttons := Self.GetButtons();
+  if Length(buttons) <> 10 then Exit;
+
+  for i := 0 to High(buttons) do
+  begin
+    digit := OCR.Recognize(buttons[i].Bounds.Expand(5), Self.ButtonFilter, RS_FONT_BOLD_12);
+    if DIGITS.Contains(digit) then loaded += True;
+    if Length(loaded) > 2 then
+      Exit(True);
+  end;
+end;
+
+
 (*
 ## BankPin.IsOpen
 ```pascal
@@ -81,7 +104,6 @@ begin
   Result := WaitUntil(Self.IsOpen(), interval, waitTime);
 end;
 
-
 (*
 ## BankPin.ClickDigit
 ```pascal
@@ -96,8 +118,8 @@ Original method by Olly, fixed by INeedBot.
 function TRSBankPin.ClickDigit(digit: Char): Boolean;
 var
   buttons: TRSButtonArray;
-  hovering: Boolean;
   i: Int32;
+  hovering: Boolean;
 begin
   buttons := Self.GetButtons();
   if Length(buttons) <> 10 then
@@ -143,7 +165,7 @@ function TRSBankPin.Enter(pin: String; attempts: Int32 = 3): Boolean;
     i: Int32;
   begin
     for i := 0 to High(DIGITS) do
-      if OCR.LocateText(Self.Bounds(), DIGITS[i],  RS_FONT_BOLD_12, Self.OCRFilter, 1) then
+      if OCR.LocateText(Self.Bounds(), DIGITS[i],  RS_FONT_BOLD_12, Self.DigitFilter, 1) then
         Exit(pin[i+1]);
   end;
 
@@ -205,8 +227,14 @@ var
 
 function TRSBank.IsOpen(WaitForItems: Boolean = True): Boolean; override;
 begin
-  if BankPin.IsOpen() and (not BankPin.Enter(Login.GetPlayerPin())) then
-    Self.Fatal('Failed to enter bank pin');
+  if BankPin.IsOpen() then
+  begin
+    if not WaitUntil(BankPin.ButtonsLoaded(), 100, 3000) then
+      Self.Fatal('Bank pin buttons don''t seem to have loaded in 3 seconds.');
+
+    if not BankPin.Enter(Login.GetPlayerPin()) then
+      Self.Fatal('Failed to enter bank pin');
+  end;
 
   Result := inherited(WaitForItems);
 end;
