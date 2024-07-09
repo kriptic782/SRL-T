@@ -230,11 +230,11 @@ begin
   hi := High(atpa);
   for i := 0 to hi do
   begin
-    if i mod 40 = 0 then
+    if i mod 50 = 0 then
       Self.DebugLn('Creating webgraph connections for area '  + ToStr(i) + '/' + ToStr(hi));
 
-    if Length(atpa[i]) < 18 then Continue; //remove very small spaces
-    if (red <> []) and not atpa[i].AnyInRange(red, Sqrt(2)) then Continue; //closed areas with no door
+    if Length(atpa[i]) < 20 then Continue; //remove very small spaces
+    if (Length(atpa[i]) > 25000) and (atpa[i].Density() > 0.65) then Continue;
 
     bounds := atpa[i].Bounds();
     if Max(bounds.Width(), bounds.Height()) < GENERATED_GRAPH.NodeRadius then //mark spaces less than NodeRadius with a single node and continue
@@ -245,20 +245,24 @@ begin
 
     skeleton := atpa[i].Erode(1).Skeleton(2, 7);
 
-    nodes := skeleton;
-    RAaSTPA(nodes, GENERATED_GRAPH.Spacing);
+    if skeleton = [] then
+    begin
+      Result.Nodes += atpa[i].Median();
+      Continue;
+    end;
 
-    len := Length(Result.Nodes);
-    SetLength(Result.Nodes, len + Length(nodes));
-    SetLength(Result.Paths, Length(Result.Nodes));
+    nodes := [];
+    for tpa in PartitionTPA(skeleton, GENERATED_GRAPH.Spacing, GENERATED_GRAPH.Spacing) do
+    begin
+      if tpa = [] then Continue;
+      for tpa in tpa.Cluster(1) do nodes += MiddleTPA(tpa);
+    end;
+
+    SetLength(connectionMap, bounds.X2, bounds.Y2);
 
     skeletonTree.Init(skeleton);
     nodesTree.Init(nodes);
-
-    connectionMap := [];
-    SetLength(connectionMap, bounds.X2, bounds.Y2);
-
-    for j := High(nodesTree.Data) downto 0 do
+    for j := 0 to High(nodesTree.Data) do
     begin
       p := nodesTree.Data[j].split;
       tpa := nodesTree.KNearest(p, GENERATED_GRAPH.MaxConnections, True);
@@ -299,11 +303,14 @@ begin
       end;
     end;
 
+    skeletonTree.Free();
+    len := Length(Result.Nodes);
+    SetLength(Result.Nodes, len + Length(nodes));
+    SetLength(Result.Paths, Length(Result.Nodes));
+
     for j := 0 to High(nodesTree.Data) do
     begin
-      if nodesTree.Data[j].hidden then Continue;
       p := nodesTree.Data[j].split;
-
       for n in connectionMap[p.X, p.Y] do
       begin
         q := nodesTree.Data[n].split;
@@ -315,12 +322,10 @@ begin
     end;
 
     nodesTree.Free();
-    skeletonTree.Free();
   end;
 
-  len := Length(Result.Nodes);
-  SetLength(Result.Paths, len);
-  SetLength(Result.Names, len);
+  SetLength(Result.Paths, Length(Result.Nodes));
+  SetLength(Result.Names, Length(Result.Nodes));
 end;
 
 function TRSChunkLoader.GetGraph(name: String; level: UInt32; map: TMufasaBitmap): TWebGraph; overload;
