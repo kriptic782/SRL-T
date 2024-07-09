@@ -1,3 +1,12 @@
+## [7.3.2](https://github.com/Torwent/SRL-T/compare/v7.3.1...v7.3.2) (2024-07-09)
+
+
+### Bug Fixes
+
+* read notes ([9383146](https://github.com/Torwent/SRL-T/commit/93831467742014154e208ea6c3d4f89e3b1c80c3))
+
+
+
 ## [7.3.1](https://github.com/Torwent/SRL-T/compare/v7.3.0...v7.3.1) (2024-07-09)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([cb430bc](https://github.com/Torwent/SRL-T/commit/cb430bcc1c8ae4189543a6e06c35226ad5a4c873))
-
-
-
-## [7.1.2](https://github.com/Torwent/SRL-T/compare/v7.1.1...v7.1.2) (2024-07-06)
-
-
-### Bug Fixes
-
-* force bump ([8d2720a](https://github.com/Torwent/SRL-T/commit/8d2720a27225cd8405066b41116a4d872aab1dc0))
 
 
 
