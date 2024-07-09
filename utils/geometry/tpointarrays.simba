@@ -8,6 +8,8 @@ TPointArray related methods
   {$I SRL-T/utils.simba}
 {$ENDIF}
 
+{$loadlib ../../plugins/libslacktree/libslacktree}
+
 //SplitTPA without rounding
 function CustomSplitTPA(const arr: TPointArray; dist: Extended): T2DPointArray;
 var
