@@ -1,3 +1,12 @@
+# [7.3.0](https://github.com/Torwent/SRL-T/compare/v7.2.0...v7.3.0) (2024-07-09)
+
+
+### Features
+
+* **webgraph gen:** read notes ([5df912e](https://github.com/Torwent/SRL-T/commit/5df912eb8104c99c72b245b4806c78541f817887))
+
+
+
 # [7.2.0](https://github.com/Torwent/SRL-T/compare/v7.1.3...v7.2.0) (2024-07-09)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **mousezoom:** wasn't currectly force moving to the mainscreen area when it should have been ([3707387](https://github.com/Torwent/SRL-T/commit/3707387ca1aa707ef848ad3c625d0d1920f321fb))
-
-
-
-# [7.1.0](https://github.com/Torwent/SRL-T/compare/v7.0.2...v7.1.0) (2024-07-06)
-
-
-### Features
-
-* **TRSMap:** read notes ([ad624cf](https://github.com/Torwent/SRL-T/commit/ad624cf41b6a5c4a91bc5939cf70c9cc89e0746e))
 
 
 
