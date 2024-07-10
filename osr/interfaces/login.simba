@@ -619,7 +619,7 @@ var
 begin
   if launcher then
   begin
-    SRL.FindColors(tpa, CTS0(591881, 9), Self.Bounds());
+    SRL.FindColors(tpa, CTS0(591881, 12), Self.Bounds());
 
     if tpa = [] then
       Exit;
@@ -627,7 +627,7 @@ begin
     atpa := tpa.Cluster(3);
     atpa.FilterDimensions(200, 50, 230, 70);
 
-    if Length(atpa) > 1 then
+    if Length(atpa) <> 1 then
       Exit;
     tpa := atpa[0];
 

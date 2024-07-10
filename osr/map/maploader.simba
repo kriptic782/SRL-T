@@ -211,7 +211,7 @@ end;
 
 function TRSChunkLoader.BuildGraph(name: String; map: TMufasaBitmap): TWebGraph;
 var
-  a, b, i, j, n, len, hi: Int32;
+  a, b, i, j, n, len, hi, divider: Int32;
   atpa, parts: T2DPointArray;
   white, red, skeleton, nodes, tpa: TPointArray;
   bounds: TBox;
@@ -228,9 +228,16 @@ begin
   atpa := white.NRCluster(1);
 
   hi := High(atpa);
+
+  case hi of
+    0..50: divider := 50;
+    51..400: divider := 100;
+    else divider := 200;
+  end;
+
   for i := 0 to hi do
   begin
-    if i mod 50 = 0 then
+    if i mod divider = 0 then
       Self.DebugLn('Creating webgraph connections for area '  + ToStr(i) + '/' + ToStr(hi));
 
     if Length(atpa[i]) <= GENERATED_GRAPH.MinimumTiles * RSTranslator.TileArea then Continue; //remove very small spaces
