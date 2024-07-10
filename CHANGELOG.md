@@ -1,3 +1,12 @@
+## [7.3.4](https://github.com/Torwent/SRL-T/compare/v7.3.3...v7.3.4) (2024-07-10)
+
+
+### Bug Fixes
+
+* login for launcher ([b95a970](https://github.com/Torwent/SRL-T/commit/b95a97068abdf5b699e9d36d648138e681ffd188))
+
+
+
 ## [7.3.3](https://github.com/Torwent/SRL-T/compare/v7.3.2...v7.3.3) (2024-07-10)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **webgraph gen:** read notes ([5df912e](https://github.com/Torwent/SRL-T/commit/5df912eb8104c99c72b245b4806c78541f817887))
-
-
-
-# [7.2.0](https://github.com/Torwent/SRL-T/compare/v7.1.3...v7.2.0) (2024-07-09)
-
-
-### Features
-
-* read notes ([65b732c](https://github.com/Torwent/SRL-T/commit/65b732c36f6095cb1c7a6a12e0e1c107014c075d))
 
 
 
