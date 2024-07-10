@@ -351,16 +351,19 @@ end;
 (*
 ## Minimap.SetCompassAngle
 ```pascal
-procedure TRSMinimap.SetCompassAngle(Degrees: Double; Accuracy: Double = 5);
+procedure TRSMinimap.SetCompassAngleEx(degrees, accuracy: Double);
+procedure TRSMinimap.SetCompassAngle(degrees: Double);
+procedure TRSMinimap.SetCompassAngle(minDegrees, maxDegrees: Double); overload;
 ```
 Sets the current compass angle.
+If you specify a minimum and a maximum angle a gaussian distribution will be used.
 
 Example:
 ```pascal
 Minimap.SetCompassAngle(180);
 ```
 *)
-procedure TRSMinimap.SetCompassAngle(Degrees: Double; Accuracy: Double = 5);
+procedure TRSMinimap.SetCompassAngleEx(degrees, accuracy: Double);
 const
   DEG_PER_PIXEL = 2.83;
 var
@@ -378,16 +381,16 @@ begin
   CustomMouse.IdleInterval := 0;
 
   Available := GetClientBounds().Expand(-10);
-  Degrees := FixD(Degrees);
-  Remaining := Round(Self.GetCompassAngle() - Degrees);
+  degrees := FixD(degrees);
+  Remaining := Round(Self.GetCompassAngle() - degrees);
 
   T := GetTickCount() + Round(SRL.TruncatedGauss(6000, 8000));
 
-  while (Abs(Remaining) > Accuracy) do
+  while (Abs(Remaining) > accuracy) do
   begin
     if (GetTickCount() > T) then
     begin
-      Self.DebugLn('SetCompassAngle timed out');
+      Self.DebugLn('SetCompassAngle timed out.');
 
       if not RSClient.IsLoggedIn() then
         Login.LoginPlayer()
@@ -397,7 +400,7 @@ begin
       Exit;
     end;
 
-    Pixels := Round(Abs(SRL.DeltaAngle(Self.GetCompassAngle(), Degrees)) * DEG_PER_PIXEL);
+    Pixels := Round(Abs(SRL.DeltaAngle(Self.GetCompassAngle(), degrees)) * DEG_PER_PIXEL);
     LeftToRight := ((Remaining > 0) and (Abs(Remaining) <= 180)) or ((Remaining < 0) and (Abs(Remaining) > 180));
 
     MousePosition := CustomMouse.Position();
@@ -413,7 +416,8 @@ begin
 
       Destination.X := MousePosition.X + Pixels;
       Destination.Y := Random(MousePosition.Y + 100, Available.Y2);
-    end else
+    end
+    else
     begin
       if (not Available.Contains(MousePosition)) or ((MousePosition.Y + 200 > Available.Y2) or (MousePosition.X - Pixels < Available.X1)) then
       begin
@@ -432,8 +436,21 @@ begin
 
     Wait(100, 1000, wdLeft);
 
-    Remaining := Round(Self.GetCompassAngle() - Degrees);
+    Remaining := Round(Self.GetCompassAngle() - degrees);
   end;
+end;
+
+procedure TRSMinimap.SetCompassAngle(degrees: Double);
+begin
+  Self.SetCompassAngleEx(degrees, 5);
+end;
+
+procedure TRSMinimap.SetCompassAngle(minDegrees, maxDegrees: Double); overload;
+var
+  degrees: Double;
+begin
+  degrees := SRL.TruncatedGauss(FixD(minDegrees), FixD(maxDegrees));
+  Self.SetCompassAngleEx(degrees, 5);
 end;
 
 
