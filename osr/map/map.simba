@@ -864,13 +864,16 @@ while True do
 ```
 *)
 function TRSMap.DebugPosition(): TPoint;
+  function _BoxStr(b: TBox): String;
+  begin
+    Result := Format('[%d, %d, %d, %d]', [b.X1, b.Y1, b.X2, b.Y2]);
+  end;
 var
   x1, y1, x2, y2, x, y, i: Int32;
   p, local: TPoint;
   bitmap, map, cleanMinimap: TMufasaBitmap;
   time: Double;
   lines: TStringArray;
-
 begin
   Freeze();
 
@@ -878,21 +881,23 @@ begin
   Result := Self.Position();
   time := PerformanceTimer() - time;
 
-  if Self.RegionIndex > -1 then
-    local := Self.Loader.GetLocal(Self.RegionIndex, Result)
-  else
-    local := Result;
+  case Self.RegionIndex of
+    -1:  local := Result;
+    else
+    begin
+      local := Self.Loader.GetLocal(Self.RegionIndex, Result);
+      x := Self.Region.Region.X1;
+      y := Self.Region.Region.Y1;
+    end;
+  end;
 
-  x := Self.Loader.Regions[Self.RegionIndex].Region.X1;
-  y := Self.Loader.Regions[Self.RegionIndex].Region.Y1;
-
-  x1 := Max(0, local.X - 200 + x);
-  y1 := Max(0, local.Y - 200 + y);
+  x1 := Max(0, local.X - 200);
+  y1 := Max(0, local.Y - 200);
   x2 := Min(x1 + 400, Self.Loader.Map.GetWidth()  - 1);
   y2 := Min(y1 + 400, Self.Loader.Map.GetHeight() - 1);
 
   x := local.X - x1;
-  y := local.Y - y1 + y;
+  y := local.Y - y1;
 
   map := Self.Loader.Map.Copy(x1, y1, x2, y2);
   map.LineTo(Point(0, y), Point(x2 - x1, y), $00FF00);
@@ -908,32 +913,40 @@ begin
   cleanMinimap.DrawBoxFilled([p.X - 1, p.Y - 1, p.X + 1, p.Y + 1], False, $FFFFFF);
 
   lines := [
-    'RegionIndex: ' + ToStr(Self.RegionIndex),
-    'RegionName: '  + ToStr(Self.Region.Name),
-    'Plane: '       + ToStr(Self.Region.Plane),
-    'Accuracy: '    + ToStr(Round(Self.Similarity, 3)),
-    'Time: '        + ToStr(Round(time)) + ' ms'
+    'Position:',
+    ' - Local : '  + Format('[%d, %d]', [local.X, local.Y]),
+    ' - Global: ' + Format('[%d, %d]', [Result.X, Result.Y]),
+    '',
+    'Region:',
+    ' - Index   : ' + ToStr(Self.RegionIndex),
+    ' - Name    : ' + ToStr(Self.Region.Name),
+    ' - Plane   : ' + ToStr(Self.Region.Plane),
+    ' - Local   : ' + _BoxStr(Self.Region.Region),
+    ' - Original: ' + _BoxStr(Self.Region.Original),
+    '',
+    'Certainty: '    + ToStr(Round(Self.Similarity, 3)),
+    'Time: '         + ToStr(Round(time)) + ' ms'
   ];
 
   bitmap.Init();
-  bitmap.SetSize(560 + cleanMinimap.GetWidth(), 420);
+  bitmap.SetSize(700 + cleanMinimap.GetWidth(), 440);
   bitmap.DrawClear($403027);
 
   bitmap.SetFontName('Consolas');
   bitmap.SetFontSize(18);
   bitmap.SetFontAntialiasing(True);
 
-  bitmap.DrawText('Local: ' + Format('(%d, %d)', [local.X, local.Y]), [420, 40 + cleanMinimap.GetHeight()], $FFFFFF);
-  bitmap.DrawText('Global: ' + Format('(%d, %d)', [Result.X, Result.Y]), [420, 60 + cleanMinimap.GetHeight()], $FFFFFF);
-
   for i := 0 to High(lines) do
-    bitmap.DrawText(lines[i], [420, cleanMinimap.GetHeight() + 100 + 20 * i], $FFFFFF);
+  begin
+    WriteLn lines[i];
+    bitmap.DrawText(lines[i], [430, cleanMinimap.GetHeight() + 20 + 20 * i], $FFFFFF);
+  end;
 
-  map.DrawTransparent(10, 10, bitmap);
+  map.DrawTransparent(10, 20, bitmap);
   map.Free();
 
   cleanMinimap.SetTransparentColor($0);
-  cleanMinimap.DrawTransparent(450, 10, bitmap);
+  cleanMinimap.DrawTransparent(520, 10, bitmap);
   cleanMinimap.Free();
 
   bitmap.Debug();
