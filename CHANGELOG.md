@@ -1,3 +1,12 @@
+## [7.3.5](https://github.com/Torwent/SRL-T/compare/v7.3.4...v7.3.5) (2024-07-11)
+
+
+### Bug Fixes
+
+* **TRSMap:** TRSMap.DebugPosition() should be completely fixed now ([e967fee](https://github.com/Torwent/SRL-T/commit/e967feefef4b0814621260c7ba3d0050707ba529))
+
+
+
 ## [7.3.4](https://github.com/Torwent/SRL-T/compare/v7.3.3...v7.3.4) (2024-07-10)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **webgraph:** biggest performance boost in a while ([da89266](https://github.com/Torwent/SRL-T/commit/da892662db44e71b0d6a124db286d948a1a9ccd1))
-
-
-
-# [7.3.0](https://github.com/Torwent/SRL-T/compare/v7.2.0...v7.3.0) (2024-07-09)
-
-
-### Features
-
-* **webgraph gen:** read notes ([5df912e](https://github.com/Torwent/SRL-T/commit/5df912eb8104c99c72b245b4806c78541f817887))
 
 
 
