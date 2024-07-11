@@ -315,10 +315,10 @@ function TRSGrandExchange.GetItemName: String;
 var
   B: TBox;
 begin
-  B.X1 := Self.X1 + 175;
-  B.Y1 := Self.Y1 + 45;
-  B.X2 := Self.X2 - 25;
-  B.Y2 := Self.Y1 + 65;
+  B.X1 := Self.X1 + 159;
+  B.Y1 := Self.Y1 + 41;
+  B.X2 := Self.X2 - 9;
+  B.Y2 := Self.Y1 + 64;
 
   case Self.GetCurrentInterface() of
     ERSGEInterface.OFFER_SETUP:  Result := OCR.Recognize(B, TOCRColorFilter.Create([2070783]), RS_FONT_BOLD_12);
