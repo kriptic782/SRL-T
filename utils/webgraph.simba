@@ -54,10 +54,10 @@ var
   hyp: Double;
 
   function GetNextShortest(): TNode;
-  var i,node: Int32;
+  var i, node: Int32;
   begin
     Result := queue[0];
-    for i:=0 to High(queue) do
+    for i := 1 to High(queue) do
       if queue[i].Score < Result.Score then
       begin
         node   := i;
