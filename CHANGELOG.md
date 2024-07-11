@@ -1,3 +1,12 @@
+## [7.3.6](https://github.com/Torwent/SRL-T/compare/v7.3.5...v7.3.6) (2024-07-11)
+
+
+### Bug Fixes
+
+* **maps:** update maps ([80d49a4](https://github.com/Torwent/SRL-T/commit/80d49a4da47adf1504cfe6fca561fd5e5f7bc640))
+
+
+
 ## [7.3.5](https://github.com/Torwent/SRL-T/compare/v7.3.4...v7.3.5) (2024-07-11)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([9383146](https://github.com/Torwent/SRL-T/commit/93831467742014154e208ea6c3d4f89e3b1c80c3))
-
-
-
-## [7.3.1](https://github.com/Torwent/SRL-T/compare/v7.3.0...v7.3.1) (2024-07-09)
-
-
-### Bug Fixes
-
-* **webgraph:** biggest performance boost in a while ([da89266](https://github.com/Torwent/SRL-T/commit/da892662db44e71b0d6a124db286d948a1a9ccd1))
 
 
 
