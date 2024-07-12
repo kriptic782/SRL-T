@@ -1,4 +1,5 @@
 {.$I SRL-T/osr.simba}
+{$loadlib ../../../plugins/libtpaex/libtpaex}
 
 const
   PATH = {$macro CURRENT_DIRECTORY};
@@ -287,12 +288,11 @@ begin
     end;
 end;
 
-function TPointArray.ClusterEx(dist: Extended): T2DPointArray; constref;
+function TPointArray.NRCluster(dist: Double): T2DPointArray; constref;
 begin
   if (Length(Self) < 700) then
-    Result := CustomSplitTPA(Self, dist)
-  else
-    Result := CustomClusterTPA(Self, dist);
+    Exit(NRSplitTPA(Self, dist));
+  Result := NRClusterTPA(Self, dist);
 end;
 
 
@@ -456,7 +456,7 @@ begin
   corners := [[0,bmp.getHeight()-1], [bmp.getWidth()-1,bmp.getHeight()-1]];
 
   tpa := border.Invert(bmp.Bounds());
-  atpa := tpa.ClusterEx(1);
+  atpa := tpa.NRCluster(1);
   for i := High(atpa) downto 0 do
     if atpa[i].Contains(corners[0]) or atpa[i].Contains(corners[1]) then
     begin
