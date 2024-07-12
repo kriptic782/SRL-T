@@ -1,3 +1,12 @@
+# [7.4.0](https://github.com/Torwent/SRL-T/compare/v7.3.7...v7.4.0) (2024-07-12)
+
+
+### Features
+
+* **tpaex:** TPA Extensions plugin additions ([78eae8d](https://github.com/Torwent/SRL-T/commit/78eae8dc8e07f5fbff43804821901909c429f0d7))
+
+
+
 ## [7.3.7](https://github.com/Torwent/SRL-T/compare/v7.3.6...v7.3.7) (2024-07-12)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * login for launcher ([b95a970](https://github.com/Torwent/SRL-T/commit/b95a97068abdf5b699e9d36d648138e681ffd188))
-
-
-
-## [7.3.3](https://github.com/Torwent/SRL-T/compare/v7.3.2...v7.3.3) (2024-07-10)
-
-
-### Bug Fixes
-
-* read notes ([a772f10](https://github.com/Torwent/SRL-T/commit/a772f103b1f3d756fd61920ea46665d23963ffa2))
 
 
 
