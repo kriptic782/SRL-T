@@ -186,28 +186,9 @@ begin
 end;
 
 
-function TPointArray.Matrix(out x,y: Int32): array of TBoolArray; constref;
-var
-  b: TBox;
-  p: TPoint;
+function TPointArray.Matrix(): T2DBoolArray; constref;
 begin
-  b := Self.Bounds();
-  x := b.X1;
-  y := b.Y1;
-
-  SetLength(Result, b.Height(), b.Width());
-  for p in Self do Result[p.Y-y,p.X-x] := True;
-end;
-
-function TPointArray.Matrix(): array of TBoolArray; constref; overload;
-var
-  b: TBox;
-  p: TPoint;
-begin
-  b := Self.Bounds();
-
-  SetLength(Result, b.Y2+1, b.X2+1);
-  for p in Self do Result[p.Y,p.X] := True;
+  Result := TPAMatrix(Self);
 end;
 
 function TPointArray.Intersection(other: TPointArray): TPointArray; constref;
@@ -237,6 +218,19 @@ begin
   for i := 0 to High(Self) do
     if i < High(Self) then
       Result += Self[i].DistanceTo(Self[i+1]);
+end;
+
+
+function TPointArray.AStar(start, goal: TPoint; out totalDist: Double; diagonalTravel: Boolean = True; maxDistance: Int32 = 8): TPointArray;
+begin
+  Result := AStarTPA(Self, start, goal, totalDist, True, maxDistance);
+end;
+
+function TPointArray.AStar(start, goal: TPoint; diagonalTravel: Boolean = True; maxDistance: Int32 = 8): TPointArray; overload;
+var
+  totalDist: Double;
+begin
+  Result := AStarTPA(Self, start, goal, totalDist, True, maxDistance);
 end;
 
 
