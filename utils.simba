@@ -8,6 +8,12 @@ type
 const
   SIMBA_DATA_DIR = AppPath + 'Data' + DirectorySeparator;
   CACHE_DIR = SIMBA_DATA_DIR + 'cache' + DirectorySeparator;
+  {$IFDEF WINDOWS}
+  WINAPI_CC = {$IFDEF CPU386}'stdcall'{$ELSE}'win64'{$ENDIF};
+  {$ENDIF}
+
+type
+  PWideChar = ^WideChar;
 
 var
   SRL: TSRL;

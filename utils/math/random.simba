@@ -124,9 +124,9 @@ end;
 (*
 ## SRL.RandomPoint
 ```pascal
-function TSRL.RandomPoint(Mean: TPoint; MaxRad: Int32): TPoint;
-function TSRL.RandomPoint(Bounds: TBox): TPoint; overload;
-function TSRL.RandomPoint(Rect: TRectangle): TPoint; overload;
+function TSRL.RandomPoint(mean: TPoint; MaxRad: Int32): TPoint;
+function TSRL.RandomPoint(bounds: TBox): TPoint; overload;
+function TSRL.RandomPoint(rect: TRectangle): TPoint; overload;
 ```
 Generates a random TPoint which weights around ``Mean``, with a max distance 
 from mean defined by ``MaxRad``.
@@ -138,10 +138,10 @@ begin
   Result.Y := NormalRange(Mean.y-maxRad, Mean.y+MaxRad, CUTOFF);
 end;
 
-function TSRL.RandomPoint(Bounds: TBox; CUTOFF:Single=0): TPoint; constref; overload;
+function TSRL.RandomPoint(bounds: TBox; CUTOFF:Single=0): TPoint; constref; overload;
 begin
-  Result.X := NormalRange(Bounds.x1, Bounds.x2, CUTOFF);
-  Result.Y := NormalRange(Bounds.y1, Bounds.y2, CUTOFF);
+  Result.X := NormalRange(bounds.x1, bounds.x2, CUTOFF);
+  Result.Y := NormalRange(bounds.y1, bounds.y2, CUTOFF);
 end;
 
 function TSRL.RandomPoint(Rect: TRectangle; CUTOFF:Single = 0): TPoint; constref; overload;
@@ -163,6 +163,25 @@ begin
   Result.Y := Round(SRL.NormalRange(y1+1, y2-1, CUTOFF));
   Result := RotatePoint(Result, a, (X2+X1)/2+Random()-0.5, (Y2+Y1)/2+Random()-0.5);
 end;
+
+
+function TSRL.UniformPoint(circle: TCircle): TPoint; constref;
+var
+  r, t: Double;
+begin
+  r := circle.Radius * Sqrt(Random());
+  t := Random() * 2 * PI;
+
+  Result.X := Round(circle.X + r * Cos(t));
+  Result.Y := Round(circle.Y + r * Sin(t));
+end;
+
+function TSRL.UniformPoint(bounds: TBox): TPoint; constref; overload;
+begin
+  Result.X := Random(bounds.X1, bounds.X2);
+  Result.Y := Random(bounds.Y1, bounds.Y2);
+end;
+
 
 (*
 ## SRL.RandonPointEx

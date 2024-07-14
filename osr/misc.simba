@@ -21,7 +21,6 @@ const
 ```pascal
 function TSRL.GetXPAtLevel(level:Int32): Int32;
 ```
-
 Given a level it returns the minimum XP needed for it.
 *)
 function TSRL.GetXPAtLevel(level: Int32): Int32; constref;
@@ -39,7 +38,6 @@ end;
 ```pascal
 function TSRL.GetLevelAtXP(XP:UInt32): Int32;
 ```
-
 Given some XP, it returns what level that is.
 *)
 function TSRL.GetLevelAtXP(XP: UInt32): Int32; constref;
@@ -58,7 +56,6 @@ end;
 ```pascal
 function TSRL.GetItemAmountBox(constref area: TBox): TBox;
 ```
-
 Returns the correct text box of an item's amount text based on the item box.
 *)
 function TSRL.GetItemAmountBox(constref area: TBox): TBox;
@@ -73,7 +70,6 @@ end;
 ```pascal
 function TSRL.GetItemAmount(area: TBox): Int32;
 ```
-
 For use with items in like bankscreen, inventory, shops and so on to
 get the number of stacked items there are.
 *)
@@ -94,7 +90,6 @@ end;
 ```pascal
 function TSRL.AvgBrightness(B: TBox): Int32;
 ```
-
 Returns the average brightness of a area on the screen. 
 Returns a value between ``0`` and ``100``, ``0`` being black.
 *)
@@ -112,7 +107,6 @@ end;
 ```pascal
 function TSRL.PeakBrightness(B: TBox): Int32;
 ```
-
 Returns the peak brightness of a area on the screen. 
 Returns a value between ``0`` and ``100``, ``0`` being black.
 *)

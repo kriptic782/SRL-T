@@ -24,7 +24,6 @@ const
 ```pascal
 function TSRL.MsToTime(const MS: UInt64; const Format: TTimeFormat): String; constref;
 ```
-
 Converts milliseconds to a string following the given time-format.
 *)
 function TSRL.MsToTime(const MS: UInt64; const Format: TTimeFormat): String; constref;
@@ -65,7 +64,6 @@ end;
 ```pascal
 function TSRL.TimeRunning(TheType: TTimeFormat = Time_Formal_Long): String; constref;
 ```
-
 Returns time the script has been running as a string with the given time-format.
 *)
 function TSRL.TimeRunning(TheType: TTimeFormat = Time_Formal_Long): String; constref;
@@ -237,8 +235,8 @@ end;
 function PerformanceTimer(): Double;
 var
   frequency,counter: ^UInt64;
-  function QPF(F: ^UInt64): LongBool; static; external 'QueryPerformanceFrequency@Kernel32.dll '+{$IFDEF CPU386}'stdcall'{$ELSE}'win64'{$ENDIF};
-  function QPC(C: ^UInt64): LongBool; static; external 'QueryPerformanceCounter@Kernel32.dll '+{$IFDEF CPU386}'stdcall'{$ELSE}'win64'{$ENDIF};
+  function QPF(F: ^UInt64): LongBool; static; external 'QueryPerformanceFrequency@Kernel32.dll ' + WINAPI_CC;
+  function QPC(C: ^UInt64): LongBool; static; external 'QueryPerformanceCounter@Kernel32.dll ' + WINAPI_CC;
 begin
   frequency := GetMem(SizeOf(UInt64)); // at least qword aligned
   counter   := GetMem(SizeOf(UInt64)); // ...
