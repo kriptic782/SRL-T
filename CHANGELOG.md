@@ -1,3 +1,12 @@
+## [7.4.1](https://github.com/Torwent/SRL-T/compare/v7.4.0...v7.4.1) (2024-07-14)
+
+
+### Bug Fixes
+
+* tweaks to libtpaex, some new random point methods ([13d913e](https://github.com/Torwent/SRL-T/commit/13d913ee9e4e75323880159f5549b42cf6609b3b))
+
+
+
 # [7.4.0](https://github.com/Torwent/SRL-T/compare/v7.3.7...v7.4.0) (2024-07-12)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMap:** TRSMap.DebugPosition() should be completely fixed now ([e967fee](https://github.com/Torwent/SRL-T/commit/e967feefef4b0814621260c7ba3d0050707ba529))
-
-
-
-## [7.3.4](https://github.com/Torwent/SRL-T/compare/v7.3.3...v7.3.4) (2024-07-10)
-
-
-### Bug Fixes
-
-* login for launcher ([b95a970](https://github.com/Torwent/SRL-T/commit/b95a97068abdf5b699e9d36d648138e681ffd188))
 
 
 
