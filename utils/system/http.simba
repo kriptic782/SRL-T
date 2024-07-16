@@ -22,8 +22,7 @@ end;
 
 procedure THTTPClient.Free();
 begin
-  if not Self.IsSetup then
-    Exit;
+  if not Self.IsSetup then Exit;
   FreeHTTPClient(Self.Client);
   Self.IsSetup := False;
 end;

@@ -221,16 +221,21 @@ begin
 end;
 
 
-function TPointArray.AStar(start, goal: TPoint; out totalDist: Double; diagonalTravel: Boolean = True; maxDistance: Int32 = 8): TPointArray;
+function TPointArray.AStarDebug(start, goal: TPoint; diagonalTravel: Boolean = True; colorMapID: Int32 = 0): TPointArray;
+var
+  matrix: TSingleMatrix;
+  bmp: TMufasaBitmap;
 begin
-  Result := AStarTPA(Self, start, goal, totalDist, True, maxDistance);
+  Result := AStarTPAEx(Self, matrix, start, goal, True);
+  bmp.Init();
+  bmp.DrawMatrix(matrix, colorMapID);
+  bmp.Debug();
+  bmp.Free();
 end;
 
-function TPointArray.AStar(start, goal: TPoint; diagonalTravel: Boolean = True; maxDistance: Int32 = 8): TPointArray; overload;
-var
-  totalDist: Double;
+function TPointArray.AStar(start, goal: TPoint; diagonalTravel: Boolean = True): TPointArray;
 begin
-  Result := AStarTPA(Self, start, goal, totalDist, True, maxDistance);
+  Result := AStarTPA(Self, start, goal, True);
 end;
 
 
