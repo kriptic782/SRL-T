@@ -1,3 +1,12 @@
+## [7.4.2](https://github.com/Torwent/SRL-T/compare/v7.4.1...v7.4.2) (2024-07-16)
+
+
+### Bug Fixes
+
+* **tpaex:** proper astar algorithm in the library ([0706a79](https://github.com/Torwent/SRL-T/commit/0706a7940ea9057568a1c942d09f8aac5797081c))
+
+
+
 ## [7.4.1](https://github.com/Torwent/SRL-T/compare/v7.4.0...v7.4.1) (2024-07-14)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **maps:** update maps ([80d49a4](https://github.com/Torwent/SRL-T/commit/80d49a4da47adf1504cfe6fca561fd5e5f7bc640))
-
-
-
-## [7.3.5](https://github.com/Torwent/SRL-T/compare/v7.3.4...v7.3.5) (2024-07-11)
-
-
-### Bug Fixes
-
-* **TRSMap:** TRSMap.DebugPosition() should be completely fixed now ([e967fee](https://github.com/Torwent/SRL-T/commit/e967feefef4b0814621260c7ba3d0050707ba529))
 
 
 
