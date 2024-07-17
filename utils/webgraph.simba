@@ -23,6 +23,22 @@ begin
   Result.Paths    := System.Copy(Self.Paths);
 end;
 
+procedure TWebGraph.BlockInside(area: TBox);
+var
+  i, c: Int32;
+begin
+  SetLength(blocking, Length(Self.Nodes));
+
+  for i := 0 to High(Self.Nodes) do
+    if area.Contains(Self.Nodes[i]) then
+    begin
+      blocking[c] := i;
+      Inc(c);
+    end;
+
+  SetLength(blocking, c);
+end;
+
 procedure TWebGraph.BlockOutside(Area: TBox);
 var
   i, c: Int32;

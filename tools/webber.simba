@@ -20,7 +20,7 @@ Keep in mind that unless you send a PR with your additions, they will be lost wi
 {$I WaspLib/osr.simba}
 {$H-}
 const
-  CHUNK: TBox = [48, 51, 52, 48];
+  CHUNK: TBox = [49,54,50,53];
   PLANE: Int32 = 0;
   GRAPH_OFFSET: TPoint = [0, 0];
 
@@ -33,7 +33,7 @@ begin
   GENERATED_GRAPH.MinimumTiles := 4;     //spaces with less tiles than this will be ignored.
   GENERATED_GRAPH.NodeRadius := 50;      //closed space less than NodeRadius pixels will have a single node.
   GENERATED_GRAPH.MaxConnections := 6;   //Max connections per node.
-  GENERATED_GRAPH.WallCrossings := True;
+  GENERATED_GRAPH.WallCrossings := True; //Whether to allow wall crossings when there's a close path around it.
 end;
 
 type
@@ -75,6 +75,7 @@ begin
   Self.Graph.LoadNodesFromString(NODES_STR);
   Self.Graph.LoadPathsFromString(PATHS_STR);
   Self.Graph.LoadNamesFromString(NAMES_STR);
+
 end;
 
 function TWebberForm.BoxIsValid(): Boolean;

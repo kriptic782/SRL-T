@@ -1422,10 +1422,11 @@ var
   counts: TIntegerArray;
   p, a, b, q: TPoint;
 begin
+  if not bmp.FindColors(blacks, BLACK) then Exit;
   SetLength(matrix, bmp.getHeight());
   bounds := Box(4, 4, bmp.GetWidth() - 5, bmp.GetHeight() - 5);
   center := Box(bmp.getCenter(), 1, 1);
-  if not bmp.FindColors(blacks, BLACK) then Exit;
+
 
   hi := High(blacks);
 
