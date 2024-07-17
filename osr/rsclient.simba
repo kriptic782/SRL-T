@@ -69,12 +69,32 @@ Are there any other cases where music tab won't be visible?
 function TRSClient.DetectClientMode(Update: Boolean = False): ERSClientMode;
 var
   W, H: Int32;
+  pid: UInt32;
+  win: TOSWindow;
+  proc: TSysProc;
 begin
   try
     GetClientDimensions(W, H);
   except
-    WriteLn('TargetPID: ', GetSimbaTargetPID());
+    pid := GetSimbaTargetPID();
+    WriteLn('TargetPID: ', pid);
     WriteLn('TargetWin: ', GetSimbaTargetWindow());
+    WriteLn('TargetWin Bounds: ', GetSimbaTargetWindow().GetBounds());
+    WriteLn('Valid? ', IsTargetValid());
+    for win in GetWindows() do
+      if win.GetPID() = pid then
+      begin
+        WriteLn('PID Window: ', win);
+        WriteLn('PID Bounds: ', win.GetBounds());
+        Break;
+      end;
+
+    for proc in GetProcesses() do
+      if proc.PID = pid then
+      begin
+        WriteLn('PID proccess: ', proc);
+        Break;
+      end;
     WriteLn('Please refocus the client!');
     TerminateScript(GetExceptionMessage());
   end;
@@ -166,6 +186,44 @@ begin
   Self.LoseFocus();
 end;
 
+function TRSClient.Revalidate(): Boolean;
+var
+  pid: PtrUInt;
+  wins: TOSWindowArray;
+  win: TOSWindow;
+  proc: TSysProc;
+  b: TBox;
+begin
+  if IsTargetValid() then Exit(True);
+
+  pid := GetSimbaTargetPID();
+  wins := GetWindows().GetByClass('SunAwtCanvas');
+
+  for win in wins do
+  begin
+    if win.GetPID() <> pid then Continue;
+
+    wins := win.GetRootWindow().GetChildren(True).GetByClass('SunAwtCanvas');
+    for win in wins do
+      if Length(win.GetChildren(True)) = 0 then
+        Break(2);
+  end;
+
+  for proc in GetProcesses() do
+  begin
+    if proc.PID <> pid then Continue;
+    b := win.GetBounds();
+    proc.Handle := win;
+    proc.Height := b.Height();
+    proc.Width := b.Width();
+
+    SetTarget(proc);
+    Break;
+  end;
+
+  Result := IsTargetValid();
+end;
+
 (*
 ## RSClient.Setup()
 ```pascal
@@ -180,6 +238,9 @@ This is automatically called on the **RSClient** variable.
 procedure TRSClient.Setup();
 begin
   Self.Name := 'RSClient';
+
+  if not Self.Revalidate() then
+    TerminateScript('Please refocus the client!');
 
   {$IFDEF SRL_USE_REMOTEINPUT}
   Self.RemoteInput.Setup();
