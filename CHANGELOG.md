@@ -1,3 +1,12 @@
+## [7.4.5](https://github.com/Torwent/SRL-T/compare/v7.4.4...v7.4.5) (2024-07-17)
+
+
+### Bug Fixes
+
+* **RSClient:** attempt to revalidate a client whose window handle has changed ([aba85a4](https://github.com/Torwent/SRL-T/commit/aba85a457da1f62c9c9180b81c7fdaf283f7247d))
+
+
+
 ## [7.4.4](https://github.com/Torwent/SRL-T/compare/v7.4.3...v7.4.4) (2024-07-17)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * tweaks to libtpaex, some new random point methods ([13d913e](https://github.com/Torwent/SRL-T/commit/13d913ee9e4e75323880159f5549b42cf6609b3b))
-
-
-
-# [7.4.0](https://github.com/Torwent/SRL-T/compare/v7.3.7...v7.4.0) (2024-07-12)
-
-
-### Features
-
-* **tpaex:** TPA Extensions plugin additions ([78eae8d](https://github.com/Torwent/SRL-T/commit/78eae8dc8e07f5fbff43804821901909c429f0d7))
 
 
 
