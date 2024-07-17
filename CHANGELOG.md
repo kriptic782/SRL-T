@@ -1,3 +1,12 @@
+## [7.4.4](https://github.com/Torwent/SRL-T/compare/v7.4.3...v7.4.4) (2024-07-17)
+
+
+### Bug Fixes
+
+* **TRSMapObjects:** disable Filter.Finder for banks ([58f3701](https://github.com/Torwent/SRL-T/commit/58f3701dc2cb0322e79ed752adfbb00aacccd8a7))
+
+
+
 ## [7.4.3](https://github.com/Torwent/SRL-T/compare/v7.4.2...v7.4.3) (2024-07-17)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **tpaex:** TPA Extensions plugin additions ([78eae8d](https://github.com/Torwent/SRL-T/commit/78eae8dc8e07f5fbff43804821901909c429f0d7))
-
-
-
-## [7.3.7](https://github.com/Torwent/SRL-T/compare/v7.3.6...v7.3.7) (2024-07-12)
-
-
-### Bug Fixes
-
-* **itemfinder:** update items ([08cfbba](https://github.com/Torwent/SRL-T/commit/08cfbbad79c27f15051891df93fd867cecdb9026))
 
 
 
