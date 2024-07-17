@@ -461,15 +461,21 @@ begin
   if Objects <> [] then
   begin
     Self.ObjectsCache := Objects.GetAllByAction('Collect');
-    for i := 0 to High(Self.ObjectsCache)  do
+    for i := 0 to High(Self.ObjectsCache) do
+    begin
+      Self.ObjectsCache[i].Filter.Finder := False;
       Self.MapObjects += @Self.ObjectsCache[i];
+    end;
   end;
 
   if NPCs <> [] then
   begin
     Self.NPCsCache := NPCs.GetAllByAction('Bank');
     for i := 0 to High(Self.NPCsCache)  do
+    begin
+      Self.ObjectsCache[i].Filter.Finder := False;
       Self.MapObjects += @Self.NPCsCache[i];
+    end;
   end;
 
   if Self.MapObjects = [] then
@@ -514,6 +520,9 @@ procedure TRSBanks.Debug();
 var
   mapObj: PRSMapObject;
 begin
+  if Self.MapObjects = [] then
+    Self._SetupMapObjects();
+
   mapObj := Self.MapObjects.GetClosest();
   case mapObj^.MapObjectType of
     ERSMapObjectType.OBJ: System.Debug(PRSObjectV2(mapObj)^);

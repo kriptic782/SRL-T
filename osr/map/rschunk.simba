@@ -15,6 +15,7 @@ type
     MOTHERLOADE_MINE,
     PRIFDDINAS,
     RUINS_OF_UNKAH,
+    SEERS_VILLAGE,
     TEMPOROSS_COVE,
     VARROCK,
     WINTERTODT
@@ -33,6 +34,7 @@ begin
     ERSChunk.MOTHERLOADE_MINE : Result := [[57,89,59,87],  [0,1]    ];
     ERSChunk.PRIFDDINAS       : Result := [[50,95,51,94],  [0]      ];
     ERSChunk.RUINS_OF_UNKAH   : Result := [[48,44,49,44],  [0]      ];
+    ERSChunk.SEERS_VILLAGE    : Result := [[41,55,43,53],  [0,2]    ];
     ERSChunk.TEMPOROSS_COVE   : Result := [[47,46,47,46],  [0]      ];
     ERSChunk.VARROCK          : Result := [[49,54,50,53],  [0]      ];
     ERSChunk.WINTERTODT       : Result := [[25,61,25,62],  [0]      ];
