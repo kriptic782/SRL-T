@@ -1,3 +1,12 @@
+## [7.4.3](https://github.com/Torwent/SRL-T/compare/v7.4.2...v7.4.3) (2024-07-17)
+
+
+### Bug Fixes
+
+* **webgraph:** added a inverted way of blocking nodes/paths ([82eb301](https://github.com/Torwent/SRL-T/commit/82eb301d6e1691a0ab51effaa77149ced67180a1))
+
+
+
 ## [7.4.2](https://github.com/Torwent/SRL-T/compare/v7.4.1...v7.4.2) (2024-07-16)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **itemfinder:** update items ([08cfbba](https://github.com/Torwent/SRL-T/commit/08cfbbad79c27f15051891df93fd867cecdb9026))
-
-
-
-## [7.3.6](https://github.com/Torwent/SRL-T/compare/v7.3.5...v7.3.6) (2024-07-11)
-
-
-### Bug Fixes
-
-* **maps:** update maps ([80d49a4](https://github.com/Torwent/SRL-T/commit/80d49a4da47adf1504cfe6fca561fd5e5f7bc640))
 
 
 
