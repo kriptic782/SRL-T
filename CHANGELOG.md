@@ -1,3 +1,12 @@
+## [7.4.6](https://github.com/Torwent/SRL-T/compare/v7.4.5...v7.4.6) (2024-07-18)
+
+
+### Bug Fixes
+
+* **Minimap:** read notes ([be4fade](https://github.com/Torwent/SRL-T/commit/be4fadefb17e88c79601cc58cabebdb9503ab2f0))
+
+
+
 ## [7.4.5](https://github.com/Torwent/SRL-T/compare/v7.4.4...v7.4.5) (2024-07-17)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **tpaex:** proper astar algorithm in the library ([0706a79](https://github.com/Torwent/SRL-T/commit/0706a7940ea9057568a1c942d09f8aac5797081c))
-
-
-
-## [7.4.1](https://github.com/Torwent/SRL-T/compare/v7.4.0...v7.4.1) (2024-07-14)
-
-
-### Bug Fixes
-
-* tweaks to libtpaex, some new random point methods ([13d913e](https://github.com/Torwent/SRL-T/commit/13d913ee9e4e75323880159f5549b42cf6609b3b))
 
 
 
