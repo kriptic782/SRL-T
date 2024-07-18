@@ -962,6 +962,7 @@ begin
   end;
 end;
 
+
 (*
 ## Minimap.FindDotShadows
 ```pascal
@@ -1652,6 +1653,148 @@ function TRSMinimap.GetDots(dot: ERSMinimapDot): TPointArray; overload;
 begin
   Result := Self.GetDots([dot], Self.Bounds());
 end;
+
+
+(*
+## Minimap.CleanMinimap
+```pascal
+procedure TRSMinimap.CleanMinimap(bitmap: TMufasaBitmap);
+```
+Method used to clear minimap dots from a minimap bitmap (image).
+You probably don't need to use this, it's an internal method.
+*)
+procedure TRSMinimap.CleanMinimap(bitmap: TMufasaBitmap);
+
+  procedure _Find(p: TPoint);
+  var
+    area: TBox;
+    pixel: Int32;
+    x, y: Int32;
+  begin
+    area := [p.X - 5, p.Y - 5, p.X + 5, p.Y + 5];
+
+    for y := area.Y1 to area.Y2 do
+      for x := area.X1 to area.X2 do
+        if bitmap.PointInBitmap(x, y) then
+        begin
+          pixel := bitmap.GetPixel(x, y);
+
+          SetToleranceSpeed2Modifiers(0.001, 0.001);
+          if SimilarColors($FFFFFF, pixel, 30) then
+            bitmap.SetPixel(x, y, 0);
+
+          SetToleranceSpeed2Modifiers(0.05, 1);
+          if SimilarColors($00FFFF, pixel, 30) then
+            bitmap.SetPixel(x, y, 0);
+
+          SetToleranceSpeed2Modifiers(0.05, 1);
+          if SimilarColors($0000FF, pixel, 30) then
+            bitmap.SetPixel(x, y, 0);
+
+          SetToleranceSpeed2Modifiers(50, 100);
+          if SimilarColors($000000, pixel, 1) then
+            bitmap.SetPixel(x, y, 0);
+        end;
+  end;
+
+var
+  dots: TPointArray;
+  dot: TPoint;
+  tpa: TPointArray;
+begin
+  dots := Self.GetDotsBitmap(bitmap, [ERSMinimapDot.NPC, ERSMinimapDot.ITEM, ERSMinimapDot.PLAYER]);
+
+  SetColorToleranceSpeed(2);
+
+  for dot in dots do
+    _Find(dot);
+  _Find([bitmap.GetWidth() div 2, bitmap.GetHeight() div 2]); // our own player
+
+  SetColorToleranceSpeed(1);
+  SetToleranceSpeed2Modifiers(0.2, 0.2);
+
+  // TODO: account for tolerance
+  bitmap.ReplaceColor(255,0);
+  bitmap.ReplaceColor(284358,0);
+  bitmap.ReplaceColor(1127261,0);
+
+  bitmap.DrawPolyFilled(Self.GetPolygon().Offset(-Self.X1, -Self.Y1), True, 0);
+
+  bitmap.FindColors(tpa, 0);
+  bitmap.Blend(tpa.Sorted(bitmap.GetCenter()), 5);
+  bitmap.Pad(10);
+end;
+
+(*
+## Minimap.GetCleanMinimap
+```pascal
+function TRSMinimap.GetCleanMinimap(angle: Double = $FFFF): TMufasaBitmap;
+```
+Method used to "screenshot" the minimap and clean it with Minimap.CleanMinimap().
+You probably don't need to use this directly but you can see what it does in the following example.
+
+Example:
+```pascal
+Minimap.GetCleanMinimap().Debug();
+```
+*)
+function TRSMinimap.GetCleanMinimap(angle: Double = $FFFF): TMufasaBitmap;
+var
+  bitmap: TMufasaBitmap;
+begin
+  bitmap := GetMufasaBitmap(BitmapFromClient(Self.Bounds()));
+  bitmap.ReplaceColor(0, 1); // We need zero to be unique
+
+  Self.CleanMinimap(bitmap);
+
+  Result.Init();
+  if angle = $FFFF then
+    angle := Self.GetCompassAngle(False);
+  bitmap.RotateBitmapEx(angle, False, True, Result);
+  bitmap.Free();
+end;
+
+(*
+## TRSMinimap.ScaleMinimap
+```pascal
+function TRSMinimap.ScaleMinimap(bitmap: TMufasaBitmap; scaling: Int32): TMufasaBitmap;
+```
+Method used to scale down the minimap.
+You probably don't need to use this directly but you can see what it does in the following example.
+
+Example:
+```pascal
+Minimap.ScaleMinimap(Minimap.GetCleanMinimap(), 4).Debug();
+```
+*)
+function TRSMinimap.ScaleMinimap(bitmap: TMufasaBitmap; scaling: Int32): TMufasaBitmap;
+var
+  RADIUS = 67;
+var
+  p: TPoint;
+  tmp: TMufasaBitmap;
+  tpa: TPointArray;
+begin
+  tmp := bitmap.Copy();
+
+  p := tmp.GetCenter();
+  if RSClient.Mode = ERSClientMode.FIXED then
+    p := p.Offset(0, -8).Rotate(-Self.GetCompassAngle(False), p); // fixed
+
+  tmp.DrawCircleFilled(p.X, p.Y, RADIUS, True, 0);
+
+  RADIUS += 3;
+
+  tmp.Crop(p.X - RADIUS, p.Y - RADIUS, p.X + RADIUS, p.Y + RADIUS);
+  tmp.FindColors(tpa, 0);
+  tmp.Blend(tpa.Sorted(tmp.GetCenter()), 3);
+  tmp.DrawCircleFilled(tmp.GetCenter().X, tmp.GetCenter().Y, RADIUS, True, 0);
+
+  Result := tmp.Downsample(scaling, False);
+
+  tmp.Free();
+end;
+
 
 
 (*

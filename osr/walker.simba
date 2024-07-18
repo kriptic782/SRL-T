@@ -59,6 +59,9 @@ end;
     OnWalkEvent, OnWalkingEvent: TRSWalkerV2_OnWalkEvent;
   end;
 
+(*
+## TRSWalkerV2.Setup
+```pascal
 procedure TRSWalkerV2.Setup(
   position: function (): TPoint of object;
   height: function (p: TPoint = [-1,-1]): Single of object;
@@ -66,9 +69,41 @@ procedure TRSWalkerV2.Setup(
   graph: ^TWebGraph;
   mapImage: TMufasaBitmap
 );
+```
+Setup method for TRSWalkerV2.
+
+Only `position` is a hard requirement of this method,
+all others can be `nil` if you don't need them.
+
+`graph` is only required if you plan on doing webwaking and should point to your webgraph.
+`getLocal` and `mapImage` are just for webgraph debugging if webwalking crashes.
+
+`height` is only required if you want to pass in tile heights information to TRSWalkerV2.
+
+Example:
+```pascal
+Walker.Setup(@MyCustomPositionSystem, nil, nil, nil, nil);
+```
+*)
+procedure TRSWalkerV2.Setup(
+  position: function (): TPoint of object;
+  height: function (p: TPoint = [-1,-1]): Single of object;
+  getLocal: function (tpa: TPointArray; offset: TPoint = [0,0]): TPointArray of object;
+  graph: ^TWebGraph;
+  mapImage: TMufasaBitmap
+);
+  type TRSWalkerV2 = TRSWalkerV2;
+  function TRSWalkerV2.DummyHeight(p: TPoint = [-1,-1]): Single;
+  begin
+    Result := 0;
+  end;
+
 begin
   Self.Position := @position;
-  Self.Height := @height;
+  if @height <> nil then
+    Self.Height := @height
+  else
+    Self.Height := @Self.DummyHeight;
   Self.GetLocal := @getLocal;
   Self.WebGraph := graph;
   Self.WalkUpText := ['Walk here', 'alk her'];
@@ -179,7 +214,6 @@ You will probably never need to call this directly.
 
 The values used are hardcoded and if you don't like them, it's recommended you override the method.
 The following example shows how one could override the function to enable run at 50% energy everytime, keep in mind though, you shouldn't do this, you should add randomness to it!
-```
 *)
 procedure TRSWalkerV2.CheckRunEnergy();
 begin
@@ -235,19 +269,25 @@ var
     idx: Int32;
     angle: Double;
     SlowMouse: TMouse;
+    h, diff: Single;
   begin
     angle := Minimap.GetCompassAngle(False);
     idx := Self.PathIndex;
+
     while (idx < High(Self.Path)) and Self.IsWalkable(Self.Path[idx+1], myPos, angle) do
       Inc(idx);
 
     if (Idx = High(Self.Path)) and (Random(10) > 2) then Exit();
 
-    mmPos := Self.Path[idx] - myPos + minimap.Center;
+    mmPos := Self.Path[idx] - myPos + minimap.Center();
     mmPos := mmPos.Rotate(angle, Minimap.Center);
 
     if Self.ScreenWalk then
-      mmPos := Minimap.PointToMSRect(mmPos).Mean();
+    begin
+      h := Self.Height(myPos);
+      diff := -(h-Self.Height(Self.MMToMap(myPos, mmPos, angle)));
+      mmPos := Minimap.VectorToMSRect([mmPos.X, mmPos.Y, diff], 1, 1).Mean();
+    end;
 
     SlowMouse := Mouse;
     SlowMouse.Speed := Random(6,10);
@@ -339,7 +379,7 @@ You will probably never need to call this directly.
 
 If you wish to modify certain walker behaviors, it can be a good approach to override this function.
 *)
-function TRSWalkerV2.Click(minimapPoint: TPoint; Randomness: Int32): Boolean;
+function TRSWalkerV2.Click(minimapPoint: TPoint; Randomness: Int32; height: Single = 0): Boolean;
 var
   p: TPoint;
   i: Int32;
@@ -351,7 +391,9 @@ begin
   if Self.ScreenWalk then
   begin
     p := Minimap.RandomPointOnZoomRectangle(minimapPoint, randomness);
-    Mouse.Move(Minimap.PointToMSRect(p).Mean());
+
+    Mouse.Move(Minimap.VectorToMSRect([p.X, p.Y, height]).Mean());
+
     upText := MainScreen.GetUpText();
 
     if not upText.ContainsAny(Self.WalkUpText) then
@@ -399,9 +441,9 @@ begin
   minimapPoint := Self.PointToMM(playerPoint, walkerPoint, Minimap.GetCompassAngle(False));
 
   if Self.ScreenWalk then
-    Result := Minimap.PointOnZoomRectangle(minimapPoint)
-  else
-    Result := Minimap.IsPointOn(minimapPoint);
+   Exit(Minimap.PointOnZoomRectangle(minimapPoint));
+
+  Result := Minimap.IsPointOn(minimapPoint);
 end;
 
 (*
@@ -415,6 +457,7 @@ You will probably never need to call this directly but it can be used to take a 
 function TRSWalkerV2.WalkFinalStep(playerPoint, walkerPoint: TPoint; waitUntilDistance: Int32): Boolean;
 var
   minimapPoint: TPoint;
+  h, diff: Single;
 begin
   if not Self.WalkStepHelper(playerPoint, walkerPoint, minimapPoint) then
     Exit(not Self.Walking);
@@ -422,7 +465,10 @@ begin
   if (Minimap.Center().DistanceTo(minimapPoint) < 5) then
     Exit(True);
 
-  Result := Self.Click(minimapPoint, 0);
+  h := Self.Height(playerPoint);
+  diff := -(h-Self.Height(walkerPoint));
+
+  Result := Self.Click(minimapPoint, 0, diff);
   if Result then
     Self.WaitMoving(walkerPoint, waitUntilDistance);
 end;
@@ -469,13 +515,17 @@ You will probably never need to call this directly.
 function TRSWalkerV2.IsWalkable(walkerPoint: TPoint; playerPoint: TPoint; angle: Double): Boolean;
 var
   mmPoint: TPoint;
+  h, diff: Single;
   b: TBox;
 begin
   mmPoint := Self.PointToMM(playerPoint, walkerPoint, angle);
   if not Self.ScreenWalk then
     Exit(Minimap.IsPointOn(mmPoint, -1));
 
-  b := Minimap.PointToMSRect(mmPoint, 1, 1, Angle).Bounds();
+  h := Self.Height(playerPoint);
+  diff := -(h-Self.Height(walkerPoint));
+  b := Minimap.VectorToMSRect([mmPoint.X, mmPoint.Y, diff], 1, 1, angle).Bounds();
+
   if MainScreen.IsVisible(b.Middle) then
     Result := CountColor($0, b.Expand(4, MainScreen.Bounds())) = 0; //Client doesn't always render everything when zoomed out
 end;

@@ -122,8 +122,8 @@ var
 begin
   Self.Name := 'Walker';
 
-  minimapImage := TRSWalker.GetCleanMinimap();
-  minimapSample := Self.ScaleMinimap(minimapImage, Self.Scaling);
+  minimapImage := Minimap.GetCleanMinimap();
+  minimapSample := Minimap.ScaleMinimap(minimapImage, Self.Scaling);
 
   Self.Cache := TMatchTemplateRGBCache.Create(Self.Map.ScaledMap.ToMatrix(), MinimapSample.ToMatrix());
   Self.WalkUpText := ['Walk here', 'lk he'];
@@ -354,155 +354,6 @@ end;
 
 
 (*
-## Walker.CleanMinimap
-```pascal
-procedure TRSWalker.CleanMinimap(Bitmap: TMufasaBitmap); static;
-```
-Internal walker method used to clear minimap dots from the minimap.
-You probably don't need to use this.
-*)
-procedure TRSWalker.CleanMinimap(bitmap: TMufasaBitmap); static;
-
-  procedure Find(P: TPoint);
-  var
-    Area: TBox;
-    Pixel: Int32;
-    X, Y: Int32;
-  begin
-    Area := [P.X - 5, P.Y - 5, P.X + 5, P.Y + 5];
-
-    for Y := Area.Y1 to Area.Y2 do
-      for X := Area.X1 to Area.X2 do
-        if bitmap.PointInBitmap(X, Y) then
-        begin
-          Pixel := bitmap.GetPixel(X, Y);
-
-          SetToleranceSpeed2Modifiers(0.001, 0.001);
-          if SimilarColors($FFFFFF, Pixel, 30) then
-            bitmap.SetPixel(X, Y, 0);
-
-          SetToleranceSpeed2Modifiers(0.05, 1);
-          if SimilarColors($00FFFF, Pixel, 30) then
-            bitmap.SetPixel(X, Y, 0);
-
-          SetToleranceSpeed2Modifiers(0.05, 1);
-          if SimilarColors($0000FF, Pixel, 30) then
-            bitmap.SetPixel(X, Y, 0);
-
-          SetToleranceSpeed2Modifiers(50, 100);
-          if SimilarColors($000000, Pixel, 1) then
-            bitmap.SetPixel(X, Y, 0);
-        end;
-  end;
-
-var
-  Dots: TPointArray;
-  Dot: TPoint;
-  TPA: TPointArray;
-begin
-  Dots := Minimap.GetDotsBitmap(bitmap, [ERSMinimapDot.NPC, ERSMinimapDot.ITEM, ERSMinimapDot.PLAYER]);
-
-  SetColorToleranceSpeed(2);
-
-  for Dot in Dots do
-    Find(Dot);
-  Find([bitmap.GetWidth() div 2, bitmap.GetHeight() div 2]); // our own player
-
-  SetColorToleranceSpeed(1);
-  SetToleranceSpeed2Modifiers(0.2, 0.2);
-
-  // TODO: account for tolerance
-  bitmap.ReplaceColor(255,0);
-  bitmap.ReplaceColor(284358,0);
-  bitmap.ReplaceColor(1127261,0);
-
-  bitmap.DrawPolyFilled(Minimap.GetPolygon().Offset(-Minimap.X1, -Minimap.Y1), True, 0);
-
-  bitmap.FindColors(TPA, 0);
-  bitmap.Blend(TPA.Sorted(bitmap.GetCenter()), 5);
-  bitmap.Pad(10);
-end;
-
-(*
-## Walker.GetCleanMinimap()
-```pascal
-function TRSWalker.GetCleanMinimap(): TMufasaBitmap; static;
-```
-Internal walker method used to "screenshot" the minimap and clean it with Walker.CleanMinimap().
-You probably don't need to use this directly but you can see what it does in the following example.
-
-Example:
-```pascal
-var
-  rsw: TRSWalker;
-
-begin
-  rsw.GetCleanMinimap().Debug();
-end;
-```
-*)
-function TRSWalker.GetCleanMinimap(): TMufasaBitmap; static;
-var
-  Bitmap: TMufasaBitmap;
-begin
-  Bitmap := GetMufasaBitmap(BitmapFromClient(Minimap.Bounds()));
-  Bitmap.ReplaceColor(0, 1); // We need zero to be unique
-
-  TRSWalker.CleanMinimap(Bitmap);
-
-  Result.Init();
-
-  Bitmap.RotateBitmapEx(Minimap.GetCompassAngle(False), False, True, Result);
-  Bitmap.Free();
-end;
-
-(*
-## Walker.ScaleMinimap
-```pascal
-function TRSWalker.ScaleMinimap(Bitmap: TMufasaBitmap; Scaling: Int32): TMufasaBitmap;
-```
-Internal walker method used to scale down the minimap to whatever TRSWalker.Scaling is.
-You probably don't need to use this directly but you can see what it does in the following example.
-
-Example:
-```pascal
-var
-  rsw: TRSWalker;
-
-begin
-  rsw.ScaleMinimap(rsw.GetCleanMinimap(), rsw.Scaling).Debug();
-end;
-```
-*)
-function TRSWalker.ScaleMinimap(Bitmap: TMufasaBitmap; Scaling: Int32): TMufasaBitmap;
-var
-  RADIUS = 67;
-var
-  P: TPoint;
-  Temp: TMufasaBitmap;
-  TPA: TPointArray;
-begin
-  Temp := Bitmap.Copy();
-
-  P := Temp.GetCenter();
-  if RSClient.Mode = ERSClientMode.FIXED then
-    P := P.Offset(0, -8).Rotate(-Minimap.GetCompassAngle(False), P); // fixed
-
-  Temp.DrawCircleFilled(P.X, P.Y, RADIUS, True, 0);
-
-  RADIUS += 3;
-
-  Temp.Crop(P.X - RADIUS, P.Y - RADIUS, P.X + RADIUS, P.Y + RADIUS);
-  Temp.FindColors(TPA, 0);
-  Temp.Blend(TPA.Sorted(Temp.GetCenter()), 3);
-  Temp.DrawCircleFilled(Temp.GetCenter().X, Temp.GetCenter().Y, RADIUS, True, 0);
-
-  Result := Temp.Downsample(Scaling, False);
-
-  Temp.Free();
-end;
-
-(*
 ## Walker.ScaledSearch
 ```pascal
 function TRSWalker.ScaledSearch(Bitmap: TMufasaBitmap; Samples: Int32): TPointArray;
@@ -517,7 +368,7 @@ var
   Sample: TMufasaBitmap;
   Matrix: TSingleMatrix;
 begin
-  Sample := Self.ScaleMinimap(Bitmap, Self.Scaling);
+  Sample := Minimap.ScaleMinimap(Bitmap, Self.Scaling);
   Matrix := MatchTemplateMask(Self.Cache, Sample.ToMatrix, TM_CCOEFF_NORMED);
 
   while Length(Result) < Samples do
@@ -610,7 +461,7 @@ begin
   Self.Region := [];
   Self.Similarity := 0;
 
-  Bitmap := TRSWalker.GetCleanMinimap();
+  Bitmap := Minimap.GetCleanMinimap();
 
   TPA := Self.ScaledSearch(Bitmap, SAMPLES);
   for I := 0 to High(TPA) do
@@ -1238,7 +1089,7 @@ begin
   WorldBitmap.LineTo(Point(X, 0), Point(X, Y2 - Y1), $00FF00);
   WorldBitmap.DrawBox([X - 2, Y - 2, X + 2, Y + 2], $FFFFFF);
 
-  MinimapBitmap := Self.ScaleMinimap(TRSWalker.GetCleanMinimap(), 1);
+  MinimapBitmap := Minimap.ScaleMinimap(Minimap.GetCleanMinimap(), 1);
 
   P := MinimapBitmap.GetCenter();
   if RSClient.Mode = ERSClientMode.FIXED then

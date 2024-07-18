@@ -154,11 +154,11 @@ function TRSMapObject.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF):
 var
   coordinates: TPointArray;
   p: TPoint;
-  offset: Vector3;
   h, diff: Single;
 begin
   if me = [0,0] then
     me := Self.Walker^.Position();
+
   if angle = $FFFF then
     angle := Minimap.GetCompassAngle(False);
 
@@ -168,10 +168,10 @@ begin
 
   for p in coordinates.Sorted(me) do
   begin
+    p := p + Self.Offset;
     diff := -(h-Self.Walker^.Height(p));
-    offset := Vec3(Self.Offset.X, Self.Offset.Y, -(h-Self.Walker^.Height(p)));
     p := Self.Walker^.PointToMM(me, p, angle);
-    Result += Minimap.GetCuboidMS(p + [Round(0.15*diff), Round(0.11*diff)], Self.Size, offset, angle);
+    Result += Minimap.GetCuboidMS(p + [Round(0.15*diff), Round(0.11*diff)], Self.Size, [0,0,diff], angle);
   end;
 end;
 
@@ -541,7 +541,6 @@ function TRSObjectV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): 
 var
   Locations: TCoordsAngle;
   p: TPoint;
-  offset: Vector3;
   h, diff: Single;
   i: Int32;
 begin
@@ -562,11 +561,10 @@ begin
 
   for i := 0 to High(Locations.Coordinates) do
   begin
-    p := Locations.Coordinates[i];
+    p := Locations.Coordinates[i] + Self.Offset;
     diff := -(h-Self.Walker^.Height(p));
-    offset := Vec3(Self.Offset.X, Self.Offset.Y, diff);
     p := Self.Walker^.PointToMM(me, p, angle);
-    Result += Minimap.GetCuboidMS(p + [Round(0.15*diff), Round(0.11*diff)], Self.Size, offset, angle - Locations.Angles[i]);
+    Result += Minimap.GetCuboidMS(p + [Round(0.15*diff), Round(0.11*diff)], Self.Size, [0,0,diff], angle - Locations.Angles[i]);
   end;
 end;
 
@@ -748,7 +746,6 @@ function TRSNPCV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCu
 var
   dots: TPointArray;
   p: TPoint;
-  offsetV: Vector3;
   h, diff: Single;
   i: Int32;
 begin
@@ -769,11 +766,10 @@ begin
     dots := dots.Sorted(Minimap.Center());
     for i := 0 to High(dots) do
     begin
-      p := Self.Walker^.MMToMap(me, p, angle);
+      p := Self.Walker^.MMToMap(me, p, angle) + Self.Offset;
       diff := -(h-Self.Walker^.Height(p)) / 4;
-      offsetV := Vec3(Self.Offset.X, Self.Offset.Y, diff);
 
-      Result += Minimap.GetCuboidMS(dots[i] + [Round(0.15*diff), Round(0.11*diff)], Self.Size, offsetV, angle);
+      Result += Minimap.GetCuboidMS(dots[i] + [Round(0.15*diff), Round(0.11*diff)], Self.Size, [0,0,diff], angle);
     end;
 
     Exit;
@@ -795,10 +791,9 @@ begin
 
   for i := 0 to High(dots) do
   begin
-    p := dots[i];
-    offsetV := Vec3(Self.Offset.X, Self.Offset.Y, 0);
+    p := dots[i] + Self.Offset;
     p := Self.Walker^.PointToMM(me, p, angle);
-    Result += Minimap.GetCuboidMS(p, Self.Size, offsetV, angle);
+    Result += Minimap.GetCuboidMS(p, Self.Size, [0,0,0], angle);
   end;
 end;
 
@@ -1445,6 +1440,7 @@ procedure TRSObjectV2.SetupEx(size: Vector3; coordinates: TPointArray);
 begin
   Self.SetupCoordinates(coordinates);
   Self.Size := size;
+  SetLength(Self.Rotations, Length(Self.Coordinates));
 end;
 
 function TRSObjectV2.Setup(size, height: Double; coordinates: TPointArray): TRSObjectV2; static; overload;

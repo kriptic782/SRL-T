@@ -78,8 +78,8 @@ procedure TRSMap.InternalSetup();
 var
   minimapImage, minimapSample: TMufasaBitmap;
 begin
-  minimapImage := TRSMap.GetCleanMinimap();
-  minimapSample := Self.ScaleMinimap(minimapImage, Self.Loader.Downscale);
+  minimapImage := Minimap.GetCleanMinimap();
+  minimapSample := Minimap.ScaleMinimap(minimapImage, Self.Loader.Downscale);
 
   Self.Cache := TMatchTemplateRGBCache.Create(Self.Loader.DownscaledMap.ToMatrix(), MinimapSample.ToMatrix());
 
@@ -372,146 +372,6 @@ end;
 
 
 (*
-## Map.CleanMinimap
-```pascal
-procedure TRSMap.CleanMinimap(bitmap: TMufasaBitmap); static;
-```
-Internal TRSMap method used to clear minimap dots from the minimap.
-You probably don't need to use this.
-*)
-procedure TRSMap.CleanMinimap(bitmap: TMufasaBitmap); static;
-
-  procedure _Find(P: TPoint);
-  var
-    Area: TBox;
-    Pixel: Int32;
-    X, Y: Int32;
-  begin
-    Area := [P.X - 5, P.Y - 5, P.X + 5, P.Y + 5];
-
-    for Y := Area.Y1 to Area.Y2 do
-      for X := Area.X1 to Area.X2 do
-        if bitmap.PointInBitmap(X, Y) then
-        begin
-          Pixel := bitmap.GetPixel(X, Y);
-
-          SetToleranceSpeed2Modifiers(0.001, 0.001);
-          if SimilarColors($FFFFFF, Pixel, 30) then
-            bitmap.SetPixel(X, Y, 0);
-
-          SetToleranceSpeed2Modifiers(0.05, 1);
-          if SimilarColors($00FFFF, Pixel, 30) then
-            bitmap.SetPixel(X, Y, 0);
-
-          SetToleranceSpeed2Modifiers(0.05, 1);
-          if SimilarColors($0000FF, Pixel, 30) then
-            bitmap.SetPixel(X, Y, 0);
-
-          SetToleranceSpeed2Modifiers(50, 100);
-          if SimilarColors($000000, Pixel, 1) then
-            bitmap.SetPixel(X, Y, 0);
-        end;
-  end;
-
-var
-  Dots: TPointArray;
-  Dot: TPoint;
-  TPA: TPointArray;
-begin
-  Dots := Minimap.GetDotsBitmap(bitmap, [ERSMinimapDot.NPC, ERSMinimapDot.ITEM, ERSMinimapDot.PLAYER]);
-
-  SetColorToleranceSpeed(2);
-
-  for Dot in Dots do
-    _Find(Dot);
-  _Find([bitmap.GetWidth() div 2, bitmap.GetHeight() div 2]); // our own player
-
-  SetColorToleranceSpeed(1);
-  SetToleranceSpeed2Modifiers(0.2, 0.2);
-
-  // TODO: account for tolerance
-  bitmap.ReplaceColor(255,0);
-  bitmap.ReplaceColor(284358,0);
-  bitmap.ReplaceColor(1127261,0);
-
-  bitmap.DrawPolyFilled(Minimap.GetPolygon().Offset(-Minimap.X1, -Minimap.Y1), True, 0);
-
-  bitmap.FindColors(TPA, 0);
-  bitmap.Blend(TPA.Sorted(bitmap.GetCenter()), 5);
-  bitmap.Pad(10);
-end;
-
-(*
-## Map.GetCleanMinimap()
-```pascal
-function TRSMap.GetCleanMinimap(): TMufasaBitmap; static;
-```
-Internal TRSMap method used to "screenshot" the minimap and clean it with TRSMap.CleanMinimap().
-You probably don't need to use this directly but you can see what it does in the following example.
-
-Example:
-```pascal
-Map.GetCleanMinimap().Debug();
-```
-*)
-function TRSMap.GetCleanMinimap(): TMufasaBitmap; static;
-var
-  Bitmap: TMufasaBitmap;
-begin
-  Bitmap := GetMufasaBitmap(BitmapFromClient(Minimap.Bounds()));
-  Bitmap.ReplaceColor(0, 1); // We need zero to be unique
-
-  TRSMap.CleanMinimap(Bitmap);
-
-  Result.Init();
-
-  Bitmap.RotateBitmapEx(Minimap.GetCompassAngle(False), False, True, Result);
-  Bitmap.Free();
-end;
-
-(*
-## Map.ScaleMinimap
-```pascal
-function TRSMap.ScaleMinimap(Bitmap: TMufasaBitmap; Scaling: Int32): TMufasaBitmap;
-```
-Internal TRSMap method used to scale down the minimap to whatever the TRSMap scale is.
-You probably don't need to use this directly but you can see what it does in the following example.
-
-Example:
-```pascal
-Map.SetupChunks([[18,56,22,60], [42,50, 46, 45]], [0, 1]);
-Map.ScaleMinimap(Map.GetCleanMinimap(), Map.Scaling).Debug();
-```
-*)
-function TRSMap.ScaleMinimap(Bitmap: TMufasaBitmap; Scaling: Int32): TMufasaBitmap;
-var
-  RADIUS = 67;
-var
-  P: TPoint;
-  Temp: TMufasaBitmap;
-  TPA: TPointArray;
-begin
-  Temp := Bitmap.Copy();
-
-  P := Temp.GetCenter();
-  if RSClient.Mode = ERSClientMode.FIXED then
-    P := P.Offset(0, -8).Rotate(-Minimap.GetCompassAngle(False), P); // fixed
-
-  Temp.DrawCircleFilled(P.X, P.Y, RADIUS, True, 0);
-
-  RADIUS += 3;
-
-  Temp.Crop(P.X - RADIUS, P.Y - RADIUS, P.X + RADIUS, P.Y + RADIUS);
-  Temp.FindColors(TPA, 0);
-  Temp.Blend(TPA.Sorted(Temp.GetCenter()), 3);
-  Temp.DrawCircleFilled(Temp.GetCenter().X, Temp.GetCenter().Y, RADIUS, True, 0);
-
-  Result := Temp.Downsample(Scaling, False);
-
-  Temp.Free();
-end;
-
-(*
 ## Map.ScaledSearch
 ```pascal
 function TRSMap.ScaledSearch(bitmap: TMufasaBitmap; samples: Int32): TPointArray;
@@ -528,7 +388,7 @@ var
   matrix: TSingleMatrix;
   n: Int32;
 begin
-  sample := Self.ScaleMinimap(bitmap, Self.Loader.Downscale);
+  sample := Minimap.ScaleMinimap(bitmap, Self.Loader.Downscale);
   matrix := MatchTemplateMask(Self.Cache, sample.ToMatrix(), TM_CCOEFF_NORMED);
 
   while Length(Result) < samples do
@@ -621,7 +481,7 @@ begin
   Self.Region := [];
   Self.Similarity := 0;
 
-  cleanMinimap := Self.GetCleanMinimap();
+  cleanMinimap := Minimap.GetCleanMinimap();
 
   tpa := Self.ScaledSearch(cleanMinimap, SAMPLES);
   for i := 0 to High(tpa) do
@@ -904,7 +764,7 @@ begin
   map.LineTo(Point(x, 0), Point(x, y2 - y1), $00FF00);
   map.DrawBox([x - 2, y - 2, x + 2, y + 2], $FFFFFF);
 
-  cleanMinimap := Self.ScaleMinimap(TRSMap.GetCleanMinimap(), 1);
+  cleanMinimap := Minimap.ScaleMinimap(Minimap.GetCleanMinimap(), 1);
 
   p := cleanMinimap.GetCenter();
   if RSClient.Mode = ERSClientMode.FIXED then

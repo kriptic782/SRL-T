@@ -105,6 +105,70 @@ begin
 end;
 
 
+function TMufasaBitmap.Mirror(style: TBmpMirrorStyle): TMufasaBitmap;
+begin
+  client.getMBitmaps().AddBMP(Self);
+  Result := GetMufasaBitmap(CreateMirroredBitmapEx(Self.getIndex(), style));
+end;
+
+
+function TMufasaBitmap.RotateClockWise(): TMufasaBitmap;
+var
+  tmp: TMufasaBitmap;
+begin
+  tmp := Self.Mirror(TBmpMirrorStyle.MirrorLine);
+  Result := tmp.Mirror(TBmpMirrorStyle.MirrorWidth);
+  tmp.Free();
+end;
+
+function TMufasaBitmap.RotateClockWise(times: Int32): TMufasaBitmap; overload;
+var
+  i: Int32;
+  tmp1, tmp2: TMufasaBitmap;
+begin
+  tmp1 := Self.Copy();
+  if times < 1 then
+    Exit(tmp1);
+
+  for i := 1 to times do
+  begin
+    tmp2 := tmp1.RotateClockWise();
+    tmp1.Free();
+    tmp1 := tmp2.Copy();
+  end;
+
+  Result := tmp1;
+end;
+
+function TMufasaBitmap.RotateCounterClockWise(): TMufasaBitmap;
+var
+  tmp: TMufasaBitmap;
+begin
+  tmp := Self.Mirror(TBmpMirrorStyle.MirrorLine);
+  Result := tmp.Mirror(TBmpMirrorStyle.MirrorHeight);
+  tmp.Free();
+end;
+
+function TMufasaBitmap.RotateCounterClockWise(times: Int32): TMufasaBitmap; overload;
+var
+  i: Int32;
+  tmp1, tmp2: TMufasaBitmap;
+begin
+  tmp1 := Self.Copy();
+  if times < 1 then
+    Exit(tmp1);
+
+  for i := 1 to times do
+  begin
+    tmp2 := tmp1.RotateCounterClockWise();
+    tmp1.Free();
+    tmp1 := tmp2.Copy();
+  end;
+
+  Result := tmp1;
+end;
+
+
 function TMufasaBitmap.Data(): TIntegerArray;
 begin
   SetLength(Result, Self.getWidth()*Self.getHeight());
