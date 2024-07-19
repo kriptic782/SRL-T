@@ -636,9 +636,11 @@ begin
 
   Self.FindEx(cuboids, atpa);
 
-  bitmap.DrawATPA(atpa);
   if atpa <> [] then
+  begin
+    bitmap.DrawATPA(atpa);
     bitmap.DrawTPA(atpa[0], $0);
+  end;
 
   bitmap.DrawCuboidArray(cuboids, $00FFFF);
 end;
@@ -883,6 +885,7 @@ begin
   h := Self.Walker^.Height(me);
 
   mmPoints := Self.MapToMM(me, angle);
+
   filters := Self.Walker^.FiltersToMM(me, Self.DotFilters, angle);
   filters.Draw(bitmap);
 
@@ -902,9 +905,11 @@ begin
 
   Self.FindEx(cuboids, atpa);
 
-  bitmap.DrawATPA(atpa);
   if atpa <> [] then
+  begin
+    bitmap.DrawATPA(atpa);
     bitmap.DrawTPA(atpa[0], $0);
+  end;
 
   bitmap.DrawCuboidArray(cuboids, $00FFFF);
 end;
@@ -1470,11 +1475,12 @@ begin
   end;
 
   Self.Filter.Walker := True;
+  Self.MapObjectType := ERSMapObjectType.NPC;
 end;
 
 procedure TRSNPCV2.SetupEx(radius: Int32; size: Vector3; coordinates: TPointArray);
 begin
-  Self.SetupCoordinates(coordinates);
+  Self.SetupCoordinates([radius], coordinates);
   Self.Size := size;
 end;
 
@@ -1485,7 +1491,7 @@ end;
 
 function TRSNPCV2.Setup(radius: Int32; height: Double; coordinates: TPointArray): TRSNPCV2; static; overload;
 begin
-  Result.Setup(radius, 1, height, coordinates);
+  Result := TRSNPCV2.Setup(radius, 1, height, coordinates);
 end;
 
 procedure TRSNPCV2.SetupEx(radii: TIntegerArray; shape: Vector3; coordinates: TPointArray); overload;
