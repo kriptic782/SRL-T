@@ -423,6 +423,29 @@ begin
 end;
 
 function TRSGrandExchange.FindSearch(Item: String; out B: TBox): Boolean;
+  function MatchSearchResult(SearchText : tStringArray; Item: String): Boolean;
+  var
+    BadChars : String = "'.,-<>?+=()/\*@![]|#_:";
+    BadCount : Int32;
+    C : Char;
+  begin
+    if SearchText.Merge(' ') = Item then Exit(True);
+
+    // If there wasn't a match, maybe a multi-line entry is overlapping
+    if length(SearchText) = 2 then
+      if length(SearchText.Merge(' ')) = length(item) then
+      begin
+        for C in BadChars do if (not (C in Item)) and (C in SearchText[1]) then BadCount += 1;
+        Result := StringMatch(SearchText.Merge(' '), item) >= ((length(item)-BadCount)/length(item));
+
+        if Result then
+        begin
+          Self.DebugLn('TRSGrandExchange.FindSearch(): WARNING - OCR failure detected: ' + SearchText.Merge(' '));
+          exit();
+        end;
+      end;
+  end;
+
 var
   searchGrid : tBoxArray := grid(3,3, 161, 32, point(0,0), point(Chat.X1 + 11, Chat.Y1 + 29));
 begin
@@ -430,7 +453,7 @@ begin
     Item[1] := UpCase(Item[1]);
 
   for b in searchGrid do
-    if OCR.RecognizeLines(b, TOCRColorFilter.Create([$000000]), RS_FONT_PLAIN_12).Merge(' ') = Item then
+    if MatchSearchResult(OCR.RecognizeLines(b, TOCRColorFilter.Create([$000000]), RS_FONT_PLAIN_12), Item) then
     begin
       result := True;
       break;
