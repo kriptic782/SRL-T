@@ -1,3 +1,12 @@
+## [7.4.7](https://github.com/Torwent/SRL-T/compare/v7.4.6...v7.4.7) (2024-07-19)
+
+
+### Bug Fixes
+
+* **TRSNPCV2:** fixes to the setup methods ([56bd7ab](https://github.com/Torwent/SRL-T/commit/56bd7ab3321a9c1efe03de6279988d198f2d1af6))
+
+
+
 ## [7.4.6](https://github.com/Torwent/SRL-T/compare/v7.4.5...v7.4.6) (2024-07-18)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **webgraph:** added a inverted way of blocking nodes/paths ([82eb301](https://github.com/Torwent/SRL-T/commit/82eb301d6e1691a0ab51effaa77149ced67180a1))
-
-
-
-## [7.4.2](https://github.com/Torwent/SRL-T/compare/v7.4.1...v7.4.2) (2024-07-16)
-
-
-### Bug Fixes
-
-* **tpaex:** proper astar algorithm in the library ([0706a79](https://github.com/Torwent/SRL-T/commit/0706a7940ea9057568a1c942d09f8aac5797081c))
 
 
 
