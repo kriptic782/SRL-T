@@ -1,3 +1,12 @@
+## [7.4.8](https://github.com/Torwent/SRL-T/compare/v7.4.7...v7.4.8) (2024-07-19)
+
+
+### Bug Fixes
+
+* force bump ([0cfa7d0](https://github.com/Torwent/SRL-T/commit/0cfa7d0d7b6b92ebb6dc997f3ad6693e9bc98a44))
+
+
+
 ## [7.4.7](https://github.com/Torwent/SRL-T/compare/v7.4.6...v7.4.7) (2024-07-19)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMapObjects:** disable Filter.Finder for banks ([58f3701](https://github.com/Torwent/SRL-T/commit/58f3701dc2cb0322e79ed752adfbb00aacccd8a7))
-
-
-
-## [7.4.3](https://github.com/Torwent/SRL-T/compare/v7.4.2...v7.4.3) (2024-07-17)
-
-
-### Bug Fixes
-
-* **webgraph:** added a inverted way of blocking nodes/paths ([82eb301](https://github.com/Torwent/SRL-T/commit/82eb301d6e1691a0ab51effaa77149ced67180a1))
 
 
 
