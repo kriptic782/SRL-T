@@ -229,7 +229,7 @@ begin
   Result := AStarTPAEx(Self, matrix, start, goal, True);
   bmp.Init();
   bmp.DrawMatrix(matrix, colorMapID);
-  bmp.Debug();
+  ShowBitmap(bmp);
   bmp.Free();
 end;
 
@@ -316,7 +316,6 @@ procedure TPointArray.WeightedSort(weights: TIntegerArray; iLo, iHi: Int32; sort
 var
   lo, hi, mid: Int32;
 begin
-  if (Length(weights) <> Length(self)) then Exit;
   lo := iLo;
   hi := iHi;
   mid := weights[(lo + hi) shr 1];
@@ -335,14 +334,14 @@ begin
     if (lo <= hi) then
     begin
       Swap(weights[lo], weights[hi]);
-      Swap(self[lo], self[hi]);
+      Swap(Self[lo], Self[hi]);
       Inc(lo);
       Dec(hi);
     end;
   until lo > hi;
 
-  if (hi > iLo) then self.WeightedSort(weights, iLo, hi, sortUp);
-  if (lo < iHi) then self.WeightedSort(weights, lo, iHi, sortUp);
+  if (hi > iLo) then Self.WeightedSort(weights, iLo, hi, sortUp);
+  if (lo < iHi) then Self.WeightedSort(weights, lo, iHi, sortUp);
 end;
 
 function TPointArray.WeightedSorted(weights: TIntegerArray; iLo, iHi: Int32; sortUp: Boolean): TPointArray; constref;

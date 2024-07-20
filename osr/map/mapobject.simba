@@ -415,19 +415,24 @@ end;
 procedure TCoordsAngle.Sort(pt: TPoint);
 var
   len, i: Int32;
-  weights: TIntegerArray;
+  w1, w2: TIntegerArray;
 begin
   len := Length(Self.Coordinates);
   if len <> Length(Self.Angles) then
     TerminateScript('TCoordsAngle.FilterCircle() requires both arrays to be the same length.');
 
-  SetLength(weights, len);
+  SetLength(w1, len);
+  SetLength(w2, len);
   for i := 0 to High(Self.Coordinates) do
-    weights[i] := Sqr(pt.X - Self.Coordinates[i].X) + Sqr(pt.Y - Self.Coordinates[i].Y);
+  begin
+    w1[i] := Sqr(pt.X - Self.Coordinates[i].X) + Sqr(pt.Y - Self.Coordinates[i].Y);
+    w2[i] := w1[i];
+  end;
 
   len -= 1;
-  Self.Coordinates.WeightedSort(weights, 0, len, True);
-  Self.Angles.WeightedSort(weights, 0, len, True);
+
+  Self.Coordinates.WeightedSort(w1, 0, len, True);
+  Self.Angles.WeightedSort(w2, 0, len, True);
 end;
 
 type
@@ -557,6 +562,7 @@ begin
   Locations.FilterCircle([me.X, me.Y, 85]);
   if (Length(Locations.Coordinates) = 0) or (Length(Locations.Angles) = 0) then
     Exit;
+
   Locations.Sort(me);
 
   for i := 0 to High(Locations.Coordinates) do
@@ -564,7 +570,7 @@ begin
     p := Locations.Coordinates[i] + Self.Offset;
     diff := -(h-Self.Walker^.Height(p));
     p := Self.Walker^.PointToMM(me, p, angle);
-    Result += Minimap.GetCuboidMS(p + [Round(0.15*diff), Round(0.11*diff)], Self.Size, [0,0,diff], angle - Locations.Angles[i]);
+    Result += Minimap.GetCuboidMS(p + [Round(0.15*diff), Round(0.11*diff)], Self.Size, [0,0,diff], angle - radians(Locations.Angles[i]));
   end;
 end;
 
@@ -618,6 +624,9 @@ var
   atpa: T2DPointArray;
   h: Single;
 begin
+  if Self.Walker = nil then
+    TerminateScript('Walker not set for ' + Self.Name + ' object.');
+
   me := Self.Walker^.Position();
   angle := Minimap.GetCompassAngle(False);
   h := Self.Walker^.Height(me);
