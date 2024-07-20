@@ -1,3 +1,12 @@
+## [7.4.9](https://github.com/Torwent/SRL-T/compare/v7.4.8...v7.4.9) (2024-07-20)
+
+
+### Bug Fixes
+
+* several small fixes to TRSObjectsV2 ([f21c5ac](https://github.com/Torwent/SRL-T/commit/f21c5acab63bdaa740b77ec96da25c844bf77fa7))
+
+
+
 ## [7.4.8](https://github.com/Torwent/SRL-T/compare/v7.4.7...v7.4.8) (2024-07-19)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **RSClient:** attempt to revalidate a client whose window handle has changed ([aba85a4](https://github.com/Torwent/SRL-T/commit/aba85a457da1f62c9c9180b81c7fdaf283f7247d))
-
-
-
-## [7.4.4](https://github.com/Torwent/SRL-T/compare/v7.4.3...v7.4.4) (2024-07-17)
-
-
-### Bug Fixes
-
-* **TRSMapObjects:** disable Filter.Finder for banks ([58f3701](https://github.com/Torwent/SRL-T/commit/58f3701dc2cb0322e79ed752adfbb00aacccd8a7))
 
 
 
