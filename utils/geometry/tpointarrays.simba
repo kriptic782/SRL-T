@@ -316,6 +316,7 @@ procedure TPointArray.WeightedSort(weights: TIntegerArray; iLo, iHi: Int32; sort
 var
   lo, hi, mid: Int32;
 begin
+  if (Length(weights) <> Length(Self)) then Exit;
   lo := iLo;
   hi := iHi;
   mid := weights[(lo + hi) shr 1];

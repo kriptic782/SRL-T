@@ -90,6 +90,7 @@ begin
       Result += i;
 end;
 
+
 function TStringArray.Contains(const value: String): Boolean; constref;
 begin
   Result := Self.Find(value) > -1;

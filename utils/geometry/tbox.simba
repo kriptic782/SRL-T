@@ -343,3 +343,24 @@ begin
   Result := testSet;
   FilterPointsBox(Result, Self.X1, Self.Y1, Self.X2, Self.Y2);
 end;
+
+
+operator > (left, right: TBox): Boolean;
+begin
+  Result := left.Area() > right.Area();
+end;
+
+operator < (left, right: TBox): Boolean;
+begin
+  Result := left.Area() < right.Area();
+end;
+
+operator >= (left, right: TBox): Boolean;
+begin
+  Result := left.Area() >= right.Area();
+end;
+
+operator <= (left, right: TBox): Boolean;
+begin
+  Result := left.Area() <= right.Area();
+end;

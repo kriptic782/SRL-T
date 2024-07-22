@@ -1,3 +1,4 @@
+
 (*
 # Tool Webber
 Run it to launch the tool. This is the tool used to maked TRSWalker WebGraphs.
@@ -20,6 +21,7 @@ Keep in mind that unless you send a PR with your additions, they will be lost wi
 {$I WaspLib/osr.simba}
 {$H-}
 const
+  FILE_NAME: String = 'Images/cg.png';
   CHUNK: TBox = [49,54,50,53];
   PLANE: Int32 = 0;
   GRAPH_OFFSET: TPoint = [0, 0];
@@ -62,9 +64,15 @@ begin
   f := [CHUNK.X2, CHUNK.Y2];
   name := ToStr(s.X) + '-' + ToStr(s.Y) + '_' + ToStr(f.X) + '-' + ToStr(f.Y);
 
-  Self.Bitmap := System.Map.Loader.Loader.GetMap(s, f, PLANE, ERSMapType.NORMAL);
+  if FILE_NAME = '' then
+    Self.Bitmap := System.Map.Loader.Loader.GetMap(s, f, PLANE, ERSMapType.NORMAL)
+  else
+  begin
+    Self.Bitmap.Init();
+    Self.Bitmap.LoadFromFile(FILE_NAME);
+  end;
 
-  if (NODES_STR = '') or (PATHS_STR = '') or (NAMES_STR = '') then
+  if (NODES_STR = '') and (PATHS_STR = '') and (NAMES_STR = '') then
   begin
     cbitmap     := System.Map.Loader.Loader.GetMap(s, f, PLANE, ERSMapType.COLLISION);
     Self.Graph  := System.Map.Loader.Loader.GetGraph(name, PLANE, cbitmap);
@@ -76,6 +84,8 @@ begin
   Self.Graph.LoadPathsFromString(PATHS_STR);
   Self.Graph.LoadNamesFromString(NAMES_STR);
 
+  if Length(Self.Graph.Nodes) <> Length(Self.Graph.Names) then
+    SetLength(Self.Graph.Names, Length(Self.Graph.Nodes));
 end;
 
 function TWebberForm.BoxIsValid(): Boolean;

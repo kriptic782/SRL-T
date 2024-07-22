@@ -29,7 +29,7 @@ type
     AUTOCHAT    //Chat autochat (only for the public chat button)
   );
 
-function TRSChatButtons.GetButtons: TRSButtonArray;
+function TRSChatButtons.GetButtons(): TRSButtonArray;
 var
   i: Int32;
   Boxes: TBoxArray;
@@ -55,7 +55,7 @@ begin
 end;
 
 
-function TRSChatButtons.GetActive: ERSChatButton;
+function TRSChatButtons.GetActive(): ERSChatButton;
 var
   Buttons: TRSButtonArray := Self.GetButtons();
   i: Int32;
@@ -66,9 +66,9 @@ begin
       Exit(ERSChatButton((i+1)));
 end;
 
-function TRSChatButtons.IsOpen: Boolean;
+function TRSChatButtons.IsOpen(): Boolean;
 begin
-  Result := Self.GetActive = ERSChatButton.CLOSED;
+  Result := Self.GetActive() = ERSChatButton.CLOSED;
 end;
 
 
@@ -100,12 +100,12 @@ begin
 end;
 
 
-function TRSChatButtons.IsActive(Button: ERSChatButton): Boolean;
+function TRSChatButtons.IsActive(button: ERSChatButton): Boolean;
 begin
   Result := Self.GetButton(Button).Enabled;
 end;
 
-function TRSChatButtons.Open(Button: ERSChatButton): Boolean;
+function TRSChatButtons.Open(button: ERSChatButton): Boolean;
 begin
   Result := Self.GetButton(Button).Enable;
 end;

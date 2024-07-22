@@ -806,7 +806,7 @@ begin
   try
     path := Self.WebGraph^.PathBetweenEx(me, destination, pathRandomness, 4);
   except
-    if Assigned(Self.MapImage) then
+    if Assigned(Self.MapImage) and (Length(Self.WebGraph^.Nodes) > 0) then
     begin
       bmp := Self.MapImage.Copy();
       tmp := Self.WebGraph^;

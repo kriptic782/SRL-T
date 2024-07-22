@@ -291,48 +291,48 @@ end;
 
 // -----------------------------------------------------------------
 // Operator overloads
-operator + (L, R: TPoint): TPoint;
+operator + (left, right: TPoint): TPoint;
 begin
-  Result.X := L.X + R.X;
-  Result.Y := L.Y + R.Y;
+  Result.X := left.X + right.X;
+  Result.Y := left.Y + right.Y;
 end;
 
-operator += (var L: TPoint; R: TPoint): TPoint;
+operator += (var left: TPoint; right: TPoint): TPoint;
 begin
-  L.X += R.X;
-  L.Y += R.Y;
-  Result := L;
+  left.X += right.X;
+  left.Y += right.Y;
+  Result := left;
 end;
 
-operator - (L, R:TPoint): TPoint;
+operator - (left, right:TPoint): TPoint;
 begin
-  Result.X := L.X - R.X;
-  Result.Y := L.Y - R.Y;
+  Result.X := left.X - right.X;
+  Result.Y := left.Y - right.Y;
 end;
 
-operator -= (var L: TPoint; R: TPoint): TPoint;
+operator -= (var left: TPoint; right: TPoint): TPoint;
 begin
-  L.X -= R.X;
-  L.Y -= R.Y;
-  Result := L;
+  left.X -= right.X;
+  left.Y -= right.Y;
+  Result := left;
 end;
 
-operator * (L: TPoint; R: Double): TPoint;
+operator * (left: TPoint; right: Double): TPoint;
 begin
-  Result.X := Round(L.X * R);
-  Result.Y := Round(L.Y * R);
+  Result.X := Round(left.X * right);
+  Result.Y := Round(left.Y * right);
 end;
 
-operator *= (var L: TPoint; R: Double): TPoint;
+operator *= (var left: TPoint; right: Double): TPoint;
 begin
-  L.X := Round(L.X * R);
-  L.Y := Round(L.Y * R);
-  Result := L;
+  left.X := Round(left.X * right);
+  left.Y := Round(left.Y * right);
+  Result := left;
 end;
 
-operator in(Left: TPoint; Right: TBox): Boolean;
+operator in(left: TPoint; right: TBox): Boolean;
 begin
-  Result := PointInBox(Left, Right);
+  Result := PointInBox(left, right);
 end;
 
 operator in(left: TPoint; right: TRectangle): Boolean;
@@ -340,10 +340,12 @@ begin
   Result := TSRL.PointInRect(left, right);
 end;
 
-operator + (Left, Right: TBox): TBox;
+operator + (left, right: TBox): TBox;
 begin
-  Result.X1 := Min(Min(Left.X1, Right.X2), Min(Right.X1, Left.X2));
-  Result.Y1 := Min(Min(Left.Y1, Right.Y2), Min(Right.Y1, Left.Y2));
-  Result.X2 := Max(Max(Left.X1, Right.X2), Max(Right.X1, Left.X2));
-  Result.Y2 := Max(Max(Left.Y1, Right.Y2), Max(Right.Y1, Left.Y2));
+  Result.X1 := Min(Min(left.X1, right.X2), Min(right.X1, left.X2));
+  Result.Y1 := Min(Min(left.Y1, right.Y2), Min(right.Y1, left.Y2));
+  Result.X2 := Max(Max(left.X1, right.X2), Max(right.X1, left.X2));
+  Result.Y2 := Max(Max(left.Y1, right.Y2), Max(right.Y1, left.Y2));
 end;
+
+

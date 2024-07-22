@@ -105,6 +105,7 @@ begin
   end;
 end;
 
+
 function TIntegerArray.Find(const Value: Integer): Integer; constref;
 begin
   for Result := 0 to High(Self) do
@@ -125,6 +126,32 @@ begin
       Result[Inc(top)-1] := i;
     end;
 end;
+
+
+function TIntegerArray.Contains(const value: Integer): Boolean; constref;
+begin
+  Result := Self.Find(value) > -1;
+end;
+
+function TIntegerArray.ContainsAny(const values: TIntegerArray): Boolean; constref;
+var
+  value: Integer;
+begin
+  for value in values do
+    if Self.Contains(value) then
+      Exit(True);
+end;
+
+function TIntegerArray.ContainsAll(const values: TIntegerArray): Boolean; constref;
+var
+  value: Integer;
+begin
+  for value in values do
+    if not Self.Contains(value) then
+      Exit;
+  Result := True;
+end;
+
 
 procedure TIntegerArray.Reverse();
 var
@@ -166,6 +193,7 @@ begin
     inc(r);
   end;
 end;
+
 
 procedure TIntegerArray.Sort();
 begin
@@ -353,6 +381,7 @@ begin
   ClearSameIntegers(Result);
 end;
 
+
 operator in(Left: Int32; constref Right: TIntegerArray): Boolean;
 var
   i: Int32;
@@ -370,6 +399,7 @@ begin
     if Right[i] = Round(Left) then
       Exit(True);
 end;
+
 
 procedure T2DIntegerArray.Append(const Value: TIntegerArray);
 var top:Int32;
@@ -439,6 +469,7 @@ begin
     Self := Self + Copy(Arr[i]);
 end;
 
+
 function T2DIntegerArray.Find(const Value: TIntegerArray): Integer; constref;
 begin
   for Result:=0 to High(Self) do
@@ -455,6 +486,7 @@ begin
     if Value.Equals(Self[i]) then
       Result += i;
 end;
+
 
 function T2DIntegerArray.Reversed(): T2DIntegerArray;
 var
@@ -496,6 +528,7 @@ begin
     inc(lo);
   end;
 end;
+
 
 function T2DIntegerArray.Combine(Other: T2DIntegerArray): T2DIntegerArray; constref;
 begin

@@ -172,6 +172,9 @@ begin
 
   for l := 0 to High(lines) do
   begin
+    if lines[l].I = -1 then Continue;
+    if lines[l].J = -1 then Continue;
+
     dn1 := Hypot(Self.Nodes[lines[l].I].x-P.x, Self.Nodes[lines[l].I].y-P.y);
     dn2 := Hypot(Self.Nodes[lines[l].J].x-P.x, Self.Nodes[lines[l].J].y-P.y);
 
@@ -180,6 +183,9 @@ begin
     else
       Result += lines[l].J;
   end;
+
+  if Length(Result) = 0 then
+    Exit;
 
   SetLength(weights, Length(Result));
 
