@@ -1,3 +1,12 @@
+## [7.4.11](https://github.com/Torwent/SRL-T/compare/v7.4.10...v7.4.11) (2024-07-23)
+
+
+### Bug Fixes
+
+* removed the global hint removal ([e564e21](https://github.com/Torwent/SRL-T/commit/e564e216431b1aebbbccf26ddc459d8c12e322f2))
+
+
+
 ## [7.4.10](https://github.com/Torwent/SRL-T/compare/v7.4.9...v7.4.10) (2024-07-22)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSNPCV2:** fixes to the setup methods ([56bd7ab](https://github.com/Torwent/SRL-T/commit/56bd7ab3321a9c1efe03de6279988d198f2d1af6))
-
-
-
-## [7.4.6](https://github.com/Torwent/SRL-T/compare/v7.4.5...v7.4.6) (2024-07-18)
-
-
-### Bug Fixes
-
-* **Minimap:** read notes ([be4fade](https://github.com/Torwent/SRL-T/commit/be4fadefb17e88c79601cc58cabebdb9503ab2f0))
 
 
 
