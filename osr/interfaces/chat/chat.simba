@@ -544,13 +544,16 @@ if Chat.LeveledUp then
   Chat.ClickContinue(True);
 ```
 *)
+{$H-}
 function TRSChat.LeveledUp(): Boolean;
 begin
   //Overriden in stats.simba
 end;
+{$H+}
+
 (*
 ## var Chat
-  Global Chat variable.
+Global Chat variable.
 *)
 var
   Chat: TRSChat;

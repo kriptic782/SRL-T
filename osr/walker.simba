@@ -93,10 +93,12 @@ procedure TRSWalkerV2.Setup(
   mapImage: TMufasaBitmap
 );
   type TRSWalkerV2 = TRSWalkerV2;
+  {$H-}
   function TRSWalkerV2.DummyHeight(p: TPoint = [-1,-1]): Single;
   begin
     Result := 0;
   end;
+  {$H+}
 
 begin
   Self.Position := @position;

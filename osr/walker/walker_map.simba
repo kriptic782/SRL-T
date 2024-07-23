@@ -9,10 +9,12 @@ This file contains internal methods used by walker.
 {$ENDIF}
 
 // not a const, allow people to edit.
+{$H-}
 var
   WALKER_DIR = {$MACRO CURRENT_DIRECTORY};
   WALKER_MAP = {$MACRO CURRENT_DIRECTORY} + 'map.png';
   WALKER_MAPS = {$MACRO CURRENT_DIRECTORY} + 'maps' + DirectorySeparator;
+{$H+}
 
 type
 (*

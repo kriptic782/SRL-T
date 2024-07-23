@@ -226,7 +226,7 @@ var
   matrix: TSingleMatrix;
   bmp: TMufasaBitmap;
 begin
-  Result := AStarTPAEx(Self, matrix, start, goal, True);
+  Result := AStarTPAEx(Self, matrix, start, goal, diagonalTravel);
   bmp.Init();
   bmp.DrawMatrix(matrix, colorMapID);
   ShowBitmap(bmp);
@@ -235,7 +235,7 @@ end;
 
 function TPointArray.AStar(start, goal: TPoint; diagonalTravel: Boolean = True): TPointArray;
 begin
-  Result := AStarTPA(Self, start, goal, True);
+  Result := AStarTPA(Self, start, goal, diagonalTravel);
 end;
 
 

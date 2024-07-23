@@ -930,4 +930,4 @@ var
 ## var Map
 Global TRSMap variable
 *)
-  Map: TRSMap;
+  {$H-}Map: TRSMap;{$H+}

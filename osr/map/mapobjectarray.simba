@@ -611,4 +611,4 @@ begin
 end;
 
 var
-  Banks: TRSBanks;
+  {$H-}Banks: TRSBanks;{$H+}

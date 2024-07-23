@@ -1506,6 +1506,7 @@ end;
 procedure TRSNPCV2.SetupEx(radii: TIntegerArray; shape: Vector3; coordinates: TPointArray); overload;
 begin
   Self.SetupCoordinates(radii, coordinates);
+  Self.Size := shape;
 end;
 
 function TRSNPCV2.Setup(radii: TIntegerArray; size, height: Double; coordinates: TPointArray): TRSNPCV2; static; overload;

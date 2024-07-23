@@ -310,6 +310,7 @@ begin
   end;
 end;
 
+{$H-}
 (*
 ## MainScreen.NormalizeDistance
 ```pascal
@@ -368,6 +369,7 @@ function TRSMainScreen.PointToMM(MS: TPoint; Height: Int32 = 0; Accuracy:Double 
 begin
   // Implemented in minimaptoms.simba
 end;
+{$H+}
 
 (*
 ## Mainscreen.FindObject()

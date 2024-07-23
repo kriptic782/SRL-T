@@ -1,10 +1,4 @@
 {$DEFINE SRL_OSR}
-
-{$IFNDEF SRL_HINTS}
-  {$IFDEF HINTS}{$DEFINE SRL_HAD_HINTS}{$ENDIF}
-  {$HINTS OFF}
-{$ENDIF}
-
 {$I utils.simba}
 
 procedure TSRL.Setup();
@@ -13,10 +7,12 @@ begin
   Self.IsSetup := True;
 end;
 
-procedure TSRL.Debug(Bitmap: TMufasaBitmap); overload;
+{$H-}
+procedure TSRL.Debug(bitmap: TMufasaBitmap); overload;
 begin
   { override me to debug things }
 end;
+{$H+}
 
 procedure TSRL.Debug(); overload;
 var

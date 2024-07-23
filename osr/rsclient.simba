@@ -89,7 +89,7 @@ begin
         Break;
       end;
 
-    for proc in GetProcesses() do
+    for proc in {$H-}GetProcesses(){$H+} do
       if proc.PID = pid then
       begin
         WriteLn('PID proccess: ', proc);
@@ -209,7 +209,7 @@ begin
         Break(2);
   end;
 
-  for proc in GetProcesses() do
+  for proc in {$H-}GetProcesses(){$H+} do
   begin
     if proc.PID <> pid then Continue;
     b := win.GetBounds();
