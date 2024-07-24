@@ -1,3 +1,12 @@
+## [7.4.13](https://github.com/Torwent/SRL-T/compare/v7.4.12...v7.4.13) (2024-07-24)
+
+
+### Bug Fixes
+
+* SRL.IsSetup is now only set at the end of SRL.Setup ([1827625](https://github.com/Torwent/SRL-T/commit/18276253c4abe023aaf631971c802518a7d499e0))
+
+
+
 ## [7.4.12](https://github.com/Torwent/SRL-T/compare/v7.4.11...v7.4.12) (2024-07-24)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * several small fixes to TRSObjectsV2 ([f21c5ac](https://github.com/Torwent/SRL-T/commit/f21c5acab63bdaa740b77ec96da25c844bf77fa7))
-
-
-
-## [7.4.8](https://github.com/Torwent/SRL-T/compare/v7.4.7...v7.4.8) (2024-07-19)
-
-
-### Bug Fixes
-
-* force bump ([0cfa7d0](https://github.com/Torwent/SRL-T/commit/0cfa7d0d7b6b92ebb6dc997f3ad6693e9bc98a44))
 
 
 
