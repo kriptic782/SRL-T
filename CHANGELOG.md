@@ -1,3 +1,12 @@
+## [7.4.12](https://github.com/Torwent/SRL-T/compare/v7.4.11...v7.4.12) (2024-07-24)
+
+
+### Bug Fixes
+
+* read notes ([f7a4675](https://github.com/Torwent/SRL-T/commit/f7a46757ee4a661fd0fb5d7ff3ed7273dc3e5039))
+
+
+
 ## [7.4.11](https://github.com/Torwent/SRL-T/compare/v7.4.10...v7.4.11) (2024-07-23)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * force bump ([0cfa7d0](https://github.com/Torwent/SRL-T/commit/0cfa7d0d7b6b92ebb6dc997f3ad6693e9bc98a44))
-
-
-
-## [7.4.7](https://github.com/Torwent/SRL-T/compare/v7.4.6...v7.4.7) (2024-07-19)
-
-
-### Bug Fixes
-
-* **TRSNPCV2:** fixes to the setup methods ([56bd7ab](https://github.com/Torwent/SRL-T/commit/56bd7ab3321a9c1efe03de6279988d198f2d1af6))
 
 
 
