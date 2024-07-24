@@ -133,7 +133,8 @@ begin
       'Unsupported client!',
       'This client is not supported!' + LineEnding +
       'Only the 32 bits legacy client is supported!'+ LineEnding + LineEnding +
-      'Click "Ok" to downlod the supported client.', TMsgDlgType.mtError, [mbOk]) then
+      'Click "Ok" to downlod the supported client.', TMsgDlgType.mtError, [mbOk, mbCancel]) = 1
+    then
       OpenWebPage('https://oldschool.runescape.com/download?force_test=control');
     Self.Fatal(GetExceptionMessage());
   end;

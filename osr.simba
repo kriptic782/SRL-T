@@ -4,7 +4,6 @@
 procedure TSRL.Setup();
 begin
   { override me to setup things }
-  Self.IsSetup := True;
 end;
 
 {$H-}
@@ -143,6 +142,8 @@ begin
     Exit;
     
   inherited;
+
+  Self.IsSetup := True;
 end;
 
 {$SCOPEDENUMS OFF}
