@@ -45,14 +45,14 @@ end;
 
     MinEnergy, ClickRandomness, MouseAheadTimer: Int32;
 
-    ScreenWalk, AdaptiveWalk, FancyMouse, Walking: Boolean;
+    ScreenWalk, AdaptiveWalk, FancyMouse, Walking, RedClicked: Boolean;
 
     AdaptiveToggleDistances: TPoint;
 
     PathIndex: Int32;
     Path: TPointArray;
 
-    WalkUpText: TStringArray;
+    WalkUpText, TargetUpText, ActionUpText: TStringArray;
 
     WebGraph: ^TWebGraph;
     MapImage: TMufasaBitmap;
@@ -371,6 +371,22 @@ begin
   until Timeout.IsFinished() or Countdown.IsFinished() or (Position.Current.DistanceTo(Destination) <= waitUntilDistance);
 end;
 
+
+procedure TRSWalkerV2.AntibanClick(randomness: Int32);
+var
+  i: Int32;
+begin
+  Mouse.Click(MOUSE_LEFT);
+
+  // 15% chance of spam clicking
+  if (randomness > 0) and (Random() < 0.15) then
+    for i := 0 to Random(3) do
+    begin
+      Mouse.Click(Mouse.Position(), MOUSE_LEFT);
+      Wait(0, 150, wdLeft);
+    end;
+end;
+
 (*
 ## Walker.Click
 ```pascal
@@ -381,38 +397,49 @@ You will probably never need to call this directly.
 
 If you wish to modify certain walker behaviors, it can be a good approach to override this function.
 *)
-function TRSWalkerV2.Click(minimapPoint: TPoint; Randomness: Int32; height: Single = 0): Boolean;
+function TRSWalkerV2.Click(minimapPoint: TPoint; randomness: Int32; height: Single = 0): Boolean;
 var
   p: TPoint;
-  i: Int32;
   upText: String;
+  hoveringTarget: Boolean;
 begin
+  Self.RedClicked := False;
+  if MainScreen.IsUpText(['Use', '>']) and not Self.ActionUpText.ContainsAny(['Use', '>']) then
+  begin
+    ChooseOption.Select('Cancel');
+    Exit;
+  end;
+
   Result := True;
   Self.CheckRunEnergy();
 
   if Self.ScreenWalk then
   begin
     p := Minimap.RandomPointOnZoomRectangle(minimapPoint, randomness);
-
     Mouse.Move(Minimap.VectorToMSRect([p.X, p.Y, height]).Mean());
-
     upText := MainScreen.GetUpText();
 
-    if not upText.ContainsAny(Self.WalkUpText) then
+    hoveringTarget := upText.ContainsAny(Self.TargetUpText);
+    if hoveringTarget and (Self.ActionUpText <> []) then
+    begin
+      hoveringTarget := upText.ContainsAny(Self.ActionUpText);
+
+      if not hoveringTarget then
+      begin
+        Self.RedClicked := ChooseOption.Select(Self.ActionUpText);
+        if Self.RedClicked then Self.Walking := False;
+        Exit(Self.RedClicked);
+      end;
+    end else if not upText.ContainsAny(Self.WalkUpText) then
       Exit(ChooseOption.Select('Walk here'));
   end
   else
     Mouse.Move(Minimap.RandomPointOn(minimapPoint, randomness));
 
-  Mouse.Click(MOUSE_LEFT);
+  Self.AntibanClick(randomness);
 
-  // 15% chance of spam clicking
-  if (Randomness > 0) and (Random() < 0.15) then
-    for i := 0 to Random(3) do
-    begin
-      Mouse.Click(Mouse.Position(), MOUSE_LEFT);
-      Wait(0, 150, wdLeft);
-    end;
+  Self.RedClicked := Self.ScreenWalk and hoveringTarget and MainScreen.DidRedClick();
+  if Self.RedClicked then Self.Walking := False;
 end;
 
 (*

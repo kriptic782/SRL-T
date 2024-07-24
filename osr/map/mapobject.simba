@@ -36,10 +36,6 @@ type
     end;
 
     MapObjectType: ERSMapObjectType;
-  class var
-    CurrentUpText: TStringArray;
-    CurrentActionUpText: TStringArray;
-    RedClicked: Boolean;
   end;
 
   PRSMapObject = ^TRSMapObject;
@@ -258,14 +254,12 @@ begin
   if Self.Filter.UpText then
   begin
     strArray += Self.Name;
-
-    if TRSMapObject.CurrentUpText <> strArray then
-      TRSMapObject.CurrentUpText := strArray;
+    Self.Walker^.TargetUpText := strArray;
   end;
 
   upText := MainScreen.GetUpText();
 
-  if ('>' in upText) and not TRSMapObject.CurrentUpText.Contains('Use') then
+  if upText.ContainsAny(['Use', '>']) and not Self.Walker^.TargetUpText.ContainsAny(['Use', '>']) then
   begin
     ChooseOption.Select('Cancel');
     Exit;
@@ -298,20 +292,18 @@ begin
   if Self.Filter.UpText then
   begin
     strArray += Self.Name;
-
-    if TRSMapObject.CurrentUpText <> strArray then
-      TRSMapObject.CurrentUpText := strArray;
+    Self.Walker^.TargetUpText := strArray;
   end;
 
   upText := MainScreen.GetUpText();
 
-  if ('>' in upText) and not TRSMapObject.CurrentUpText.Contains('Use') then
+  if upText.ContainsAny(['Use', '>']) and not Self.Walker^.TargetUpText.ContainsAny(['Use', '>']) then
   begin
     ChooseOption.Select('Cancel');
     Exit;
   end;
 
-  if TRSMapObject.RedClicked or (Self.Filter.UpText and (Self.Name in upText)) then
+  if Self.Walker^.RedClicked or (Self.Filter.UpText and (Self.Name in upText)) then
     Exit(True);
 
   shouldExit := False;
@@ -329,12 +321,12 @@ This is what's responsible for deciding if we click a target we are hovering or 
 *)
 function TRSMapObject._ClickHelper(leftClick: Boolean): Boolean;
 begin
-  TRSMapObject.CurrentUpText := [];
-  TRSMapObject.CurrentActionUpText := [];
+  Self.Walker^.TargetUpText := [];
+  Self.Walker^.ActionUpText := [];
 
-  if TRSMapObject.RedClicked then
+  if Self.Walker^.RedClicked then
   begin
-    TRSMapObject.RedClicked := False;
+    Self.Walker^.RedClicked := False;
     Exit(True);
   end;
 
@@ -346,11 +338,8 @@ begin
     Exit;
   end;
 
-  if leftClick then
-    Mouse.Click(MOUSE_LEFT);
-
-  if MainScreen.DidRedClick() then
-    Exit(True);
+  if leftClick then Mouse.Click(MOUSE_LEFT);
+  if MainScreen.DidRedClick() then Exit(True);
 
   Result := not leftClick and Self.Filter.UpText and ChooseOption.Select(Self.Name);
 end;
@@ -367,12 +356,12 @@ This is what is responsible for deciding if we just left click a target we are h
 *)
 function TRSMapObject._SelectHelper(action: TStringArray): Boolean;
 begin
-  TRSMapObject.CurrentUpText := [];
-  TRSMapObject.CurrentActionUpText := [];
+  Self.Walker^.TargetUpText := [];
+  Self.Walker^.ActionUpText := [];
 
-  if TRSMapObject.RedClicked then
+  if Self.Walker^.RedClicked then
   begin
-    TRSMapObject.RedClicked := False;
+    Self.Walker^.RedClicked := False;
     Exit(True);
   end;
 
@@ -1260,11 +1249,9 @@ begin
     ChooseOption.Close();
   end;
 
-  if not Self.Filter.Walker then
-    Exit;
+  if not Self.Filter.Walker then Exit;
 
-  if Self.Filter.UpText then
-    TRSMapObject.CurrentUpText += Self.Name;
+  if Self.Filter.UpText then Self.Walker^.TargetUpText := [Self.Name];
 
   p := Self.Walker^.GetClosestPoint(Self.Coordinates);
   if not Self.Walker^.MakePointVisible(p) and
@@ -1308,9 +1295,9 @@ WriteLn RSObjects.GEBank.SelectOption(['Collect']);
 *)
 function TRSMapObject.SelectOption(action: TStringArray; attempts: Int32 = 2): Boolean;
 begin
-  Self.CurrentActionUpText := action;
+  Self.Walker^.ActionUpText := action;
   Result := Self.Hover(attempts) and Self._SelectHelper(action);
-  Self.CurrentActionUpText := [];
+  Self.Walker^.ActionUpText := [];
 end;
 
 
@@ -1347,9 +1334,9 @@ WriteLn RSObjects.GEBank.WalkSelectOption(['Collect']);
 *)
 function TRSMapObject.WalkSelectOption(action: TStringArray; attempts: Int32 = 2): Boolean;
 begin
-  Self.CurrentActionUpText := action;
+  Self.Walker^.TargetUpText := action;
   Result := Self.WalkHover(attempts) and Self._SelectHelper(action);
-  Self.CurrentActionUpText := [];
+  Self.Walker^.ActionUpText := [];
 end;
 
 

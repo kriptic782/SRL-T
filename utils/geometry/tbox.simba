@@ -152,10 +152,8 @@ end;
 
 procedure TBox.Normalize();
 begin
-  if (Self.X1 > Self.X2) then
-    Swap(Self.X1, Self.X2);
-  if (Self.Y1 > Self.Y2) then
-    Swap(Self.Y1, Self.Y2);
+  if (Self.X1 > Self.X2) then Swap(Self.X1, Self.X2);
+  if (Self.Y1 > Self.Y2) then Swap(Self.Y1, Self.Y2);
 end;
 
 procedure TBox.LimitTo(b: TBox);
@@ -163,15 +161,21 @@ begin
   Self.Normalize();
   b.Normalize();
 
-  if (self.x1 < b.x1) then self.x1 := b.x1;
-  if (self.x1 > b.x2) then self.x1 := b.x2;
-  if (self.x2 < b.x1) then self.x2 := b.x1;
-  if (self.x2 > b.x2) then self.x2 := b.x2;
+  if (Self.x1 < b.x1) then Self.x1 := b.x1;
+  if (Self.x1 > b.x2) then Self.x1 := b.x2;
+  if (Self.x2 < b.x1) then Self.x2 := b.x1;
+  if (Self.x2 > b.x2) then Self.x2 := b.x2;
 
-  if (self.y1 < b.y1) then self.y1 := b.y1;
-  if (self.y1 > b.y2) then self.y1 := b.y2;
-  if (self.y2 < b.y1) then self.y2 := b.y1;
-  if (self.y2 > b.y2) then self.y2 := b.y2;
+  if (Self.y1 < b.y1) then Self.y1 := b.y1;
+  if (Self.y1 > b.y2) then Self.y1 := b.y2;
+  if (Self.y2 < b.y1) then Self.y2 := b.y1;
+  if (Self.y2 > b.y2) then Self.y2 := b.y2;
+end;
+
+function TBox.EnsureRange(b: TBox): TBox; constref;
+begin
+  Result := Self;
+  Result.LimitTo(b);
 end;
 
 
