@@ -152,7 +152,7 @@ begin
   except
     MessageDlg(
       'Unsupported client!', 'This client is not supported!' + LineEnding +
-      'You are using Simba ' + BITNESS + ' bits and for it you need a ' + BITNESS ' bits client.',
+      'You are using Simba ' + BITNESS + ' bits and for it you need a ' + BITNESS + ' bits client.',
       TMsgDlgType.mtError, [mbOk]);
     Self.Fatal(GetExceptionMessage());
   end;
