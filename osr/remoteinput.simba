@@ -38,15 +38,33 @@ begin
     raise 'Failed to inject into pid ' + ToString(pid);
 end;
 
-procedure RIInject(ProcessName: String; out PID: Int32); overload;
+procedure RIInject(process: String; out PID: Int32); overload;
 var
   PIDs: TIntegerArray;
 begin
-  RIInject(ProcessName);
+  RIInject(process);
 
   if (not WaitUntil(Length(PIDs := EIOS_GetClientPIDs()) > 0, 100, 1000)) then
-    raise 'Failed to inject into "' + ProcessName + '"';
+    raise 'Failed to inject into "' + process + '"';
 
+  PID := PIDs[0];
+end;
+
+procedure RIInject(processes: TStringArray; out PID: Int32); overload;
+var
+  i: Int32;
+  PIDs: TIntegerArray;
+begin
+  for i := 0 to High(processes) do
+  begin
+    RIInject(processes[i]);
+
+    if WaitUntil(Length(PIDs := EIOS_GetClientPIDs()) > 0, 100, 1000) then
+      Break;
+  end;
+
+  if Length(PIDs := EIOS_GetClientPIDs()) = 0 then
+    raise 'Failed to inject into "' + ToStr(processes) + '"';
   PID := PIDs[0];
 end;
 
@@ -107,7 +125,7 @@ end;
 
 procedure TRemoteInput.Setup();
 const
-  RS_EXECUTABLE = {$IFDEF WINDOWS}'JagexLauncher.exe'{$ELSE}'java'{$ENDIF};
+  RS_EXECUTABLES: TStringArray = [{$IFDEF WINDOWS}'RuneLite.exe', 'JagexLauncher.exe'{$ELSE}'java'{$ENDIF}];
 begin
   Self.Name := 'Remote Input';
 
@@ -121,8 +139,10 @@ begin
     begin
       if (MessageDlg('SRL', 'Automatically try to find a RS client?', mtConfirmation, [mbYes, mbNo]) = mrNo) then
         raise 'No RS clients found';
-      
-      RIInject(RS_EXECUTABLE, Self.PID); 
+
+      Self.DebugLn('Automatically finding the client may take a few seconds.');
+      Self.DebugLn('Finding a RuneLite client may also have unexpected results.');
+      RIInject(RS_EXECUTABLES, Self.PID); 
     end else
       RIInject(Self.PID);
     Self.EIOS := EIOS_PairClient(Self.PID);
