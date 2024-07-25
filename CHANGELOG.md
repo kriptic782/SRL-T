@@ -1,3 +1,12 @@
+## [7.4.17](https://github.com/Torwent/SRL-T/compare/v7.4.16...v7.4.17) (2024-07-25)
+
+
+### Bug Fixes
+
+* typo ([05ee792](https://github.com/Torwent/SRL-T/commit/05ee792241bfd90fcf371724cdab76b4eeb48cad))
+
+
+
 ## [7.4.16](https://github.com/Torwent/SRL-T/compare/v7.4.15...v7.4.16) (2024-07-25)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * SRL.IsSetup is now only set at the end of SRL.Setup ([1827625](https://github.com/Torwent/SRL-T/commit/18276253c4abe023aaf631971c802518a7d499e0))
-
-
-
-## [7.4.12](https://github.com/Torwent/SRL-T/compare/v7.4.11...v7.4.12) (2024-07-24)
-
-
-### Bug Fixes
-
-* read notes ([f7a4675](https://github.com/Torwent/SRL-T/commit/f7a46757ee4a661fd0fb5d7ff3ed7273dc3e5039))
 
 
 
