@@ -129,13 +129,10 @@ begin
     if (Self.EIOS <> nil) then
       SetEIOSTarget({$libpath ../plugins/libremoteinput/libremoteinput}, ToString(Self.PID));
   except
-    if MessageDlg(
-      'Unsupported client!',
-      'This client is not supported!' + LineEnding +
-      'Only the 32 bits legacy client is supported!'+ LineEnding + LineEnding +
-      'Click "Ok" to downlod the supported client.', TMsgDlgType.mtError, [mbOk, mbCancel]) = 1
-    then
-      OpenWebPage('https://oldschool.runescape.com/download?force_test=control');
+    MessageDlg(
+      'Unsupported client!', 'This client is not supported!' + LineEnding +
+      'For your current Simba you need a ' + {$IFDEF CPU64}'64'{$ELSE}'32'{$ENDIF} 'bits client!',
+      TMsgDlgType.mtError, [mbOk]);
     Self.Fatal(GetExceptionMessage());
   end;
   AddOnTerminate(@Self.Free);

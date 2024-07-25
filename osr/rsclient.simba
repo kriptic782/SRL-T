@@ -47,6 +47,7 @@ type
     {$ENDIF}
   end;
 
+{$H-}
 function TRSClient.Image(): TMufasaBitmap;
 begin
   {$IFNDEF SRL_DISABLE_REMOTEINPUT}
@@ -56,6 +57,7 @@ begin
   
   Self.Fatal('Unable to draw on this client');
 end;
+{$H+}
 
 (*
 ## RSClient.DetectClientMode()

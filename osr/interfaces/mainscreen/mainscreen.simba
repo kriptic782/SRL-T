@@ -152,7 +152,6 @@ type
 ```pascal
 procedure TRSMainScreen.Setup(ClientMode: ERSClientMode);
 ```
-
 Setups the mainscreen.
 
 ```{note}
@@ -204,7 +203,6 @@ end;
 ```pascal
 function TRSMainScreen.GetUpText(): String;
 ```
-
 Returns the current uptext.
 Uptext is the top left which appears when moving the mouse over a object.
 
