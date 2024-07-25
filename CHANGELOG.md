@@ -1,3 +1,12 @@
+## [7.4.16](https://github.com/Torwent/SRL-T/compare/v7.4.15...v7.4.16) (2024-07-25)
+
+
+### Bug Fixes
+
+* **RI:** remote input bitness error is more descriptive now ([8a0b62f](https://github.com/Torwent/SRL-T/commit/8a0b62fc8e63ae027a1e88713ecc5faad54b80ca))
+
+
+
 ## [7.4.15](https://github.com/Torwent/SRL-T/compare/v7.4.14...v7.4.15) (2024-07-25)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([f7a4675](https://github.com/Torwent/SRL-T/commit/f7a46757ee4a661fd0fb5d7ff3ed7273dc3e5039))
-
-
-
-## [7.4.11](https://github.com/Torwent/SRL-T/compare/v7.4.10...v7.4.11) (2024-07-23)
-
-
-### Bug Fixes
-
-* removed the global hint removal ([e564e21](https://github.com/Torwent/SRL-T/commit/e564e216431b1aebbbccf26ddc459d8c12e322f2))
 
 
 
