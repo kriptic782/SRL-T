@@ -126,6 +126,7 @@ end;
 procedure TRemoteInput.Setup();
 const
   RS_EXECUTABLES: TStringArray = [{$IFDEF WINDOWS}'RuneLite.exe', 'JagexLauncher.exe'{$ELSE}'java'{$ENDIF}];
+  BITNESS: String = {$IFDEF CPU386}'32'{$ELSE}'64'{$ENDIF};
 begin
   Self.Name := 'Remote Input';
 
@@ -151,7 +152,7 @@ begin
   except
     MessageDlg(
       'Unsupported client!', 'This client is not supported!' + LineEnding +
-      'For your current Simba you need a ' + {$IFDEF CPU64}'64'{$ELSE}'32'{$ENDIF} 'bits client!',
+      'You are using Simba ' + BITNESS + ' bits and for it you need a ' + BITNESS ' bits client.',
       TMsgDlgType.mtError, [mbOk]);
     Self.Fatal(GetExceptionMessage());
   end;
