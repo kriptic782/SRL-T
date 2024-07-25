@@ -1,3 +1,12 @@
+## [7.4.15](https://github.com/Torwent/SRL-T/compare/v7.4.14...v7.4.15) (2024-07-25)
+
+
+### Bug Fixes
+
+* **remote input:** auto-detecting ([e48c8be](https://github.com/Torwent/SRL-T/commit/e48c8bef640cf5d521c5aafe9c5bfd313a88ee0a))
+
+
+
 ## [7.4.14](https://github.com/Torwent/SRL-T/compare/v7.4.13...v7.4.14) (2024-07-25)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * removed the global hint removal ([e564e21](https://github.com/Torwent/SRL-T/commit/e564e216431b1aebbbccf26ddc459d8c12e322f2))
-
-
-
-## [7.4.10](https://github.com/Torwent/SRL-T/compare/v7.4.9...v7.4.10) (2024-07-22)
-
-
-### Bug Fixes
-
-* read notes ([290b523](https://github.com/Torwent/SRL-T/commit/290b52372eda483ed96336a7a631e6082e977072))
 
 
 
