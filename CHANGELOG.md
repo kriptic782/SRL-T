@@ -1,3 +1,12 @@
+## [7.4.14](https://github.com/Torwent/SRL-T/compare/v7.4.13...v7.4.14) (2024-07-25)
+
+
+### Bug Fixes
+
+* improved RI failed injection message ([91fed2b](https://github.com/Torwent/SRL-T/commit/91fed2bbe4d9c4008295682e09b556cb09f8758e))
+
+
+
 ## [7.4.13](https://github.com/Torwent/SRL-T/compare/v7.4.12...v7.4.13) (2024-07-24)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([290b523](https://github.com/Torwent/SRL-T/commit/290b52372eda483ed96336a7a631e6082e977072))
-
-
-
-## [7.4.9](https://github.com/Torwent/SRL-T/compare/v7.4.8...v7.4.9) (2024-07-20)
-
-
-### Bug Fixes
-
-* several small fixes to TRSObjectsV2 ([f21c5ac](https://github.com/Torwent/SRL-T/commit/f21c5acab63bdaa740b77ec96da25c844bf77fa7))
 
 
 
