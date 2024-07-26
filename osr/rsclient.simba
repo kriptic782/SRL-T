@@ -31,14 +31,11 @@ ERSClientMode = (
 The modes of the client.
 *)
 type
-  ERSClientMode = (
-    UNKNOWN,
-    FIXED,
-    RESIZABLE_CLASSIC,
-    RESIZABLE_MODERN
-  );
+  ERSClient = (UNKNOWN, LEGACY, RUNELITE, OFFICIAL);
+  ERSClientMode = (UNKNOWN, FIXED, RESIZABLE_CLASSIC, RESIZABLE_MODERN);
 
   TRSClient = record(TSRLBaseRecord)
+    Client: ERSClient;
     Mode: ERSClientMode;
 
     {$IFNDEF SRL_DISABLE_REMOTEINPUT}
@@ -188,6 +185,22 @@ begin
   Self.LoseFocus();
 end;
 
+function TRSClient.GetCurrentClient(): ERSClient;
+var
+  win: TOSWindow;
+begin
+  win := GetSimbaTargetWindow();
+
+  case win.GetClassName() of
+    'JagRenderView', 'JagWindow': Exit(ERSClient.OFFICIAL);
+  end;
+
+  case win.GetRootWindow().GetTitle() of
+    'Old School RuneScape': Result := ERSClient.LEGACY;
+    'RuneLite': Result := ERSClient.RUNELITE;
+  end;
+end;
+
 function TRSClient.Revalidate(): Boolean;
 var
   pid: PtrUInt;
@@ -243,6 +256,8 @@ begin
 
   if not Self.Revalidate() then
     TerminateScript('Please refocus the client!');
+
+  Self.Client := Self.GetCurrentClient();
 
   {$IFDEF SRL_USE_REMOTEINPUT}
   Self.RemoteInput.Setup();
