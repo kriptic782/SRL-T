@@ -1,3 +1,12 @@
+# [7.5.0](https://github.com/Torwent/SRL-T/compare/v7.4.17...v7.5.0) (2024-07-26)
+
+
+### Features
+
+* **RSClient:** can now detect the current client being used ([9b603fa](https://github.com/Torwent/SRL-T/commit/9b603fa487ccacb131ff569fe9b50a99e43411df))
+
+
+
 ## [7.4.17](https://github.com/Torwent/SRL-T/compare/v7.4.16...v7.4.17) (2024-07-25)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * improved RI failed injection message ([91fed2b](https://github.com/Torwent/SRL-T/commit/91fed2bbe4d9c4008295682e09b556cb09f8758e))
-
-
-
-## [7.4.13](https://github.com/Torwent/SRL-T/compare/v7.4.12...v7.4.13) (2024-07-24)
-
-
-### Bug Fixes
-
-* SRL.IsSetup is now only set at the end of SRL.Setup ([1827625](https://github.com/Torwent/SRL-T/commit/18276253c4abe023aaf631971c802518a7d499e0))
 
 
 
