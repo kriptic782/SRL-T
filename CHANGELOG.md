@@ -1,3 +1,12 @@
+## [7.5.1](https://github.com/Torwent/SRL-T/compare/v7.5.0...v7.5.1) (2024-07-30)
+
+
+### Bug Fixes
+
+* read notes ([a07639f](https://github.com/Torwent/SRL-T/commit/a07639f26d72fff8ed6894a9c23535a6c4ea0839))
+
+
+
 # [7.5.0](https://github.com/Torwent/SRL-T/compare/v7.4.17...v7.5.0) (2024-07-26)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **remote input:** auto-detecting ([e48c8be](https://github.com/Torwent/SRL-T/commit/e48c8bef640cf5d521c5aafe9c5bfd313a88ee0a))
-
-
-
-## [7.4.14](https://github.com/Torwent/SRL-T/compare/v7.4.13...v7.4.14) (2024-07-25)
-
-
-### Bug Fixes
-
-* improved RI failed injection message ([91fed2b](https://github.com/Torwent/SRL-T/commit/91fed2bbe4d9c4008295682e09b556cb09f8758e))
 
 
 
