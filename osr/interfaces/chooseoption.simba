@@ -213,7 +213,7 @@ begin
   if Length(boxes) = 0 then
     raise 'No space found to move mouse';
 
-  Mouse.Move(boxes[Random(Length(boxes))], False, MOUSE_DISTRIBUTION_RANDOM);
+  Mouse.Move(boxes[Random(Length(boxes))], False, EMouseDistribution.MOUSE_DISTRIBUTION_RANDOM);
   Result := WaitUntil(not Self.IsOpen(), 100, 1000);
 end;
 

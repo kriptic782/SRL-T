@@ -257,7 +257,9 @@ begin
   if not Self.Revalidate() then
     TerminateScript('Please refocus the client!');
 
+  {$IFNDEF SIMBAHEADLESS}
   Self.Client := Self.GetCurrentClient();
+  {$ENDIF}
 
   {$IFDEF SRL_USE_REMOTEINPUT}
   Self.RemoteInput.Setup();

@@ -27,7 +27,7 @@ EMouseDistribution = (
   MOUSE_DISTRIBUTION_RANDOM,  // Completely random point
   MOUSE_DISTRIBUTION_GAUSS,   // Weighted towards the center
   MOUSE_DISTRIBUTION_SKEWED,  // Weighted torwards current mouse position
-  MOUSE_DISTRIBUTION_ROWP     // Weighted torwards current mouse position but more "rounded" compared to MOUSE_DISTRIBUTION_SKEWED
+  MOUSE_DISTRIBUTION_ROWP     // Weighted torwards current mouse position but more "rounded" compared to EMouseDistribution.MOUSE_DISTRIBUTION_SKEWED
 );
 The available distributions used to generate a point in a box.
 ```
@@ -47,7 +47,7 @@ type
 TMouse = record(TSRLBaseRecord)
   Speed: Double;                     // Overall mouse speed (Default: 12)
   Gravity, Wind: Double;             // Gravity & Wind for generating mouse path (Default: 9 & 5)
-  Distribution: EMouseDistribution;  // Default distribution to use (Default: MOUSE_DISTRIBUTION_ROWP)
+  Distribution: EMouseDistribution;  // Default distribution to use (Default: EMouseDistribution.MOUSE_DISTRIBUTION_ROWP)
   MissChance: Double;                // Percentage chance to "Miss" the mouse (Default: 10)
   IdleInterval: Double;              // Distance to travel before calling Mouse.Idle() (Default: 0)
   IdleProgress: Double;
@@ -182,7 +182,7 @@ begin
   Self.Gravity := 9;
   Self.Wind := 5;
   Self.MissChance := 15;
-  Self.Distribution := MOUSE_DISTRIBUTION_ROWP;
+  Self.Distribution := EMouseDistribution.MOUSE_DISTRIBUTION_ROWP;
   Self.CanIdle := True;
 
   {$IFDEF SRL_DEBUG_MOUSE}
@@ -407,7 +407,7 @@ end;
 procedure TMouse.Move(Destination: TPoint);
 procedure TMouse.Move(X, Y: Int32); overload;
 procedure TMouse.Move(Center: TPoint; Radius: Int32; ForcedMove: Boolean = False); overload;
-procedure TMouse.Move(Box: TBox; ForcedMove: Boolean = False; Distribution: EMouseDistribution = MOUSE_DISTRIBUTION_DEFAULT); overload;
+procedure TMouse.Move(Box: TBox; ForcedMove: Boolean = False; Distribution: EMouseDistribution = EMouseDistribution.MOUSE_DISTRIBUTION_DEFAULT); overload;
 procedure TMouse.Move(Circle: TCircle; ForcedMove: Boolean = False); overload;
 procedure TMouse.Move(Rect: TRectangle; ForcedMove: Boolean = False); overload;
 ```
@@ -486,19 +486,19 @@ begin
   Self.Move(SRL.RandomPoint(Center, Radius));
 end;
 
-procedure TMouse.Move(Box: TBox; ForcedMove: Boolean = False; Distribution: EMouseDistribution = MOUSE_DISTRIBUTION_DEFAULT); overload;
+procedure TMouse.Move(Box: TBox; ForcedMove: Boolean = False; Distribution: EMouseDistribution = EMouseDistribution.MOUSE_DISTRIBUTION_DEFAULT); overload;
 begin
   if Box.Contains(Self.Position()) and (not ForcedMove) then
     Exit;
 
-  if Distribution = MOUSE_DISTRIBUTION_DEFAULT then
+  if Distribution = EMouseDistribution.MOUSE_DISTRIBUTION_DEFAULT then
     Distribution := Self.Distribution;
 
   case Distribution of
-    MOUSE_DISTRIBUTION_RANDOM: Self.Move(Random(Box.X1, Box.X2), Random(Box.Y1, Box.Y2));
-    MOUSE_DISTRIBUTION_GAUSS:  Self.Move(SRL.RandomPoint(Box));
-    MOUSE_DISTRIBUTION_SKEWED: Self.Move(SRL.RandomPointEx(Self.Position(), Box));
-    MOUSE_DISTRIBUTION_ROWP:   Self.Move(SRL.Rowp(Self.Position(), Box));
+    EMouseDistribution.MOUSE_DISTRIBUTION_RANDOM: Self.Move(Random(Box.X1, Box.X2), Random(Box.Y1, Box.Y2));
+    EMouseDistribution.MOUSE_DISTRIBUTION_GAUSS:  Self.Move(SRL.RandomPoint(Box));
+    EMouseDistribution.MOUSE_DISTRIBUTION_SKEWED: Self.Move(SRL.RandomPointEx(Self.Position(), Box));
+    EMouseDistribution.MOUSE_DISTRIBUTION_ROWP:   Self.Move(SRL.Rowp(Self.Position(), Box));
   end;
 end;
 
@@ -522,7 +522,7 @@ procedure TMouse.Click(Button: Int32);
 procedure TMouse.Click(X, Y: Int32; Button: Int32); overload;
 procedure TMouse.Click(P: TPoint; Button: Int32); overload;
 procedure TMouse.Click(Center: TPoint; Radius: Int32; Button: Int32; ForcedMove: Boolean = False); overload;
-procedure TMouse.Click(Box: TBox; Button: Int32; ForcedMove: Boolean = False; Distribution: EMouseDistribution = MOUSE_DISTRIBUTION_DEFAULT); overload;
+procedure TMouse.Click(Box: TBox; Button: Int32; ForcedMove: Boolean = False; Distribution: EMouseDistribution = EMouseDistribution.MOUSE_DISTRIBUTION_DEFAULT); overload;
 procedure TMouse.Click(Circle: TCircle; Button: Int32; ForcedMove: Boolean = False); overload;
 procedure TMouse.Click(Rect: TRectangle; Button: Int32; ForcedMove: Boolean = False); overload;
 ```
@@ -580,7 +580,7 @@ begin
   Self.Click(Button);
 end;
 
-procedure TMouse.Click(Box: TBox; Button: Int32; ForcedMove: Boolean = False; Distribution: EMouseDistribution = MOUSE_DISTRIBUTION_DEFAULT); overload;
+procedure TMouse.Click(Box: TBox; Button: Int32; ForcedMove: Boolean = False; Distribution: EMouseDistribution = EMouseDistribution.MOUSE_DISTRIBUTION_DEFAULT); overload;
 begin
   Self.Move(Box, ForcedMove, Distribution);
   Self.Click(Button);
@@ -737,7 +737,6 @@ var
   Global mouse variable.
 *)
   Mouse: TMouse;
-
 
 begin
   Mouse.Setup();

@@ -93,7 +93,6 @@ end;
 ```pascal
 procedure TAntiban.AddSleep(Time: String; Length: Double; Randomness: Double = 0.10; LogoutChance: Double = 0.50);
 ```
-
 Schedule a sleep break. A sleep break is a large break, it can be any length but it's usually the several hours and also the largest one/ones.
 
 **Time** is the aproximate time you want the break to occur and should be written in a **TTimeFormat.Time_Bare** format (00:00:00). https://ollydev.github.io/SRL-Development/time.html?highlight=ttime#ttimeformat
@@ -126,7 +125,6 @@ end;
 ```pascal
 procedure TAntiban.AddBreak(Interval, Length: Double; Randomness: Double = 0.2; LogoutChance: Double = 0.50);
 ```
-
 Schedule a break. Breaks can be of short or medium length and should be shorter than any sleep breaks.
 
 **Interval** is the aproximate interval of time that has to pass for the break to occur and it will be repeated everytime that interval passes. In other words this runs on a loop and interval is the time in between.
@@ -269,7 +267,6 @@ end;
 ```pascal
 procedure TAntiban.AddTask(Interval: Double; Method: TAntibanMethod; Randomness: Double = 0.2); overload;
 ```
-
 Schedule a antiban task. An antiban task can be any procedure but they are should be short things that won't break your main script.
 
 **Interval** is the aproximate interval of time that has to pass for the antiban task to occur and it will be repeated everytime that interval passes.
@@ -295,7 +292,7 @@ begin
   Self.Tasks += Task;
 end;
 
-function TAntiban.DoBreak: Boolean;
+function TAntiban.DoBreak(): Boolean;
 var
   I: Int32;
 begin
@@ -310,7 +307,7 @@ begin
     end;
 end;
 
-function TAntiban.DoSleep: Boolean;
+function TAntiban.DoSleep(): Boolean;
 var
   I: Int32;
 begin
@@ -348,7 +345,6 @@ end;
 ```pascal
 function TAntiban.DoAntiban(CheckBreaks: Boolean = True; CheckSleeps: Boolean = True): Boolean;
 ```
-
 Antiban.DoAntiban should be called in your script when antiban sleeps, breaks or tasks won't break your script.
 When this is called, the setup sleep breaks, breaks and tasks will be checked, if enough time has passed to perform any of them (subject to the parameters you pass in too), they will be performed, otherwise, nothing will happen.
 
@@ -423,7 +419,6 @@ procedure TAntiban.AdjustZoom;
 procedure TAntiban.SwivelNear(start: TBox; radius: Int32; Iterations: Int32=1); overload;
 procedure TAntiban.Swivel;
 ```
-
 SRL built in Antiban Tasks that can be added with **TAntiban.AddTask**.
 
 Example:
@@ -433,17 +428,17 @@ Antiban.AddTask(15 * ONE_MINUTE, @Antiban.HoverSkills);
 *)
 procedure TAntiban.SmallRandomMouse();
 var
-  B: TBox;
-  P: TPoint;
+  b: TBox;
+  p: TPoint;
 begin
   Self.DebugLn('Random Mouse (Small)');
 
-  B := Box(Mouse.Position(), 350, 350);
+  b := Box(Mouse.Position(), 350, 350);
   repeat
-    P := SRL.RandomPoint(B);
-  until P.DistanceTo(B.Middle) < 50; // Make sure we move at least 50 distance
+    P := SRL.RandomPoint(b);
+  until p.DistanceTo(b.Center()) < 50; // Make sure we move at least 50 distance
 
-  Mouse.Move(P);
+  Mouse.Move(p);
 end;
 
 procedure TAntiban.RandomMouse();
@@ -459,16 +454,16 @@ begin
   for i := 1 to SRL.TruncatedGauss(1, 6) do
   begin
     if Random() < 0.30 then
-      customMouse.Move(GetClientBounds().Expand(150), True, MOUSE_DISTRIBUTION_GAUSS)
+      customMouse.Move(GetClientBounds().Expand(150), True, EMouseDistribution.MOUSE_DISTRIBUTION_GAUSS)
     else
-      customMouse.Move(GetClientBounds().Expand(150), True, MOUSE_DISTRIBUTION_RANDOM);
+      customMouse.Move(GetClientBounds().Expand(150), True, EMouseDistribution.MOUSE_DISTRIBUTION_RANDOM);
 
     if Random() < 0.50 then
       Wait(0, 1000, wdLeft);
   end;
 end;
 
-procedure TAntiban.RandomRotate;
+procedure TAntiban.RandomRotate();
 begin
   Self.DebugLn('Random Rotate');
 
@@ -478,7 +473,7 @@ begin
   end;
 end;
 
-procedure TAntiban.HoverSkill(Skill: ERSSkill; HoverTime: Int32; ReturnToCurrentTab: Boolean);
+procedure TAntiban.HoverSkill(skill: ERSSkill; HoverTime: Int32; returnToCurrentTab: Boolean);
 var
   Tab: ERSGameTab;
 begin
@@ -495,7 +490,7 @@ begin
   end;
 end;
 
-procedure TAntiban.HoverSkills;
+procedure TAntiban.HoverSkills();
 begin
   if Self.Skills = [] then
   begin
@@ -507,19 +502,19 @@ begin
   HoverSkill(Self.Skills[Random(Length(Self.Skills))], SRL.TruncatedGauss(1000, 10000), SRL.Dice(50));
 end;
 
-procedure TAntiban.LoseFocus;
+procedure TAntiban.LoseFocus();
 begin
   RSClient.LoseFocus();
 end;
 
-procedure TAntiban.LoseFocus(Idle: Int32); overload;
+procedure TAntiban.LoseFocus(idle: Int32); overload;
 begin
   RSClient.LoseFocus();
 
   Wait(Idle);
 end;
 
-procedure TAntiban.RandomTab;
+procedure TAntiban.RandomTab();
 begin
   Self.DebugLn('Random Tab');
 
@@ -548,11 +543,11 @@ begin
   Wait(0, 8000, wdLeft);
 end;
 
-procedure TAntiban.RandomRightClick;
+procedure TAntiban.RandomRightClick();
 begin
   Self.DebugLn('Random Right Click');
 
-  Mouse.Move(GetClientBounds(), True, MOUSE_DISTRIBUTION_RANDOM);
+  Mouse.Move(GetClientBounds(), True, EMouseDistribution.MOUSE_DISTRIBUTION_RANDOM);
 
   if ChooseOption.Open() then
   begin
@@ -620,7 +615,7 @@ begin
   end;
 end;
 
-function TAntiban.GenerateSwivelPoints(A: TPoint; invCircularity:Double; curls: Int32; baseRad:Int32; direction:Boolean): TPointArray;
+function TAntiban.GenerateSwivelPoints(a: TPoint; invCircularity: Double; curls: Int32; baseRad:Int32; direction:Boolean): TPointArray;
 var
   t,o,rr: Double;
   i,j,k,rad: Int32;
@@ -709,7 +704,7 @@ begin
   end;
 end;
 
-procedure TAntiban.SwivelNear(start: TBox; radius: Int32; Iterations: Int32=1); overload;
+procedure TAntiban.SwivelNear(start: TBox; radius: Int32; iterations: Int32 = 1); overload;
 var
   i: Int32;
 begin
@@ -776,7 +771,7 @@ end;
 
 (*
 ## var Antiban
-  Global Antiban variable.
+Global Antiban variable.
 *)
 var
   Antiban: TAntiban;
