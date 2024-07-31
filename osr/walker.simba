@@ -32,11 +32,11 @@ var
   rsw: TRSWalker;
 begin
   rsw.Setup('world');
-  rsw.OnWalkingEvent := @rsw.WalkerTasks;
+  rsw.OnWaitMoving := @rsw.WalkerTasks;
 end;
 ```
 *)
-  TRSWalkerV2_OnWalkEvent = procedure(walker: PRSWalkerV2; position: TPoint; destination: TPoint) of object;
+  TRSWalkerEvent = procedure(walker: PRSWalkerV2; position: TPoint; destination: TPoint) of object;
 
   TRSWalkerV2 = record(TSRLBaseRecord)
     Position: function (): TPoint of object;
@@ -56,7 +56,8 @@ end;
 
     WebGraph: ^TWebGraph;
     MapImage: TMufasaBitmap;
-    OnWalkEvent, OnWalkingEvent: TRSWalkerV2_OnWalkEvent;
+    OWEventIdx, OWMEventIdx: Int32;
+    OnWalkEvents, OnWaitMovingEvents: array of TRSWalkerEvent;
   end;
 
 (*
@@ -320,7 +321,7 @@ procedure TRSWalkerV2.WaitMoving(destination: TPoint; waitUntilDistance: Int32);
 Internal method used to wait while we are moving using walker.
 You will probably never need to call this directly.
 
-This is where TRSWalkerV2.OnWalkingEvent are called.
+This is where TRSWalkerV2.OnWaitMoving are called.
 *)
 procedure TRSWalkerV2.WaitMoving(destination: TPoint; waitUntilDistance: Int32);
 var
@@ -331,7 +332,6 @@ var
   awct: Int64;
 begin
   Timeout.Init(Round(SRL.TruncatedGauss(20000, 25000)));
-
   Countdown.Init(Round(SRL.TruncatedGauss(500, 1500)));
 
   // initial timeout needs to be longer, as we might not have started walking yet.
@@ -352,8 +352,8 @@ begin
     if Position.Current <> Position.Previous then
       Countdown.Restart();
 
-    if (@Self.OnWalkingEvent <> nil) then
-      Self.OnWalkingEvent(@Self, Position.Current, destination);
+    if (Self.OWMEventIdx <= High(Self.OnWaitMovingEvents)) and (@Self.OnWaitMovingEvents[Self.OWMEventIdx] <> nil) then
+      Self.OnWaitMovingEvents[Self.OWMEventIdx](@Self, Position.Current, destination);
 
     if (Self.AdaptiveWalk) and (GetTickCount() > awct) then
     begin
@@ -457,8 +457,8 @@ begin
   event_time := GetTickCount();
 
   // run events
-  if (@Self.OnWalkEvent <> nil) then
-    Self.OnWalkEvent(@Self, playerPoint, walkerPoint);
+  if (Self.OWEventIdx <= High(Self.OnWalkEvents)) and (@Self.OnWalkEvents[Self.OWEventIdx] <> nil) then
+    Self.OnWalkEvents[Self.OWEventIdx](@Self, playerPoint, walkerPoint);
 
   // in case the events used a bit of time, while our character was moving towards a point, we have to update the current position.
   if GetTickCount() - event_time > 100 then
