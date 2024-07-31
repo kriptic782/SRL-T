@@ -1,3 +1,12 @@
+## [7.5.2](https://github.com/Torwent/SRL-T/compare/v7.5.1...v7.5.2) (2024-07-31)
+
+
+### Bug Fixes
+
+* read notes ([15c49b1](https://github.com/Torwent/SRL-T/commit/15c49b12fe10f0a21c0f6a4f3b8cc49ef305c405))
+
+
+
 ## [7.5.1](https://github.com/Torwent/SRL-T/compare/v7.5.0...v7.5.1) (2024-07-30)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **RI:** remote input bitness error is more descriptive now ([8a0b62f](https://github.com/Torwent/SRL-T/commit/8a0b62fc8e63ae027a1e88713ecc5faad54b80ca))
-
-
-
-## [7.4.15](https://github.com/Torwent/SRL-T/compare/v7.4.14...v7.4.15) (2024-07-25)
-
-
-### Bug Fixes
-
-* **remote input:** auto-detecting ([e48c8be](https://github.com/Torwent/SRL-T/commit/e48c8bef640cf5d521c5aafe9c5bfd313a88ee0a))
 
 
 
