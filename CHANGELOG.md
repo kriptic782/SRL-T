@@ -1,3 +1,12 @@
+## [7.5.4](https://github.com/Torwent/SRL-T/compare/v7.5.3...v7.5.4) (2024-08-01)
+
+
+### Bug Fixes
+
+* **walkerv2:** forgot if statement to check if there's a walk event ([180d519](https://github.com/Torwent/SRL-T/commit/180d519592e69c164f2a1e14f85ad47e5eda191a))
+
+
+
 ## [7.5.3](https://github.com/Torwent/SRL-T/compare/v7.5.2...v7.5.3) (2024-08-01)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **RSClient:** can now detect the current client being used ([9b603fa](https://github.com/Torwent/SRL-T/commit/9b603fa487ccacb131ff569fe9b50a99e43411df))
-
-
-
-## [7.4.17](https://github.com/Torwent/SRL-T/compare/v7.4.16...v7.4.17) (2024-07-25)
-
-
-### Bug Fixes
-
-* typo ([05ee792](https://github.com/Torwent/SRL-T/commit/05ee792241bfd90fcf371724cdab76b4eeb48cad))
 
 
 
