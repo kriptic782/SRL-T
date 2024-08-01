@@ -1,3 +1,12 @@
+## [7.5.3](https://github.com/Torwent/SRL-T/compare/v7.5.2...v7.5.3) (2024-08-01)
+
+
+### Bug Fixes
+
+* **WalkerV2:** events rollback ([83b2871](https://github.com/Torwent/SRL-T/commit/83b2871af94fc19a9c9289be41ac9e6f90497965))
+
+
+
 ## [7.5.2](https://github.com/Torwent/SRL-T/compare/v7.5.1...v7.5.2) (2024-07-31)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * typo ([05ee792](https://github.com/Torwent/SRL-T/commit/05ee792241bfd90fcf371724cdab76b4eeb48cad))
-
-
-
-## [7.4.16](https://github.com/Torwent/SRL-T/compare/v7.4.15...v7.4.16) (2024-07-25)
-
-
-### Bug Fixes
-
-* **RI:** remote input bitness error is more descriptive now ([8a0b62f](https://github.com/Torwent/SRL-T/commit/8a0b62fc8e63ae027a1e88713ecc5faad54b80ca))
 
 
 
