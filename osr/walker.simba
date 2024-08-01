@@ -49,16 +49,19 @@ end;
 
     AdaptiveToggleDistances: TPoint;
 
-    PathIndex: Int32;
-    Path: TPointArray;
-
     WalkUpText, TargetUpText, ActionUpText: TStringArray;
 
     WebGraph: ^TWebGraph;
     MapImage: TMufasaBitmap;
-    OWEventIdx, OWMEventIdx: Int32;
-    OnWalkEvents, OnWaitMovingEvents: array of TRSWalkerEvent;
+
+    OnWalkEvent, OnWaitMovingEvent: TRSWalkerEvent;
+
+    {%codetools off}
+    _PathIndex: Int32;
+    _Path: TPointArray;
+    {%codetools on}
   end;
+
 
 (*
 ## TRSWalkerV2.Setup
@@ -241,8 +244,8 @@ var
 begin
   wasEnabled := Self.ScreenWalk;
   Self.ScreenWalk := False;
-  if ((position.DistanceTo(Self.Path[0]) < Self.AdaptiveToggleDistances.X) or
-      (position.DistanceTo(Self.Path[High(Self.Path)]) < Self.AdaptiveToggleDistances.Y)) and
+  if ((position.DistanceTo(Self._Path[0]) < Self.AdaptiveToggleDistances.X) or
+      (position.DistanceTo(Self._Path[High(Self._Path)]) < Self.AdaptiveToggleDistances.Y)) and
      (Random() > 0.05) then
     Self.ScreenWalk := True
 
@@ -275,14 +278,14 @@ var
     h, diff: Single;
   begin
     angle := Minimap.GetCompassAngle(False);
-    idx := Self.PathIndex;
+    idx := Self._PathIndex;
 
-    while (idx < High(Self.Path)) and Self.IsWalkable(Self.Path[idx+1], myPos, angle) do
+    while (idx < High(Self._Path)) and Self.IsWalkable(Self._Path[idx+1], myPos, angle) do
       Inc(idx);
 
-    if (Idx = High(Self.Path)) and (Random(10) > 2) then Exit();
+    if (Idx = High(Self._Path)) and (Random(10) > 2) then Exit();
 
-    mmPos := Self.Path[idx] - myPos + minimap.Center();
+    mmPos := Self._Path[idx] - myPos + minimap.Center();
     mmPos := mmPos.Rotate(angle, Minimap.Center);
 
     if Self.ScreenWalk then
@@ -352,8 +355,8 @@ begin
     if Position.Current <> Position.Previous then
       Countdown.Restart();
 
-    if (Self.OWMEventIdx <= High(Self.OnWaitMovingEvents)) and (@Self.OnWaitMovingEvents[Self.OWMEventIdx] <> nil) then
-      Self.OnWaitMovingEvents[Self.OWMEventIdx](@Self, Position.Current, destination);
+    if @Self.OnWaitMovingEvent <> nil then
+      Self.OnWaitMovingEvent(@Self, Position.Current, destination);
 
     if (Self.AdaptiveWalk) and (GetTickCount() > awct) then
     begin
@@ -457,8 +460,7 @@ begin
   event_time := GetTickCount();
 
   // run events
-  if (Self.OWEventIdx <= High(Self.OnWalkEvents)) and (@Self.OnWalkEvents[Self.OWEventIdx] <> nil) then
-    Self.OnWalkEvents[Self.OWEventIdx](@Self, playerPoint, walkerPoint);
+  Self.OnWalkEvent(@Self, playerPoint, walkerPoint);
 
   // in case the events used a bit of time, while our character was moving towards a point, we have to update the current position.
   if GetTickCount() - event_time > 100 then
@@ -565,7 +567,7 @@ var
   i: Int32;
   path: TPointArray;
 begin
-  path := Self.Path.FilterCircle([playerPoint.X, playerPoint.Y, 90]);
+  path := Self._Path.FilterCircle([playerPoint.X, playerPoint.Y, 90]);
   path := Self.PointsToMM(playerPoint, path, Minimap.GetCompassAngle(False));
   path := Minimap.Filter(path);
 
@@ -622,7 +624,7 @@ Walker.WalkPath([[100,100],[120,120],[140,140],[160,160],[180,180]]);
 *)
 function TRSWalkerV2.WalkPath(path: TPointArray; WaitUntilDistance: Int32 = 0; debug: Boolean = False): Boolean;
 
-  function BuildPath(tpa: TPointArray): TPointArray;
+  function _BuildPath(tpa: TPointArray): TPointArray;
   var
     i, j: Int32;
     line: TPointArray;
@@ -646,20 +648,20 @@ function TRSWalkerV2.WalkPath(path: TPointArray; WaitUntilDistance: Int32 = 0; d
     Result += tpa[High(tpa)];
   end;
 
-  function AdvancePath(var index: Int32; playerPoint: TPoint): Boolean;
+  function _AdvancePath(var index: Int32; playerPoint: TPoint): Boolean;
   var
     Angle: Double := Minimap.GetCompassAngle(False);
     Previous: Int32 := index;
     Nearest, Furthest: Int32;
   begin
-    Nearest := Self.Path.Find(Self.Path.Sorted(playerPoint)[0]);
-    Self.Pathindex := Nearest;
+    Nearest := Self._Path.Find(Self._Path.Sorted(playerPoint)[0]);
+    Self._Pathindex := Nearest;
 
-    while (Nearest < High(Self.Path)) and (not Self.IsWalkable(Self.Path[Nearest+1], playerPoint, Angle)) do
+    while (Nearest < High(Self._Path)) and (not Self.IsWalkable(Self._Path[Nearest+1], playerPoint, Angle)) do
       Inc(Nearest);
 
     Furthest := Nearest;
-    while (Furthest < High(Self.Path)) and Self.IsWalkable(Self.Path[Furthest+1], playerPoint, Angle) do
+    while (Furthest < High(Self._Path)) and Self.IsWalkable(Self._Path[Furthest+1], playerPoint, Angle) do
       Inc(Furthest);
 
     index := Furthest;
@@ -678,7 +680,7 @@ var
 begin
   Self.Walking := True;
   playerPoint := Self.Position();
-  Self.Path := BuildPath([playerPoint] + path);
+  Self._Path := _BuildPath([playerPoint] + path);
 
   if Self.AdaptiveWalk then
   begin
@@ -694,7 +696,7 @@ begin
     if debug then
       Self.DebugPath(index, playerPoint);
 
-    if AdvancePath(index, playerPoint) then
+    if _AdvancePath(index, playerPoint) then
       fails := 0
     else
     begin
@@ -718,14 +720,14 @@ begin
         Minimap.WaitFlag();
     end;
 
-    if index = High(Self.Path) then
+    if index = High(Self._Path) then
     begin
-      if Self.WalkFinalStep(playerPoint, Self.Path[index], WaitUntilDistance) then
+      if Self.WalkFinalStep(playerPoint, Self._Path[index], WaitUntilDistance) then
         Exit(True);
       Continue;
     end;
 
-    Self.WalkStep(playerPoint, Self.Path[index]);
+    Self.WalkStep(playerPoint, Self._Path[index]);
   end;
 
   if fails = 10 then
