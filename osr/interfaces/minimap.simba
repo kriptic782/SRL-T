@@ -382,7 +382,7 @@ begin
 
   Available := GetClientBounds().Expand(-10);
   degrees := FixD(degrees);
-  Remaining := Round(Self.GetCompassAngle() - degrees);
+  Remaining := Round(SRL.DeltaAngle(Self.GetCompassAngle(), degrees));
 
   T := GetTickCount() + Round(SRL.TruncatedGauss(6000, 8000));
 
@@ -436,7 +436,7 @@ begin
 
     Wait(100, 1000, wdLeft);
 
-    Remaining := Round(Self.GetCompassAngle() - degrees);
+    Remaining := Round(SRL.DeltaAngle(Self.GetCompassAngle(), degrees));
   end;
 end;
 
@@ -566,7 +566,6 @@ begin
     if Self.IsPointOn(p) then
       Result += p;
 end;
-
 
 
 (*

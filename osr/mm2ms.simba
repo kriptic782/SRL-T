@@ -827,11 +827,12 @@ WriteLn Minimap.FacePoint([620, 100]); //keep in mind this example uses a static
 *)
 function TRSMinimap.FacePoint(p: TPoint; randomness: Int32 = 0): Boolean;
 var
+  center: TPoint;
   tpa: TPointArray;
   d1: Double;
   i: Int32;
 begin
-  if not Self.IsPointOn(P) then
+  if not Self.IsPointOn(p) then
     Exit;
 
   tpa := Self.GetZoomRectangle().Totpa();
@@ -841,18 +842,17 @@ begin
 
   tpa := tpa.SortFrom(p);
 
-  d1 := Self.Center().DistanceTo(p);
+  center := Self.Center();
+  d1 := center.DistanceTo(p);
 
   for i := 0 to High(tpa) do
-  begin
-    if Result := d1 <= Self.Center().DistanceTo(tpa[i]) then
+    if Result := d1 <= center.DistanceTo(tpa[i]) then
       Break;
 
-    if i = High(tpa) then //the point is outside of the zoom rectangle reach.
-      Exit;
-  end;
+  if not Result then
+    Exit;
 
-  Self.SetCompassAngle(Self.Center().AngleBetween(tpa[i]) - Self.Center().AngleBetween(p) + randomness);
+  Self.SetCompassAngle(center.AngleBetween(tpa[i]) - center.AngleBetween(p) + randomness);
 end;
 
 (*
