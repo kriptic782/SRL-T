@@ -1,3 +1,12 @@
+## [7.5.5](https://github.com/Torwent/SRL-T/compare/v7.5.4...v7.5.5) (2024-08-03)
+
+
+### Bug Fixes
+
+* **Minimap:** SetCompassAngle now has 0 and 360 "close" to each other ([2c279d6](https://github.com/Torwent/SRL-T/commit/2c279d6c180671f1c28bd616d615793aa59405fe))
+
+
+
 ## [7.5.4](https://github.com/Torwent/SRL-T/compare/v7.5.3...v7.5.4) (2024-08-01)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([a07639f](https://github.com/Torwent/SRL-T/commit/a07639f26d72fff8ed6894a9c23535a6c4ea0839))
-
-
-
-# [7.5.0](https://github.com/Torwent/SRL-T/compare/v7.4.17...v7.5.0) (2024-07-26)
-
-
-### Features
-
-* **RSClient:** can now detect the current client being used ([9b603fa](https://github.com/Torwent/SRL-T/commit/9b603fa487ccacb131ff569fe9b50a99e43411df))
 
 
 
