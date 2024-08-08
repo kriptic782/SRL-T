@@ -872,6 +872,19 @@ begin
   end;
 end;
 
+function TRSInventory.ShiftDrop(slots: TIntegerArray; pattern: TIntegerArray): Boolean; overload;
+var
+  order: TIntegerArray;
+  i: Int32;
+begin
+  for i := 0 to High(pattern) do
+    if slots.Find(pattern[i]) > -1 then
+      order += pattern[i];
+
+  Result := Self.ShiftDrop(order);
+end;
+
+
 function TRSInventory.ShiftDrop(items: TRSItemArray; pattern: TIntegerArray): Boolean; overload;
 var
   slots, order: TIntegerArray;

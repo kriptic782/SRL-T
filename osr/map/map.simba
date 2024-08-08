@@ -917,7 +917,7 @@ begin
   if graph then
   begin
     tmp := Self.Loader.Graph;
-    tmp.Nodes := Self.Loader.GetLocal(tmp.Nodes, [-Self.Loader.Padding,-Self.Loader.Padding]);
+    tmp.Nodes := Self.Loader.GetLocal(tmp.Nodes, [0,0]);
     tmp.Draw(bmp);
   end;
 
