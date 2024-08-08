@@ -1,3 +1,12 @@
+## [7.5.7](https://github.com/Torwent/SRL-T/compare/v7.5.6...v7.5.7) (2024-08-08)
+
+
+### Bug Fixes
+
+* **itemfinder:** updated ([5601c06](https://github.com/Torwent/SRL-T/commit/5601c06779a6e19ce32fa3e623019911a4431ff6))
+
+
+
 ## [7.5.6](https://github.com/Torwent/SRL-T/compare/v7.5.5...v7.5.6) (2024-08-03)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **WalkerV2:** events rollback ([83b2871](https://github.com/Torwent/SRL-T/commit/83b2871af94fc19a9c9289be41ac9e6f90497965))
-
-
-
-## [7.5.2](https://github.com/Torwent/SRL-T/compare/v7.5.1...v7.5.2) (2024-07-31)
-
-
-### Bug Fixes
-
-* read notes ([15c49b1](https://github.com/Torwent/SRL-T/commit/15c49b12fe10f0a21c0f6a4f3b8cc49ef305c405))
 
 
 
