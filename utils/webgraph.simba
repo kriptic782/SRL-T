@@ -302,9 +302,6 @@ var
   n1, n2: Int32;
   nodes: TIntegerArray;
 begin
-  if p.InRange(q, 4) then
-    RaiseException('Points ' + p.ToString() + ' and ' + q.ToString() + ' are too close!');
-
   n1 := Self.FindNearestNode(p);
   n2 := Self.FindNearestNode(q);
 
