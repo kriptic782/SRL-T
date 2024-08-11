@@ -35,7 +35,7 @@ end;
 //This is the number of degrees you need to face the compass to face the door directly.
 //It works by selecting the cardinal direction that gives the highest inner product
 //with the vector from the tile before the door to the door center.
-function TRSDoor.GetDoorAngle(tileBeforeDoor: TPoint): Integer;
+function TRSDoor.GetDoorAngle(): Single;
 const
   NORTH:  TPoint = [0,-1];
   EAST:   TPoint = [1,0];
@@ -50,7 +50,7 @@ begin
 
   for cardinal in CARDINALS do
   begin
-    tmp := Self.Center - tileBeforeDoor;
+    tmp := Self.Center - Self.Before;
     if cardinal.Dot(tmp) > innerProduct then
     begin
       doorDirection := cardinal;
@@ -68,12 +68,12 @@ end;
 
 //Does as the name states. Doesn't support diagonal doors yet
 //Might add small randomness to this later (i.e. do doorangle + Random(-10,10) or something similar)
-function TRSDoor.GetVisibleAngle(angle: Double; tileBeforeDoor: TPoint; randomness: Integer = 75): Double;
+function TRSDoor.GetVisibleAngle(angle: Double; randomness: Integer = 75): Double;
 begin
-  Result := Self.GetDoorAngle(tileBeforeDoor);
+  Result := Self.GetDoorAngle();
 
-  if Abs(Round(SRL.DeltaAngle(angle, Result))) < Randomness then Exit;
-  if Abs(Round(SRL.DeltaAngle(angle, Result + 180))) < Randomness then Exit;
+  if Abs(Round(SRL.DeltaAngle(angle, Result))) < randomness then Exit;
+  if Abs(Round(SRL.DeltaAngle(angle, Result + 180))) < randomness then Exit;
 
   Result += Random(-randomness,randomness);
   if SRL.Dice(50) then Result += 180;
@@ -288,15 +288,16 @@ begin
 end;
 
 
-function TWebGraph.NodesToPoints(NodeList: TIntegerArray): TPointArray; constref;
-var node: Int32;
+function TWebGraph.NodesToPoints(nodeList: TIntegerArray): TPointArray; constref;
+var
+  node: Int32;
 begin
-  for node in NodeList do
+  for node in nodeList do
     Result += Self.Nodes[node];
 end;
 
 
-function TWebGraph.PathBetween(p,q: TPoint; rnd: Double = 0): TPointArray;
+function TWebGraph.PathBetween(p, q: TPoint; rnd: Double = 0): TPointArray;
 var
   n1, n2: Int32;
   nodes: TIntegerArray;
@@ -317,7 +318,7 @@ begin
     RaiseException('Points ' + p.ToString() + ' and ' + q.ToString() + ' don''t connect!');
 end;
 
-function TWebGraph.PathBetweenEx(p,q: TPoint; rnd: Double = 0; attempts: Int32 = 3; safe: Boolean = True): TPointArray;
+function TWebGraph.PathBetweenEx(p, q: TPoint; rnd: Double = 0; attempts: Int32 = 3; safe: Boolean = True): TPointArray;
 var
   i, j: Int32;
   nS, nG, nodes: TIntegerArray;

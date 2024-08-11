@@ -1599,26 +1599,27 @@ begin
 end;
 
 function T2DPointArray.ToTBA(): TBoxArray; constref;
-var i:Int32;
+var
+  i: Int32;
 begin
   SetLength(Result, Length(self));
-  for i:=0 to High(Self) do
+  for i := 0 to High(Self) do
     Result[i] := GetTPABounds(Self[i]);
 end;
 
 
 function T2DPointArray.InSameTPA(p, q: TPoint): Boolean;
 var
-  i, a, b: Integer;
+  i, a, b: Int32;
 begin
   a := -1;
   b := -1;
 
-  for i := 0 to high(Self) do
+  for i := 0 to High(Self) do
   begin
     if (a = -1) and Self[i].Contains(p) then a := i;
     if (b = -1) and Self[i].Contains(q) then b := i;
-    if a = b then Exit(True);
+    if ((a > -1) or (b > -1)) and (a = b) then Exit(True);
   end;
 
   Result := a = b;

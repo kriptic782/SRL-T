@@ -60,11 +60,12 @@ end;
     _PathIndex: Int32;
     _Path: TPointArray;
 
-    {%codetools on}
+
     _DoorHandler: record
       Door: TRSDoor;
-      FlagMoved, Handling, SettingUp: Boolean;
+      FlagMoved, Handling, SettingUp, Skipped: Boolean;
     end;
+    {%codetools on}
   end;
 
 
@@ -407,7 +408,7 @@ end;
 
 function TRSWalkerV2.FindFlagMove(out flag: TPoint): Boolean;
 var
-  i: Integer;
+  i: Int32;
   p, q, median: TPoint;
   history: TPointarray;
 begin
@@ -431,7 +432,7 @@ begin
   median := history.Median();
   if p.DistanceTo(median) > RSTranslator.TileSize then
   begin
-    flag := median;
+    flag := median + [0,8];
     Result := True;
   end;
 end;
@@ -554,7 +555,7 @@ You will probably never need to call this directly but it can be used to take a 
 *)
 function TRSWalkerV2.WalkFinalStep(playerPoint, walkerPoint: TPoint; waitUntilDistance: Int32): Boolean;
 var
-  minimapPoint, flagpoint: TPoint;
+  minimapPoint, flag: TPoint;
   h, diff: Single;
   wasHandlingDoor: Boolean;
 begin
@@ -574,19 +575,22 @@ begin
   begin
     wasHandlingDoor := True;
     if not walkerPoint.InRange(Self._DoorHandler.Door.After, 4) and not walkerPoint.InRange(playerPoint, 10) then
-      if Self.FindFlagMove(flagpoint) then
-        if not Self.WebGraph^.WalkableClusters.InSameTPA(flagpoint, walkerpoint) then
+      if Self.FindFlagMove(flag) then
+      begin
+        flag := Self.WebGraph^.WalkableSpace.NearestPoint(flag);
+        if not Self.WebGraph^.WalkableClusters.InSameTPA(flag, walkerpoint) then
         begin
           WaitUntil(not Minimap.isPlayermoving(), 100, 1200);
           Self._DoorHandler.FlagMoved := True;
           Exit(False);
         end;
+      end;
   end;
 
   if Self._DoorHandler.SettingUp then
     if playerpoint.InRange(Self._DoorHandler.Door.Center, 99) and not playerpoint.InRange(walkerPoint, 20) then
     begin
-      Minimap.SetCompassAngleEx(Self._DoorHandler.Door.GetVisibleAngle(Minimap.GetCompassAngle(), Self._DoorHandler.Door.Before), 15);
+      Minimap.SetCompassAngleEx(Self._DoorHandler.Door.GetVisibleAngle(Minimap.GetCompassAngle()), 15);
       Self._DoorHandler.SettingUp := False;
     end;
 
@@ -605,7 +609,7 @@ You will probably never need to call this directly.
 *)
 function TRSWalkerV2.WalkStep(playerPoint, walkerPoint: TPoint): Boolean;
 var
-  minimapPoint, flagPoint: TPoint;
+  minimapPoint, flag: TPoint;
   waitUntilDistance: Int32;
   wasHandlingDoor: Boolean;
 begin
@@ -627,8 +631,10 @@ begin
     begin
       wasHandlingDoor := True;
       if not walkerPoint.InRange(Self._DoorHandler.Door.After, 4) and not walkerPoint.InRange(playerpoint, 10) then
-        if Self.FindFlagMove(flagpoint) then
-          if not Self.WebGraph^.WalkableClusters.InSameTPA(Self.WebGraph^.WalkableSpace.NearestPoint(flagpoint), walkerpoint) then
+        if Self.FindFlagMove(flag) then
+        begin
+          flag := Self.WebGraph^.WalkableSpace.NearestPoint(flag);
+          if not Self.WebGraph^.WalkableClusters.InSameTPA(flag, walkerpoint) then
           begin
             if Self.WebGraph^.WalkableClusters.InSameTPA(Self.Position(), Self._DoorHandler.Door.After) then
               Exit;
@@ -637,12 +643,13 @@ begin
             Self._DoorHandler.FlagMoved := True;
             Exit(False);
           end;
+        end;
     end;
 
     if Self._DoorHandler.SettingUp then
       if playerpoint.InRange(Self._DoorHandler.Door.Center, 99) and not playerpoint.InRange(walkerPoint, 20) then
       begin
-        Minimap.SetCompassAngleEx(Self._DoorHandler.Door.GetVisibleAngle(Minimap.GetCompassAngle(), Self._DoorHandler.Door.Before), 15);
+        Minimap.SetCompassAngleEx(Self._DoorHandler.Door.GetVisibleAngle(Minimap.GetCompassAngle()), 15);
         Self._DoorHandler.SettingUp := False;
       end;
 
@@ -718,7 +725,7 @@ begin
   bitmap.Free();
 end;
 
-
+{%codetools off}
 function TRSWalkerV2._BuildPath(tpa: TPointArray): TPointArray;
 var
   i, j: Int32;
@@ -815,6 +822,7 @@ begin
   if (Result mod 2 = 0) then
     Minimap.WaitFlag();
 end;
+{%codetools on}
 
 (*
 ## TRSWalkerV2.WalkPath
@@ -871,46 +879,38 @@ begin
 end;
 
 
-function TRSWalkerV2.SolveDoor(): Boolean;
+function TRSWalkerV2.SolveDoor(door: TRSDoor; compass: Single): Boolean;
 var
-  Rect: TRectangle;
-  MiddleOfDoorside, DoorTile: TPoint;
+  rect: TRectangle;
+  middleOfDoorside: TPoint;
   tpa: TPointArray;
-  AngleOpposite: Boolean;
-  DoorAngle: Integer;
   option: TRSChooseOption_Option;
 begin
-  doorAngle := Self._DoorHandler.Door.GetDoorAngle(Self._DoorHandler.Door.Before);
-
-  if Abs(SRL.DeltaAngle(Minimap.GetCompassAngle(), doorAngle)) < 90 then
-    doorTile := Self._DoorHandler.Door.After
-  else
-  begin
-    DoorTile := Self._DoorHandler.Door.Before;
-    AngleOpposite := True;
-  end;
+  Self.DebugLn('Solving door from far away');
 
   //Self.RotateTowardsDoor(door, TileBeforeDoor); //This should already have been called
   WaitUntil(not minimap.IsPlayerMoving(), 10,7000);
-  Rect := Self.GetRectMS(Self.Position(), doorTile);
+  rect := Self.GetRectMS(Self.Position(), door.After);
 
   //move mouse to the average of the middle of the bottom edge and the center of the rect
   // recent addition, shift 3/5 of the way towards the bottom instead of in the middle
   // potential addition for more randomness: make tpa from line and grow by 1
 
-  tpa := TRSDoor.GetCorners(rect.ToTPA(), doorAngle, Minimap.GetCompassAngle());
-  MiddleOfDoorside := [Round((tpa[0].X+tpa[1].X)/2), Round((tpa[0].Y+tpa[1].Y)/2)];
+  tpa := TRSDoor.GetCorners(rect.ToTPA(), door.GetDoorAngle(), compass);
+  middleOfDoorside := [Round((tpa[0].X+tpa[1].X)/2), Round((tpa[0].Y+tpa[1].Y)/2)];
 
-  Mouse.move([Round((2*rect.mean.X+3*MiddleOfDoorside.X)/5), Round((2*rect.mean.Y+3*MiddleOfDoorside.Y)/5)]);
+  Mouse.Move([Round((2*rect.Mean().X+3*middleOfDoorside.X)/5), Round((2*rect.Mean().Y+3*middleOfDoorside.Y)/5)]);
 
   //Check Uptext and walk through
   if Mainscreen.IsUpText(['Open', 'Squeeze']) then
   begin
     Mouse.Click(MOUSE_LEFT);
     Exit(True);
-  end
-  else if Mainscreen.IsUpText(['Walk here']) then
+  end;
+
+  if Mainscreen.IsUpText(['Walk here']) then
   begin
+    Self._DoorHandler.Skipped := True;
     if Mainscreen.IsUpText('Walk here') then
     begin
       Mouse.Click(MOUSE_LEFT);
@@ -918,29 +918,21 @@ begin
     end;
 
     Exit(ChooseOption.Select('Walk Here'));
-  end
-  else
-  begin
-    Result := ChooseOption.HasOption(['Open'], option, True, False);
-
-    if Result then
-      ChooseOption.Select(option)
-    else
-      ChooseOption.Select('Walk here');
-
-    Exit;
   end;
-  if Self.Position().DistanceTo(Self._DoorHandler.Door.After) < Self.Position().DistanceTo(Self._DoorHandler.Door.Before) then
-    Exit(True);
+
+  Result := ChooseOption.HasOption(['Open'], option, True, False);
+
+  if Result then ChooseOption.Select(option)
+  else ChooseOption.Select('Walk here');
 end;
 
 
 function TRSWalkerV2.WalkDoorway(path: TPointArray; door: TRSDoor; waitUntilDistance: Int32 = 0; debug: Boolean = False): Boolean;
 var
-  playerPoint: TPoint;
+  playerPoint, flag: TPoint;
   index, fails: Int32;
   rect: TRectangle;
-  compass: Single;
+  compass, dAngle, cAngle: Single;
 begin
   Self._WalkPathSetup(path);
 
@@ -959,14 +951,15 @@ begin
 
     if not Self._DoorHandler.Handling then
     begin
-      compass := Minimap.GetCompassAngle(False);
+      cAngle := Minimap.GetCompassAngle(True);
+      compass := radians(cAngle);
       rect := Self.GetRectMS(playerPoint, door.After, 0, [0,0], compass);
 
       if Mainscreen.IsVisible(rect) then
       begin
         if not Self._DoorHandler.SettingUp then
         begin
-          compass := door.GetVisibleAngle(Minimap.GetCompassAngle(), door.Before);
+          compass := door.GetVisibleAngle(Minimap.GetCompassAngle());
           Minimap.SetCompassAngleEx(compass, 15);
 
           Self._DoorHandler.SettingUp := True;
@@ -984,15 +977,32 @@ begin
 
         if Mainscreen.IsVisible(rect) then
         begin
-          Result := Self.SolveDoor();
+          Result := Self.SolveDoor(door, cAngle);
           playerPoint := Self.Position();
 
           if Result then
           begin
+            if Self._DoorHandler.Skipped then
+            begin
+              Self._DoorHandler.Skipped := False;
+
+              if Self.FindFlagMove(flag) then
+              begin
+                Self.DebugLn('Flag moved!');
+                if not Self.WebGraph^.WalkableClusters.InSameTPA(flag, door.After) then
+                begin
+                  Self.DebugLn('We didn''t go through the door!');
+                  WaitUntil(not Minimap.IsPlayermoving(), 100, 1200);
+                  Self._DoorHandler.FlagMoved := True;
+                  Exit(False);
+                end;
+              end;
+            end;
+
             WaitUntil(Minimap.IsPlayerMoving(), 200, 1000);
-            WaitUntil(not Minimap.IsPlayerMoving(), 50, 2000 + 600 * Round(playerPoint.DistanceTo(door.Before)/4)); //max duration it can take to get to a point with a 2 second buffer
-            playerPoint := Self.Position();
-            Exit(playerPoint.DistanceTo(door.Before) <= 4);
+            WaitUntil(not Minimap.IsPlayerMoving(), 50, 2000 + 600 * Round(playerPoint.DistanceTo(door.Before) / 4)); //max duration it can take to get to a point with a 2 second buffer
+
+            Exit(door.After.InRange(Self.Position(), 3));
           end;
 
           index := 0;
@@ -1099,8 +1109,8 @@ end;
 
 function TRSWalkerV2._HardSolveDoor(me: TPoint; door: TRSDoor): Boolean;
 var
-  destination, cardinal, middleBottom: TPoint;
-  doorAngle: Integer;
+  p, middleBottom: TPoint;
+  angle: Single;
   innerProduct, doorRadians, tmp: Double;
   rect: TRectangle;
   tpa: TPointArray;
@@ -1108,26 +1118,12 @@ begin
   if door.DoorType = ERSDoorType.UNKNOWN then
     Exit;
 
-  for cardinal in [[0,-1], [1,0], [0,1], [-1,0]] do
-  begin
-    tmp := cardinal.Dot(door.Center - door.Before);
-    if tmp <= innerProduct then Continue;
+  p := Self.PointToMM(me, door.After, Minimap.GetCompassAngle(False));
 
-    case cardinal of
-      [0,-1]: doorAngle := 0;
-      [-1,0]: doorAngle := 90;
-      [0,1]:  doorAngle := 180;
-      [1,0]:  doorAngle := 270;
-    end;
+  angle := -(Minimap.GetCompassAngle() - Minimap.Center().AngleBetween(p));
+  Minimap.SetCompassAngleEx(angle, 15);
 
-    innerProduct := tmp;
-  end;
-
-  doorRadians := Radians(doorAngle);
-  Minimap.SetCompassAngle(doorAngle);
-
-  destination := me - [Round(Sin(doorRadians) * 4), Round(Cos(doorRadians) * 4)];
-  rect := Self.GetRectMS(me, destination, 0, [0,0], doorAngle);
+  rect := Self.GetRectMS(me, door.After, 0, [0,0], Minimap.GetCompassAngle(False));
   //move mouse slightly below the mean of the rectangle
   tpa := rect.ToTPA();
   tpa.SortByY(False);
@@ -1143,10 +1139,10 @@ begin
       Exit;
   end;
 
-  Self.WalkBlind(destination, 0);
+  Self.WalkBlind(door.After, 0);
 
   with Self.Position() do
-    Result := destination.DistanceTo([X, Y]) < me.DistanceTo([X, Y]);
+    Result := door.After.DistanceTo([X, Y]) < me.DistanceTo([X, Y]);
 end;
 
 
@@ -1156,10 +1152,8 @@ var
 begin
   for i := 0 to High(path) do
     for Result := 0 to High(doors) do
-    begin
       if RSTranslator.Normalize(path[i]) in [doors[Result].Before, doors[Result].After] then
         Exit;
-    end;
   Result := -1;
 end;
 
@@ -1226,6 +1220,7 @@ var
   path: TPointArray;
   i, j, d: Int32;
   doors: TRSDoorArray;
+  doorTile: TPoint;
 begin
   if not System.InRange(pathRandomness, 0, 1) then
     Self.Fatal('TRSWalkerV2.WebWalk `PathRandomness` must be within 0..1');
@@ -1235,7 +1230,6 @@ begin
   for i := 1 to 10 do
   begin
     me := Self.Position();
-
     path := _GetPath(me, False);
 
     Self._DoorHandler.SettingUp := False;
@@ -1244,24 +1238,37 @@ begin
     d := Self.GetDoorOnPath(path, doors);
     if d = -1 then Break;
 
+    if Abs(SRL.DeltaAngle(Minimap.GetCompassAngle(True), doors[d].GetDoorAngle())) >= 90 then
+    begin
+      doorTile := doors[d].Before;
+      doors[d].Before := doors[d].After;
+      doors[d].After := doorTile;
+    end;
+
     Self._DoorHandler.Door := doors[d];
 
     for j := High(path) downto 0 do
     begin
-      if RSTranslator.Normalize(path[j]) in [doors[d].Before, doors[d].After] then Break;
+      if RSTranslator.Normalize(path[j]) = doors[d].After then Break;
       Delete(path, j, 1);
     end;
 
     Self.DebugLn('Attempting to solve door.');
-    if Self.WalkDoorway(path, doors[d], waitUntilDistance, debug) then
-      Delete(doors, d, 1)
-    else
+
+    Self.WalkDoorway(path, doors[d], waitUntilDistance, debug);
+
+    if doors[d].After.InRange(Self.Position(), 3) then
     begin
-      Self.DebugLn('Hard solving door.');
-      if Self.WalkStep(Self.Position(), doors[d].Before) then
-        if Self._HardSolveDoor(Self.Position(), doors[d]) then
-          Delete(doors, d, 1);
+      Delete(doors, d, 1);
+      Continue;
     end;
+
+    Self.DebugLn('Hard solving door.');
+    if Self.WalkStep(Self.Position(), doors[d].Before) then
+      Self._HardSolveDoor(Self.Position(), doors[d]);
+
+    if doors[d].After.InRange(Self.Position(), 3) then
+      Delete(doors, d, 1);
   end;
 
   path := _GetPath(me, True);

@@ -28,14 +28,33 @@ begin
   bitmap.Free();
 end;
 
-procedure Debug(TPA: TPointArray); overload;
+procedure Debug(tpa: TPointArray); overload;
 begin
-  Debug([TPA]);
+  Debug([tpa]);
 end;
 
-procedure Debug(R: TRectangle); overload;
+procedure Debug(p: TPoint; color: Int32 = $FF); overload;
+var
+  bitmap: TMufasaBitmap;
 begin
-  Debug(R.ToTPA().Connect());
+  {$IFNDEF SRL_DISABLE_REMOTEINPUT}
+  if RSClient.DebugOnClient then
+  begin
+    RSClient.Image().Clear();
+    RSClient.Image().DrawCross(p, 4, color);
+    Exit;
+  end;
+  {$ENDIF}
+
+  bitmap.FromClient();
+  bitmap.DrawCross(p, 4, color);
+  bitmap.Debug();
+  bitmap.Free();
+end;
+
+procedure Debug(r: TRectangle); overload;
+begin
+  Debug(r.ToTPA().Connect());
 end;
 
 procedure Debug(rectArray: TRectArray); overload;
@@ -49,31 +68,36 @@ begin
   Debug(atpa);
 end;
 
-procedure Debug(Box: TBox); overload;
+procedure Debug(c: TCircle); overload;
 begin
-  Debug(EdgeFromBox(Box));
+  Debug(TPAFromCircle(c.X, c.Y, c.Radius));
 end;
 
-procedure Debug(Boxes: TBoxArray); overload;
+procedure Debug(b: TBox); overload;
+begin
+  Debug(EdgeFromBox(b));
+end;
+
+procedure Debug(boxes: TBoxArray); overload;
 var
   atpa: T2DPointArray;
-  I: Int32;
+  i: Int32;
 begin
-  SetLength(atpa, Length(Boxes));
-  for I := 0 to High(atpa) do
-    atpa[I] := EdgeFromBox(Boxes[I]);
+  SetLength(atpa, Length(boxes));
+  for i := 0 to High(atpa) do
+    atpa[i] := EdgeFromBox(boxes[i]);
 
   Debug(atpa);
 end;
 
-procedure Debug(Matrix: T2DIntegerArray); overload;
+procedure Debug(matrix: T2DIntegerArray); overload;
 var
-  Bitmap: TMufasaBitmap;
+  bitmap: TMufasaBitmap;
 begin
-  Bitmap.Init();
-  Bitmap.DrawMatrix(Matrix);
-  Bitmap.Debug();
-  Bitmap.Free();
+  bitmap.Init();
+  bitmap.DrawMatrix(matrix);
+  bitmap.Debug();
+  bitmap.Free();
 end;
 
 procedure Debug(cuboid: TCuboid; color: Integer = $0000FF); overload;
