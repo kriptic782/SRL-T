@@ -89,7 +89,7 @@ begin
       @Self.Position, @Self.Height, @Self.Loader.GetLocal,
       @Self.Loader.Graph, Self.Loader.Map
     );
-
+    Self.Walker.Name := 'Map.Walker';
     AddOnTerminate(@Self.Loader.Free);
     Self.IsSetup := True;
   end;
@@ -501,7 +501,12 @@ begin
   if Self.RegionIndex > -1 then
   begin
     Self.Region := Self.Loader.Regions[Self.RegionIndex];
-    Exit(Self.Loader.GetGlobal(Self.RegionIndex, Result));
+    Result := Self.Loader.GetGlobal(Self.RegionIndex, Result);
+
+    if Self.Loader.UsingChunks then
+      Exit(RSTranslator.Normalize(Result))
+    else
+      Exit;
   end;
 
   Result := [0,0];

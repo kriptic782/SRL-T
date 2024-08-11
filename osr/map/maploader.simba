@@ -11,6 +11,7 @@ TRSWalker by Slacky and it's future iterations made by Olly.
 {$ENDIF}
 
 {$I files/maps/map.graph}
+{$SCOPEDENUMS ON}
 
 const
   RSMAP_PATH: String = {$MACRO CURRENT_DIRECTORY};
@@ -210,15 +211,68 @@ end;
 
 
 function TRSChunkLoader.BuildGraph(name: String; map: TMufasaBitmap): TWebGraph;
+
+  function _FindDoors(doorATPA: T2DPointArray; white: TPointArray): TRSDoorArray;
+  var
+    direction, center: TPoint;
+    i: Integer;
+  begin
+    SetLength(Result, Length(doorATPA));
+
+    for i := 0 to High(doorATPA) do
+    begin
+      center := MiddleTPA(doorATPA[i]);
+      Result[i].Center := center;
+      direction := [0,0];
+
+      if PointInTPA(center + [1,0], doorATPA[i]) and PointInTPA(center + [-1,0], doorATPA[i]) then
+        direction := [0,1];
+
+      if PointInTPA(center + [0,1], doorATPA[i]) and PointInTPA(center + [0,-1], doorATPA[i]) then
+        direction := [1,0];
+
+      if PointInTPA(center + [1,1], doorATPA[i]) and PointInTPA(center + [-1,-1], doorATPA[i]) then
+        direction := [1,-1];
+
+      if PointInTPA(center + [1,-1], doorATPA[i]) and PointInTPA(center + [-1,1], doorATPA[i]) then
+        direction := [1,1];
+
+      if direction = [0,0] then Continue;
+
+      //check if pixels around the door are walkable to exclude weird objects colored red on the map as being doors
+      //also excludes open doors to be detected as doors needed to be passed through
+      if PointInTPA(center + direction, white) and PointInTPA(center + direction.Rotate(180, [0,0]), white) then
+      begin
+        Result[i].Direction := direction;
+        case Length(doorATPA[i]) of
+          4: Result[i].DoorType := ERSDoorType.NORMAL;
+          8: Result[i].DoorType := ERSDoorType.WIDE;
+        end;
+      end;
+
+      if Result[i].DoorType = ERSDoorType.WIDE then
+        case Result[i].Direction of
+          [0,1]: Result[i].Center.X -= 2;
+          [1,0]: Result[i].Center.Y -= 2;
+        end;
+
+      Result[i].Before += Result[i].Center + Result[i].Direction * 2;
+      Result[i].After  += Result[i].Center - Result[i].Direction * 2;
+    end;
+  end;
+
 var
-  a, b, i, j, n, len, hi, divider: Int32;
+  a, b, i, j, n, len, hi, divider, nonSepDoors: Int32;
   atpa, parts: T2DPointArray;
-  white, red, skeleton, nodes, tpa: TPointArray;
+  white, red, skeleton, nodes, tpa, doorsInTpa, doorNodes: TPointArray;
   bounds: TBox;
   p, q: TPoint;
   nodesTree, skeletonTree: TSlackTree;
   jInRange, nInRange: Boolean;
   connectionMap: array of array of TIntegerArray;
+  doors: TRSDoorArray;
+  door: TRSDoor;
+  doorPaths: T2DIntegerArray;
 begin
   map.FindColors(white, $FFFFFF);
   map.FindColors(red, $FF);
@@ -226,6 +280,28 @@ begin
   Self.DebugLn('Generating webgraph for region: ' + name);
 
   atpa := white.NRCluster(1);
+
+  doors := _FindDoors(red.NRCluster(1), white);
+
+  atpa.sortBySize(0, True);
+
+  for i := 0 to high(doors) do
+  begin
+    door := doors[i];
+    if not door.IsSeparatingAreas(atpa) then
+    begin
+      nonSepDoors += 1;
+      Continue;
+    end;
+
+    door.SEPARATING := True;
+
+    Result.Doors += door;
+    doorNodes += [door.Before, door.After];
+    SetLength(doorPaths, Length(doorNodes));
+    doorPaths[(i-nonSepDoors)*2] += (i-nonSepDoors)*2+1;
+    doorPaths[(i-nonSepDoors)*2+1] += (i-nonSepDoors)*2;
+  end;
 
   hi := High(atpa);
 
@@ -332,6 +408,51 @@ begin
 
   SetLength(Result.Paths, Length(Result.Nodes));
   SetLength(Result.Names, Length(Result.Nodes));
+
+  //Connect doornodes to nearest node
+  nodes := Copy(Result.Nodes);
+  nodesTree.Init(nodes);
+
+  len := Length(Result.Nodes);
+
+  for i := 0 to High(atpa) do
+  begin
+    doorsInTpa := atpa[i].Intersection(doorNodes);
+
+    for j := 0 to High(doorsInTpa) do
+    begin
+      for p in nodesTree.KNearest(doorsInTpa[j], 20) do
+      begin
+        if atpa[i].Contains(p) then
+        begin
+          n := Result.Nodes.Find(p);
+          Result.Nodes += doorsInTpa[j];
+          SetLength(result.Paths, Length(Result.Nodes));
+          Result.Paths[n] += High(Result.Nodes);
+          Result.Paths[High(Result.Nodes)] += n;
+          Break;
+        end;
+      end;
+
+      if not Result.Nodes.Contains(doorsInTpa[j]) then
+        Result.Nodes += doorsInTpa[j];
+    end;
+  end;
+
+  nodesTree.Free();
+
+  nodes := Copy(Result.Nodes, len, Length(Result.Nodes)-len);
+  for n := 0 to high(doorNodes) do
+  begin
+    i := nodes.Find(doorNodes[n]);
+    j := nodes.Find(doorNodes[doorPaths[n][0]]);
+    if (i < 0) or (j < 0) then Continue;
+    Result.Paths[len + i] += len + j;
+  end;
+
+
+  SetLength(Result.Paths, Length(Result.Nodes));
+  SetLength(Result.Names, Length(Result.Nodes));
 end;
 
 function TRSChunkLoader.GetGraph(name: String; level: UInt32; map: TMufasaBitmap): TWebGraph; overload;
@@ -359,6 +480,7 @@ begin
       json.Put('nodes', Result.NodesToString());
       json.Put('paths', Result.PathsToString());
       json.Put('names', Result.NamesToString());
+      json.Put('doors', Result.DoorsToString());
 
       if not WriteFileContents(cachename + '.json', json.ToString(2), False) then
         Self.Fatal('Failed to save ' + name + ' webgraph.');
@@ -377,6 +499,7 @@ begin
     Result.LoadNodesFromString(json.getString('nodes'));
     Result.LoadPathsFromString(json.getString('paths'));
     Result.LoadNamesFromString(json.getString('names'));
+    Result.LoadDoorsFromString(json.getString('doors'));
   except
     TerminateScript('Something went wrong loading the webraph: ' + GetExceptionMessage());
   finally
@@ -794,15 +917,17 @@ begin
 end;
 
 
+
 procedure TRSMapLoader.Load(chunks: TBoxArray; planes: TIntegerArray = [0]; downscale: UInt32 = 8; padding: UInt32 = 40);
 var
-  i, j, idx: Int32;
+  i, j, n, idx: Int32;
   bitmaps, hbitmaps, cbitmaps: TMufasaBitmapArray;
   s, f, tmp: TPoint;
   graphs: array of TWebGraph;
   json: TJSONArray;
   objects, npcs: array of TJSONArray;
   name: String;
+  white, walkableSpace: TPointArray;
 begin
   Self.Init(downscale);
   SetLength(Self.Regions, Length(chunks) * Length(planes));
@@ -836,10 +961,19 @@ begin
       end;
 
       cbitmaps += Self.Loader.GetMap(s, f, planes[i], ERSMapType.COLLISION);
+      cbitmaps[idx].FindColors(white, $FFFFFF);
+      walkableSpace += Self.GetGlobal(idx, white, [padding, padding]);
+
       if not Self.SkipGraph then
       begin
         graphs += Self.Loader.GetGraph(name, planes[i], cbitmaps[idx]);
         graphs[idx].Nodes := Self.GetGlobal(idx, graphs[idx].Nodes, [padding, padding]);
+        for n :=0 to high(graphs[idx].Doors) do
+        begin
+          graphs[idx].Doors[n].Before := Self.GetGlobal(idx, graphs[idx].Doors[n].Before, [padding, padding]);
+          graphs[idx].Doors[n].After  := Self.GetGlobal(idx, graphs[idx].Doors[n].After, [padding, padding]);
+          graphs[idx].Doors[n].Center := Self.GetGlobal(idx, graphs[idx].Doors[n].Center, [padding, padding]);
+        end;
       end;
 
       json := Self.Loader.GetJSON(s, f, planes[i], ERSMapJSON.OBJECTS);
@@ -855,8 +989,19 @@ begin
   Self.Map        := Self.InternalLoad(bitmaps);
   Self.Heightmap  := Self._InternalLoad(hbitmaps);
   Self.Collision  := Self._InternalLoad(cbitmaps);
+
   if not Self.SkipGraph then
-    Self.Graph      := Self.InternalGraphLoad(graphs);
+  begin
+    Self.Graph := Self.InternalGraphLoad(graphs);
+    Self.Graph.WalkableSpace := walkableSpace;
+    Self.Graph.WalkableClusters := walkableSpace.NRCluster(1);
+    for i := 0 to High(Self.Graph.Doors) do
+    begin
+      Self.Graph.Doors[i].Before := RSTranslator.Normalize(Self.Graph.Doors[i].Before);
+      Self.Graph.Doors[i].After  := RSTranslator.Normalize(Self.Graph.Doors[i].After);
+    end;
+  end;
+
   Self.ObjectData := Self.InternalJSONLoad(objects);
   Self.NPCData    := Self.InternalJSONLoad(npcs);
 
@@ -867,13 +1012,14 @@ end;
 
 procedure TRSMapLoader.Load(chunks: array of TRSMapChunk; downscale: UInt32 = 8; padding: UInt32 = 40); overload;
 var
-  i, j, idx: Int32;
+  i, j, n, idx: Int32;
   bitmaps, hbitmaps, cbitmaps: TMufasaBitmapArray;
   s, f, tmp: TPoint;
   graphs: array of TWebGraph;
   json: TJSONArray;
   objects, npcs: array of TJSONArray;
   name: String;
+  white, walkableSpace: TPointArray;
 begin
   Self.Init(downscale);
 
@@ -911,10 +1057,19 @@ begin
       end;
 
       cbitmaps += Self.Loader.GetMap(s, f, chunks[i].Planes[j], ERSMapType.COLLISION);
+      cbitmaps[idx].FindColors(white, $FFFFFF);
+      walkableSpace += Self.GetGlobal(idx, white, [padding, padding]);
+
       if not Self.SkipGraph then
       begin
         graphs += Self.Loader.GetGraph(name, chunks[i].Planes[j], cbitmaps[idx]);
         graphs[idx].Nodes := Self.GetGlobal(idx, graphs[idx].Nodes, [padding, padding]);
+        for n :=0 to high(graphs[idx].Doors) do
+        begin
+          graphs[idx].Doors[n].Before := Self.GetGlobal(idx, graphs[idx].Doors[n].Before, [padding, padding]);
+          graphs[idx].Doors[n].After  := Self.GetGlobal(idx, graphs[idx].Doors[n].After, [padding, padding]);
+          graphs[idx].Doors[n].Center := Self.GetGlobal(idx, graphs[idx].Doors[n].Center, [padding, padding]);
+        end;
       end;
 
       json := Self.Loader.GetJSON(s, f, chunks[i].Planes[j], ERSMapJSON.OBJECTS);
@@ -931,7 +1086,16 @@ begin
   Self.Heightmap  := Self._InternalLoad(hbitmaps);
   Self.Collision  := Self._InternalLoad(cbitmaps);
   if not Self.SkipGraph then
-    Self.Graph      := Self.InternalGraphLoad(graphs);
+  begin
+    Self.Graph := Self.InternalGraphLoad(graphs);
+    Self.Graph.WalkableSpace := walkableSpace;
+    Self.Graph.WalkableClusters := walkableSpace.NRCluster(1);
+    for i := 0 to High(Self.Graph.Doors) do
+    begin
+      Self.Graph.Doors[i].Before := RSTranslator.Normalize(Self.Graph.Doors[i].Before);
+      Self.Graph.Doors[i].After  := RSTranslator.Normalize(Self.Graph.Doors[i].After);
+    end;
+  end;
   Self.ObjectData := Self.InternalJSONLoad(objects);
   Self.NPCData    := Self.InternalJSONLoad(npcs);
 
@@ -1140,23 +1304,24 @@ begin
 end;
 
 function TRSMapLoader.GetGlobal(regionIndex: Int32; tpa: TPointArray; offset: TPoint = [0,0]): TPointArray; overload;
-var
-  p: TPoint;
 begin
   if regionIndex = -1 then
     Exit(tpa);
 
-  for p in tpa do
-    Result += p + Self.Regions[regionIndex].Offset - [Self.Regions[regionIndex].Region.X1, Self.Regions[regionIndex].Region.Y1] + offset;
+  Result := tpa.Offset(Self.Regions[regionIndex].Offset - [Self.Regions[regionIndex].Region.X1, Self.Regions[regionIndex].Region.Y1] + offset);
 end;
 
 function TRSMapLoader.GetGlobal(tpa: TPointArray; offset: TPoint = [0,0]): TPointArray; overload;
 var
   p: TPoint;
 begin
+  if Length(Self.Regions) = 1 then
+    Exit(Self.GetGlobal(Self.LocalIndex(tpa[0]), tpa, offset));
+
   for p in tpa do
     Result += Self.GetGlobal(Self.LocalIndex(p), p, offset);
 end;
+
 
 
 function TRSMapLoader.GetLocal(regionIndex: Int32; p: TPoint; offset: TPoint = [0,0]): TPoint;
@@ -1189,5 +1354,3 @@ begin
   for p in tpa do
     Result += Self.GetLocal(Self.GlobalIndex(p), p, offset);
 end;
-
-

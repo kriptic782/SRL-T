@@ -99,6 +99,36 @@ begin
   Result := Self.Find(value) > -1;
 end;
 
+function TPointArray.ContainsAll(values: TPointArray): Boolean;
+var
+  small, large: ^TPointArray;
+  i, j, found: Int32;
+begin
+  if High(Self) > High(values) then
+  begin
+    small := @values;
+    large := @Self;
+  end
+  else
+  begin
+    small := @Self;
+    large := @values;
+  end;
+
+  for i := 0 to High(large^) do
+    for j := 0 to High(small^) do
+      if small^[j] = large^[i] then
+      begin
+        found += 1;
+        if found = Length(values) then
+          Break(2)
+        else
+          Break;
+      end;
+
+  Result := found = Length(values);
+end;
+
 
 function TPointArray.FindAll(const Value: TPoint): TIntegerArray; constref;
 var
@@ -1576,6 +1606,23 @@ begin
     Result[i] := GetTPABounds(Self[i]);
 end;
 
+
+function T2DPointArray.InSameTPA(p, q: TPoint): Boolean;
+var
+  i, a, b: Integer;
+begin
+  a := -1;
+  b := -1;
+
+  for i := 0 to high(Self) do
+  begin
+    if (a = -1) and Self[i].Contains(p) then a := i;
+    if (b = -1) and Self[i].Contains(q) then b := i;
+    if a = b then Exit(True);
+  end;
+
+  Result := a = b;
+end;
 
 function T2DPointArray.First(): TPointArray; constref;
 begin

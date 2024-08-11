@@ -448,8 +448,8 @@ begin
   Bitmap.DrawBox(Self.Slider, $00FFFF);
   Bitmap.SetFontAntialiasing(False);
   Bitmap.SetFontSize(30);
-  with Bitmap.TextSize(ToString(Self.Position)) do
-    Bitmap.DrawText(ToString(Self.Position), [Self.SliderRegion.Middle.X - (X div 2), Self.Slider.Middle.Y - (Y div 3)], $00FF00);
+  with Bitmap.TextSize(ToStr(Self.Position)) do
+    Bitmap.DrawText(ToStr(Self.Position), [Self.SliderRegion.Middle.X - (X div 2), Self.Slider.Middle.Y - (Y div 3)], $00FF00);
 end;
 
 function TRSScrollBar.IsVisible(): Boolean;

@@ -86,6 +86,18 @@ begin
 end;
 
 (*
+## TPoint.Dot
+```pascal
+function TPoint.Dot(other: TPoint): Double; constref;
+```
+Returns the dot product of 2 points
+*)
+function TPoint.Dot(other: TPoint): Double; constref;
+begin
+  Result := Self.X * other.X + Self.Y * other.Y;
+end;
+
+(*
 ## TPoint.AngleBetween
 ```pascal
 function TPoint.AngleBetween(other: TPoint): Double; constref;
@@ -184,4 +196,7 @@ begin
 end;
 
 
-
+function TPoint.ToString(): String;
+begin
+  Result := '[' + ToStr(Self.X) + ',' + ToStr(Self.Y) + ']';
+end;

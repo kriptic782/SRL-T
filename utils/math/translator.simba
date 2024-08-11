@@ -148,6 +148,17 @@ begin
 end;
 
 
+function TRSTranslator.Normalize(p: TPoint): TPoint;
+begin
+  Result := [p.X - (p.X mod Self.TileSize), p.Y - (p.Y mod Self.TileSize) + (Self.TileSize div 2)];
+end;
+
+function TRSTranslator.NormalizeDoor(p: TPoint): TPoint;
+begin
+  Result := [p.X - (p.X mod Self.TileSize) + 1, p.Y - (p.Y mod Self.TileSize) + 1];
+end;
+
+
 var
   RSTranslator: TRSTranslator;
 
