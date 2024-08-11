@@ -932,7 +932,7 @@ var
   playerPoint, flag: TPoint;
   index, fails: Int32;
   rect: TRectangle;
-  compass, dAngle, cAngle: Single;
+  compass, cAngle: Single;
 begin
   Self._WalkPathSetup(path);
 
@@ -1109,9 +1109,8 @@ end;
 
 function TRSWalkerV2._HardSolveDoor(me: TPoint; door: TRSDoor): Boolean;
 var
-  p, middleBottom: TPoint;
+  middleBottom: TPoint;
   angle: Single;
-  innerProduct, doorRadians, tmp: Double;
   rect: TRectangle;
   tpa: TPointArray;
 begin
@@ -1228,7 +1227,6 @@ var
   path: TPointArray;
   i, j, d: Int32;
   doors: TRSDoorArray;
-  doorTile: TPoint;
 begin
   if not System.InRange(pathRandomness, 0, 1) then
     Self.Fatal('TRSWalkerV2.WebWalk `PathRandomness` must be within 0..1');

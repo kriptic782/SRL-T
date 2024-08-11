@@ -7,6 +7,8 @@
   {$I SRL-T/utils.simba}
 {$ENDIF}
 
+{$SCOPEDENUMS ON}
+
 type
   ERSDoorType = (UNKNOWN, NORMAL, WIDE);
   TRSDoor = record
