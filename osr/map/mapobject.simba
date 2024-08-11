@@ -769,7 +769,7 @@ begin
       p := Self.Walker^.MMToMap(me, p, angle) + Self.Offset;
       diff := -(h-Self.Walker^.Height(p)) / 4;
 
-      Result += Minimap.GetCuboidMS(dots[i] + [Round(0.15*diff), Round(0.11*diff)], Self.Size, [0,0,diff], angle);
+      Result += Minimap.GetCuboidMS(dots[i] + [Round(0.15*diff), Round(0.11*diff)], Self.Size, [2,2,diff], angle);
     end;
 
     Exit;

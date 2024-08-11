@@ -1118,9 +1118,7 @@ begin
   if door.DoorType = ERSDoorType.UNKNOWN then
     Exit;
 
-  p := Self.PointToMM(me, door.After, Minimap.GetCompassAngle(False));
-
-  angle := -(Minimap.GetCompassAngle() - Minimap.Center().AngleBetween(p));
+  angle := door.GetVisibleAngle(Minimap.GetCompassAngle());
   Minimap.SetCompassAngleEx(angle, 15);
 
   rect := Self.GetRectMS(me, door.After, 0, [0,0], Minimap.GetCompassAngle(False));
@@ -1146,14 +1144,24 @@ begin
 end;
 
 
-function TRSWalkerV2.GetDoorOnPath(path: TPointArray; doors: TRSDoorArray): Int32;
+function TRSWalkerV2.GetDoorOnPath(path: TPointArray; out doors: TRSDoorArray): Int32;
 var
   i: Int32;
+  tmp: TPoint;
 begin
   for i := 0 to High(path) do
     for Result := 0 to High(doors) do
-      if RSTranslator.Normalize(path[i]) in [doors[Result].Before, doors[Result].After] then
+    begin
+      if RSTranslator.Normalize(path[i]) = doors[Result].Before then
         Exit;
+      if RSTranslator.Normalize(path[i]) = doors[Result].After then
+      begin
+        tmp := doors[Result].Before;
+        doors[Result].Before := doors[Result].After;
+        doors[Result].After := tmp;
+        Exit;
+      end;
+    end;
   Result := -1;
 end;
 
@@ -1237,13 +1245,6 @@ begin
 
     d := Self.GetDoorOnPath(path, doors);
     if d = -1 then Break;
-
-    if Abs(SRL.DeltaAngle(Minimap.GetCompassAngle(True), doors[d].GetDoorAngle())) >= 90 then
-    begin
-      doorTile := doors[d].Before;
-      doors[d].Before := doors[d].After;
-      doors[d].After := doorTile;
-    end;
 
     Self._DoorHandler.Door := doors[d];
 

@@ -43,26 +43,24 @@ const
   WEST:   TPoint = [-1,0];
   CARDINALS: TPointArray = [NORTH,EAST,SOUTH,WEST];
 var
-  innerProduct: Double;
+  best: Double;
   cardinal, doorDirection, tmp: TPoint;
 begin
-  innerProduct := 0;
-
   for cardinal in CARDINALS do
   begin
-    tmp := Self.Center - Self.Before;
-    if cardinal.Dot(tmp) > innerProduct then
+    tmp := Self.Center - Self.After;
+    if cardinal.Dot(tmp) > best then
     begin
       doorDirection := cardinal;
-      innerProduct := cardinal.Dot(tmp);
+      best := cardinal.Dot(tmp);
     end;
   end;
 
   case doorDirection of
-    NORTH: Result := 0;
-    WEST: Result := 90; //facing 90 degrees on the osrs compass is actually facing west
-    SOUTH: Result := 180;
-    EAST: Result := 270;
+    NORTH: Result := 180;
+    WEST: Result := 270;
+    SOUTH: Result := 0;
+    EAST: Result := 90;
   end;
 end;
 
@@ -78,7 +76,7 @@ begin
   Result += Random(-randomness,randomness);
   if SRL.Dice(50) then Result += 180;
 
-  Result := SRL.Modulo(Round(angle),360);
+  Result := FixD(angle);
 end;
 
 function TRSDoor.GetCorners(corners: TPointArray; doorAngle: Single; compass: Single = $FFFF): TPointArray; static;
