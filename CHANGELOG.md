@@ -1,3 +1,12 @@
+## [7.6.2](https://github.com/Torwent/SRL-T/compare/v7.6.1...v7.6.2) (2024-08-11)
+
+
+### Bug Fixes
+
+* small tweak to stuff using old walker ([4e1ea82](https://github.com/Torwent/SRL-T/commit/4e1ea825291010f3c8dd74a21fc616b363a8c827))
+
+
+
 ## [7.6.1](https://github.com/Torwent/SRL-T/compare/v7.6.0...v7.6.1) (2024-08-11)
 
 
@@ -38,15 +47,6 @@
 ### Bug Fixes
 
 * **tpa:** NearestPoint doesn't sort the array anymore ([1d15c1b](https://github.com/Torwent/SRL-T/commit/1d15c1b2aaafd14429160be3f160af64203abb2f))
-
-
-
-## [7.5.5](https://github.com/Torwent/SRL-T/compare/v7.5.4...v7.5.5) (2024-08-03)
-
-
-### Bug Fixes
-
-* **Minimap:** SetCompassAngle now has 0 and 360 "close" to each other ([2c279d6](https://github.com/Torwent/SRL-T/commit/2c279d6c180671f1c28bd616d615793aa59405fe))
 
 
 
