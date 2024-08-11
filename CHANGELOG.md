@@ -1,3 +1,12 @@
+## [7.6.1](https://github.com/Torwent/SRL-T/compare/v7.6.0...v7.6.1) (2024-08-11)
+
+
+### Bug Fixes
+
+* **TRSMap:** force bump map version ([57185f1](https://github.com/Torwent/SRL-T/commit/57185f1b94ddc0167cb348fff11b39ec6acc5e8f))
+
+
+
 # [7.6.0](https://github.com/Torwent/SRL-T/compare/v7.5.7...v7.6.0) (2024-08-11)
 
 
@@ -38,15 +47,6 @@
 ### Bug Fixes
 
 * **Minimap:** SetCompassAngle now has 0 and 360 "close" to each other ([2c279d6](https://github.com/Torwent/SRL-T/commit/2c279d6c180671f1c28bd616d615793aa59405fe))
-
-
-
-## [7.5.4](https://github.com/Torwent/SRL-T/compare/v7.5.3...v7.5.4) (2024-08-01)
-
-
-### Bug Fixes
-
-* **walkerv2:** forgot if statement to check if there's a walk event ([180d519](https://github.com/Torwent/SRL-T/commit/180d519592e69c164f2a1e14f85ad47e5eda191a))
 
 
 
