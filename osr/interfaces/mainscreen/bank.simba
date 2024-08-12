@@ -1474,6 +1474,7 @@ begin
   Result := inherited();
 end;
 
+
 function TRSMainScreen.IsVisible(p: TPoint): Boolean; override;
 begin
   Result := inherited;
@@ -1497,6 +1498,20 @@ begin
 
   if Bank.Bounds().Expand(5).ContainsAll(tpa) and Bank.IsOpen() then
     Exit(False);
+end;
+
+function TRSMainScreen.Filter(arr: TPointArray): TPointArray; override;
+begin
+  Result := inherited;
+
+  if (Result = []) or (RSClient.Mode = ERSClientMode.FIXED) then
+    Exit;
+
+  if Bank.IsOpen() then
+  begin
+    arr := Result.FilterBox(Bank.Bounds());
+    Result := Result.Difference(arr);
+  end;
 end;
 
 

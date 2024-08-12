@@ -71,7 +71,6 @@ end;
 ```pascal
 function TRSXPBar.IsEnabled(): Boolean;
 ```
-
 Checks if the XPBar circle is enabled.
 
 Example:
@@ -92,7 +91,6 @@ end;
 ```pascal
 function TRSXPBar.Enable(): Boolean;
 ```
-
 Enables the XPBar by clicking the XPBar circle.
 
 Example:
@@ -116,7 +114,6 @@ end;
 ```pascal
 procedure TRSXPBar._Setup();
 ```
-
 Internal method automatically called by SRL once when attempting to read the XPBar.
 *)
 procedure TRSXPBar._Setup();
@@ -271,7 +268,6 @@ end;
 ```pascal
 function TRSXPBar.Open(): Boolean;
 ```
-
 Attempts to open the XPBar if it's not open.
 
 Example:
@@ -305,6 +301,36 @@ end;
 *)
 var
   XPBar: TRSXPBar;
+
+
+function TRSMainScreen.IsVisible(p: TPoint): Boolean; override;
+begin
+  Result := inherited;
+  if not XPBar.IsSetup then Exit;
+
+  if XPBar.Bounds().Expand(5).Contains(p) then
+    Exit(False);
+end;
+
+function TRSMainScreen.IsVisible(tpa: TPointArray; useCenter: Boolean = True): Boolean; override;
+begin
+  Result := inherited;
+  if Result and useCenter then Exit;
+  if not XPBar.IsSetup then Exit;
+
+  if XPBar.Bounds().Expand(5).ContainsAll(tpa) then
+    Exit(False);
+end;
+
+function TRSMainScreen.Filter(arr: TPointArray): TPointArray; override;
+begin
+  Result := inherited;
+  if not XPBar.IsSetup then Exit;
+
+  arr := Result.FilterBox(XPBar.Bounds());
+  Result := Result.Difference(arr);
+end;
+
 
 procedure TRSClient.ClientModeChanged(); override;
 begin

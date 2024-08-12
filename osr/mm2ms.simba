@@ -14,12 +14,14 @@ functionality to convert coordinates to & from the minimap to the mainscreen.
 {$ENDIF}
 
 (*
+(MM2MS)=
 ## type TMM2MS
 ```pascal
-type
-  TMM2MS = record(TSRLBaseRecord)
-    ZoomLevel: Int32;
-  end;
+TMM2MS = record(TSRLBaseRecord)
+  ZoomLevel: Int32;
+  ZoomRectangles: array [0..100] of TRectangle;
+  PlayerBoxes: array [0..100] of TBox;
+end;
 ```
 The comments explains it. This is the datastructure MM2MS uses.
 *)
@@ -27,6 +29,7 @@ type
   TMM2MS = record(TSRLBaseRecord)
     ZoomLevel: Int32;
     ZoomRectangles: array [0..100] of TRectangle;
+    PlayerBoxes: array [0..100] of TBox;
   end;
 
 procedure TMM2MS.DebugTiles(dots: Boolean; angle: Double = -1);
@@ -219,9 +222,9 @@ end;
 function TRSMinimap.VectorToMS(vec: Vector3; roll: Single = $FFFF): TPoint;
 begin
   if (roll = $FFFF) then roll := Self.GetCompassAngle(False);
-  Vec := Vec.RotateXY(PI*2 - roll, Self.Center.X, Self.Center.Y);
+  vec := vec.RotateXY(PI*2 - roll, Self.Center.X, Self.Center.Y);
 
-  Result := MM2MS.Run([Vec], roll)[0];
+  Result := MM2MS.Run([vec], roll)[0];
 end;
 
 function TRSMinimap.StaticToMS(staticMMPoint: TPoint; height:Int32=0): TPoint;
@@ -802,14 +805,20 @@ Returns a box surrounding our player. Works at any zoom level.
 *)
 function TRSMainScreen.GetPlayerBox(): TBox; override;
 var
-  A: Double := Minimap.GetCompassAngle(False);
-  Center: TPoint := Minimap.Center();
-  TPA: TPointArray;
+  a: Double;
+  center: TPoint;
+  tpa: TPointArray;
 begin
-  TPA := [Minimap.VectorToMS(Vec3(Center.X - 2, Center.Y, 10), A),
-          Minimap.VectorToMS(Vec3(Center.X + 2, Center.Y, -3), A)];
+  if MM2MS.PlayerBoxes[MM2MS.ZoomLevel] <> [] then
+    Exit(MM2MS.PlayerBoxes[MM2MS.ZoomLevel]);
 
-  Result := TPA.Bounds();
+  a := Minimap.GetCompassAngle(False);
+  center := Minimap.Center();
+  tpa := [Minimap.VectorToMS(Vec3(center.X - 2, center.Y, 10), a),
+          Minimap.VectorToMS(Vec3(center.X + 2, center.Y, -3), a)];
+
+  Result := tpa.Bounds();
+  MM2MS.PlayerBoxes[MM2MS.ZoomLevel] := Result;
 end;
 
 

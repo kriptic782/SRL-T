@@ -302,6 +302,8 @@ var
   n1, n2: Int32;
   nodes: TIntegerArray;
 begin
+  if p.InRange(q, 4) then Exit([p, q]);
+
   n1 := Self.FindNearestNode(p);
   n2 := Self.FindNearestNode(q);
 
@@ -320,9 +322,6 @@ var
   i, j: Int32;
   nS, nG, nodes: TIntegerArray;
 begin
-  if p.InRange(q, 4) then
-    RaiseException('Points ' + p.ToString() + ' and ' + q.ToString() + ' are too close!');
-
   if not Self.WalkableSpace.Contains(p) then p := RSTranslator.NormalizeDoor(p);
   if not Self.WalkableSpace.Contains(q) then q := RSTranslator.NormalizeDoor(q);
 
@@ -331,6 +330,8 @@ begin
 
   nS := Self.FindNearestNodes(p, attempts);
   nG := Self.FindNearestNodes(q, attempts);
+
+  if nS[0] = nG[0] then Exit([p, q]);
 
   attempts -= 1;
 
