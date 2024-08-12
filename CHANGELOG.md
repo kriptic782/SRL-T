@@ -1,3 +1,12 @@
+## [7.6.3](https://github.com/Torwent/SRL-T/compare/v7.6.2...v7.6.3) (2024-08-12)
+
+
+### Bug Fixes
+
+* read notes ([4005858](https://github.com/Torwent/SRL-T/commit/4005858300a71147359c7d386a9eb6507795df04))
+
+
+
 ## [7.6.2](https://github.com/Torwent/SRL-T/compare/v7.6.1...v7.6.2) (2024-08-11)
 
 
@@ -38,15 +47,6 @@
 ### Bug Fixes
 
 * **itemfinder:** updated ([5601c06](https://github.com/Torwent/SRL-T/commit/5601c06779a6e19ce32fa3e623019911a4431ff6))
-
-
-
-## [7.5.6](https://github.com/Torwent/SRL-T/compare/v7.5.5...v7.5.6) (2024-08-03)
-
-
-### Bug Fixes
-
-* **tpa:** NearestPoint doesn't sort the array anymore ([1d15c1b](https://github.com/Torwent/SRL-T/commit/1d15c1b2aaafd14429160be3f160af64203abb2f))
 
 
 
