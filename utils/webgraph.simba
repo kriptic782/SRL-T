@@ -28,7 +28,7 @@ begin
     Exit;
 
   for tpa in atpa do
-    if tpa.ContainsAll([self.Center + Direction, self.Center - Direction]) then
+    if tpa.ContainsAll([Self.Center + Self.Direction, Self.Center - Self.Direction]) then
       Exit;
 
   Result := True;
@@ -72,13 +72,13 @@ function TRSDoor.GetVisibleAngle(angle: Double; randomness: Integer = 75): Doubl
 begin
   Result := Self.GetDoorAngle();
 
-  if Abs(Round(SRL.DeltaAngle(angle, Result))) < randomness then Exit;
-  if Abs(Round(SRL.DeltaAngle(angle, Result + 180))) < randomness then Exit;
+  if Abs(Round(SRL.DeltaAngle(angle, Result))) < randomness then Exit(angle);
+  if Abs(Round(SRL.DeltaAngle(angle, Result + 180))) < randomness then Exit(angle);
 
   Result += Random(-randomness,randomness);
   if SRL.Dice(50) then Result += 180;
 
-  Result := FixD(angle);
+  Result := FixD(Result);
 end;
 
 function TRSDoor.GetCorners(corners: TPointArray; doorAngle: Single; compass: Single = $FFFF): TPointArray; static;
