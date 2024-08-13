@@ -1,3 +1,12 @@
+## [7.6.4](https://github.com/Torwent/SRL-T/compare/v7.6.3...v7.6.4) (2024-08-13)
+
+
+### Bug Fixes
+
+* **DoorHandler:** a bunch of changes by bootje with some tweaks by me ([d12e20d](https://github.com/Torwent/SRL-T/commit/d12e20dfea43fa84ed5da51a963fe3e558732f54))
+
+
+
 ## [7.6.3](https://github.com/Torwent/SRL-T/compare/v7.6.2...v7.6.3) (2024-08-12)
 
 
@@ -38,15 +47,6 @@
 ### Features
 
 * add a doorhandler to TRSWalkerV2 ([ee2e956](https://github.com/Torwent/SRL-T/commit/ee2e9569c0ea90f19411cc4b266444b2b6af180f))
-
-
-
-## [7.5.7](https://github.com/Torwent/SRL-T/compare/v7.5.6...v7.5.7) (2024-08-08)
-
-
-### Bug Fixes
-
-* **itemfinder:** updated ([5601c06](https://github.com/Torwent/SRL-T/commit/5601c06779a6e19ce32fa3e623019911a4431ff6))
 
 
 
