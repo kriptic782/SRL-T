@@ -60,6 +60,7 @@ end;
     _PathIndex: Int32;
     _Path: TPointArray;
 
+
     _DoorHandler: record
       Door: TRSDoor;
       DoorsOnPath: TRSDoorArray;
@@ -68,14 +69,6 @@ end;
     {%codetools on}
   end;
 
-{%codetools off}
-{$H-}
-function TRSWalkerV2.DummyHeight(p: TPoint = [-1,-1]): Single;
-begin
-  Result := 0;
-end;
-{$H+}
-{%codetools on}
 
 (*
 ## TRSWalkerV2.Setup
@@ -110,6 +103,14 @@ procedure TRSWalkerV2.Setup(
   graph: ^TWebGraph;
   mapImage: TMufasaBitmap
 );
+  type TRSWalkerV2 = TRSWalkerV2;
+  {$H-}
+  function TRSWalkerV2.DummyHeight(p: TPoint = [-1,-1]): Single;
+  begin
+    Result := 0;
+  end;
+  {$H+}
+
 begin
   Self.Position := @position;
   if @height <> nil then
@@ -348,20 +349,18 @@ This is where TRSWalkerV2.OnWaitMoving are called.
 *)
 procedure TRSWalkerV2.WaitMoving(destination: TPoint; waitUntilDistance: Int32);
 var
-  Timeout, Countdown: TCountDown;
-  Position: record
-    Current, Previous: TPoint;
-  end;
+  timeout, countdown: TCountDown;
+  position: record Current, Previous: TPoint; end;
   awct: Int64;
 begin
-  Timeout.Init(Round(SRL.TruncatedGauss(20000, 25000)));
-  Countdown.Init(Round(SRL.TruncatedGauss(500, 1500)));
+  timeout.Init(Round(SRL.TruncatedGauss(20000, 25000)));
+  countdown.Init(Round(SRL.TruncatedGauss(500, 1500)));
 
   // initial timeout needs to be longer, as we might not have started walking yet.
-  Countdown.Timeout := GetTickCount() + Round(SRL.TruncatedGauss(2500, 3500));
+  countdown.Timeout := GetTickCount() + Round(SRL.TruncatedGauss(2500, 3500));
 
-  Position.Previous := Self.Position();
-  Position.Current := Position.Previous;
+  position.Previous := Self.Position();
+  position.Current := position.Previous;
 
   // Break from the loop if:
   // - Haven't moved in 500ms
@@ -370,15 +369,15 @@ begin
   repeat
     Self.CheckRunEnergy();
 
-    Position.Previous := Position.Current;
-    Position.Current := Self.Position();
-    if Position.Current <> Position.Previous then
-      Countdown.Restart();
+    position.Previous := position.Current;
+    position.Current := Self.Position();
+    if position.Current <> position.Previous then
+      countdown.Restart();
 
 
     if Self._DoorHandler.Handling then
     begin
-      if Self.WebGraph^.WalkableClusters.InSameTPA(Position.Current, Self._DoorHandler.Door.After) then
+      if Self.WebGraph^.WalkableClusters.InSameTPA(position.Current, RSTranslator.NormalizeDoor(Self._DoorHandler.Door.After)) then
       begin
         Self._PathIndex := Self._Path.Find(Self._Path.NearestPoint(destination));
         Self._DoorHandler.Handling := False;
@@ -387,7 +386,7 @@ begin
     end;
 
     if @Self.OnWaitMovingEvent <> nil then
-      Self.OnWaitMovingEvent(@Self, Position.Current, destination);
+      Self.OnWaitMovingEvent(@Self, position.Current, destination);
 
     if (Self.AdaptiveWalk) and (GetTickCount() > awct) then
     begin
@@ -395,14 +394,11 @@ begin
       awct := GetTickCount() + 1000;
     end;
 
-    if Self.FancyMouse then
-      Self.DoMouseAhead(Position.Current);
-
-    if not Self.Walking then
-      Break;
+    if Self.FancyMouse then Self.DoMouseAhead(position.Current);
+    if not Self.Walking then Break;
 
     Wait(100);
-  until Timeout.IsFinished() or Countdown.IsFinished() or (Position.Current.DistanceTo(Destination) <= waitUntilDistance);
+  until timeout.IsFinished() or countdown.IsFinished() or (position.Current.DistanceTo(destination) <= waitUntilDistance);
 end;
 
 
@@ -432,6 +428,7 @@ begin
   median := history.Median();
   if p.DistanceTo(median) > RSTranslator.TileSize then
   begin
+    WriteLn('flag moved away');
     flag := median + [0,8];
     Result := True;
   end;
@@ -559,7 +556,7 @@ begin
   if not Self.WalkStepHelper(playerPoint, walkerPoint, minimapPoint) then
     Exit(not Self.Walking);
 
-  if (Minimap.Center().DistanceTo(minimapPoint) < 5) then
+  if (Minimap.Center().DistanceTo(minimapPoint) < 4) then
     Exit(True);
 
   h := Self.Height(playerPoint);
@@ -577,7 +574,11 @@ begin
         flag := Self.WebGraph^.WalkableSpace.NearestPoint(flag);
         if not Self.WebGraph^.WalkableClusters.InSameTPA(flag, walkerpoint) then
         begin
-          WaitUntil(not Minimap.isPlayermoving(), 100, 1200);
+          if Self.WebGraph^.WalkableClusters.InSameTPA(Self.Position(), RSTranslator.NormalizeDoor(Self._DoorHandler.Door.After)) then
+            Exit;
+
+          if Minimap.IsPlayermoving() then
+            WaitUntil(not Minimap.IsPlayermoving(), 100, 2000);
           Self._DoorHandler.FlagMoved := True;
           Exit(False);
         end;
@@ -613,7 +614,7 @@ begin
   if not Self.WalkStepHelper(playerPoint, walkerPoint, minimapPoint) then
     Exit(not Self.Walking);
 
-  if (Minimap.Center().DistanceTo(minimapPoint) < 5) then
+  if (Minimap.Center().DistanceTo(minimapPoint) < 4) then
     Exit(True);
 
   Result := Self.Click(minimapPoint, Self.ClickRandomness);
@@ -636,7 +637,8 @@ begin
             if Self.WebGraph^.WalkableClusters.InSameTPA(Self.Position(), Self._DoorHandler.Door.After) then
               Exit;
 
-            WaitUntil(not Minimap.IsPlayermoving(), 100, 1200);
+            if Minimap.IsPlayermoving() then
+              WaitUntil(not Minimap.IsPlayermoving(), 100, 2000);
             Self._DoorHandler.FlagMoved := True;
             Exit(False);
           end;
@@ -841,7 +843,7 @@ Example:
 Walker.WalkPath([[100,100],[120,120],[140,140],[160,160],[180,180]]);
 ```
 *)
-function TRSWalkerV2.WalkPath(path: TPointArray; WaitUntilDistance: Int32 = 0; debug: Boolean = False): Boolean;
+function TRSWalkerV2.WalkPath(path: TPointArray; waitUntilDistance: Int32 = 0; debug: Boolean = False): Boolean;
 var
   playerPoint: TPoint;
   index, fails: Int32;
@@ -855,7 +857,7 @@ begin
     if Self._DoorHandler.FlagMoved then
     begin
       Self._DoorHandler.FlagMoved := False;
-      Exit(Self.WebGraph^.WalkableClusters.InSameTPA(playerpoint, Self._DoorHandler.Door.After));
+      Exit(Self.WebGraph^.WalkableClusters.InSameTPA(playerPoint, RSTranslator.NormalizeDoor(Self._DoorHandler.Door.After)));
     end;
 
     fails := Self._WalkPathHelper(index, playerPoint, fails, debug);
@@ -863,7 +865,7 @@ begin
 
     if index = High(Self._Path) then
     begin
-      if Self.WalkFinalStep(playerPoint, Self._Path[index], WaitUntilDistance) then
+      if Self.WalkFinalStep(playerPoint, Self._Path[index], waitUntilDistance) then
         Exit(True);
       Continue;
     end;
@@ -939,7 +941,10 @@ begin
   doorIndex := -1;
   for i := 0 to High(path) do
     if RSTranslator.Normalize(path[i]) = Self._DoorHandler.Door.Before then
+    begin
       doorIndex := i; //find the last time the door occurs in the path
+      Break;
+    end;
 
   if doorIndex = -1 then
     Self.Fatal('Couldn''t find a door on the path for TRSWalkerV2.WalkDoorway to handle!');
@@ -953,13 +958,13 @@ begin
     Self.DebugLn(Self.Walking, 'fails: ', fails);
     {$ENDIF}
     playerPoint := Self.Position();
-    if Self.WebGraph^.WalkableClusters.InSameTPA(playerPoint, RSTranslator.NormalizeDoor(self._DoorHandler.Door.After)) and self._doorHandler.Handling then
+    if Self.WebGraph^.WalkableClusters.InSameTPA(playerPoint, RSTranslator.NormalizeDoor(Self._DoorHandler.Door.After)) and Self._DoorHandler.Handling then
       Exit(True);
 
     if Self._DoorHandler.FlagMoved then
     begin
       Self._DoorHandler.FlagMoved := False;
-      Exit(Self.WebGraph^.WalkableClusters.InSameTPA(playerPoint, RSTranslator.NormalizeDoor(self._DoorHandler.Door.After)));
+      Exit(Self.WebGraph^.WalkableClusters.InSameTPA(playerPoint, RSTranslator.NormalizeDoor(Self._DoorHandler.Door.After)));
     end;
 
     fails := Self._WalkPathHelper(index, playerPoint, fails, debug);
@@ -995,31 +1000,43 @@ begin
 
         if Mainscreen.IsVisible(rect) then
         begin
+          {$IFDEF DEBUG_WALKERV2}
+          Self.DebugLn('Solving the door');
+          {$ENDIF}
+
           Self.SolveDoor(Self._DoorHandler.Door, cAngle);
           playerPoint := Self.Position();
 
-          //if you skipped door you need to check if you are moving towards it
+          //if you didnt skip the door you need to check if you are moving towards it
           //if you are not close to the door when you stop moving, it means the door was opened by someone else in the mean time
-          //in this case you are not handling the door anymore so you continue and it will try to handle again
-          if not self._doorHandler.Skipped then
+          //in this case you are not handling the door anymore so you Continue and it will try to handle again
+          if not Self._DoorHandler.Skipped then
           begin
-            self._doorHandler.Skipped := False;
-            WaitUntil(Minimap.IsPlayerMoving(), 200, 1000);
+            Self._DoorHandler.Skipped := False;
+            WaitUntil(Minimap.IsPlayerMoving(), 200, 1200);
             WaitUntil(not Minimap.IsPlayerMoving(), 50, 2000 + 600 * Round(playerPoint.DistanceTo(Self._DoorHandler.Door.Before) / 4)); //max duration it can take to get to a point with a 2 second buffer
-            if not Self._DoorHandler.Door.Before.InRange(Self.Position(), 3) then continue;
+            if not Self._DoorHandler.Door.Before.InRange(Self.Position(), 3) then Continue;
           end;
 
           index := 0;
 
-          //Continue the path starting from the door tile to the next door tile, or the end of the path if there is no more doors
           if Length(Self._DoorHandler.DoorsOnPath) > 1 then
           begin
-            for i := 0 to high(path) do
-              if RSTranslator.Normalize(path[i]) = self._doorHandler.DoorsOnPath[1].Before then postDoorIndex := i;
-          end else postDoorIndex := high(path);
+            postDoorIndex := -1;
+            for i := 0 to High(path) do
+              if RSTranslator.Normalize(path[i]) = Self._DoorHandler.DoorsOnPath[1].Before then
+              begin
+                postDoorIndex := i;
+                Break;
+              end;
 
+            if postDoorIndex = -1 then
+              Self.Fatal('Couldn''t find then next door on the path for TRSWalkerV2.WalkDoorway to handle!');
+          end
+          else
+            postDoorIndex := High(path);
 
-          PathToDoor := Copy(path, doorIndex, postDoorIndex - doorIndex);
+          pathToDoor := Copy(path, doorIndex, postDoorIndex - doorIndex + 1);
           Self._WalkPathSetup(pathToDoor);
           Self._DoorHandler.Handling := True;
           Continue;
@@ -1122,9 +1139,9 @@ begin
 end;
 
 
-function TRSWalkerV2._HardSolveDoor(me: TPoint; door: TRSDoor): Boolean;
+function TRSWalkerV2._HardSolveDoor(door: TRSDoor): Boolean;
 var
-  middleBottom: TPoint;
+  middleBottom, me: TPoint;
   angle: Single;
   rect: TRectangle;
   tpa: TPointArray;
@@ -1134,8 +1151,11 @@ begin
 
   angle := door.GetVisibleAngle(Minimap.GetCompassAngle());
   Minimap.SetCompassAngleEx(angle, 15);
+  WaitUntil(not minimap.IsPlayerMoving, 50,5000);
 
+  me := Self.Position();
   rect := Self.GetRectMS(me, door.After, 0, [0,0], Minimap.GetCompassAngle(False));
+
   //move mouse slightly below the mean of the rectangle
   tpa := rect.ToTPA();
   tpa.SortByY(False);
@@ -1252,11 +1272,7 @@ begin
 
   for tries := 4 downto 0 do
   begin
-    me := Self.Position();
-    path := _GetPath(me, False);
-    {$IFDEF DEBUG_WALKERV2}
-    Self.DebugLn('Full path: ', Path);
-    {$ENDIF}
+    path := _GetPath(Self.Position(), False);
     doors := Self.GetDoorsOnPath(path);
 
     Self._DoorHandler.SettingUp := False;
@@ -1265,8 +1281,7 @@ begin
     if Length(doors) = 0 then Break;
 
     Self._DoorHandler.Door := doors[0];
-    WriteLn(_doorHandler.door);
-    self._DoorHandler.DoorsOnPath := doors;
+    Self._DoorHandler.DoorsOnPath := doors;
 
     Self.DebugLn('Attempting to solve door.');
 
@@ -1278,12 +1293,10 @@ begin
 
     Self.DebugLn('Hard solving door.');
     if Self.WalkStep(Self.Position(), Self._DoorHandler.Door.Before) then
-      Self._HardSolveDoor(Self.Position(), Self._DoorHandler.Door);
+      Self._HardSolveDoor(Self._DoorHandler.Door);
   end;
 
-  me := Self.Position();
-  path := _GetPath(me, True);
-
+  path := _GetPath(Self.Position(), True);
   Result := Self.WalkPath(path, waitUntilDistance, debug);
 end;
 
