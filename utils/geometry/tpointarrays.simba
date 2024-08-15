@@ -1617,10 +1617,11 @@ begin
 
   for i := 0 to High(Self) do
   begin
-    if (a = -1) and Self[i].Contains(p) then a := i;
-    if (b = -1) and Self[i].Contains(q) then b := i;
+    if (a = -1) and (Self[i].Intersection([p]) <> []) then a := i;
+    if (b = -1) and (Self[i].Intersection([q]) <> []) then b := i;
     if ((a > -1) or (b > -1)) and (a = b) then Exit(True);
   end;
+
 
   Result := a = b;
 end;
