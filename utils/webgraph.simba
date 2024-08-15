@@ -68,7 +68,7 @@ end;
 
 //Does as the name states. Doesn't support diagonal doors yet
 //Might add small randomness to this later (i.e. do doorangle + Random(-10,10) or something similar)
-function TRSDoor.GetVisibleAngle(angle: Double; randomness: Integer = 75): Double;
+function TRSDoor.GetVisibleAngle(angle: Double; randomness: Integer = 75; allowBackwardsAngle: Boolean = True): Double;
 begin
   Result := Self.GetDoorAngle();
 
@@ -76,7 +76,7 @@ begin
   if Abs(Round(SRL.DeltaAngle(angle, Result + 180))) < randomness then Exit(angle);
 
   Result += Random(-randomness,randomness);
-  if SRL.Dice(50) then Result += 180;
+  if SRL.Dice(50) and allowBackwardsAngle then Result += 180;
 
   Result := FixD(Result);
 end;

@@ -1149,7 +1149,7 @@ begin
   if door.DoorType = ERSDoorType.UNKNOWN then
     Exit;
 
-  angle := door.GetVisibleAngle(Minimap.GetCompassAngle());
+  angle := door.GetVisibleAngle(Minimap.GetCompassAngle() , 0 , False);
   Minimap.SetCompassAngleEx(angle, 15);
   WaitUntil(not minimap.IsPlayerMoving, 50,5000);
 
@@ -1172,6 +1172,7 @@ begin
   end;
 
   Self.WalkBlind(door.After, 0);
+  Wait(1000,2000,wdLeft);
 
   with Self.Position() do
     Result := door.After.DistanceTo([X, Y]) < me.DistanceTo([X, Y]);
@@ -1289,11 +1290,13 @@ begin
     begin
       Inc(tries);
       Continue;
-    end;
+    end else
+      tries := 0; //not sure about this but I think it is fine...
 
+    if not tries > 2 then Continue;
     Self.DebugLn('Hard solving door.');
     if Self.WalkStep(Self.Position(), Self._DoorHandler.Door.Before) then
-      Self._HardSolveDoor(Self._DoorHandler.Door);
+      if Self._HardSolveDoor(Self._DoorHandler.Door) then tries := 0;
   end;
 
   path := _GetPath(Self.Position(), True);
