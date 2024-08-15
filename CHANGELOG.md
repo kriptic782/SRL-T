@@ -1,3 +1,12 @@
+# [7.7.0](https://github.com/Torwent/SRL-T/compare/v7.6.5...v7.7.0) (2024-08-15)
+
+
+### Features
+
+* **OTPGenerator:** Added a OTP generator ([051612b](https://github.com/Torwent/SRL-T/commit/051612b4060017cf4ed2ee6438c1e4d666d96f9e))
+
+
+
 ## [7.6.5](https://github.com/Torwent/SRL-T/compare/v7.6.4...v7.6.5) (2024-08-13)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * small tweak to stuff using old walker ([4e1ea82](https://github.com/Torwent/SRL-T/commit/4e1ea825291010f3c8dd74a21fc616b363a8c827))
-
-
-
-## [7.6.1](https://github.com/Torwent/SRL-T/compare/v7.6.0...v7.6.1) (2024-08-11)
-
-
-### Bug Fixes
-
-* **TRSMap:** force bump map version ([57185f1](https://github.com/Torwent/SRL-T/commit/57185f1b94ddc0167cb348fff11b39ec6acc5e8f))
 
 
 
