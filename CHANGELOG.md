@@ -1,3 +1,12 @@
+## [7.7.1](https://github.com/Torwent/SRL-T/compare/v7.7.0...v7.7.1) (2024-08-15)
+
+
+### Bug Fixes
+
+* force bump ([aabaf81](https://github.com/Torwent/SRL-T/commit/aabaf81f0775542b02c112b805a83d99e550c4b2))
+
+
+
 # [7.7.0](https://github.com/Torwent/SRL-T/compare/v7.6.5...v7.7.0) (2024-08-15)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([4005858](https://github.com/Torwent/SRL-T/commit/4005858300a71147359c7d386a9eb6507795df04))
-
-
-
-## [7.6.2](https://github.com/Torwent/SRL-T/compare/v7.6.1...v7.6.2) (2024-08-11)
-
-
-### Bug Fixes
-
-* small tweak to stuff using old walker ([4e1ea82](https://github.com/Torwent/SRL-T/commit/4e1ea825291010f3c8dd74a21fc616b363a8c827))
 
 
 
