@@ -274,10 +274,10 @@ begin
     Result[i] := Self.Nodes.find(tpa[i]);
 
   for i := 0 to High(Result) do
-    weights[i] := Length(Self.WalkableSpace.AStar(p, Self.Nodes[Result[i]], False));
+    weights[i] := Round(p.DistanceTo(Self.Nodes[Result[I]]));
 
   for i := 0 to high(Result) do
-    if weights[i] = 0 then weights[i] := $FFFFFF;
+    if not Self.WalkableClusters.InSameTPA(p,Self.Nodes[Result[I]]) then weights[i] := $FFFFFF;
 
   Result.SortWeighted(weights, 0, High(Result), True);
   if weights[0] = $FFFFFF then
