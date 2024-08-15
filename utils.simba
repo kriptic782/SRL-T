@@ -20,6 +20,7 @@ var
 
 {$IFNDEF SRL_WRAPPERS_INCLUDED}      {$I utils/wrappers.simba}
 {$IFNDEF SRL_MATH_INCLUDED}          {$I utils/math/math.simba}
+{$IFNDEF SRL_OTP_INCLUDED}          {$I utils/math/otp.simba}
 {$IFNDEF SRL_EXTENDEDARRAY_INCLUDED} {$I utils/math/extendedarrays.simba}
 {$IFNDEF SRL_INTEGERARRAY_INCLUDED}  {$I utils/math/integerarrays.simba}
 {$IFNDEF SRL_MATRIX_INCLUDED}        {$I utils/math/matrix.simba}
@@ -55,6 +56,7 @@ var
 {$IFNDEF SRL_WEBGRAPH_INCLUDED}      {$I utils/webgraph.simba}
 
 
+{$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}

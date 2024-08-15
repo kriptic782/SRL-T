@@ -223,11 +223,7 @@ end;
 
 function TPointArray.Intersection(other: TPointArray): TPointArray; constref;
 begin
-  try
-    GetSamePointsATPA([Self, Other], Result);
-  except
-    Result := []; //this sometimes threw me a range error? not sure why... simba bug?
-  end;
+  GetSamePointsATPA([Self, Other], Result);
 end;
 
 function TPointArray.Difference(other: TPointArray): TPointArray; constref;

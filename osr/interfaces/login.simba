@@ -66,6 +66,10 @@ Type responsible for handling login and managing cached TRSLoginPlayers.
     PlayerIndex: Int32;
 
     AllowDangerousWorlds: Boolean;
+
+    {%codetools off}
+    WhiteOCRFilter, YellowOCRFilter: TOCRColorFilter;
+    {%codetools on}
   end;
 
 const
@@ -90,7 +94,6 @@ LOGIN_MESSAGE_MEMBERS = 'You need a members account';
 LOGIN_MESSAGE_IN_MEMBERS_AREA = 'You are standing in a members-only area';
 LOGIN_MESSAGE_AUTHENTICATOR = 'Authenticator';
 ```
-
 Global constants for most if not all login messages.
 
 Each of this messages is stored in **LOGIN_MESSAGES** in the same order.
@@ -128,7 +131,8 @@ Each of this messages is stored in **LOGIN_MESSAGES** in the same order.
     LOGIN_MESSAGE_ACCOUNT_DISABLED,
     LOGIN_MESSAGE_ACCOUNT_RULE_BREAKER,
     LOGIN_MESSAGE_MEMBERS,
-    LOGIN_MESSAGE_IN_MEMBERS_AREA
+    LOGIN_MESSAGE_IN_MEMBERS_AREA ,
+    LOGIN_MESSAGE_AUTHENTICATOR
   ];
 
   LOGIN_DIALOG_OK = 'Ok';
@@ -153,23 +157,22 @@ Each of this messages is stored in **LOGIN_MESSAGES** in the same order.
 function TRSLogin.FindText(Text: String; out B: TBox): Boolean;
 function TRSLogin.FindText(Text: String): Boolean; overload;
 ```
-
 Internal TRSLogin method used to find a message on the TRSLogin interface.
 You probably will never to use this directly.
 *)
-function TRSLogin.FindText(Text: String; out B: TBox): Boolean;
+function TRSLogin.FindText(text: String; out b: TBox): Boolean;
 begin
-  Result := (OCR.LocateText(Self.Bounds, Text, RS_FONT_BOLD_12,  TOCRColorFilter.Create([$FFFFFF]), B) = 1) or
-            (OCR.LocateText(Self.Bounds, Text, RS_FONT_BOLD_12,  TOCRColorFilter.Create([$00FFFF]), B) = 1) or
-            (OCR.LocateText(Self.Bounds, Text, RS_FONT_PLAIN_12, TOCRColorFilter.Create([$FFFFFF]), B) = 1) or
-            (OCR.LocateText(Self.Bounds, Text, RS_FONT_PLAIN_11, TOCRColorFilter.Create([$FFFFFF]), B) = 1);
+  Result := (OCR.LocateText(Self.Bounds(), text, RS_FONT_BOLD_12,  Self.WhiteOCRFilter, b) = 1) or
+            (OCR.LocateText(Self.Bounds(), text, RS_FONT_BOLD_12,  Self.YellowOCRFilter, b) = 1) or
+            (OCR.LocateText(Self.Bounds(), text, RS_FONT_PLAIN_12, Self.WhiteOCRFilter, b) = 1) or
+            (OCR.LocateText(Self.Bounds(), text, RS_FONT_PLAIN_11, Self.WhiteOCRFilter, b) = 1);
 end;
 
-function TRSLogin.FindText(Text: String): Boolean; overload;
+function TRSLogin.FindText(text: String): Boolean; overload;
 var
-  _: TBox;
+  b: TBox;
 begin
-  Result := FindText(Text, _);
+  Result := Self.FindText(text, b);
 end;
 
 (*
@@ -474,14 +477,14 @@ WriteLn Login.GetLoginMessage();
 *)
 function TRSLogin.GetLoginMessage(): String;
 var
-  I: Int32;
+  i: Int32;
 begin
   Result := LOGIN_MESSAGE_NONE;
 
-  for I := 0 to High(LOGIN_MESSAGES) do
-    if Self.FindText(LOGIN_MESSAGES[I]) then
+  for i := 0 to High(LOGIN_MESSAGES) do
+    if Self.FindText(LOGIN_MESSAGES[i]) then
     begin
-      Result := LOGIN_MESSAGES[I];
+      Result := LOGIN_MESSAGES[i];
 
       Exit;
     end;
@@ -900,6 +903,8 @@ begin
   inherited;
 
   Self.Name := 'Login';
+  Self.WhiteOCRFilter := TOCRColorFilter.Create([$FFFFFF]);
+  Self.YellowOCRFilter := TOCRColorFilter.Create([$00FFFF]);
 end;
 
 (*

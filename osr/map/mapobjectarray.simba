@@ -460,7 +460,7 @@ var
 begin
   if Objects <> [] then
   begin
-    Self.ObjectsCache := Objects.GetAllByAction('Collect');
+    Self.ObjectsCache := Objects.GetAllByAction('Bank');
     for i := 0 to High(Self.ObjectsCache) do
     begin
       Self.ObjectsCache[i].Filter.Finder := False;

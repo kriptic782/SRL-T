@@ -502,7 +502,7 @@ begin
 end;
 
 
-procedure TRSObjectV2.Filter(polygon: TPointArray; inside: Boolean);
+procedure TRSObjectV2.AddFilter(polygon: TPointArray; inside: Boolean);
 var
   i: Int32;
 begin
@@ -516,7 +516,7 @@ begin
     end;
 end;
 
-procedure TRSObjectV2.Filter(circle: TCircle; inside: Boolean); overload;
+procedure TRSObjectV2.AddFilter(circle: TCircle; inside: Boolean); overload;
 var
   i: Int32;
 begin

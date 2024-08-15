@@ -518,6 +518,13 @@ begin
     Result := [X, Y, Self.Height([X,Y]), Self.Region.Plane];
 end;
 
+function TRSMap.GetRegionIndex(): Int32;
+begin
+  Self.Position();
+  Result := Self.RegionIndex;
+end;
+
+
 (*
 ## Map.Height
 ```pascal

@@ -504,12 +504,9 @@ end;
 (*
 ## QuickPrayer.IsOpen
 ```pascal
-function QuickPrayer.IsOpen: Boolean;
+function QuickPrayer.IsOpen(): Boolean;
+function QuickPrayer.IsOpen(waitTime: Int32; interval: Int32 = -1): Boolean; overload;
 ```
-```pascal
-function QuickPrayer.IsOpen(WaitTime: Int32; Interval: Int32 = -1): Boolean; overload;
-```
-
 Returns true if the quick prayers are open.
 *)
 function TRSQuickPrayer.IsOpen(): Boolean;
@@ -517,7 +514,7 @@ begin
   Result := (GameTabs.GetCurrentTab() = ERSGameTab.PRAYER) and (Prayer.GetPrayerLevel = -1);
 end;
 
-function TRSQuickPrayer.IsOpen(WaitTime: Int32; Interval: Int32 = -1): Boolean; overload;
+function TRSQuickPrayer.IsOpen(waitTime: Int32; interval: Int32 = -1): Boolean; overload;
 begin
   if (Interval = -1) then
     Interval := SRL.TruncatedGauss(50, 1500);
@@ -528,17 +525,16 @@ end;
 (*
 ## QuickPrayer.Open
 ```pascal
-function QuickPrayer.Open: Boolean;
+function QuickPrayer.Open(): Boolean;
 ```
-
 Attempts to open the quick prayers.
 
 Example:
 ```pascal
-QuickPrayer.Open;
+QuickPrayer.Open();
 ```
 *)
-function TRSQuickPrayer.Open: Boolean;
+function TRSQuickPrayer.Open(): Boolean;
 begin
   if Self.IsOpen then
     Exit(True);
@@ -552,12 +548,11 @@ end;
 (*
 ## QuickPrayer.GetButton
 ```pascal
-function QuickPrayer.GetButton: TBox;
+function QuickPrayer.GetButton(): TBox;
 ```
-
 Internal function that returns the bounds of the quick prayers close button.
 *)
-function TRSQuickPrayer.GetButton: TBox;
+function TRSQuickPrayer.GetButton(): TBox;
 begin
   Result := [Self.X1 + 50, Self.Y1 + 233, Self.X2 - 49, Self.Y2 - 7];
 end;
@@ -565,9 +560,8 @@ end;
 (*
 ## QuickPrayer.Close
 ```pascal
-function QuickPrayer.Close: Boolean;
+function QuickPrayer.Close(): Boolean;
 ```
-
 Attempts to close the quick prayers.
 
 Example:
@@ -575,7 +569,7 @@ Example:
 QuickPrayers.Close;
 ```
 *)
-function TRSQuickPrayer.Close: Boolean;
+function TRSQuickPrayer.Close(): Boolean;
 begin
   if not Self.IsOpen then
     Exit(True);
@@ -588,9 +582,8 @@ end;
 (*
 ## QuickPrayer.IsPrayerSelected
 ```pascal
-function QuickPrayer.IsPrayerSelected(QPrayer: ERSPrayer): Boolean;
+function QuickPrayer.IsPrayerSelected(qPrayer: ERSPrayer): Boolean;
 ```
-
 Returns true if the specified quick prayer is selected.
 
 Example:
@@ -598,22 +591,21 @@ Example:
 WriteLn QuickPrayers.IsPrayerSelected(ERSPrayer.PROTECT_FROM_MAGIC);
 ```
 *)
-function TRSQuickPrayer.IsPrayerSelected(QPrayer: ERSPrayer): Boolean;
+function TRSQuickPrayer.IsPrayerSelected(qPrayer: ERSPrayer): Boolean;
 var
   TPA: TPointArray;
 begin
-  if not Self.IsOpen then
+  if not Self.IsOpen() then
     Exit;
 
-  Result := SRL.FindColors(TPA, CTS0($080CEF), Prayer.GetPrayerBox(QPrayer)) > 0;
+  Result := SRL.FindColors(TPA, CTS0($080CEF), Prayer.GetPrayerBox(qPrayer)) > 0;
 end;
 
 (*
 ## QuickPrayer.GetSelectedPrayers
 ```pascal
-function QuickPrayer.GetSelectedPrayers: array of ERSPrayer;
+function QuickPrayer.GetSelectedPrayers(): array of ERSPrayer;
 ```
-
 Returns an array of all selected quick prayers
 
 Example:
@@ -621,28 +613,25 @@ Example:
 WriteLn QuickPrayers.GetSelectedPrayers;
 ```
 *)
-function TRSQuickPrayer.GetSelectedPrayers: array of ERSPrayer;
+function TRSQuickPrayer.GetSelectedPrayers(): array of ERSPrayer;
 var
-  QPrayer: ERSPrayer;
+  qPrayer: ERSPrayer;
 begin
   Result := [];
   if not Self.IsOpen() then
     Exit;
 
-  for QPrayer := Low(ERSPrayer) to High(ERSPrayer) do
-    if Self.IsPrayerSelected(ERSPrayer(QPrayer)) then
-      Result += QPrayer;
+  for qPrayer := Low(ERSPrayer) to High(ERSPrayer) do
+    if Self.IsPrayerSelected(qPrayer) then
+      Result += qPrayer;
 end;
 
 (*
 ## QuickPrayer.SelectPrayer
 ```pascal
 function QuickPrayer.SelectPrayer(QPrayer: ERSPrayer): Boolean;
-```
-```pascal
 function QuickPrayer.SelectPrayer(QPrayers: array of ERSPrayer): Boolean; overload;
 ```
-
 Attempts to select the specified quick prayer/prayers.
 
 Example:
@@ -650,38 +639,35 @@ Example:
 QuickPrayers.SelectPrayer(ERSPrayer.PROTECT_ITEM);
 ```
 *)
-function TRSQuickPrayer.SelectPrayer(QPrayer: ERSPrayer): Boolean;
+function TRSQuickPrayer.SelectPrayer(qPrayer: ERSPrayer): Boolean;
 begin
-  if not Self.Open then
+  if not Self.Open() then
     Exit;
 
-  if Self.IsPrayerSelected(QPrayer) then
+  if Self.IsPrayerSelected(qPrayer) then
     Exit(True);
 
-  Mouse.Click(Prayer.GetPrayerBox(QPrayer), MOUSE_LEFT);
+  Mouse.Click(Prayer.GetPrayerBox(qPrayer), MOUSE_LEFT);
 
-  Result := WaitUntil(Self.IsPrayerSelected(QPrayer), 50, SRL.TruncatedGauss(1000, 2000));
+  Result := WaitUntil(Self.IsPrayerSelected(qPrayer), 50, SRL.TruncatedGauss(1000, 2000));
 end;
 
-function TRSQuickPrayer.SelectPrayer(QPrayers: array of ERSPrayer): Boolean; overload;
+function TRSQuickPrayer.SelectPrayer(qPrayers: array of ERSPrayer): Boolean; overload;
 var
   i : int32;
 begin
-  for i := 0 to High(QPrayers) do
-  Self.SelectPrayer(QPrayers[i]);
+  for i := 0 to High(qPrayers) do
+  Self.SelectPrayer(qPrayers[i]);
 
-  Result := QPrayers = Self.GetSelectedPrayers;
+  Result := qPrayers = Self.GetSelectedPrayers();
 end;
 
 (*
 ## QuickPrayer.DeselectPrayer
 ```pascal
 function QuickPrayer.DeselectPrayer(QPrayer: ERSPrayer): Boolean;
-```
-```pascal
 function QuickPrayer.DeselectPrayer(QPrayers: array of ERSPrayer): Boolean; overload;
 ```
-
 Attempts to Deselect the specified quick prayer/prayers.
 
 Example:
@@ -689,27 +675,27 @@ Example:
 QuickPrayers.DeselectPrayer(ERSPrayer.PROTECT_ITEM);
 ```
 *)
-function TRSQuickPrayer.DeselectPrayer(QPrayer: ERSPrayer): Boolean;
+function TRSQuickPrayer.DeselectPrayer(qPrayer: ERSPrayer): Boolean;
 begin
   if not Self.Open then
     Exit;
 
-  if not Self.IsPrayerSelected(QPrayer) then
+  if not Self.IsPrayerSelected(qPrayer) then
     Exit(True);
 
-  Mouse.Click(Prayer.GetPrayerBox(QPrayer), MOUSE_LEFT);
+  Mouse.Click(Prayer.GetPrayerBox(qPrayer), MOUSE_LEFT);
 
-  Result := WaitUntil(not Self.IsPrayerSelected(QPrayer), 50, SRL.TruncatedGauss(1000, 2000));
+  Result := WaitUntil(not Self.IsPrayerSelected(qPrayer), 50, SRL.TruncatedGauss(1000, 2000));
 end;
 
-function TRSQuickPrayer.DeselectPrayer(QPrayers: array of ERSPrayer): Boolean; overload;
+function TRSQuickPrayer.DeselectPrayer(qPrayers: array of ERSPrayer): Boolean; overload;
 var
   i : int32;
 begin
-  for i := 0 to High(QPrayers) do
-    Self.DeselectPrayer(QPrayers[i]);
+  for i := 0 to High(qPrayers) do
+    Self.DeselectPrayer(qPrayers[i]);
 
-  Result := not (QPrayers = Self.GetSelectedPrayers);
+  Result := qPrayers <> Self.GetSelectedPrayers();
 end;
 
 procedure TRSQuickPrayer.Draw(Bitmap: TMufasaBitmap); override;
@@ -720,8 +706,8 @@ begin
   inherited();
 
   Bitmap.DrawBoxes(Prayer.GetPrayerBoxes(), $00FFFF);
-  Bitmap.DrawBoxes(Prayer.GetPrayerBoxes(Prayer.GetAvailablePrayers), $00ff22);
-  Bitmap.DrawBoxes(Prayer.GetPrayerBoxes(Self.GetSelectedPrayers), $FFFFFF);
+  Bitmap.DrawBoxes(Prayer.GetPrayerBoxes(Prayer.GetAvailablePrayers()), $00ff22);
+  Bitmap.DrawBoxes(Prayer.GetPrayerBoxes(Self.GetSelectedPrayers()), $FFFFFF);
   Bitmap.DrawBox(Self.GetButton, $00FFFF);
 end;
 
