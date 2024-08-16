@@ -1271,7 +1271,7 @@ begin
   if not System.InRange(pathRandomness, 0, 1) then
     Self.Fatal('TRSWalkerV2.WebWalk `PathRandomness` must be within 0..1');
 
-  for tries := 4 downto 0 do
+  for tries := 0 to 4 do
   begin
     path := _GetPath(Self.Position(), False);
     doors := Self.GetDoorsOnPath(path);
@@ -1284,16 +1284,18 @@ begin
     Self._DoorHandler.Door := doors[0];
     Self._DoorHandler.DoorsOnPath := doors;
 
-    Self.DebugLn('Attempting to solve door.');
+    Self.DebugLn('Attempting to solve door, attempt ' + ToStr(tries + 1));
 
-    if Self.WalkDoorway(path, waitUntilDistance, debug) then
+    if not Self.WalkDoorway(path, waitUntilDistance, debug) then
     begin
       Inc(tries);
-      Continue;
     end else
-      tries := 0; //not sure about this but I think it is fine...
+    begin
+      tries := 0;
+      Continue;
+    end;
 
-    if not tries > 2 then Continue;
+    if not tries > 1 then Continue;
     Self.DebugLn('Hard solving door.');
     if Self.WalkStep(Self.Position(), Self._DoorHandler.Door.Before) then
       if Self._HardSolveDoor(Self._DoorHandler.Door) then tries := 0;
