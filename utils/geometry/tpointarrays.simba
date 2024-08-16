@@ -223,7 +223,11 @@ end;
 
 function TPointArray.Intersection(other: TPointArray): TPointArray; constref;
 begin
-  GetSamePointsATPA([Self, Other], Result);
+  try
+    GetSamePointsATPA([Self, Other], Result)
+  except
+    Result := [];
+  end;
 end;
 
 function TPointArray.Difference(other: TPointArray): TPointArray; constref;
