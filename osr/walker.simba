@@ -377,7 +377,7 @@ begin
 
     if Self._DoorHandler.Handling then
     begin
-      if Self.WebGraph^.WalkableClusters.InSameTPA(position.Current, RSTranslator.NormalizeDoor(Self._DoorHandler.Door.After)) then
+      if Self.WebGraph^.WalkableClusters.InSameTPA(RSTranslator.NormalizeDoor(position.Current), RSTranslator.NormalizeDoor(Self._DoorHandler.Door.After)) then
       begin
         Self._PathIndex := Self._Path.Find(Self._Path.NearestPoint(destination));
         Self._DoorHandler.Handling := False;
@@ -958,13 +958,13 @@ begin
     Self.DebugLn(Self.Walking, 'fails: ', fails);
     {$ENDIF}
     playerPoint := Self.Position();
-    if Self.WebGraph^.WalkableClusters.InSameTPA(playerPoint, RSTranslator.NormalizeDoor(Self._DoorHandler.Door.After)) and Self._DoorHandler.Handling then
+    if Self.WebGraph^.WalkableClusters.InSameTPA(RSTranslator.NormalizeDoor(playerPoint), RSTranslator.NormalizeDoor(Self._DoorHandler.Door.After)) then
       Exit(True);
 
     if Self._DoorHandler.FlagMoved then
     begin
       Self._DoorHandler.FlagMoved := False;
-      Exit(Self.WebGraph^.WalkableClusters.InSameTPA(playerPoint, RSTranslator.NormalizeDoor(Self._DoorHandler.Door.After)));
+      Exit(Self.WebGraph^.WalkableClusters.InSameTPA(RSTranslator.NormalizeDoor(playerPoint), RSTranslator.NormalizeDoor(Self._DoorHandler.Door.After)));
     end;
 
     fails := Self._WalkPathHelper(index, playerPoint, fails, debug);
@@ -1295,6 +1295,9 @@ begin
       Continue;
     end;
 
+    Self._DoorHandler.SettingUp := False;
+    Self._DoorHandler.Handling := False;
+
     if not tries > 1 then Continue;
     Self.DebugLn('Hard solving door.');
     if Self.WalkStep(Self.Position(), Self._DoorHandler.Door.Before) then
@@ -1341,4 +1344,3 @@ begin
   p := Self.GetClosestPointEx(me, tpa);
   Result := Minimap.MakePointVisible(Self.PointToMM(me, p, Minimap.GetCompassAngle(False)));
 end;
-
