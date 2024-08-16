@@ -588,7 +588,7 @@ begin
   if Self._DoorHandler.SettingUp then
     if playerpoint.InRange(Self._DoorHandler.Door.Center, 99) and not playerpoint.InRange(walkerPoint, 20) then
     begin
-      Minimap.SetCompassAngleEx(Self._DoorHandler.Door.GetVisibleAngle(Minimap.GetCompassAngle()),15);
+      Minimap.SetCompassAngleEx(Self._DoorHandler.Door.GetVisibleAngle(Minimap.GetCompassAngle()), 15);
       Self._DoorHandler.SettingUp := False;
     end;
 
@@ -648,7 +648,7 @@ begin
     if Self._DoorHandler.SettingUp then
       if playerpoint.InRange(Self._DoorHandler.Door.Center, 99) and not playerpoint.InRange(walkerPoint, 20) then
       begin
-        Minimap.SetCompassAngleEx(Self._DoorHandler.Door.GetVisibleAngle(Minimap.GetCompassAngle()),15);
+        Minimap.SetCompassAngleEx(Self._DoorHandler.Door.GetVisibleAngle(Minimap.GetCompassAngle()), 15);
         Self._DoorHandler.SettingUp := False;
       end;
 
