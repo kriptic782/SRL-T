@@ -1284,7 +1284,7 @@ begin
     Self._DoorHandler.Door := doors[0];
     Self._DoorHandler.DoorsOnPath := doors;
 
-    Self.DebugLn('Attempting to solve door, attempt ' + IntToStr(tries + 1));
+    Self.DebugLn('Attempting to solve door, attempt ' + ToStr(tries + 1));
 
     if not Self.WalkDoorway(path, waitUntilDistance, debug) then
     begin
