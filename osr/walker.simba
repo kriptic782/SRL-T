@@ -1150,7 +1150,6 @@ begin
     Exit;
 
   angle := door.GetVisibleAngle(Minimap.GetCompassAngle() , 0 , False);
-  WriteLn(angle);
   Minimap.SetCompassAngleEx(angle, 15);
   WaitUntil(not minimap.IsPlayerMoving, 50,5000);
 
@@ -1177,8 +1176,6 @@ begin
 
   with Self.Position() do
     Result := door.After.DistanceTo([X, Y]) < me.DistanceTo([X, Y]);
-
-  WriteLn('Did hardsolve work?: ', Result);
 end;
 
 
@@ -1347,4 +1344,3 @@ begin
   p := Self.GetClosestPointEx(me, tpa);
   Result := Minimap.MakePointVisible(Self.PointToMM(me, p, Minimap.GetCompassAngle(False)));
 end;
-
