@@ -1,3 +1,12 @@
+## [7.7.2](https://github.com/Torwent/SRL-T/compare/v7.7.1...v7.7.2) (2024-08-16)
+
+
+### Bug Fixes
+
+* consistency change ([ba6c6db](https://github.com/Torwent/SRL-T/commit/ba6c6dba36db6720548eb6c32fb917f4e6fc3aea))
+
+
+
 ## [7.7.1](https://github.com/Torwent/SRL-T/compare/v7.7.0...v7.7.1) (2024-08-15)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **DoorHandler:** a bunch of changes by bootje with some tweaks by me ([d12e20d](https://github.com/Torwent/SRL-T/commit/d12e20dfea43fa84ed5da51a963fe3e558732f54))
-
-
-
-## [7.6.3](https://github.com/Torwent/SRL-T/compare/v7.6.2...v7.6.3) (2024-08-12)
-
-
-### Bug Fixes
-
-* read notes ([4005858](https://github.com/Torwent/SRL-T/commit/4005858300a71147359c7d386a9eb6507795df04))
 
 
 
