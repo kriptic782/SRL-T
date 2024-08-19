@@ -158,6 +158,14 @@ begin
   Result := [p.X - (p.X mod Self.TileSize) + 1, p.Y - (p.Y mod Self.TileSize) + 1];
 end;
 
+function TRSTranslator.NormalizeNearestTile(p: TPoint): TPoint;
+begin
+  if (p.X mod Self.TileSize) = 3 then
+    Result := [p.X - (p.X mod Self.TileSize) + 4, p.Y - (p.Y mod Self.TileSize) + (Self.TileSize div 2)]
+  else
+    Result := [p.X - (p.X mod Self.TileSize), p.Y - (p.Y mod Self.TileSize) + (Self.TileSize div 2)];
+end;
+
 
 var
   RSTranslator: TRSTranslator;

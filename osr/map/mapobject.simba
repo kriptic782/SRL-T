@@ -720,7 +720,7 @@ begin
   Result.ID := json.getInt('id');
   Result.Name := json.getString('name');
   Result.Category := json.getInt('category');
-  Result.Offset := [2,2];
+  Result.Offset := [0,0]; //This is now no longer needs to be [2,2] by default, unless the npc has an actual offset from the center of the tile
 
   Result.Actions := TRSMapObject.GetActions(json.getJSONArray('actions'));
   Result.Size := TRSMapObject.GetSize(json.getJSONArray('size'));
@@ -746,10 +746,11 @@ end;
 
 function TRSNPCV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref; override;
 var
-  dots: TPointArray;
-  p: TPoint;
+  dots, tileGrid, mmGrid: TPointArray;
+  p, mmPoint: TPoint;
+  vec: Vector3;
   h, diff: Single;
-  i: Int32;
+  i, x, y: Int32;
 begin
   if Self.Filter.Walker and (me = [0,0]) then
     me := Self.Walker^.Position();
@@ -765,13 +766,33 @@ begin
     if dots = [] then
       Exit;
 
+    tileGrid := [];
+
+    // get the pixels on the minimap that correspond to tile coordinates on the map
+    // maybe there is a smarter way to do this, but for now it works fine
+    for x := Minimap.Center().X - 10 * 4 to Minimap.Center().X + 10 * 4 with 4 do
+      for y := Minimap.Center().Y - 10 * 4 to Minimap.Center().Y + 10 * 4 with 4 do
+      begin
+        mmPoint := Vec3(x, y).RotateXY(angle, Minimap.Center().X, Minimap.Center.Y).ToPoint;
+        mmGrid += mmPoint;
+        tileGrid += RSTranslator.NormalizeNearestTile(Self.Walker^.MMToMap(me, mmPoint));
+      end;
+
+
+    dots := dots.Offset(2,1); //This brings the dots closest to the tile center in general, closer than the original 2,2 offset
+    for i := 0 to High(dots) do
+      dots[i] := mmGrid.NearestPoint(dots[i]);
+
+
     dots := dots.Sorted(Minimap.Center());
     for i := 0 to High(dots) do
     begin
-      p := Self.Walker^.MMToMap(me, p, angle) + Self.Offset;
+      p := mmGrid.NearestPoint(dots[i]);  // snap minimap dot onto nearest 'tile' point on the minimap
+      p := Self.Walker^.MMToMap(me, p, angle); // transfer back from minimap grid to map grid
+      p := RSTranslator.NormalizeNearestTile(p)+ Self.Offset; // read comments above NormalizeNearestTile for more info, also standard offset of [2,2] has been removed
       diff := -(h-Self.Walker^.Height(p)) / 4;
-
-      Result += Minimap.GetCuboidMS(dots[i] + [Round(0.15*diff), Round(0.11*diff)], Self.Size, [2,2,diff], angle);
+      vec := Self.Walker^.PointToMMVec(me, p, angle);
+      Result += Minimap.GetCuboidMS(vec + [Round(0.15*diff), Round(0.11*diff), 0], Self.Size, [0,0,diff], angle);
     end;
 
     Exit;
