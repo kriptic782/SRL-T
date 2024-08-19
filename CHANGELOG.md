@@ -1,3 +1,12 @@
+## [7.7.5](https://github.com/Torwent/SRL-T/compare/v7.7.4...v7.7.5) (2024-08-19)
+
+
+### Bug Fixes
+
+* **itemfinder:** add new items ([c55313e](https://github.com/Torwent/SRL-T/commit/c55313eb3da927a245a9df27482e2af18b1d3578))
+
+
+
 ## [7.7.4](https://github.com/Torwent/SRL-T/compare/v7.7.3...v7.7.4) (2024-08-16)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * force bump ([aabaf81](https://github.com/Torwent/SRL-T/commit/aabaf81f0775542b02c112b805a83d99e550c4b2))
-
-
-
-# [7.7.0](https://github.com/Torwent/SRL-T/compare/v7.6.5...v7.7.0) (2024-08-15)
-
-
-### Features
-
-* **OTPGenerator:** Added a OTP generator ([051612b](https://github.com/Torwent/SRL-T/commit/051612b4060017cf4ed2ee6438c1e4d666d96f9e))
 
 
 
