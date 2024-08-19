@@ -355,6 +355,22 @@ begin
             );
 end;
 
+function TRSMinimap.GetTileMS(vec: Vector3; tile: Vector3 = [1, 1, 0]; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TRectangle; overload;
+begin
+  if not Self.IsPointOn(vec.ToPoint()) then
+    Exit;
+
+  //The above prevents running out of memory from fetching tiles too far away.
+  //Everything at the very edge of the minimap is also roughly the same limit of the render distance.
+  //So even though we could fetch tiles further that are visible they would be pitch black because they are not rendered and kind of pointless.
+  //So this just won't go further if the point is not on the minimap and prevents users from accidentally trying to get tiles that are truly too far.
+
+  if (angle = $FFFF) then
+    angle := Self.GetCompassAngle(False);
+
+  Result := Self.VectorToMSRect(vec + offset + [0, 0, tile.Z], tile.X, tile.Y, angle);
+end;
+
 function TRSMinimap.GetTileArrayMS(locArray: TPointArray; tile: Vector3 = [1, 1, 0]; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TRectArray;
 var
   loc: TPoint;
@@ -421,6 +437,18 @@ begin
   Result.Bottom := Self.GetTileMs(loc, [shape.X, shape.Y, 0], offset, angle);
   if shape.Z <> 0 then
     Result.Top := Self.GetTileMS(loc, shape, offset, angle)
+  else
+    Result.Top := Result.Bottom;
+end;
+
+function TRSMinimap.GetCuboidMS(vec: Vector3; shape: Vector3 = [1, 1, 4]; offset: Vector3 = [0, 0, 0]; angle: Single = $FFFF): TCuboidEx; overload;
+begin
+  if (angle = $FFFF) then
+    angle := Self.GetCompassAngle(False);
+
+  Result.Bottom := Self.GetTileMs(vec, [shape.X, shape.Y, 0], offset, angle);
+  if shape.Z <> 0 then
+    Result.Top := Self.GetTileMS(vec, shape, offset, angle)
   else
     Result.Top := Result.Bottom;
 end;

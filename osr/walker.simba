@@ -134,6 +134,17 @@ begin
   end;
 end;
 
+function TRSWalkerV2.PointToMMVec(playerPoint, p: TPoint; radians: Double): Vector3;
+var
+  MMpoint: TPoint;
+begin
+  with Minimap.Center() do
+  begin
+    MMPoint := p - playerPoint + [X, Y];
+    Result := Vec3(MMPoint.X,MMPoint.Y).RotateXY(radians, X, Y);
+  end;
+end;
+
 function TRSWalkerV2.PointsToMM(playerPoint: TPoint; tpa: TPointArray; radians: Double): TPointArray;
 var
   p: TPoint;
