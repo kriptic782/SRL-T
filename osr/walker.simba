@@ -919,6 +919,8 @@ begin
 
   Mouse.Move([Round((2*rect.Mean().X+3*middleOfDoorside.X)/5), Round((2*rect.Mean().Y+3*middleOfDoorside.Y)/5)]);
 
+  Self._DoorHandler.Skipped := False; //I can't explain why but without this like, it always skips the door
+
   //Check Uptext and walk through
   if Mainscreen.IsUpText(['Open', 'Squeeze']) then
   begin
