@@ -134,6 +134,17 @@ begin
   end;
 end;
 
+function TRSWalkerV2.PointToMMVec(playerPoint, p: TPoint; radians: Double): Vector3;
+var
+  MMpoint: TPoint;
+begin
+  with Minimap.Center() do
+  begin
+    MMPoint := p - playerPoint + [X, Y];
+    Result := Vec3(MMPoint.X,MMPoint.Y).RotateXY(radians, X, Y);
+  end;
+end;
+
 function TRSWalkerV2.PointsToMM(playerPoint: TPoint; tpa: TPointArray; radians: Double): TPointArray;
 var
   p: TPoint;
@@ -907,6 +918,8 @@ begin
   middleOfDoorside := [Round((tpa[0].X+tpa[1].X)/2), Round((tpa[0].Y+tpa[1].Y)/2)];
 
   Mouse.Move([Round((2*rect.Mean().X+3*middleOfDoorside.X)/5), Round((2*rect.Mean().Y+3*middleOfDoorside.Y)/5)]);
+
+  Self._DoorHandler.Skipped := False; //I can't explain why but without this like, it always skips the door
 
   //Check Uptext and walk through
   if Mainscreen.IsUpText(['Open', 'Squeeze']) then
