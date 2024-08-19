@@ -746,7 +746,7 @@ end;
 
 function TRSNPCV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref; override;
 var
-  dots, tileGrid, mmGrid: TPointArray;
+  dots, mmGrid: TPointArray;
   p, mmPoint: TPoint;
   vec: Vector3;
   h, diff: Single;
@@ -766,8 +766,6 @@ begin
     if dots = [] then
       Exit;
 
-    tileGrid := [];
-
     // get the pixels on the minimap that correspond to tile coordinates on the map
     // maybe there is a smarter way to do this, but for now it works fine
     for x := Minimap.Center().X - 10 * 4 to Minimap.Center().X + 10 * 4 with 4 do
@@ -775,15 +773,9 @@ begin
       begin
         mmPoint := Vec3(x, y).RotateXY(angle, Minimap.Center().X, Minimap.Center.Y).ToPoint;
         mmGrid += mmPoint;
-        tileGrid += RSTranslator.NormalizeNearestTile(Self.Walker^.MMToMap(me, mmPoint));
       end;
 
-
     dots := dots.Offset(2,1); //This brings the dots closest to the tile center in general, closer than the original 2,2 offset
-    for i := 0 to High(dots) do
-      dots[i] := mmGrid.NearestPoint(dots[i]);
-
-
     dots := dots.Sorted(Minimap.Center());
     for i := 0 to High(dots) do
     begin
