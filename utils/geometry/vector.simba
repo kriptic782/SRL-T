@@ -382,6 +382,22 @@ begin
   Result.z := Result.z / Length(Self);
 end;
 
+function Vector3Array.NearestVec(vec: Vector3 = [0,0,0]): Vector3;
+var
+  i, nearest: Int32;
+  dist: Double;
+begin
+  dist := $FFFFFF;
+  for i:=0 to High(Self) do
+  begin
+    if Self[i].Distance(vec) < dist then
+    begin
+      dist := Self[i].Distance(vec);
+      nearest := i;
+    end;
+  end;
+  Result := Self[nearest];
+end;
 
 
 // ---------------------------------------------------------------------------

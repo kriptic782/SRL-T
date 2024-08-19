@@ -18,6 +18,7 @@ type
     Actions: TStringArray;
 
     Size: Vector3;
+    Tiles: Integer;
     Coordinates: TPointArray;
 
     Finder: TRSObjectFinder;
@@ -724,6 +725,8 @@ begin
 
   Result.Actions := TRSMapObject.GetActions(json.getJSONArray('actions'));
   Result.Size := TRSMapObject.GetSize(json.getJSONArray('size'));
+  Result.Tiles := Ceil(Result.Size.X);
+  Result.Offset := [2,2]*(Result.Tiles - 1);
 
   Result := Result.Merge(json.getJSONArray('coordinates'), json.getJSONArray('colors'));
   Result.Finder.ColorClusters := [];
@@ -746,8 +749,9 @@ end;
 
 function TRSNPCV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref; override;
 var
-  dots, mmGrid: TPointArray;
-  p, mmPoint: TPoint;
+  dots: TPointArray;
+  dotsVec3Arr, mmGridVec3Arr: Vector3Array;
+  p: TPoint;
   vec: Vector3;
   h, diff: Single;
   i, x, y: Int32;
@@ -766,22 +770,28 @@ begin
     if dots = [] then
       Exit;
 
-    // get the pixels on the minimap that correspond to tile coordinates on the map
-    // maybe there is a smarter way to do this, but for now it works fine
     for x := Minimap.Center().X - 10 * 4 to Minimap.Center().X + 10 * 4 with 4 do
       for y := Minimap.Center().Y - 10 * 4 to Minimap.Center().Y + 10 * 4 with 4 do
       begin
-        mmPoint := Vec3(x, y).RotateXY(angle, Minimap.Center().X, Minimap.Center.Y).ToPoint;
-        mmGrid += mmPoint;
+        mmGridVec3Arr += Vec3(x, y).RotateXY(angle, Minimap.Center().X, Minimap.Center.Y);
       end;
 
-    dots := dots.Offset(2,1); //This brings the dots closest to the tile center in general, closer than the original 2,2 offset
+    dotsVec3Arr.FromTPA(dots);
+    dotsVec3Arr := dotsVec3Arr.Offset([1.5,1.5]);
+    dotsVec3Arr := dotsVec3Arr.Offset(Vec3(-2,-2).RotateXY(angle, 0,0)*(Self.Tiles-1));
+
+    for i := 0 to high(dotsVec3Arr) do
+    begin
+      dotsVec3Arr[i] := mmGridVec3Arr.NearestVec(dotsVec3Arr[i]);
+    end;
+
+    dots := dotsVec3Arr.ToTPA();
     dots := dots.Sorted(Minimap.Center());
     for i := 0 to High(dots) do
     begin
-      p := mmGrid.NearestPoint(dots[i]);  // snap minimap dot onto nearest 'tile' point on the minimap
+      p := dots[i];  // snap minimap dot onto nearest 'tile' point on the minimap
       p := Self.Walker^.MMToMap(me, p, angle); // transfer back from minimap grid to map grid
-      p := RSTranslator.NormalizeNearestTile(p)+ Self.Offset; // read comments above NormalizeNearestTile for more info, also standard offset of [2,2] has been removed
+      p := RSTranslator.NormalizeNearestTile(p) + Self.Offset; // read comments above NormalizeNearestTile for more info, also standard offset of [2,2] has been removed
       diff := -(h-Self.Walker^.Height(p)) / 4;
       vec := Self.Walker^.PointToMMVec(me, p, angle);
       Result += Minimap.GetCuboidMS(vec + [Round(0.15*diff), Round(0.11*diff), 0], Self.Size, [0,0,diff], angle);
