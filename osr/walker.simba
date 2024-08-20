@@ -187,6 +187,8 @@ begin
 end;
 
 function TRSWalkerV2.GetRectMS(playerPoint, mapPoint: TPoint; height: Double = 0; offset: Vector2 = [0,0]; radians: Single = $FFFF): TRectangle;
+var
+  mapVec: Vector3;
 begin
   if radians = $FFFF then
     radians := Minimap.GetCompassAngle(False);
@@ -194,10 +196,10 @@ begin
   with Minimap.Center() do
   begin
     mapPoint   := [X, Y] + (mapPoint - playerPoint);
-    mapPoint   := mapPoint.Rotate(radians, [X, Y]);
+    mapVec     := Vec3(mapPoint.X,mapPoint.Y).RotateXY(radians, X, Y);
   end;
 
-  Result := Minimap.VectorToMSRect(Vec3(mapPoint.x - offset.X, mapPoint.y - offset.Y, height), 1, 1, radians);
+  Result := Minimap.VectorToMSRect(Vec3(mapVec.X - offset.X, mapVec.Y - offset.Y, height), 1, 1, radians);
 end;
 
 function TRSWalkerV2.MMToMap(playerPoint, minimapPoint: TPoint; radians: Single = $FFFF): TPoint;

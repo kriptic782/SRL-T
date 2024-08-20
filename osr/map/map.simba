@@ -704,15 +704,16 @@ Debug(Map.GetTileMS(Map.Position() + [10, 10]));
 function TRSMap.GetTileMS(playerPoint, mapPoint: TPoint; height: Double = 0; offset: Vector2 = [0,0]): TRectangle;
 var
   radians: Double;
+  mapVec: Vector3;
 begin
   with Minimap.Center() do
   begin
     mapPoint   := [X, Y] + (mapPoint - playerPoint);
-    radians := Minimap.GetCompassAngle(False);
-    mapPoint   := mapPoint.Rotate(radians, [X, Y]);
+    radians    := Minimap.GetCompassAngle(False);
+    mapVec     := Vec3(mapPoint.X,mapPoint.Y).RotateXY(radians, X, Y);
   end;
 
-  Result := Minimap.VectorToMSRect(Vec3(mapPoint.x - offset.X, mapPoint.y - offset.Y, height), 1, 1, radians);
+  Result := Minimap.VectorToMSRect(Vec3(mapVec.x - offset.X, mapVec.y - offset.Y, height), 1, 1, radians);
 end;
 
 function TRSMap.GetTileMS(mapPoint: TPoint; height: Double = 0; offset: Vector2 = [0,0]): TRectangle; overload;
