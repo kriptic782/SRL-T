@@ -944,8 +944,8 @@ begin
 
   if atpa <> [] then
   begin
-    //bitmap.DrawATPA(atpa);
-    //bitmap.DrawTPA(atpa[0], $0);
+    bitmap.DrawATPA(atpa);
+    bitmap.DrawTPA(atpa[0], $0);
   end;
 
   bitmap.DrawCuboidArray(cuboids, $00FFFF);
