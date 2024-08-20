@@ -285,10 +285,20 @@ begin
 
   atpa.sortBySize(0, True);
 
+  hi := High(doors);
+  case hi of
+    0..50: divider := 50;
+    51..400: divider := 100;
+    else divider := 200;
+  end;
+
   for i := 0 to high(doors) do
   begin
+    if i mod divider = 0 then
+      Self.DebugLn('Adding doors to graph: '  + ToStr(i) + '/' + ToStr(hi));
     door := doors[i];
-    if not door.IsSeparatingAreas(atpa) then
+
+    if (door.DoorType = ERSDoorType.UNKNOWN) or atpa.InSameTPA(door.Before, door.After) then
     begin
       nonSepDoors += 1;
       Continue;

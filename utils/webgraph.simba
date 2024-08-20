@@ -19,20 +19,6 @@ type
 
   TRSDoorArray = array of TRSDoor;
 
-//check if a door separates two closed off clusters of walkable space
-function TRSDoor.IsSeparatingAreas(atpa: T2dPointArray): Boolean;
-var
-  tpa: TPointArray;
-begin
-  if Self.DoorType = ERSDoorType.UNKNOWN then
-    Exit;
-
-  for tpa in atpa do
-    if tpa.ContainsAll([Self.Center + Self.Direction, Self.Center - Self.Direction]) then
-      Exit;
-
-  Result := True;
-end;
 
 //This is the number of degrees you need to face the compass to face the door directly.
 //It works by selecting the cardinal direction that gives the highest inner product
