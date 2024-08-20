@@ -90,7 +90,7 @@ begin
   for door in Self do
     case door.DoorType of
       ERSDoorType.NORMAL:
-        if door.isSeparatingAreas(atpa) then
+        if door.SEPARATING then
           bmp.drawCross(door.Center, 3, $FF)
         else
           bmp.drawCross(door.Center, 3, $FFFF00);
