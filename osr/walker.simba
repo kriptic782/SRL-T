@@ -1122,7 +1122,7 @@ begin
   for destination in destinations do
   begin
     try
-      path := Self.WebGraph^.PathBetween(me, destination, 0);
+      path := Self.WebGraph^.PathBetweenEx(me, destination, 0, 1);
     except
       Continue;
     end;
@@ -1334,6 +1334,7 @@ end;
 
 function TRSWalkerV2.WebWalk(destination: TPoint; waitUntilDistance: Int32 = 0; pathRandomness: Double = 0; debug: Boolean = False): Boolean;
 begin
+  WriteLn('Begining webwalk');
   Result := Self.WebWalkEx(Self.Position(), destination, waitUntilDistance, pathRandomness, debug);
 end;
 

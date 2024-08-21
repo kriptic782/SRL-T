@@ -1153,7 +1153,7 @@ var
   shouldExit: Boolean;
   attempt: Int32;
   atpa: T2DPointArray;
-  tpa: TPointArray;
+  tpa, path: TPointArray;
   angle: Double;
   me, closest: TPoint;
 begin
@@ -1187,7 +1187,9 @@ begin
       Exit(True);
 
     me := Self.Walker^.Position();
-    closest := Self.Walker^.GetClosestPointEx(me, Self.Coordinates);
+    closest := Self.Walker^.GetClosestPointEx(me, Self.Coordinates, path);
+    if Length(path) = 0 then
+      closest := Self.Walker^.WebGraph^.Nodes[Self.Walker^.WebGraph^.FindNearestNode(closest)];
     if not Self.Walker^.InRangeEx(me, closest, 50) then
     begin
       Self.Walker^.WebWalkEx(me, closest, 30, 0.15);
@@ -1296,7 +1298,6 @@ begin
 
   me :=  Self.Walker^.Position();
   p := Self.Walker^.GetClosestPointEx(me, Self.Coordinates, path);
-
   //if the point is not reachable with the webgraph (like a banker behind a booth) then pick nearest node as target
   if Length(path) = 0 then
     p := Self.Walker^.WebGraph^.Nodes[Self.Walker^.WebGraph^.FindNearestNode(p)];
@@ -1308,7 +1309,7 @@ begin
      not Self.Walker^.WebWalk(p, 30, 0.15) then
       Exit;
   end else
-  if not Self.Walker^.WebWalk(p, 30, 0.15) then  // in this case simply making the target visible doesn't suffice to reachh the npc
+  if not Self.Walker^.WebWalk(p, 30, 0.15) then  // in this case simply making the target visible doesn't suffice to reach the npc
       Exit;
 
   Result := Self._WalkHoverHelper(attempts, Self.TrackTarget);
