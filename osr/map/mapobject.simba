@@ -146,7 +146,7 @@ begin
   Result := Minimap.PointsToMS(coordinates, angle);
 end;
 
-function TRSMapObject.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray;
+function TRSMapObject.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref;
 var
   coordinates: TPointArray;
   p: TPoint;
@@ -532,7 +532,7 @@ begin
 end;
 
 
-function TRSObjectV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; override;
+function TRSObjectV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref; override;
 var
   Locations: TCoordsAngle;
   p: TPoint;
@@ -674,7 +674,6 @@ type
     Level: Int32;
     DotType: ERSMinimapDot;
     DotFilters: TRSDotFilterArray;
-    TilesWide: Integer;
   end;
 
   PRSNPCV2 = ^TRSNPCV2;
@@ -726,7 +725,6 @@ begin
 
   Result.Actions := TRSMapObject.GetActions(json.getJSONArray('actions'));
   Result.Size := TRSMapObject.GetSize(json.getJSONArray('size'));
-  Result.TilesWide:= Ceil(Result.Size.X);
 
   Result := Result.Merge(json.getJSONArray('coordinates'), json.getJSONArray('colors'));
   Result.Finder.ColorClusters := [];
@@ -747,7 +745,7 @@ begin
 end;
 
 
-function TRSNPCV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; override;
+function TRSNPCV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref; override;
   //gets the points on the rotated minimap which correspond the closest to actual tile coordinates
   function _GetMinimapGrid(angle: Single): Vector3Array;
   var x, y: Integer;
@@ -767,7 +765,7 @@ function TRSNPCV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCu
   begin
     dotVecs.FromTPA(dots);
     dotVecs := dotVecs.Offset([2,2]);
-    dotVecs := dotVecs.Offset(Vec3(-2,-2).RotateXY(angle, 0, 0)*(NPC.TilesWide-1));
+    dotVecs := dotVecs.Offset(Vec3(-2,-2).RotateXY(angle, 0, 0)*(Ceil(Max(NPC.Size.X, NPC.Size.Y))-1));
 
     mmGrid := _GetMinimapGrid(angle);
     for i := 0 to High(dotVecs) do
@@ -791,8 +789,6 @@ begin
   if Self.Filter.Walker and Self.Filter.Minimap then
   begin
     h := Self.Walker^.Height(me);
-    if Self.TilesWide = 0 then Self.TilesWide := 1;
-
     dots := Minimap.GetFilteredDotArray(Self.DotType, Self.Walker^.FiltersToMM(me, Self.DotFilters, angle));
     if dots = [] then
       Exit;
@@ -803,7 +799,7 @@ begin
     for i := 0 to High(dots) do
     begin
       p := Self.Walker^.MMToMap(me, dots[i], angle); // transfer back from minimap grid to map grid
-      p := RSTranslator.NormalizeNearestTile(p) + [2,2]*(Self.TilesWide-1); //Go from topleft corner of npc to center
+      p := RSTranslator.NormalizeNearestTile(p) + [2,2]*(Ceil(Max(Self.Size.X, Self.Size.Y))-1); //Go from topleft corner of npc to center
       p := p + Self.Offset; //User specified offset
       diff := -(h-Self.Walker^.Height(p))/4;
       vec := Self.Walker^.PointToMMVec(me, p, angle); //translate back to MM space, use vectors to avoid rounding errors

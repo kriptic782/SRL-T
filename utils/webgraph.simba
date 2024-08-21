@@ -83,7 +83,7 @@ begin
 end;
 
 //draw doors on bitmap
-procedure TRSDoorArray.Draw(bmp: TMufasaBitmap; atpa: T2DPointArray);
+procedure TRSDoorArray.Draw(bmp: TMufasaBitmap);
 var
   door: TRSDoor;
 begin
