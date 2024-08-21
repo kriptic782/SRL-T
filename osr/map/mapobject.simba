@@ -562,7 +562,7 @@ begin
     p := RSTranslator.Normalize(p);
     diff := -(h-Self.Walker^.Height(p));
     vec := Self.Walker^.PointToMMVec(me, p, angle);
-    Result += Minimap.GetCuboidMS(vec + [Round(0.15*diff), Round(0.11*diff), 0], Self.Size, [0,0,diff], angle - radians(Locations.Angles[i]));
+    Result += Minimap.GetCuboidMS(vec + [Round(0.15*diff), Round(0.11*diff), 0], Self.Size, [0,0,diff], angle - Locations.Angles[i]);
   end;
 end;
 
