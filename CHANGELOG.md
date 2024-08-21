@@ -1,3 +1,12 @@
+## [7.7.8](https://github.com/Torwent/SRL-T/compare/v7.7.7...v7.7.8) (2024-08-21)
+
+
+### Bug Fixes
+
+* remove tilewide ([0969e26](https://github.com/Torwent/SRL-T/commit/0969e2639433a53e4a0805b48963cf4797840a8e))
+
+
+
 ## [7.7.7](https://github.com/Torwent/SRL-T/compare/v7.7.6...v7.7.7) (2024-08-21)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * force bump ([2f13659](https://github.com/Torwent/SRL-T/commit/2f13659e85fc21ab05002ba8615c47f052e1cbc4))
-
-
-
-## [7.7.3](https://github.com/Torwent/SRL-T/compare/v7.7.2...v7.7.3) (2024-08-16)
-
-
-### Bug Fixes
-
-* force bump ([048e0f0](https://github.com/Torwent/SRL-T/commit/048e0f061ceb4d5ba592791c9d408e9324611952))
 
 
 
