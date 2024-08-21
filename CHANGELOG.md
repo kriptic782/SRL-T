@@ -1,3 +1,12 @@
+## [7.7.7](https://github.com/Torwent/SRL-T/compare/v7.7.6...v7.7.7) (2024-08-21)
+
+
+### Bug Fixes
+
+* **itemfinder:** update items ([5ad46f6](https://github.com/Torwent/SRL-T/commit/5ad46f668b964dfa80d1810b98fc5c61a8371d91))
+
+
+
 ## [7.7.6](https://github.com/Torwent/SRL-T/compare/v7.7.5...v7.7.6) (2024-08-21)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * force bump ([048e0f0](https://github.com/Torwent/SRL-T/commit/048e0f061ceb4d5ba592791c9d408e9324611952))
-
-
-
-## [7.7.2](https://github.com/Torwent/SRL-T/compare/v7.7.1...v7.7.2) (2024-08-16)
-
-
-### Bug Fixes
-
-* consistency change ([ba6c6db](https://github.com/Torwent/SRL-T/commit/ba6c6dba36db6720548eb6c32fb917f4e6fc3aea))
 
 
 
