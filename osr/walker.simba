@@ -1109,10 +1109,10 @@ function TRSWalkerV2.GetClosestPoint(destinations: TPointArray): TPoint;
 ```
 Method used to get the closest Point to the Player out of a TPA.
 *)
-function TRSWalkerV2.GetClosestPointEx(me: TPoint; destinations: TPointArray): TPoint;
+
+function TRSWalkerV2.GetClosestPointEx(me: TPoint; destinations: TPointArray; out path: TPointArray): TPoint; overload;
 var
   shortPaths: T2DPointArray;
-  path: TPointArray;
   shortest, dist: Int32;
   destination: TPoint;
 begin
@@ -1122,7 +1122,7 @@ begin
   for destination in destinations do
   begin
     try
-      path := Self.WebGraph^.PathBetween(me, destination, 0);
+      path := Self.WebGraph^.PathBetweenEx(me, destination, 0, 1);
     except
       Continue;
     end;
@@ -1145,7 +1145,16 @@ begin
   if shortPaths = [] then
     Exit(destinations.NearestPoint(me));
 
+  path := shortPaths.RandomValue();
+
   Result := shortPaths.RandomValue().Last();
+end;
+
+function TRSWalkerV2.GetClosestPointEx(me: TPoint; destinations: TPointArray): TPoint; overload;
+var
+  _: TPointArray;
+begin
+  Result := GetClosestPointEx(me, destinations, _);
 end;
 
 function TRSWalkerV2.GetClosestPoint(destinations: TPointArray): TPoint;
@@ -1301,7 +1310,7 @@ begin
 
     Self.DebugLn('Attempting to solve door, attempt ' + ToStr(tries + 1));
 
-    if not Self.WalkDoorway(path, waitUntilDistance, debug) then
+    if not Self.WalkDoorway(path, 0, debug) then
     begin
       Inc(tries);
     end else

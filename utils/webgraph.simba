@@ -307,17 +307,34 @@ function TWebGraph.PathBetweenEx(p, q: TPoint; rnd: Double = 0; attempts: Int32 
 var
   i, j: Int32;
   nS, nG, nodes: TIntegerArray;
+  changed: Boolean;
+  pCircle, qCircle: TCircle;
+  pArea, qArea: TPointArray;
 begin
-  if not Self.WalkableSpace.Contains(p) then p := RSTranslator.NormalizeDoor(p);
-  if not Self.WalkableSpace.Contains(q) then q := RSTranslator.NormalizeDoor(q);
+  if not Self.WalkableSpace.Contains(p) or not Self.WalkableSpace.Contains(q) then
+  begin
+    p := RSTranslator.NormalizeDoor(p);
+    q := RSTranslator.NormalizeDoor(q);
+    changed := True;
+  end;
 
-  if not Self.WalkableSpace.Contains(p) then p := Self.WalkableSpace.NearestPoint(p);
-  if not Self.WalkableSpace.Contains(q) then q := Self.WalkableSpace.NearestPoint(q);
+  if changed then
+  begin
+    pCircle := [p.x, p.y, 30];
+    qCircle := [p.x, p.y, 30];
+    pArea := pCircle.toTPA(True).Intersection(Self.WalkableSpace);
+    qArea := qCircle.toTPA(True).Intersection(Self.WalkableSpace);
+    if not Self.WalkableSpace.Contains(p) then p := pArea.NearestPoint(p);
+    if not Self.WalkableSpace.Contains(q) then q := qArea.NearestPoint(q);
+  end;
 
   nS := Self.FindNearestNodes(p, attempts);
   nG := Self.FindNearestNodes(q, attempts);
 
   if nS[0] = nG[0] then Exit([p, q]);
+
+  if (Length(nG) = 1) and (Length(Self.Paths[nG[0]]) = 0) then
+    RaiseException('Points ' + p.ToString() + ' and ' + q.ToString() + ' don''t connect!');
 
   attempts -= 1;
 
