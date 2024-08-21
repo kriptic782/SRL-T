@@ -146,7 +146,7 @@ begin
   Result := Minimap.PointsToMS(coordinates, angle);
 end;
 
-function TRSMapObject.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref;
+function TRSMapObject.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray;
 var
   coordinates: TPointArray;
   p: TPoint;
@@ -532,7 +532,7 @@ begin
 end;
 
 
-function TRSObjectV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref; override;
+function TRSObjectV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; override;
 var
   Locations: TCoordsAngle;
   p: TPoint;
@@ -747,7 +747,7 @@ begin
 end;
 
 
-function TRSNPCV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; constref; override;
+function TRSNPCV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCuboidExArray; override;
   //gets the points on the rotated minimap which correspond the closest to actual tile coordinates
   function _GetMinimapGrid(angle: Single): Vector3Array;
   var x, y: Integer;
@@ -791,6 +791,7 @@ begin
   if Self.Filter.Walker and Self.Filter.Minimap then
   begin
     h := Self.Walker^.Height(me);
+    if Self.TilesWide = 0 then Self.TilesWide := 1;
 
     dots := Minimap.GetFilteredDotArray(Self.DotType, Self.Walker^.FiltersToMM(me, Self.DotFilters, angle));
     if dots = [] then
@@ -1279,7 +1280,8 @@ RSObjects.GEBank.WalkHover();
 *)
 function TRSMapObject.WalkHover(attempts: Int32 = 2): Boolean;
 var
-  p: TPoint;
+  p, me: TPoint;
+  path: TPointArray;
 begin
   if ChooseOption.IsOpen() then
   begin
@@ -1292,9 +1294,21 @@ begin
 
   if Self.Filter.UpText then Self.Walker^.TargetUpText := [Self.Name];
 
-  p := Self.Walker^.GetClosestPoint(Self.Coordinates);
+  me :=  Self.Walker^.Position();
+  p := Self.Walker^.GetClosestPointEx(me, Self.Coordinates, path);
+
+  //if the point is not reachable with the webgraph (like a banker behind a booth) then pick nearest node as target
+  if Length(path) = 0 then
+    p := Self.Walker^.WebGraph^.Nodes[Self.Walker^.WebGraph^.FindNearestNode(p)];
+
+  // check if doors need to be passed to reach target
+  if Self.Walker^.WebGraph^.WalkableClusters.InSameTPA(me, p) then
+  begin //normal logic
   if not Self.Walker^.MakePointVisible(p) and
      not Self.Walker^.WebWalk(p, 30, 0.15) then
+      Exit;
+  end else
+  if not Self.Walker^.WebWalk(p, 30, 0.15) then  // in this case simply making the target visible doesn't suffice to reachh the npc
       Exit;
 
   Result := Self._WalkHoverHelper(attempts, Self.TrackTarget);
