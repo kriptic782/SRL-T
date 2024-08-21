@@ -166,7 +166,7 @@ type
 var
   queue: array of TNode;
   visited: TBoolArray;
-  cIdx, pathIdx, i, nodesPast: Int32;
+  cIdx, pathIdx, i: Int32;
   current, node: TNode;
   p, q: TPoint;
   hyp: Double;
@@ -199,16 +199,13 @@ begin
     Visited[cIdx] := True;
 
     if (cIdx = Goal) then
-    begin
-      WriteLn('Nodes past: ', nodesPast);
       Exit(current.Indices);
-    end;
+
     p := Self.Nodes[cIdx];
     for pathIdx in Self.Paths[cIdx] do
     begin
       if not Visited[pathIdx] then
       begin
-        nodesPast += 1;
         q := Self.Nodes[pathIdx];
         node.Indices := current.Indices + pathIdx;
 
@@ -218,7 +215,6 @@ begin
       end;
     end;
   end;
-  WriteLn('Nodes past: ', nodesPast);
 end;
 
 function TWebGraph.FindNearestNode(P: TPoint): Int32;
@@ -346,7 +342,6 @@ begin
     for j := 0 to High(nG) do
     begin
       if nS[i] = nG[j] then Continue;
-
       nodes := Self.FindPath(nS[i],nG[j], rnd);
       if Length(nodes) > 0 then Break(2);
     end;

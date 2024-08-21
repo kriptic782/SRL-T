@@ -1334,7 +1334,6 @@ end;
 
 function TRSWalkerV2.WebWalk(destination: TPoint; waitUntilDistance: Int32 = 0; pathRandomness: Double = 0; debug: Boolean = False): Boolean;
 begin
-  WriteLn('Begining webwalk');
   Result := Self.WebWalkEx(Self.Position(), destination, waitUntilDistance, pathRandomness, debug);
 end;
 
