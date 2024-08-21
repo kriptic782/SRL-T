@@ -1609,14 +1609,13 @@ end;
 
 function T2DPointArray.InSameTPA(p, q: TPoint): Boolean;
 var
-  i, len: Int32;
+  i: Int32;
 begin
   for i := 0 to High(Self) do
-  begin
-    len := Length(Self[i].Intersection([p , q]));
-    if len = 1 then Exit(False);
-    if len = 2 then Exit(True);
-  end;
+    case Length(Self[i].Intersection([p, q])) of
+      1: Exit;
+      2: Exit(True);
+    end;
 end;
 
 function T2DPointArray.First(): TPointArray; constref;
