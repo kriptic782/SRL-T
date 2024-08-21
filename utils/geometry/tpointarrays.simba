@@ -1607,23 +1607,16 @@ begin
     Result[i] := GetTPABounds(Self[i]);
 end;
 
-
 function T2DPointArray.InSameTPA(p, q: TPoint): Boolean;
 var
-  i, a, b: Int32;
+  i, len: Int32;
 begin
-  a := -1;
-  b := -1;
-
   for i := 0 to High(Self) do
   begin
-    if (a = -1) and (Self[i].Intersection([p]) <> []) then a := i;
-    if (b = -1) and (Self[i].Intersection([q]) <> []) then b := i;
-    if ((a > -1) or (b > -1)) and (a = b) then Exit(True);
+    len := Length(Self[i].Intersection([p , q]));
+    if len = 1 then Exit(False);
+    if len = 2 then Exit(True);
   end;
-
-
-  Result := a = b;
 end;
 
 function T2DPointArray.First(): TPointArray; constref;
