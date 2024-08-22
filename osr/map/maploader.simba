@@ -984,6 +984,7 @@ begin
           graphs[idx].Doors[n].After  := Self.GetGlobal(idx, graphs[idx].Doors[n].After, [padding, padding]);
           graphs[idx].Doors[n].Center := Self.GetGlobal(idx, graphs[idx].Doors[n].Center, [padding, padding]);
         end;
+        cbitmaps[idx].Pad(padding);
       end;
 
       json := Self.Loader.GetJSON(s, f, planes[i], ERSMapJSON.OBJECTS);
