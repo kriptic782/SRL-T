@@ -461,6 +461,8 @@ begin
   if Objects <> [] then
   begin
     Self.ObjectsCache := Objects.GetAllByAction('Bank');
+    Self.ObjectsCache += Objects.GetAll('Bank chest');
+
     for i := 0 to High(Self.ObjectsCache) do
     begin
       Self.ObjectsCache[i].Filter.Finder := False;
