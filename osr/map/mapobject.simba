@@ -449,7 +449,7 @@ begin
     begin
       with coordinatesJSON.getJSONArray(i) do
         Result.Coordinates += [getInt(0), getInt(1)];
-      Result.Rotations += (90 * rotationsJSON.getInt(i) * PI)/180;
+      Result.Rotations += 90 * rotationsJSON.getInt(i);
     end;
   end
   else
