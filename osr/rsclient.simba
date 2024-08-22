@@ -281,5 +281,3 @@ begin
 
   RSClient.Setup();
 end;
-
-

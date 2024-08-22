@@ -121,7 +121,7 @@ begin
   if Self.Image <> nil then
     Self.Image.DrawClear(0);
   Self.EnableRealInput();
-  Self.ReleaseClient();
+  //Self.ReleaseClient();
   Self.PID := 0;
   Self.EIOS := nil;
 end;
