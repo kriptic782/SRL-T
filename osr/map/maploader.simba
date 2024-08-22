@@ -32,7 +32,7 @@ Helper record to store chunk data with a name associated with.
     Chunk: TBox;
     Planes: TIntegerArray;
   end;
-  ERSMapType = (NORMAL, HEIGHT, COLLISION);
+  ERSMap = (NORMAL, HEIGHT, COLLISION);
   ERSMapJSON = (OBJECTS, NPCS);
 
   TRSChunkLoader = record(TSRLBaseRecord)
@@ -45,7 +45,7 @@ begin
   Self.Cache := cache;
 end;
 
-function TRSChunkLoader.GetBitmap(chunk: String; level: UInt32; map: ERSMapType): TMufasaBitmap;
+function TRSChunkLoader.GetBitmap(chunk: String; level: UInt32; map: ERSMap): TMufasaBitmap;
 var
   cacheroot, cachename, zipFile, zipPath: String;
   created: Boolean;
@@ -53,7 +53,7 @@ begin
   Result.Init();
 
   case map of
-    ERSMapType.NORMAL:
+    ERSMap.NORMAL:
     begin
       cacheroot := Self.Cache + 'map' + DirectorySeparator;
       cachename := cacheroot + ToStr(level) + DirectorySeparator + chunk;
@@ -61,7 +61,7 @@ begin
       zipFile := ToStr(level) + '/' + chunk + '.png';
     end;
 
-    ERSMapType.HEIGHT:
+    ERSMap.HEIGHT:
     begin
       cacheroot := Self.Cache + 'heightmap' + DirectorySeparator;
       cachename := cacheroot + chunk;
@@ -69,7 +69,7 @@ begin
       zipFile := chunk + '.png';
     end;
 
-    ERSMapType.COLLISION:
+    ERSMap.COLLISION:
     begin
       cacheroot := Self.Cache + 'collision' + DirectorySeparator;
       cachename := cacheroot + ToStr(level) + DirectorySeparator + chunk;
@@ -109,7 +109,7 @@ begin
   Result.LoadFromFile(cachename + '.bmp');
 end;
 
-function TRSChunkLoader.GetBitmap(chunk: TPoint; level: UInt32; map: ERSMapType): TMufasaBitmap; overload;
+function TRSChunkLoader.GetBitmap(chunk: TPoint; level: UInt32; map: ERSMap): TMufasaBitmap; overload;
 begin
   Result := Self.GetBitmap(ToStr(chunk.X) + '-' + ToStr(chunk.Y), level, map);
 end;
@@ -161,7 +161,7 @@ begin
       Result += [x,y];
 end;
 
-function TRSChunkLoader.GetMap(chunks: TPointArray; level: UInt32; map: ERSMapType): TMufasaBitmap;
+function TRSChunkLoader.GetMap(chunks: TPointArray; level: UInt32; map: ERSMap): TMufasaBitmap;
 var
   i, x, y, n: Int32;
   lo, hi: TPoint;
@@ -201,7 +201,7 @@ begin
   end;
 end;
 
-function TRSChunkLoader.GetMap(start, finish: TPoint; level: UInt32; map: ERSMapType): TMufasaBitmap; overload;
+function TRSChunkLoader.GetMap(start, finish: TPoint; level: UInt32; map: ERSMap): TMufasaBitmap; overload;
 var
   chunks: TPointArray;
 begin
@@ -961,16 +961,16 @@ begin
       tmp :=  RSTranslator.Chunk2Coordinate(s);
       Self.Regions[idx].Offset := [tmp.X-padding, tmp.Y - padding];
 
-      bitmaps += Self.Loader.GetMap(s, f, planes[i], ERSMapType.NORMAL);
+      bitmaps += Self.Loader.GetMap(s, f, planes[i], ERSMap.NORMAL);
       bitmaps[idx].Pad(padding);
 
       if planes[i] = 0 then
       begin
-        hbitmaps += Self.Loader.GetMap(s, f, 0, ERSMapType.HEIGHT);
+        hbitmaps += Self.Loader.GetMap(s, f, 0, ERSMap.HEIGHT);
         hbitmaps[High(hbitmaps)].Pad(padding);
       end;
 
-      cbitmaps += Self.Loader.GetMap(s, f, planes[i], ERSMapType.COLLISION);
+      cbitmaps += Self.Loader.GetMap(s, f, planes[i], ERSMap.COLLISION);
       cbitmaps[idx].FindColors(white, $FFFFFF);
       walkableSpace += Self.GetGlobal(idx, white, [padding, padding]);
 
@@ -1057,16 +1057,16 @@ begin
       tmp :=  RSTranslator.Chunk2Coordinate(s);
       Self.Regions[idx].Offset := [tmp.X-padding, tmp.Y - padding];
 
-      bitmaps += Self.Loader.GetMap(s, f, chunks[i].Planes[j], ERSMapType.NORMAL);
+      bitmaps += Self.Loader.GetMap(s, f, chunks[i].Planes[j], ERSMap.NORMAL);
       bitmaps[idx].Pad(padding);
 
       if chunks[i].Planes[j] = 0 then
       begin
-        hbitmaps += Self.Loader.GetMap(s, f, 0, ERSMapType.HEIGHT);
+        hbitmaps += Self.Loader.GetMap(s, f, 0, ERSMap.HEIGHT);
         hbitmaps[High(hbitmaps)].Pad(padding);
       end;
 
-      cbitmaps += Self.Loader.GetMap(s, f, chunks[i].Planes[j], ERSMapType.COLLISION);
+      cbitmaps += Self.Loader.GetMap(s, f, chunks[i].Planes[j], ERSMap.COLLISION);
       cbitmaps[idx].FindColors(white, $FFFFFF);
       walkableSpace += Self.GetGlobal(idx, white, [padding, padding]);
 
@@ -1080,6 +1080,7 @@ begin
           graphs[idx].Doors[n].After  := Self.GetGlobal(idx, graphs[idx].Doors[n].After, [padding, padding]);
           graphs[idx].Doors[n].Center := Self.GetGlobal(idx, graphs[idx].Doors[n].Center, [padding, padding]);
         end;
+        cbitmaps[idx].Pad(padding);
       end;
 
       json := Self.Loader.GetJSON(s, f, chunks[i].Planes[j], ERSMapJSON.OBJECTS);

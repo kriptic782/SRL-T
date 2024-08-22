@@ -9,11 +9,7 @@ Methods to interact with the minimap.
 {$ENDIF}
 
 type
-  ERSMinimapDot = (
-    PLAYER, 
-    NPC, 
-    ITEM
-  );
+  ERSMinimapDot = (PLAYER, NPC, ITEM);
   ERSMinimapDots = set of ERSMinimapDot;
 
 (*
