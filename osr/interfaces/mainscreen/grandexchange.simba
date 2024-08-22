@@ -897,12 +897,24 @@ begin
   Inventory.ClickSlot(invSlot);
 
   if ChooseOption.IsOpen(600) then
-    ChooseOption.Select('Exchange');
+    ChooseOption.Select('Offer');
 
-  if not waitUntil((self.GetItemQuantity > 0), 250, 2000) then
+  if not waitUntil((self.GetItemQuantity > 0), 250, 3000) then
   begin
-    self.DebugLn('TRSGrandExchange.createSellOffer: Offer quantity did not show up');
-    exit(False);
+    self.DebugLn('TRSGrandExchange.createSellOffer: Offer quantity did not show up, retrying');
+
+    Self.Close();
+    wait(Random(750,1500));
+    Self.Open();
+    wait(Random(750,1500));
+
+    Inventory.ClickSlot(invSlot, "Offer");
+    if not waitUntil((self.GetItemQuantity > 0), 250, 3000) then
+    begin
+      self.DebugLn('TRSGrandExchange.createSellOffer: Offer quantity did not show up, failed to open offer');
+
+      exit(False);
+    end;
   end;
 
   if uptextCheck <> '' then
@@ -1099,7 +1111,6 @@ begin
   Result := waitUntil(self.GetStatus() = ERSGEOfferStatus.ABORTED, 200, 2000);
 
   if Result then waitUntil((self.CountCollectionSlots() > itemCount), 250, 2000);
-    self.DebugLn('GrandExchange: Abort Slot ' + toStr(slotNumber) + ': ' + toStr(result));
 end;
 
 function TRSGrandExchange.CreateBuyOffer(itemName : String; price : String = '-1'; quantity: Int32 = 1; slotNumber : Int32 = -1; loops : Int32) : Boolean; overload;
