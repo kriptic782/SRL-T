@@ -1,3 +1,12 @@
+## [7.7.10](https://github.com/Torwent/SRL-T/compare/v7.7.9...v7.7.10) (2024-08-22)
+
+
+### Bug Fixes
+
+* **banks:** add bank chests ([49cd3bf](https://github.com/Torwent/SRL-T/commit/49cd3bff08e5e991b7b5362de21b94f782f11fd6))
+
+
+
 ## [7.7.9](https://github.com/Torwent/SRL-T/compare/v7.7.8...v7.7.9) (2024-08-22)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * force bump ([4b4c5cd](https://github.com/Torwent/SRL-T/commit/4b4c5cd3ecde197dea1dd55cbcf873aa2ea1ae7c))
-
-
-
-## [7.7.5](https://github.com/Torwent/SRL-T/compare/v7.7.4...v7.7.5) (2024-08-19)
-
-
-### Bug Fixes
-
-* **itemfinder:** add new items ([c55313e](https://github.com/Torwent/SRL-T/commit/c55313eb3da927a245a9df27482e2af18b1d3578))
 
 
 
