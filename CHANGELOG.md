@@ -1,3 +1,12 @@
+## [7.7.11](https://github.com/Torwent/SRL-T/compare/v7.7.10...v7.7.11) (2024-08-22)
+
+
+### Bug Fixes
+
+* **ERSChunk:** add alkharid ([d0c225d](https://github.com/Torwent/SRL-T/commit/d0c225d605b064a6c714adf1901d388698157e8f))
+
+
+
 ## [7.7.10](https://github.com/Torwent/SRL-T/compare/v7.7.9...v7.7.10) (2024-08-22)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **itemfinder:** update items ([5ad46f6](https://github.com/Torwent/SRL-T/commit/5ad46f668b964dfa80d1810b98fc5c61a8371d91))
-
-
-
-## [7.7.6](https://github.com/Torwent/SRL-T/compare/v7.7.5...v7.7.6) (2024-08-21)
-
-
-### Bug Fixes
-
-* force bump ([4b4c5cd](https://github.com/Torwent/SRL-T/commit/4b4c5cd3ecde197dea1dd55cbcf873aa2ea1ae7c))
 
 
 
