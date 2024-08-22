@@ -1,3 +1,12 @@
+## [7.7.9](https://github.com/Torwent/SRL-T/compare/v7.7.8...v7.7.9) (2024-08-22)
+
+
+### Bug Fixes
+
+* remove RI.ReleaseClient, at least temporarily ([d2b61ff](https://github.com/Torwent/SRL-T/commit/d2b61ff4018685926b072894ec7d20e2a5a1f806))
+
+
+
 ## [7.7.8](https://github.com/Torwent/SRL-T/compare/v7.7.7...v7.7.8) (2024-08-21)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **itemfinder:** add new items ([c55313e](https://github.com/Torwent/SRL-T/commit/c55313eb3da927a245a9df27482e2af18b1d3578))
-
-
-
-## [7.7.4](https://github.com/Torwent/SRL-T/compare/v7.7.3...v7.7.4) (2024-08-16)
-
-
-### Bug Fixes
-
-* force bump ([2f13659](https://github.com/Torwent/SRL-T/commit/2f13659e85fc21ab05002ba8615c47f052e1cbc4))
 
 
 
