@@ -1207,6 +1207,7 @@ begin
 end;
 {%codetools on}
 
+
 (*
 ## TRSMapObject.PreHoverHelper
 ```pascal
@@ -1300,15 +1301,16 @@ begin
 
   // check if doors need to be passed to reach target
   if Self.Walker^.WebGraph^.WalkableClusters.InSameTPA(me, p) then
-  begin //normal logic
-  if not Self.Walker^.MakePointVisible(p) and
-     not Self.Walker^.WebWalk(p, 30, 0.15) then
-      Exit;
-  end else
-  if not Self.Walker^.WebWalk(p, 30, 0.15) then  // in this case simply making the target visible doesn't suffice to reach the npc
-      Exit;
+  begin
+    if not Self.Walker^.MakePointVisible(p) and not Self.Walker^.WebWalk(p, 30, 0.15) then
+        Exit;
+  end
+  else
+  if not Self.Walker^.WebWalk(p, 30, 0.15) then
+    Exit;
 
-  Result := Self._WalkHoverHelper(attempts, Self.TrackTarget);
+  if Self.Walker^.WebGraph^.WalkableClusters.InSameTPA(self.Walker^.Position, p) then
+    Result := Self._WalkHoverHelper(attempts, Self.TrackTarget);
 end;
 
 
