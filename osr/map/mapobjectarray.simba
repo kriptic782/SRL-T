@@ -205,6 +205,15 @@ begin
     end;
 end;
 
+function TRSMapObjects.GetByCategory(category: Int32): TRSObjectV2;
+var
+  i: Int32;
+begin
+  for i := 0 to Self.Data.High() do
+    if Self.Data.getJSONObject(i).getInt('category') = category then
+      Exit(TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i)));
+end;
+
 
 function TRSMapObjects.GetAll(name: String): TRSObjectV2Array;
 var

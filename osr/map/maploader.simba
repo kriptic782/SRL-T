@@ -364,7 +364,7 @@ begin
         if Max(Abs(p.X - q.X), Abs(p.Y - q.Y)) > GENERATED_GRAPH.Spacing * 2 then
           Continue;
 
-        if GENERATED_GRAPH.WallCrossings and not map.ColorsInLineEx(p, q, [$0, $FF]) then
+        if GENERATED_GRAPH.WallCrossings and not map.ColorsInLineEx(p, q, [$0, $333333, $FF]) then
         begin
           connectionMap[q.X, q.Y] += j;
           Continue;
