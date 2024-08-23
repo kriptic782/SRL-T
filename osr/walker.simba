@@ -1329,7 +1329,7 @@ begin
     if Self.WalkStep(Self.Position(), Self._DoorHandler.Door.Before) then
       if Self._HardSolveDoor(Self._DoorHandler.Door) then tries := 0;
   end;
-  WriteLN('Final step: ', _GetPath(Self.Position(), True));
+
   if Self.Position() = destination then Exit(True);
   path := _GetPath(Self.Position(), True);
   Result := Self.WalkPath(path, waitUntilDistance, debug);
