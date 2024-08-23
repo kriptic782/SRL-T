@@ -1590,10 +1590,11 @@ var
   i: Int32;
 begin
   for i := 0 to High(Self) do
-    case Length(Self[i].Intersection([p, q])) of
-      1: Exit;
-      2: Exit(True);
-    end;
+    if Self[i].Bounds().ContainsAny([p, q]) then
+      case Length(Self[i].Intersection([p, q])) of
+        1: Exit;
+        2: Exit(True);
+      end;
 end;
 
 function T2DPointArray.First(): TPointArray; constref;

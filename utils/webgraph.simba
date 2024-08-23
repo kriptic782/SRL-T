@@ -110,7 +110,7 @@ type
     Blocking: TIntegerArray;
 
     WalkableSpace: TPointArray;
-    WalkableClusters: T2DPointArray;
+    WalkableClusters, ObjectEdges: T2DPointArray;
 
     Tree: TSlackTree;
   end;
@@ -121,6 +121,41 @@ begin
   Result.Names    := System.Copy(Self.Names);
   Result.Nodes    := System.Copy(Self.Nodes);
   Result.Paths    := System.Copy(Self.Paths);
+end;
+
+
+function TWebGraph.IsBlindWalkable(start, goal: TPoint): Boolean;
+var
+  edge, cluster: TPointArray;
+  i: Int32;
+begin
+  if  Self.ObjectEdges = [] then Exit(True);
+
+  edge := [];
+  for i := 0 to High(Self.ObjectEdges) do
+  begin
+    if not Self.ObjectEdges[i].Bounds().Contains(goal) then Continue;
+    if SRL.PointInPoly(goal, Self.ObjectEdges[i]) then
+    begin
+      edge := Self.ObjectEdges[i];
+      Break;
+    end;
+  end;
+
+  if edge = [] then RaiseException('Can''t find object edge!');
+
+  cluster := [];
+  for i := 0 to High(Self.WalkableClusters) do
+    if Self.WalkableClusters[i].Intersection(edge) <> [] then
+    begin
+      cluster := Self.WalkableClusters[i];
+      Break;
+    end;
+
+  if cluster = [] then RaiseException('Can''t find object cluster!');
+
+  if Length(cluster.Intersection([start, goal])) = 2 then
+    Exit(True);
 end;
 
 
@@ -262,8 +297,8 @@ begin
   for i := 0 to High(Result) do
     weights[i] := Round(p.DistanceTo(Self.Nodes[Result[I]]));
 
-  for i := 0 to high(Result) do
-    if not Self.WalkableClusters.InSameTPA(p,Self.Nodes[Result[I]]) then weights[i] := $FFFFFF;
+  for i := 0 to High(Result) do
+    if not Self.WalkableClusters.InSameTPA(p, Self.Nodes[Result[I]]) then weights[i] := $FFFFFF;
 
   Result.SortWeighted(weights, 0, High(Result), True);
   if weights[0] = $FFFFFF then
@@ -658,6 +693,9 @@ begin
   end;
 
   Self.Doors += graph.Doors;
+  Self.WalkableSpace += graph.WalkableSpace;
+  Self.WalkableClusters += graph.WalkableClusters;
+  Self.ObjectEdges += graph.ObjectEdges;
 end;
 
 
@@ -709,7 +747,7 @@ begin
   data := [Self.Spacing, Self.MinimumTiles, Self.NodeRadius, Self.MaxConnections, Int32(WallCrossings)];
 
   h := $811C9DC5;
-  for i:=0 to High(data) do
+  for i := 0 to High(data) do
   begin
     if data[i] = $0 then
       Continue;

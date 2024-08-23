@@ -3,6 +3,11 @@
 This file is responsible for loading maps for TRSMap.
 It was made from scratch by Torwent but heavily inspired in the original
 TRSWalker by Slacky and it's future iterations made by Olly.
+
+```{note}
+Most things in this file are for internal use only and you shouldn't use them directly
+nor modify them if you don't quite understand them.
+```
 *)
 
 {$DEFINE SRL_MAPLOADER_INCLUDED}
@@ -14,6 +19,11 @@ TRSWalker by Slacky and it's future iterations made by Olly.
 {$SCOPEDENUMS ON}
 
 const
+(*
+(RSMAP_PATH)=
+# const RSMAP_PATH
+Default path to look for map files.
+*)
   RSMAP_PATH: String = {$MACRO CURRENT_DIRECTORY};
 
 type
@@ -32,20 +42,72 @@ Helper record to store chunk data with a name associated with.
     Chunk: TBox;
     Planes: TIntegerArray;
   end;
+
+(*
+(ERSMap)=
+## type ERSMap
+```pascal
+ERSMap = (NORMAL, HEIGHT, COLLISION);
+```
+Enum of map types.
+*)
   ERSMap = (NORMAL, HEIGHT, COLLISION);
+
+(*
+(ERSMapJSON)=
+## type ERSMapJSON
+```pascal
+ERSMapJSON = (OBJECTS, NPCS);
+```
+Enum of map json types.
+*)
   ERSMapJSON = (OBJECTS, NPCS);
 
+(*
+(TRSChunkLoader)=
+## type TRSChunkLoader
+```pascal
+TRSChunkLoader = record(TSRLBaseRecord)
+  Cache: String;
+end;
+```
+ChunkLoader record, this is what's responsible for loading a "chunks" map.
+*)
   TRSChunkLoader = record(TSRLBaseRecord)
     Cache: String;
   end;
 
+(*
+## TRSChunkLoader.Setup
+```pascal
+procedure TRSChunkLoader.Setup(name, cache: String);
+```
+This is responsible for setting up the TRSChunkLoader.
+```{note}
+This is an internal method. Don't use it if you don't know what you are doing.
+```
+*)
 procedure TRSChunkLoader.Setup(name, cache: String);
 begin
   Self.Name := name;
   Self.Cache := cache;
 end;
 
-function TRSChunkLoader.GetBitmap(chunk: String; level: UInt32; map: ERSMap): TMufasaBitmap;
+(*
+## TRSChunkLoader.GetBitmap
+```pascal
+function TRSChunkLoader.GetBitmap(chunk: String; plane: UInt32; map: ERSMap): TMufasaBitmap;
+function TRSChunkLoader.GetBitmap(chunk: TPoint; plane: UInt32; map: ERSMap): TMufasaBitmap; overload;
+```
+Returns a chunk bitmap.
+If possible, it will be loaded from a cached .bmp file.
+If no cache file exists, the .png file is unzipped, loaded and saved as a .bmp for future uses.
+The files are cached as .bmp because .bmp is a raw format and simba loads them much faster that way.
+```{note}
+This are internal methods. Don't use them if you don't know what you are doing.
+```
+*)
+function TRSChunkLoader.GetBitmap(chunk: String; plane: UInt32; map: ERSMap): TMufasaBitmap;
 var
   cacheroot, cachename, zipFile, zipPath: String;
   created: Boolean;
@@ -56,9 +118,9 @@ begin
     ERSMap.NORMAL:
     begin
       cacheroot := Self.Cache + 'map' + DirectorySeparator;
-      cachename := cacheroot + ToStr(level) + DirectorySeparator + chunk;
+      cachename := cacheroot + ToStr(plane) + DirectorySeparator + chunk;
       zipPath := RSMAP_PATH + 'files' + DirectorySeparator + 'map.zip';
-      zipFile := ToStr(level) + '/' + chunk + '.png';
+      zipFile := ToStr(plane) + '/' + chunk + '.png';
     end;
 
     ERSMap.HEIGHT:
@@ -72,9 +134,9 @@ begin
     ERSMap.COLLISION:
     begin
       cacheroot := Self.Cache + 'collision' + DirectorySeparator;
-      cachename := cacheroot + ToStr(level) + DirectorySeparator + chunk;
+      cachename := cacheroot + ToStr(plane) + DirectorySeparator + chunk;
       zipPath := RSMAP_PATH + 'files' + DirectorySeparator + 'collision.zip';
-      zipFile := ToStr(level) + '/' + chunk + '.png';
+      zipFile := ToStr(plane) + '/' + chunk + '.png';
     end;
   end;
 
@@ -109,13 +171,26 @@ begin
   Result.LoadFromFile(cachename + '.bmp');
 end;
 
-function TRSChunkLoader.GetBitmap(chunk: TPoint; level: UInt32; map: ERSMap): TMufasaBitmap; overload;
+function TRSChunkLoader.GetBitmap(chunk: TPoint; plane: UInt32; map: ERSMap): TMufasaBitmap; overload;
 begin
-  Result := Self.GetBitmap(ToStr(chunk.X) + '-' + ToStr(chunk.Y), level, map);
+  Result := Self.GetBitmap(ToStr(chunk.X) + '-' + ToStr(chunk.Y), plane, map);
 end;
 
 
-function TRSChunkLoader.GetJSONFile(chunk: String; level: UInt32; jsonType: ERSMapJSON): TJSONArray;
+(*
+## TRSChunkLoader.GetJSONFile
+```pascal
+function TRSChunkLoader.GetJSONFile(chunk: String; plane: UInt32; jsonType: ERSMapJSON): TJSONArray;
+function TRSChunkLoader.GetJSONFile(chunk: TPoint; plane: UInt32; jsonType: ERSMapJSON): TJSONArray; overload;
+```
+Returns a chunk json file.
+If possible, it will be loaded from a cached file.
+If no cache file exists, the file is unzipped, loaded and saved into cache for future uses.
+```{note}
+This are an internal methods. Don't use them if you don't know what you are doing.
+```
+*)
+function TRSChunkLoader.GetJSONFile(chunk: String; plane: UInt32; jsonType: ERSMapJSON): TJSONArray;
 var
   name, cacheroot, cachename, zipFile, zipPath, contents: String;
 begin
@@ -125,9 +200,9 @@ begin
   end;
 
   cacheroot := Self.Cache + name + DirectorySeparator;
-  cachename := cacheroot + ToStr(level) + DirectorySeparator + chunk;
+  cachename := cacheroot + ToStr(plane) + DirectorySeparator + chunk;
   zipPath := RSMAP_PATH + 'files' + DirectorySeparator + name + '.zip';
-  zipFile := ToStr(level) + '/' + chunk + '.json';
+  zipFile := ToStr(plane) + '/' + chunk + '.json';
 
   if not FileExists(cachename + '.json') then
   begin
@@ -146,12 +221,27 @@ begin
     Result.Init(contents);
 end;
 
-function TRSChunkLoader.GetJSONFile(chunk: TPoint; level: UInt32; jsonType: ERSMapJSON): TJSONArray; overload;
+function TRSChunkLoader.GetJSONFile(chunk: TPoint; plane: UInt32; jsonType: ERSMapJSON): TJSONArray; overload;
 begin
-  Result := Self.GetJSONFile(ToStr(chunk.X) + '-' + ToStr(chunk.Y), level, jsonType);
+  Result := Self.GetJSONFile(ToStr(chunk.X) + '-' + ToStr(chunk.Y), plane, jsonType);
 end;
 
 
+(*
+## TRSChunkLoader.GetChunks
+```pascal
+function TRSChunkLoader.GetChunks(start, finish: TPoint): TPointArray; static;
+```
+Simple methods that will return all chunks in between a `start` and `finish` chunks.
+This will also fix their order if required, as osrs chunks are oddly numbered from bottom to top on the Y axis.
+
+Example:
+```pascal
+WriteLn TRSChunkLoader.GetChunks([20,20], [22,22]).ToString();
+//This will return:
+//[[20, 20], [20, 21], [20, 22], [21, 20], [21, 21], [21, 22], [22, 20], [22, 21], [22, 22]];
+```
+*)
 function TRSChunkLoader.GetChunks(start, finish: TPoint): TPointArray; static;
 var
   x, y: Int32;
@@ -161,7 +251,18 @@ begin
       Result += [x,y];
 end;
 
-function TRSChunkLoader.GetMap(chunks: TPointArray; level: UInt32; map: ERSMap): TMufasaBitmap;
+(*
+## TRSChunkLoader.GetMap
+```pascal
+function TRSChunkLoader.GetMap(chunks: TPointArray; plane: UInt32; map: ERSMap): TMufasaBitmap;
+function TRSChunkLoader.GetMap(start, finish: TPoint; plane: UInt32; map: ERSMap): TMufasaBitmap; overload;
+```
+This returns a bitmap of all the `chunks` you pass into it or `start` and `finish` plus everything inbetween.
+```{note}
+This is an internal method. Don't use it if you don't know what you are doing.
+```
+*)
+function TRSChunkLoader.GetMap(chunks: TPointArray; plane: UInt32; map: ERSMap): TMufasaBitmap;
 var
   i, x, y, n: Int32;
   lo, hi: TPoint;
@@ -176,7 +277,7 @@ begin
 
   for i := 0 to High(chunks) do
   begin
-    chunkMaps[i].Image := Self.GetBitmap(chunks[i], level, map);
+    chunkMaps[i].Image := Self.GetBitmap(chunks[i], plane, map);
 
     x := chunks[i].X;
     y := 199 - chunks[i].Y;
@@ -201,15 +302,31 @@ begin
   end;
 end;
 
-function TRSChunkLoader.GetMap(start, finish: TPoint; level: UInt32; map: ERSMap): TMufasaBitmap; overload;
+function TRSChunkLoader.GetMap(start, finish: TPoint; plane: UInt32; map: ERSMap): TMufasaBitmap; overload;
 var
   chunks: TPointArray;
 begin
   chunks := TRSChunkLoader.GetChunks(start, finish);
-  Result := Self.GetMap(chunks, level, map);
+  Result := Self.GetMap(chunks, plane, map);
 end;
 
+(*
+## TRSChunkLoader.BuildGraph
+```pascal
+function TRSChunkLoader.BuildGraph(name: String; map: TMufasaBitmap): TWebGraph;
+```
+Magically builds a webgraph for you for a given collision map passed into `map`.
 
+The collision map can only have 4 colors:
+- white ($FFFFFF) for walkable space
+- black ($000000) for non walkable space
+- red ($0000FF) for doors (optional)
+- gray ($333333) for objects (optional)
+
+```{note}
+This is an internal method. Don't use it if you don't know what you are doing.
+```
+*)
 function TRSChunkLoader.BuildGraph(name: String; map: TMufasaBitmap): TWebGraph;
 
   function _FindDoors(doorATPA: T2DPointArray; white: TPointArray): TRSDoorArray;
@@ -465,21 +582,32 @@ begin
   SetLength(Result.Names, Length(Result.Nodes));
 end;
 
-function TRSChunkLoader.GetGraph(name: String; level: UInt32; map: TMufasaBitmap): TWebGraph; overload;
+(*
+## TRSChunkLoader.GetGraph
+```pascal
+function TRSChunkLoader.GetGraph(name: String; plane: UInt32; map: TMufasaBitmap): TWebGraph;
+```
+Returns a TWebGraph for the given `map`.
+If the graph is already cached we load it from cache, otherwise we build it and save it into cache.
+```{note}
+This is an internal method. Don't use it if you don't know what you are doing.
+```
+*)
+function TRSChunkLoader.GetGraph(name: String; plane: UInt32; map: TMufasaBitmap): TWebGraph;
 var
   cacheroot, cachename: String;
   json: TJSONObject;
   t: UInt64;
 begin
   cacheroot := Self.Cache + 'graphs' + DirectorySeparator;
-  cachename := cacheroot + ToStr(level) + DirectorySeparator + name + '-' + GENERATED_GRAPH.Hash();
+  cachename := cacheroot + ToStr(plane) + DirectorySeparator + name + '-' + GENERATED_GRAPH.Hash();
 
   if not FileExists(cachename + '.json') then
   begin
     Self.DebugLn('Caching ' + name + ' webgraph, this will take a minute.');
 
-    if not ForceDirectories(cacheroot + ToStr(level) + DirectorySeparator) then
-      Self.Fatal('Failed to create path: ' + cacheroot + ToStr(level) + DirectorySeparator);
+    if not ForceDirectories(cacheroot + ToStr(plane) + DirectorySeparator) then
+      Self.Fatal('Failed to create path: ' + cacheroot + ToStr(plane) + DirectorySeparator);
 
     t := GetTickCount();
     Result := Self.BuildGraph(name, map);
@@ -518,7 +646,18 @@ begin
 end;
 
 
-function TRSChunkLoader.GetJSON(chunks: TPointArray; level: UInt32; jsonType: ERSMapJSON): TJSONArray;
+(*
+## TRSChunkLoader.GetJSON
+```pascal
+function TRSChunkLoader.GetJSON(chunks: TPointArray; plane: UInt32; jsonType: ERSMapJSON): TJSONArray;
+function TRSChunkLoader.GetJSON(start, finish: TPoint; level: UInt32; json: ERSMapJSON): TMufasaBitmap;
+```
+Returns a merged JSON file of all the jsons of our `chunks` or `start` and `finish` plus everything inbetween.
+```{note}
+This is an internal method. Don't use it if you don't know what you are doing.
+```
+*)
+function TRSChunkLoader.GetJSON(chunks: TPointArray; plane: UInt32; jsonType: ERSMapJSON): TJSONArray;
 var
   i, j, n, l, x, y, id: Int32;
   lo, hi: TPoint;
@@ -535,7 +674,7 @@ begin
 
   for i := High(chunks) downto 0 do
   begin
-    chunkJSONs[i].JSON := Self.GetJSONFile(chunks[i], level, jsonType);
+    chunkJSONs[i].JSON := Self.GetJSONFile(chunks[i], plane, jsonType);
 
     if chunkJSONs[i].JSON = nil then
     begin
@@ -574,6 +713,8 @@ begin
 
           for l := 0 to coords.High() do
           begin
+            if plane > 0 then
+              coords.getJSONArray(l).Put(0, coords.getJSONArray(l).GetInt(0) + RSTranslator.MapWidth() * plane);
             rJSON.getJSONArray('coordinates').Put(coords.Get(l));
             if jsonType = ERSMapJSON.OBJECTS then
               rJSON.getJSONArray('rotations').Put(rotations.Get(l));
@@ -601,16 +742,47 @@ end;
 
 
 type
+(*
+(TRSLegacyMapLoader)=
+## type TRSLegacyMapLoader
+```pascal
+TRSLegacyMapLoader = record(TSRLBaseRecord)
+  Cache: String;
+end;
+```
+LegacyChunkLoader record, this is what's responsible for loading a map from a file, same as the original TRSWalker by slacky.
+*)
   TRSLegacyMapLoader = record(TSRLBaseRecord)
     Cache: String;
   end;
 
+(*
+## TRSLegacyMapLoader.Setup
+```pascal
+procedure TRSLegacyMapLoader.Setup(name, cache: String);
+```
+This is responsible for setting up the TRSLegacyMapLoader.
+```{note}
+This is an internal method. Don't use it if you don't know what you are doing.
+```
+*)
 procedure TRSLegacyMapLoader.Setup(name, cache: String);
 begin
   Self.Name := name;
   Self.Cache := cache;
 end;
 
+(*
+## TRSLegacyMapLoader.FindFiles
+```pascal
+function TRSLegacyMapLoader.FindFiles(filename: String): TStringArray;
+```
+This is responsible for finding the map file to be loaded.
+Will only find `.png` or `.bmp` files in `RSMAP_PATH`.
+```{note}
+This is an internal method. Don't use it if you don't know what you are doing.
+```
+*)
 function TRSLegacyMapLoader.FindFiles(filename: String): TStringArray;
 var
   mask: String = '.png;.bmp;';
@@ -621,6 +793,18 @@ begin
   Result := System.FindFile(RSMAP_PATH + 'files' + DirectorySeparator + 'maps' + DirectorySeparator, mask, True, False);
 end;
 
+(*
+## TRSLegacyMapLoader.GetMap
+```pascal
+function TRSLegacyMapLoader.GetMap(filename: String; crop: TBox = []): TMufasaBitmap;
+```
+Returns the map file from cache if it exists, if it doesn't,
+the map is loaded and saved as a `.bmp` cache file for next usages.
+.bmp is used for caching because it's a raw image format and Simba loads it much faster than .png.
+```{note}
+This is an internal method. Don't use it if you don't know what you are doing.
+```
+*)
 function TRSLegacyMapLoader.GetMap(filename: String; crop: TBox = []): TMufasaBitmap;
 var
   fileStr, cachename: String;
@@ -670,6 +854,23 @@ begin
 end;
 
 type
+(*
+(TRSMapRegion)=
+## type TRSMapRegion
+```pascal
+TRSMapRegion = record
+  Name: String;
+  Original: TBox;
+  Region: TBox;
+  Plane: UInt32;
+  Offset: TPoint;
+end;
+```
+Map region record, responsible for storing the map region/chunk data.
+```{note}
+This is an internal type. Don't use it if you don't know what you are doing.
+```
+*)
   TRSMapRegion = record
     Name: String;
     Original: TBox;
@@ -678,6 +879,39 @@ type
     Offset: TPoint;
   end;
 
+(*
+(TRSMapLoader)=
+## type TRSMapLoader
+```pascal
+TRSMapLoader = record(TSRLBaseRecord)
+  Cache: String;
+
+  Map, Heightmap, Collision,
+  DownscaledMap: TMufasaBitmap;
+
+  MapBox: TBox;
+  Graph: TWebGraph;
+
+  Regions: array of TRSMapRegion;
+
+  Padding, Downscale: UInt32;
+
+  Loader: TRSChunkLoader;
+  LegacyLoader: TRSLegacyMapLoader;
+
+  UsingChunks, SkipGraph: Boolean;
+
+  ObjectData: TJSONArray;
+  NPCData: TJSONArray;
+end;
+```
+TRSMapLoader is what's responsible for loading a map for TRSMap.
+
+It will use `TRSChunkLoader` or `TRSLegacyMapLoader` depending on what the situation requires.
+```{note}
+This is an internal type. Don't use it if you don't know what you are doing.
+```
+*)
   TRSMapLoader = record(TSRLBaseRecord)
     Cache: String;
 
@@ -882,6 +1116,14 @@ var
 begin
   for i := 0 to High(graphs) do
     Result.Merge(graphs[i]);
+
+  Result.WalkableClusters := Result.WalkableSpace.NRCluster(1);
+
+  for i := 0 to High(Result.Doors) do
+  begin
+    Result.Doors[i].Before := RSTranslator.Normalize(Result.Doors[i].Before);
+    Result.Doors[i].After  := RSTranslator.Normalize(Result.Doors[i].After);
+  end;
 end;
 
 function TRSMapLoader.InternalJSONLoad(entries: array of TJSONArray): TJSONArray;
@@ -937,7 +1179,8 @@ var
   json: TJSONArray;
   objects, npcs: array of TJSONArray;
   name: String;
-  white, walkableSpace: TPointArray;
+  tpa: TPointArray;
+  clusters: T2DPointArray;
 begin
   Self.Init(downscale);
   SetLength(Self.Regions, Length(chunks) * Length(planes));
@@ -959,7 +1202,8 @@ begin
       Self.Regions[idx].Plane := planes[i];
 
       tmp :=  RSTranslator.Chunk2Coordinate(s);
-      Self.Regions[idx].Offset := [tmp.X-padding, tmp.Y - padding];
+      tmp.X += RSTranslator.MapWidth() * planes[i]; //easy way to handle upper levels
+      Self.Regions[idx].Offset := [tmp.X - padding, tmp.Y - padding];
 
       bitmaps += Self.Loader.GetMap(s, f, planes[i], ERSMap.NORMAL);
       bitmaps[idx].Pad(padding);
@@ -971,21 +1215,33 @@ begin
       end;
 
       cbitmaps += Self.Loader.GetMap(s, f, planes[i], ERSMap.COLLISION);
-      cbitmaps[idx].FindColors(white, $FFFFFF);
-      walkableSpace += Self.GetGlobal(idx, white, [padding, padding]);
 
       if not Self.SkipGraph then
       begin
         graphs += Self.Loader.GetGraph(name, planes[i], cbitmaps[idx]);
         graphs[idx].Nodes := Self.GetGlobal(idx, graphs[idx].Nodes, [padding, padding]);
-        for n :=0 to high(graphs[idx].Doors) do
+
+        cbitmaps[idx].FindColors(tpa, $FFFFFF);
+        graphs[idx].WalkableSpace := Self.GetGlobal(idx, tpa, [padding, padding]);
+
+        cbitmaps[idx].FindColors(tpa, $333333);
+        tpa := Self.GetGlobal(idx, tpa, [padding, padding]);
+        clusters := tpa.NRCluster(1);
+
+        for n := 0 to High(clusters) do
+          clusters[n] := clusters[n].Grow(1).Edges();
+
+        graphs[idx].ObjectEdges := clusters;
+
+        for n := 0 to High(graphs[idx].Doors) do
         begin
           graphs[idx].Doors[n].Before := Self.GetGlobal(idx, graphs[idx].Doors[n].Before, [padding, padding]);
           graphs[idx].Doors[n].After  := Self.GetGlobal(idx, graphs[idx].Doors[n].After, [padding, padding]);
           graphs[idx].Doors[n].Center := Self.GetGlobal(idx, graphs[idx].Doors[n].Center, [padding, padding]);
         end;
-        cbitmaps[idx].Pad(padding);
       end;
+
+      cbitmaps[idx].Pad(padding);
 
       json := Self.Loader.GetJSON(s, f, planes[i], ERSMapJSON.OBJECTS);
       objects += json;
@@ -1002,16 +1258,7 @@ begin
   Self.Collision  := Self._InternalLoad(cbitmaps);
 
   if not Self.SkipGraph then
-  begin
     Self.Graph := Self.InternalGraphLoad(graphs);
-    Self.Graph.WalkableSpace := walkableSpace;
-    Self.Graph.WalkableClusters := walkableSpace.NRCluster(1);
-    for i := 0 to High(Self.Graph.Doors) do
-    begin
-      Self.Graph.Doors[i].Before := RSTranslator.Normalize(Self.Graph.Doors[i].Before);
-      Self.Graph.Doors[i].After  := RSTranslator.Normalize(Self.Graph.Doors[i].After);
-    end;
-  end;
 
   Self.ObjectData := Self.InternalJSONLoad(objects);
   Self.NPCData    := Self.InternalJSONLoad(npcs);
@@ -1030,7 +1277,8 @@ var
   json: TJSONArray;
   objects, npcs: array of TJSONArray;
   name: String;
-  white, walkableSpace: TPointArray;
+  tpa: TPointArray;
+  clusters: T2DPointArray;
 begin
   Self.Init(downscale);
 
@@ -1056,6 +1304,7 @@ begin
       Self.Regions[idx].Plane := chunks[i].Planes[j];
 
       tmp :=  RSTranslator.Chunk2Coordinate(s);
+      tmp.X += RSTranslator.MapWidth() * chunks[i].planes[i]; //easy way to handle upper levels
       Self.Regions[idx].Offset := [tmp.X-padding, tmp.Y - padding];
 
       bitmaps += Self.Loader.GetMap(s, f, chunks[i].Planes[j], ERSMap.NORMAL);
@@ -1068,21 +1317,33 @@ begin
       end;
 
       cbitmaps += Self.Loader.GetMap(s, f, chunks[i].Planes[j], ERSMap.COLLISION);
-      cbitmaps[idx].FindColors(white, $FFFFFF);
-      walkableSpace += Self.GetGlobal(idx, white, [padding, padding]);
 
       if not Self.SkipGraph then
       begin
         graphs += Self.Loader.GetGraph(name, chunks[i].Planes[j], cbitmaps[idx]);
         graphs[idx].Nodes := Self.GetGlobal(idx, graphs[idx].Nodes, [padding, padding]);
+
+        cbitmaps[idx].FindColors(tpa, $FFFFFF);
+        graphs[idx].WalkableSpace := Self.GetGlobal(idx, tpa, [padding, padding]);
+
+        cbitmaps[idx].FindColors(tpa, $333333);
+        tpa := Self.GetGlobal(idx, tpa, [padding, padding]);
+        clusters := tpa.NRCluster(1);
+
+        for n := 0 to High(clusters) do
+          clusters[n] := clusters[n].Grow(1).Edges();
+
+        graphs[idx].ObjectEdges := clusters;
+
         for n :=0 to high(graphs[idx].Doors) do
         begin
           graphs[idx].Doors[n].Before := Self.GetGlobal(idx, graphs[idx].Doors[n].Before, [padding, padding]);
           graphs[idx].Doors[n].After  := Self.GetGlobal(idx, graphs[idx].Doors[n].After, [padding, padding]);
           graphs[idx].Doors[n].Center := Self.GetGlobal(idx, graphs[idx].Doors[n].Center, [padding, padding]);
         end;
-        cbitmaps[idx].Pad(padding);
       end;
+
+      cbitmaps[idx].Pad(padding);
 
       json := Self.Loader.GetJSON(s, f, chunks[i].Planes[j], ERSMapJSON.OBJECTS);
       objects += json;
@@ -1097,17 +1358,10 @@ begin
   Self.Map        := Self.InternalLoad(bitmaps);
   Self.Heightmap  := Self._InternalLoad(hbitmaps);
   Self.Collision  := Self._InternalLoad(cbitmaps);
+
   if not Self.SkipGraph then
-  begin
     Self.Graph := Self.InternalGraphLoad(graphs);
-    Self.Graph.WalkableSpace := walkableSpace;
-    Self.Graph.WalkableClusters := walkableSpace.NRCluster(1);
-    for i := 0 to High(Self.Graph.Doors) do
-    begin
-      Self.Graph.Doors[i].Before := RSTranslator.Normalize(Self.Graph.Doors[i].Before);
-      Self.Graph.Doors[i].After  := RSTranslator.Normalize(Self.Graph.Doors[i].After);
-    end;
-  end;
+
   Self.ObjectData := Self.InternalJSONLoad(objects);
   Self.NPCData    := Self.InternalJSONLoad(npcs);
 
