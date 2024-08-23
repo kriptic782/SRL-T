@@ -282,6 +282,15 @@ begin
     Result += Self.Nodes[node];
 end;
 
+function TWebGraph.NearestWalkablePoint(p: TPoint): TPoint; constref;
+var
+  pCircle: TCircle;
+  pArea: TPointArray;
+begin
+  pCircle := [p.x, p.y, 30];
+  pArea := pCircle.toTPA(True).Intersection(Self.WalkableSpace);
+  if not Self.WalkableSpace.Contains(p) then Result := pArea.NearestPoint(p);
+end;
 
 function TWebGraph.PathBetween(p, q: TPoint; rnd: Double = 0): TPointArray;
 var
@@ -308,8 +317,6 @@ var
   i, j: Int32;
   nS, nG, nodes: TIntegerArray;
   changed: Boolean;
-  pCircle, qCircle: TCircle;
-  pArea, qArea: TPointArray;
 begin
   if not Self.WalkableSpace.Contains(p) or not Self.WalkableSpace.Contains(q) then
   begin
@@ -320,12 +327,8 @@ begin
 
   if changed then
   begin
-    pCircle := [p.x, p.y, 30];
-    qCircle := [p.x, p.y, 30];
-    pArea := pCircle.toTPA(True).Intersection(Self.WalkableSpace);
-    qArea := qCircle.toTPA(True).Intersection(Self.WalkableSpace);
-    if not Self.WalkableSpace.Contains(p) then p := pArea.NearestPoint(p);
-    if not Self.WalkableSpace.Contains(q) then q := qArea.NearestPoint(q);
+    if not Self.WalkableSpace.Contains(p) then p := Self.NearestWalkablePoint(p);
+    if not Self.WalkableSpace.Contains(q) then q := Self.NearestWalkablePoint(q);
   end;
 
   nS := Self.FindNearestNodes(p, attempts);
