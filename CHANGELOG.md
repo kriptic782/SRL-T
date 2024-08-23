@@ -1,3 +1,12 @@
+## [7.7.14](https://github.com/Torwent/SRL-T/compare/v7.7.13...v7.7.14) (2024-08-23)
+
+
+### Bug Fixes
+
+* **TRSMap:** fix collision with the new gray addition ([92df303](https://github.com/Torwent/SRL-T/commit/92df30319da546132bb2f8f874408592fdc7c2b3))
+
+
+
 ## [7.7.13](https://github.com/Torwent/SRL-T/compare/v7.7.12...v7.7.13) (2024-08-22)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **banks:** add bank chests ([49cd3bf](https://github.com/Torwent/SRL-T/commit/49cd3bff08e5e991b7b5362de21b94f782f11fd6))
-
-
-
-## [7.7.9](https://github.com/Torwent/SRL-T/compare/v7.7.8...v7.7.9) (2024-08-22)
-
-
-### Bug Fixes
-
-* remove RI.ReleaseClient, at least temporarily ([d2b61ff](https://github.com/Torwent/SRL-T/commit/d2b61ff4018685926b072894ec7d20e2a5a1f806))
 
 
 
