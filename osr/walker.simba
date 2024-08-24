@@ -970,7 +970,7 @@ begin
   while Self.Walking and (fails < 10) do
   begin
     {$IFDEF DEBUG_WALKERV2}
-    Self.DebugLn('fails: ' + IntToStr(fails));
+    Self.DebugLn('fails: ' + ToStr(fails));
     {$ENDIF}
     playerPoint := Self.Position();
     if Self.WebGraph^.WalkableClusters.InSameTPA(RSTranslator.NormalizeDoor(playerPoint), RSTranslator.NormalizeDoor(Self._DoorHandler.Door.After)) then
