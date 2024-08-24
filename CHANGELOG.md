@@ -1,3 +1,12 @@
+## [7.8.1](https://github.com/Torwent/SRL-T/compare/v7.8.0...v7.8.1) (2024-08-24)
+
+
+### Bug Fixes
+
+* typo ([54aad96](https://github.com/Torwent/SRL-T/commit/54aad9643e814db3b563fbbb861f789825f40e4c))
+
+
+
 # [7.8.0](https://github.com/Torwent/SRL-T/compare/v7.7.14...v7.8.0) (2024-08-24)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([fc688c6](https://github.com/Torwent/SRL-T/commit/fc688c65b004e8650f8d2ca3940ce485cc01e188))
-
-
-
-## [7.7.11](https://github.com/Torwent/SRL-T/compare/v7.7.10...v7.7.11) (2024-08-22)
-
-
-### Bug Fixes
-
-* **ERSChunk:** add alkharid ([d0c225d](https://github.com/Torwent/SRL-T/commit/d0c225d605b064a6c714adf1901d388698157e8f))
 
 
 
