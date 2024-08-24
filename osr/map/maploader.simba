@@ -1304,7 +1304,7 @@ begin
       Self.Regions[idx].Plane := chunks[i].Planes[j];
 
       tmp :=  RSTranslator.Chunk2Coordinate(s);
-      tmp.X += RSTranslator.MapWidth() * chunks[i].planes[i]; //easy way to handle upper levels
+      tmp.X += RSTranslator.MapWidth() * chunks[i].Planes[j]; //easy way to handle upper levels
       Self.Regions[idx].Offset := [tmp.X-padding, tmp.Y - padding];
 
       bitmaps += Self.Loader.GetMap(s, f, chunks[i].Planes[j], ERSMap.NORMAL);
