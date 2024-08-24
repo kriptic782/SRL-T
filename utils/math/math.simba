@@ -239,7 +239,7 @@ end;
 (*
 ## SRL.PointInPoly
 ```pascal
-function TSRL.PointInPoly(pt: TPoint; Poly: TPointArray): Boolean; static;
+function TSRL.PointInPoly(pt: TPoint; poly: TPointArray): Boolean; static;
 ```
 Check if a point is within a polygon/shape by the given outline points (poly)
 The points must be in order, as if you would draw a line trough each point.
@@ -248,26 +248,30 @@ The points must be in order, as if you would draw a line trough each point.
 Uses winding number algorithm
 ```
 *)
-function TSRL.PointInPoly(pt: TPoint; Poly: TPointArray): Boolean; static; 
+function TSRL.PointInPoly(pt: TPoint; poly: TPointArray): Boolean; static;
 var
-  wn,H,i,j:Int32;
+  wn, h, i, j:Int32;
 begin
   wn := 0;
-  H := High(poly);
-  j := H;
-  for i:=0 to H do 
+  h := High(poly);
+  j := h;
+  for i := 0 to h do
   begin
+    if pt = poly[i] then Exit(True);
+
     if (poly[i].y <= pt.y) then 
     begin
       if (poly[j].y > pt.y) then
         if (((poly[j].x-poly[i].x)*(pt.y-poly[i].y)-(pt.x-poly[i].x)*(poly[j].y-poly[i].y)) > 0) then
           Inc(wn);
-    end else
+    end
+    else
       if poly[j].y <= pt.y then
         if (((poly[j].x-poly[i].x)*(pt.y-poly[i].y)-(pt.x-poly[i].x)*(poly[j].y-poly[i].y)) < 0) then
           Dec(wn);
     j := i;
   end;
+
   Result := (wn <> 0);
 end;
 

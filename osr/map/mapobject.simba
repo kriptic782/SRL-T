@@ -1161,31 +1161,28 @@ begin
 
   for attempt := 0 to attempts do
   begin
-    me := Self.Walker^.Position();
-    closest := Self.Walker^.GetClosestPointEx(me, Self.Coordinates, path);
-
-    if Self.Walker^.WebGraph^.IsBlindWalkable(Self.Walker^.Position(), closest) then
+    if Self.Find(atpa) then
     begin
-      if Self.Find(atpa) then
-      begin
-        if attempt < 2 then
-          tpa := atpa[0]
-        else if Length(atpa) > (attempt - 2) then
-          tpa := atpa[attempt - 2]
-        else
-          tpa := atpa.RandomValue();
+      if attempt < 2 then
+        tpa := atpa[0]
+      else if Length(atpa) > (attempt - 2) then
+        tpa := atpa[attempt - 2]
+      else
+        tpa := atpa.RandomValue();
 
-        if trackTarget then
-          Mouse.OnMovingEx := @Self._UpdateTarget;
-        Mouse.Move(tpa.RandomValue());
+      if trackTarget then
+        Mouse.OnMovingEx := @Self._UpdateTarget;
+      Mouse.Move(tpa.RandomValue());
 
-        if not Self.Filter.UpText then
-          Exit(True);
-      end;
-
-      if MainScreen.IsUpText(Self.Name) then
+      if not Self.Filter.UpText then
         Exit(True);
     end;
+
+    if MainScreen.IsUpText(Self.Name) then
+      Exit(True);
+
+    me := Self.Walker^.Position();
+    closest := Self.Walker^.GetClosestPointEx(me, Self.Coordinates, path);
 
     if Length(path) = 0 then
       closest := Self.Walker^.WebGraph^.Nodes[Self.Walker^.WebGraph^.FindNearestNode(closest)];
@@ -1302,17 +1299,16 @@ begin
     p := Self.Walker^.WebGraph^.Nodes[Self.Walker^.WebGraph^.FindNearestNode(p)];
 
   // check if doors need to be passed to reach target
-  if Self.Walker^.WebGraph^.IsBlindWalkable(me, p) then
+  if Self.Walker^.WebGraph^.WalkableClusters.InSameTPA(me, p) then
   begin
     if not Self.Walker^.MakePointVisible(p) and not Self.Walker^.WebWalk(p, 30, 0.15) then
-        Exit;
+      Exit;
   end
   else
   if not Self.Walker^.WebWalk(p, 30, 0.15) then
     Exit;
 
-  if Self.Walker^.WebGraph^.IsBlindWalkable(Self.Walker^.Position(), p) then
-    Result := Self._WalkHoverHelper(attempts, Self.TrackTarget);
+  Result := Self._WalkHoverHelper(attempts, Self.TrackTarget);
 end;
 
 

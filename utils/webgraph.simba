@@ -124,41 +124,6 @@ begin
 end;
 
 
-function TWebGraph.IsBlindWalkable(start, goal: TPoint): Boolean;
-var
-  edge, cluster: TPointArray;
-  i: Int32;
-begin
-  if  Self.ObjectEdges = [] then Exit(True);
-
-  edge := [];
-  for i := 0 to High(Self.ObjectEdges) do
-  begin
-    if not Self.ObjectEdges[i].Bounds().Contains(goal) then Continue;
-    if SRL.PointInPoly(goal, Self.ObjectEdges[i]) then
-    begin
-      edge := Self.ObjectEdges[i];
-      Break;
-    end;
-  end;
-
-  if edge = [] then RaiseException('Can''t find object edge!');
-
-  cluster := [];
-  for i := 0 to High(Self.WalkableClusters) do
-    if Self.WalkableClusters[i].Intersection(edge) <> [] then
-    begin
-      cluster := Self.WalkableClusters[i];
-      Break;
-    end;
-
-  if cluster = [] then RaiseException('Can''t find object cluster!');
-
-  if Length(cluster.Intersection([start, goal])) = 2 then
-    Exit(True);
-end;
-
-
 procedure TWebGraph.BlockInside(area: TBox);
 var
   i, c: Int32;
@@ -308,6 +273,47 @@ begin
     Result.Pop();
 end;
 
+function TWebGraph.NearestWalkablePoint(p: TPoint): TPoint; constref;
+var
+  pCircle: TCircle;
+  pArea, edge, tpa: TPointArray;
+  pAreaClusters: T2DPointArray;
+  i, bestIndex, bestLength, tempLength: Int32;
+begin
+  pCircle := [p.x, p.y, 20];
+  pArea := pCircle.toTPA(True).Intersection(Self.WalkableSpace);
+  pAreaClusters := pArea.NRCluster(1);
+
+  if Self.ObjectEdges = [] then pArea.NearestPoint(p);
+
+  edge := [];
+  for i := 0 to High(Self.ObjectEdges) do
+  begin
+    tpa := Self.ObjectEdges[i].Grow(8).ConvexHull();
+    if SRL.PointInPoly(p, tpa) then
+    begin
+      edge := Self.ObjectEdges[i];
+      {$IFDEF DEBUG_WALKERV2}
+      WriteLn('Point was inside object!');
+      {$ENDIF}
+      Break;
+    end;
+  end;
+
+  for i := 0 to high(pAreaClusters) do
+  begin
+    tempLength := Length(pAreaClusters[i].Intersection(edge));
+    if tempLength > bestLength then
+    begin
+      bestLength := tempLength;
+      bestIndex := i;
+    end;
+  end;
+  Result := pAreaClusters[bestIndex].NearestPoint(p);
+  {$IFDEF DEBUG_WALKERV2}
+  WriteLn('Found nearest walkable point as: ', p);
+  {$ENDIF}
+end;
 
 function TWebGraph.NodesToPoints(nodeList: TIntegerArray): TPointArray; constref;
 var
@@ -343,8 +349,6 @@ var
   i, j: Int32;
   nS, nG, nodes: TIntegerArray;
   changed: Boolean;
-  pCircle, qCircle: TCircle;
-  pArea, qArea: TPointArray;
 begin
   if not Self.WalkableSpace.Contains(p) or not Self.WalkableSpace.Contains(q) then
   begin
@@ -355,12 +359,8 @@ begin
 
   if changed then
   begin
-    pCircle := [p.x, p.y, 30];
-    qCircle := [p.x, p.y, 30];
-    pArea := pCircle.toTPA(True).Intersection(Self.WalkableSpace);
-    qArea := qCircle.toTPA(True).Intersection(Self.WalkableSpace);
-    if not Self.WalkableSpace.Contains(p) then p := pArea.NearestPoint(p);
-    if not Self.WalkableSpace.Contains(q) then q := qArea.NearestPoint(q);
+    if not Self.WalkableSpace.Contains(p) then p := Self.NearestWalkablePoint(p);
+    if not Self.WalkableSpace.Contains(q) then q := Self.NearestWalkablePoint(q);
   end;
 
   nS := Self.FindNearestNodes(p, attempts);

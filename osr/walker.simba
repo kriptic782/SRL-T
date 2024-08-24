@@ -430,7 +430,7 @@ begin
   begin
     if not Minimap.FindFlag(q) then
     begin
-      flag := history[high(history)];
+      flag := Self.Position();
       Exit(True);
     end;
 
@@ -441,7 +441,6 @@ begin
   median := history.Median();
   if p.DistanceTo(median) > RSTranslator.TileSize then
   begin
-    WriteLn('flag moved away');
     flag := median + [0,8];
     Result := True;
   end;
@@ -584,7 +583,8 @@ begin
     if not walkerPoint.InRange(Self._DoorHandler.Door.After, 4) and not walkerPoint.InRange(playerPoint, 10) then
       if Self.FindFlagMove(flag) then
       begin
-        flag := Self.WebGraph^.WalkableSpace.NearestPoint(flag);
+        flag := RSTranslator.NormalizeDoor(flag);
+        flag := Self.WebGraph^.NearestWalkablePoint(flag);
         if not Self.WebGraph^.WalkableClusters.InSameTPA(flag, walkerpoint) then
         begin
           if Self.WebGraph^.WalkableClusters.InSameTPA(Self.Position(), RSTranslator.NormalizeDoor(Self._DoorHandler.Door.After)) then
@@ -1322,12 +1322,13 @@ begin
     Self._DoorHandler.SettingUp := False;
     Self._DoorHandler.Handling := False;
 
-    if not tries > 1 then Continue;
+    if tries <= 2 then Continue;
     Self.DebugLn('Hard solving door.');
     if Self.WalkStep(Self.Position(), Self._DoorHandler.Door.Before) then
       if Self._HardSolveDoor(Self._DoorHandler.Door) then tries := 0;
   end;
 
+  if Self.Position() = destination then Exit(True);
   path := _GetPath(Self.Position(), True);
   Result := Self.WalkPath(path, waitUntilDistance, debug);
 end;
