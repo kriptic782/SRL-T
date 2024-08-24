@@ -1,3 +1,12 @@
+# [7.8.0](https://github.com/Torwent/SRL-T/compare/v7.7.14...v7.8.0) (2024-08-24)
+
+
+### Features
+
+* walk to objects ([891ece0](https://github.com/Torwent/SRL-T/commit/891ece04d1c2a736db7ce9ebffe8cd021d13d7d2))
+
+
+
 ## [7.7.14](https://github.com/Torwent/SRL-T/compare/v7.7.13...v7.7.14) (2024-08-23)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **ERSChunk:** add alkharid ([d0c225d](https://github.com/Torwent/SRL-T/commit/d0c225d605b064a6c714adf1901d388698157e8f))
-
-
-
-## [7.7.10](https://github.com/Torwent/SRL-T/compare/v7.7.9...v7.7.10) (2024-08-22)
-
-
-### Bug Fixes
-
-* **banks:** add bank chests ([49cd3bf](https://github.com/Torwent/SRL-T/commit/49cd3bff08e5e991b7b5362de21b94f782f11fd6))
 
 
 
