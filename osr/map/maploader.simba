@@ -695,7 +695,6 @@ begin
     for j := 0 to chunkJSONs[i].JSON.High() do
     begin
       json := chunkJSONs[i].JSON.getJSONObject(j);
-      if plane = 2 then WriteLn('plane 2');
       id := json.GetInt('id');
       coords := json.getJSONArray('coordinates');
       for l := 0 to coords.High do
