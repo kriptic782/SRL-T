@@ -1,3 +1,12 @@
+## [7.8.3](https://github.com/Torwent/SRL-T/compare/v7.8.2...v7.8.3) (2024-08-26)
+
+
+### Bug Fixes
+
+* tweaks ([15b53f2](https://github.com/Torwent/SRL-T/commit/15b53f244bc21ce8d67e97ed9eb1f62a1f907590))
+
+
+
 ## [7.8.2](https://github.com/Torwent/SRL-T/compare/v7.8.1...v7.8.2) (2024-08-24)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMap:** fix collision with the new gray addition ([92df303](https://github.com/Torwent/SRL-T/commit/92df30319da546132bb2f8f874408592fdc7c2b3))
-
-
-
-## [7.7.13](https://github.com/Torwent/SRL-T/compare/v7.7.12...v7.7.13) (2024-08-22)
-
-
-### Bug Fixes
-
-* **collision maps:** read notes ([a97243a](https://github.com/Torwent/SRL-T/commit/a97243a282f3fe8a2c7c31bd9dff14564db5b674))
 
 
 
