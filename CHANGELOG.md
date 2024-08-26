@@ -1,3 +1,12 @@
+## [7.8.5](https://github.com/Torwent/SRL-T/compare/v7.8.4...v7.8.5) (2024-08-26)
+
+
+### Bug Fixes
+
+* **collision:** remove roofs from collision, roofs should never create collision lol ([ceb66e4](https://github.com/Torwent/SRL-T/commit/ceb66e436f33ad713de98c32a80dadbae2217f1a))
+
+
+
 ## [7.8.4](https://github.com/Torwent/SRL-T/compare/v7.8.3...v7.8.4) (2024-08-26)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * typo ([54aad96](https://github.com/Torwent/SRL-T/commit/54aad9643e814db3b563fbbb861f789825f40e4c))
-
-
-
-# [7.8.0](https://github.com/Torwent/SRL-T/compare/v7.7.14...v7.8.0) (2024-08-24)
-
-
-### Features
-
-* walk to objects ([891ece0](https://github.com/Torwent/SRL-T/commit/891ece04d1c2a736db7ce9ebffe8cd021d13d7d2))
 
 
 
