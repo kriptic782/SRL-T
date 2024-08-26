@@ -1147,9 +1147,9 @@ This is responsible for deciding wether we should walk to a TRSMapObject target 
 function TRSMapObject._WalkHoverHelper(attempts: Int32; trackTarget: Boolean): Boolean;
 var
   shouldExit: Boolean;
-  attempt, i: Int32;
+  attempt: Int32;
   atpa: T2DPointArray;
-  tpa, path, edge, cluster: TPointArray;
+  tpa, path: TPointArray;
   me, closest: TPoint;
 begin
   if not Self.Filter.Walker then
