@@ -1005,7 +1005,7 @@ begin
 
       coordJSON := json.getJSONArray('coordinates').Get(j);
       coord := [coordJSON.getInt(0), coordJSON.getInt(1)];
-      objs[i].Centers += coord;
+      objs[i].Centers += coord.Offset(2,-1);
       objs[i].Rotations += rotation;
     end;
 
