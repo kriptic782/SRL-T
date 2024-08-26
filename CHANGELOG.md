@@ -1,3 +1,12 @@
+## [7.8.6](https://github.com/Torwent/SRL-T/compare/v7.8.5...v7.8.6) (2024-08-26)
+
+
+### Bug Fixes
+
+* **objects/collision:** even better coordinates ([a6a9b58](https://github.com/Torwent/SRL-T/commit/a6a9b58ce27155c09c4536da73286d1e131152df))
+
+
+
 ## [7.8.5](https://github.com/Torwent/SRL-T/compare/v7.8.4...v7.8.5) (2024-08-26)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * consistency change ([ea5633c](https://github.com/Torwent/SRL-T/commit/ea5633ca5d77400421fa173f7b63ea79712fe26e))
-
-
-
-## [7.8.1](https://github.com/Torwent/SRL-T/compare/v7.8.0...v7.8.1) (2024-08-24)
-
-
-### Bug Fixes
-
-* typo ([54aad96](https://github.com/Torwent/SRL-T/commit/54aad9643e814db3b563fbbb861f789825f40e4c))
 
 
 
