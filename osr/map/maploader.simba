@@ -695,7 +695,11 @@ begin
     for j := 0 to chunkJSONs[i].JSON.High() do
     begin
       json := chunkJSONs[i].JSON.getJSONObject(j);
+      if plane = 2 then WriteLn('plane 2');
       id := json.GetInt('id');
+      coords := json.getJSONArray('coordinates');
+      for l := 0 to coords.High do
+        coords.getJSONArray(l).Put(0, coords.getJSONArray(l).GetInt(0) + RSTranslator.MapWidth() * plane);
 
       for n := 0 to Result.High() do
       begin
@@ -703,7 +707,6 @@ begin
         if id = rJSON.getInt('id') then
         begin
           coords    := json.getJSONArray('coordinates');
-
           if jsonType = ERSMapJSON.OBJECTS then
           begin
             rotations := json.getJSONArray('rotations');
@@ -713,8 +716,6 @@ begin
 
           for l := 0 to coords.High() do
           begin
-            if plane > 0 then
-              coords.getJSONArray(l).Put(0, coords.getJSONArray(l).GetInt(0) + RSTranslator.MapWidth() * plane);
             rJSON.getJSONArray('coordinates').Put(coords.Get(l));
             if jsonType = ERSMapJSON.OBJECTS then
               rJSON.getJSONArray('rotations').Put(rotations.Get(l));
@@ -1108,8 +1109,6 @@ begin
   Result.Downsample(Self.Downscale, Self.DownscaledMap);
 end;
 
-
-
 function TRSMapLoader.InternalGraphLoad(graphs: array of TWebGraph): TWebGraph;
 var
   i: Int32;
@@ -1198,6 +1197,7 @@ begin
       name := ToStr(s.X) + '-' + ToStr(s.Y) + '_' + ToStr(f.X) + '-' + ToStr(f.Y);
       Self.Regions[idx].Name :=  ToStr(planes[i]) + '_' + name;
       Self.Regions[idx].Original := RSTranslator.Chunk2Coordinate(chunks[j]);
+      Self.Regions[idx].Original := Self.Regions[idx].Original.Offset(Point(RSTranslator.MapWidth() * planes[i], 0));
 
       Self.Regions[idx].Plane := planes[i];
 
@@ -1300,6 +1300,7 @@ begin
 
       Self.Regions[idx].Name :=  ToStr(chunks[i].Planes[j]) + '_' + name;
       Self.Regions[idx].Original := RSTranslator.Chunk2Coordinate(chunks[i].Chunk);
+      Self.Regions[idx].Original := Self.Regions[idx].Original.Offset([RSTranslator.MapWidth() * chunks[i].Planes[j], 0]);
 
       Self.Regions[idx].Plane := chunks[i].Planes[j];
 
@@ -1332,6 +1333,10 @@ begin
 
         for n := 0 to High(clusters) do
           clusters[n] := clusters[n].Grow(1).Edges();
+
+        //cbitmaps[idx].DrawATPA(clusters);
+        //cbitmaps[idx].Debug();
+        //Wait(10000);
 
         graphs[idx].ObjectEdges := clusters;
 
