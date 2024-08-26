@@ -1,3 +1,12 @@
+## [7.8.4](https://github.com/Torwent/SRL-T/compare/v7.8.3...v7.8.4) (2024-08-26)
+
+
+### Bug Fixes
+
+* **dumped data:** read notes ([368c6a2](https://github.com/Torwent/SRL-T/commit/368c6a2f9a74ce9e6abc449c8946866183360e59))
+
+
+
 ## [7.8.3](https://github.com/Torwent/SRL-T/compare/v7.8.2...v7.8.3) (2024-08-26)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * walk to objects ([891ece0](https://github.com/Torwent/SRL-T/commit/891ece04d1c2a736db7ce9ebffe8cd021d13d7d2))
-
-
-
-## [7.7.14](https://github.com/Torwent/SRL-T/compare/v7.7.13...v7.7.14) (2024-08-23)
-
-
-### Bug Fixes
-
-* **TRSMap:** fix collision with the new gray addition ([92df303](https://github.com/Torwent/SRL-T/commit/92df30319da546132bb2f8f874408592fdc7c2b3))
 
 
 
