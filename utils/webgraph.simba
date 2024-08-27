@@ -276,9 +276,9 @@ end;
 function TWebGraph.NearestWalkablePoint(p: TPoint): TPoint; constref;
 var
   pCircle: TCircle;
-  pArea, edge: TPointArray;
+  pArea, edge, tpa, bestEdge: TPointArray;
   pAreaClusters: T2DPointArray;
-  i, bestIndex, bestLength, tempLength: Int32;
+  i, bestLength, tempLength: Int32;
 begin
   pCircle := [p.x, p.y, 20];
   pArea := pCircle.toTPA(True).Intersection(Self.WalkableSpace);
@@ -302,16 +302,17 @@ begin
 
   for i := 0 to high(pAreaClusters) do
   begin
-    tempLength := Length(pAreaClusters[i].Intersection(edge));
+    tpa := pAreaClusters[i].Intersection(edge);
+    tempLength := Length(tpa);
     if tempLength > bestLength then
     begin
       bestLength := tempLength;
-      bestIndex := i;
+      bestEdge := tpa;
     end;
   end;
-  Result := pAreaClusters[bestIndex].NearestPoint(p);
+  Result := bestEdge.NearestPoint(p);
   {$IFDEF DEBUG_WALKERV2}
-  WriteLn('Found nearest walkable point as: ', p);
+  WriteLn('Found nearest walkable point as: ',result);
   {$ENDIF}
 end;
 
