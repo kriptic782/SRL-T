@@ -1,3 +1,12 @@
+## [7.8.8](https://github.com/Torwent/SRL-T/compare/v7.8.7...v7.8.8) (2024-08-27)
+
+
+### Bug Fixes
+
+* **collision:** fixed collision map for trouble brewing ([00afe03](https://github.com/Torwent/SRL-T/commit/00afe037e0d1b43bad01b1e1de4383f56fe6e68c))
+
+
+
 ## [7.8.7](https://github.com/Torwent/SRL-T/compare/v7.8.6...v7.8.7) (2024-08-26)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **dumped data:** read notes ([368c6a2](https://github.com/Torwent/SRL-T/commit/368c6a2f9a74ce9e6abc449c8946866183360e59))
-
-
-
-## [7.8.3](https://github.com/Torwent/SRL-T/compare/v7.8.2...v7.8.3) (2024-08-26)
-
-
-### Bug Fixes
-
-* tweaks ([15b53f2](https://github.com/Torwent/SRL-T/commit/15b53f244bc21ce8d67e97ed9eb1f62a1f907590))
 
 
 
