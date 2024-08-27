@@ -21,8 +21,8 @@ Keep in mind that unless you send a PR with your additions, they will be lost wi
 {$I WaspLib/osr.simba}
 {$H-}
 const
-  FILE_NAME: String = 'Images/cg.png';
   CHUNK: TBox = [49,54,50,53];
+  FILE_NAME: String = '';
   PLANE: Int32 = 0;
   GRAPH_OFFSET: TPoint = [0, 0];
 
@@ -65,7 +65,7 @@ begin
   name := ToStr(s.X) + '-' + ToStr(s.Y) + '_' + ToStr(f.X) + '-' + ToStr(f.Y);
 
   if FILE_NAME = '' then
-    Self.Bitmap := System.Map.Loader.Loader.GetMap(s, f, PLANE, ERSMapType.NORMAL)
+    Self.Bitmap := System.Map.Loader.Loader.GetMap(s, f, PLANE, ERSMap.NORMAL)
   else
   begin
     Self.Bitmap.Init();
@@ -74,7 +74,7 @@ begin
 
   if (NODES_STR = '') and (PATHS_STR = '') and (NAMES_STR = '') then
   begin
-    cbitmap     := System.Map.Loader.Loader.GetMap(s, f, PLANE, ERSMapType.COLLISION);
+    cbitmap     := System.Map.Loader.Loader.GetMap(s, f, PLANE, ERSMap.COLLISION);
     Self.Graph  := System.Map.Loader.Loader.GetGraph(name, PLANE, cbitmap);
     cbitmap.Free();
     Exit;
