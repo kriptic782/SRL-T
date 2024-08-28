@@ -273,7 +273,7 @@ begin
     Result.Pop();
 end;
 
-function TWebGraph.NearestWalkablePoint(p: TPoint): TPoint; constref;
+function TWebGraphV2.NearestWalkablePoint(p: TPoint): TPoint; constref;
 var
   pCircle: TCircle;
   pArea, edge, tpa, bestEdge: TPointArray;
