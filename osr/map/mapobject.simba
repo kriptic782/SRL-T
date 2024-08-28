@@ -1151,10 +1151,11 @@ This is responsible for deciding wether we should walk to a TRSMapObject target 
 function TRSMapObject._WalkHoverHelper(attempts: Int32; trackTarget: Boolean): Boolean;
 var
   shouldExit: Boolean;
-  attempt: Int32;
+  attempt, i: Int32;
   atpa: T2DPointArray;
   tpa, path: TPointArray;
   me, closest: TPoint;
+  same: Boolean;
 begin
   if not Self.Filter.Walker then
     Exit(Self._HoverHelper(attempts, trackTarget));
@@ -1188,8 +1189,14 @@ begin
     me := Self.Walker^.Position();
     closest := Self.Walker^.GetClosestPointEx(me, Self.Coordinates, path);
 
-    if Length(path) = 0 then
-      closest := Self.Walker^.WebGraph^.Nodes[Self.Walker^.WebGraph^.FindNearestNode(closest)];
+    if path = [] then
+    begin
+      path := Self.Walker^.WebGraph^.FindObjectPath(me, closest);
+      if path = [] then
+        TerminateScript(SRL.TimeStamp() + ':[MapObject]:[Fatal]: Can''t path to object: ' + Self.Name);
+      same := True;
+    end;
+
     if not Self.Walker^.InRangeEx(me, closest, 50) then
     begin
       Self.Walker^.WebWalkEx(me, closest, 30, 0.15);
@@ -1288,9 +1295,10 @@ RSObjects.GEBank.WalkHover();
 function TRSMapObject.WalkHover(attempts: Int32 = 2): Boolean;
 var
   p, me: TPoint;
-  path: TPointArray;
+  path, cluster, best: TPointArray;
+  i: Int32;
+  same: Boolean;
 begin
-
   if ChooseOption.IsOpen() then
   begin
     if Self.Filter.UpText and ChooseOption.HasOption(Self.Name) then
@@ -1306,15 +1314,22 @@ begin
   if Self.Filter.UpText then Self.Walker^.TargetUpText := [Self.Name];
 
   me :=  Self.Walker^.Position();
+
   p := Self.Walker^.GetClosestPointEx(me, Self.Coordinates, path);
+
   //if the point is not reachable with the webgraph (like a banker behind a booth) then pick nearest node as target
-  if Length(path) = 0 then
-    p := Self.Walker^.WebGraph^.Nodes[Self.Walker^.WebGraph^.FindNearestNode(p)];
+  if path = [] then
+  begin
+    path := Self.Walker^.WebGraph^.FindObjectPath(me, p);
+    if path = [] then
+      TerminateScript(SRL.TimeStamp() + ':[MapObject]:[Fatal]: Can''t path to object: ' + Self.Name);
+    same := True;
+  end;
 
   // check if doors need to be passed to reach target
-  if Self.Walker^.WebGraph^.WalkableClusters.InSameTPA(me, p) then
+  if same or Self.Walker^.WebGraph^.WalkableClusters.InSameTPA(me, p) then
   begin
-    if not Self.Walker^.MakePointVisible(p) and not Self.Walker^.WebWalk(p, 30, 0.15) then
+    if not Self.Walker^.MakePointVisible(p) and not Self.Walker^.WebWalkEx(me, p, 30, 0.15) then
       Exit;
   end
   else
