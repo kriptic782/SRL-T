@@ -1178,6 +1178,7 @@ begin
 
   me := Self.Position();
   rect := Self.GetRectMS(me, door.After, 0, [0,0], Minimap.GetCompassAngle(False));
+  if not Mainscreen.IsVisible(rect.mean) then Exit(False);
 
   //move mouse slightly below the mean of the rectangle
   tpa := rect.ToTPA();
