@@ -1,5 +1,8 @@
 (*
 # WebGraphV2
+Responsible for handling webwalking.
+It's partially based on the original webgraph logic by Slacky but behaves quite
+differently to handle more complex scenarios.
 *)
 
 {$DEFINE SRL_WEBGRAPHV2_INCLUDED}
@@ -217,7 +220,7 @@ begin
   end;
 end;
 
-function TWebGraphV2.FindNearestNode(P: TPoint): Int32;
+function TWebGraphV2.FindNearestNode(p: TPoint): Int32;
 var
   i,j: Int32;
   d,best,dn1,dn2: Double;
@@ -226,12 +229,12 @@ begin
   for i:=0 to High(Self.Paths) do
     for j in Self.Paths[i] do
     begin
-      d := SRL.DistToLine(P, Self.Nodes[i], Self.Nodes[j]);
+      d := SRL.DistToLine(p, Self.Nodes[i], Self.Nodes[j]);
       if d < best then
       begin
         best := d;
-        dn1 := Hypot(Self.Nodes[i].x-P.x, Self.Nodes[i].y-P.y);
-        dn2 := Hypot(Self.Nodes[j].x-P.x, Self.Nodes[j].y-P.y);
+        dn1 := Hypot(Self.Nodes[i].X-p.X, Self.Nodes[i].Y-p.Y);
+        dn2 := Hypot(Self.Nodes[j].X-p.X, Self.Nodes[j].Y-p.Y);
         if dn1 < dn2 then
           Result := i
         else
@@ -272,6 +275,18 @@ begin
   for i := 0 to High(weights.findAll($FFFFFF)) do
     Result.Pop();
 end;
+
+function TWebGraphV2.FindNearestNodesEx(p: TPoint; amount: Int32): TPointArray;
+begin
+  if Self.Tree.Size = 0 then
+  begin
+    Self.Tree.Init(System.Copy(Self.Nodes));
+    AddOnTerminate(@Self.Tree.Free);
+  end;
+
+  Result := Self.Tree.KNearest(p, amount);
+end;
+
 
 function TWebGraphV2.NearestWalkablePoint(p: TPoint): TPoint; constref;
 var
@@ -395,6 +410,37 @@ begin
   if Length(nodes) = 0 then
     RaiseException('Points ' + p.ToString() + ' and ' + q.ToString() + ' don''t connect!');
 end;
+
+
+
+function TWebGraphV2.FindObjectPath(me: TPoint; out p: TPoint): TPointArray;
+var
+  i: Int32;
+  cluster, best: TPointArray;
+begin
+  for i := 0 to High(Self.WalkableClusters) do
+    if Self.WalkableClusters[i].Contains(me) then
+      cluster := Self.WalkableClusters[i];
+
+  if cluster = [] then
+    TerminateScript(SRL.TimeStamp() + ':[WebGraph]:[Fatal]: Can''t find player cluster containg: ' + me.ToString());
+
+  best := Self.FindNearestNodesEx(p, 12);
+
+  for i := 0 to High(best) do
+    if cluster.Contains(best[i]) then
+    begin
+      p := best[i];
+      try
+        Result := Self.PathBetweenEx(me, best[i], 0.2, 2);
+      except
+        TerminateScript(SRL.TimeStamp() + ':[WebGraph]:[Fatal]: Can''t find a walkable path to ' + p.ToString() + ' object.');
+      end;
+
+      Break;
+    end;
+end;
+
 
 
 function TWebGraphV2.InvalidConnection(p,q: TPoint): Boolean;
