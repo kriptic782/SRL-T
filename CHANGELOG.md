@@ -1,3 +1,12 @@
+## [7.8.10](https://github.com/Torwent/SRL-T/compare/v7.8.9...v7.8.10) (2024-08-28)
+
+
+### Bug Fixes
+
+* **objectsv2:** can now be walked to from multiple sides ([167f93f](https://github.com/Torwent/SRL-T/commit/167f93f373c1d446712b287335bc807638eb8471))
+
+
+
 ## [7.8.9](https://github.com/Torwent/SRL-T/compare/v7.8.8...v7.8.9) (2024-08-28)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **objects/collision:** even better coordinates ([a6a9b58](https://github.com/Torwent/SRL-T/commit/a6a9b58ce27155c09c4536da73286d1e131152df))
-
-
-
-## [7.8.5](https://github.com/Torwent/SRL-T/compare/v7.8.4...v7.8.5) (2024-08-26)
-
-
-### Bug Fixes
-
-* **collision:** remove roofs from collision, roofs should never create collision lol ([ceb66e4](https://github.com/Torwent/SRL-T/commit/ceb66e436f33ad713de98c32a80dadbae2217f1a))
 
 
 
