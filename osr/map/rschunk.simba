@@ -39,7 +39,7 @@ begin
     ERSChunk.SEERS_VILLAGE    : Result := [[41,55,43,53],  [0,2]    ];
     ERSChunk.TEMPOROSS_COVE   : Result := [[47,46,47,46],  [0]      ];
     ERSChunk.VARROCK          : Result := [[49,54,50,53],  [0]      ];
-    ERSChunk.WINTERTODT       : Result := [[25,61,25,62],  [0]      ];
+    ERSChunk.WINTERTODT       : Result := [[24,63,26,61],  [0]      ];
   end;
 end;
 

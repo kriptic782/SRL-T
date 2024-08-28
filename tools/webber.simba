@@ -1,4 +1,3 @@
-
 (*
 # Tool Webber
 Run it to launch the tool. This is the tool used to maked TRSWalker WebGraphs.
@@ -21,7 +20,7 @@ Keep in mind that unless you send a PR with your additions, they will be lost wi
 {$I WaspLib/osr.simba}
 {$H-}
 const
-  CHUNK: TBox = [49,54,50,53];
+  CHUNK: TBox = [24,63,26,61];
   FILE_NAME: String = '';
   PLANE: Int32 = 0;
   GRAPH_OFFSET: TPoint = [0, 0];

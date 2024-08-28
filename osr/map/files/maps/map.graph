@@ -356,3 +356,16 @@ begin
   Result.Names := Right.Names;
 end;
 
+operator := (var Left: TWebGraphV2; var Right: TWaspWeb): TWebGraph;
+begin
+  Right.Load();
+
+  Left.Nodes := Right.Nodes;
+  Left.Paths := Right.Paths;
+  Left.Names := Right.Names;
+
+  Result.Nodes := Right.Nodes;
+  Result.Paths := Right.Paths;
+  Result.Names := Right.Names;
+end;
+

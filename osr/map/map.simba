@@ -918,7 +918,7 @@ Map.Debug(ERSMapType.HEIGHT);
 procedure TRSMap.Debug(map: ERSMap = ERSMap.NORMAL; graph: Boolean = False);
 var
   bmp: TMufasaBitmap;
-  tmp: TWebGraph;
+  tmp: TWebGraphV2;
   white: TPointArray;
   p: TPoint;
   x, y: Int32;

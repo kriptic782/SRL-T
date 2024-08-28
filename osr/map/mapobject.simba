@@ -585,6 +585,9 @@ function TRSObjectV2.FindEx(out cuboids: TCuboidExArray; out atpa: T2DPointArray
 begin
   if Self.Filter.Walker then
   begin
+    if Self.Walker = nil then
+      TerminateScript(SRL.TimeStamp() + ':[TRSMapObject]:[Fatal]: ' + Self.Name + ' has no walker pointer set.');
+
     cuboids := Self.GetCuboidArray();
     if cuboids = [] then
       Exit;
@@ -778,6 +781,9 @@ var
   h, diff: Single;
   i: Int32;
 begin
+  if Self.Filter.Walker and (Self.Walker = nil) then
+    TerminateScript(SRL.TimeStamp() + ':[TRSMapObject]:[Fatal]: ' + Self.Name + ' has no walker pointer set.');
+
   if Self.Filter.Walker and (me = [0,0]) then
     me := Self.Walker^.Position();
 
@@ -1253,8 +1259,13 @@ begin
     ChooseOption.Close();
   end;
 
-  if Self.Filter.Walker and not Self.Walker^.MakePointVisible(Self.Coordinates) then
-    Exit;
+  if Self.Filter.Walker then
+  begin
+    if Self.Walker = nil then
+      TerminateScript(SRL.TimeStamp() + ':[TRSMapObject]:[Fatal]: ' + Self.Name + ' has no walker pointer set.');
+
+    if not Self.Walker^.MakePointVisible(Self.Coordinates) then Exit;
+  end;
 
   Result := Self._HoverHelper(attempts, Self.TrackTarget);
 end;
@@ -1279,6 +1290,7 @@ var
   p, me: TPoint;
   path: TPointArray;
 begin
+
   if ChooseOption.IsOpen() then
   begin
     if Self.Filter.UpText and ChooseOption.HasOption(Self.Name) then
@@ -1287,6 +1299,9 @@ begin
   end;
 
   if not Self.Filter.Walker then Exit;
+
+  if Self.Walker = nil then
+    TerminateScript(SRL.TimeStamp() + ':[TRSMapObject]:[Fatal]: "' + Self.Name + '" has no walker pointer set.');
 
   if Self.Filter.UpText then Self.Walker^.TargetUpText := [Self.Name];
 

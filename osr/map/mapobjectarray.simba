@@ -132,12 +132,12 @@ end;
 
 
 type
-  TRSMapObjects = record
+  TRSMapJSONParser = record
     Data: TJSONArray;
     Walker: PRSWalkerV2;
   end;
 
-procedure TRSMapObjects.Setup(json: TJSONArray; walker: PRSWalkerV2);
+procedure TRSMapJSONParser.Setup(json: TJSONArray; walker: PRSWalkerV2);
 begin
   if Self.Data = nil then
     Self.Data := json
@@ -148,7 +148,7 @@ begin
 end;
 
 
-function TRSMapObjects.Get(obj: Variant): TRSObjectV2;
+function TRSMapJSONParser.Get(obj: Variant): TRSObjectV2;
 var
   i: Int32;
   name: String;
@@ -190,7 +190,7 @@ begin
     TerminateScript('Object ' + ToStr(obj) + ' doesn''t exist on the loaded maps.');
 end;
 
-function TRSMapObjects.GetByAction(action: String): TRSObjectV2;
+function TRSMapJSONParser.GetByAction(action: String): TRSObjectV2;
 var
   i, j: Int32;
 begin
@@ -205,7 +205,7 @@ begin
     end;
 end;
 
-function TRSMapObjects.GetByCategory(category: Int32): TRSObjectV2;
+function TRSMapJSONParser.GetByCategory(category: Int32): TRSObjectV2;
 var
   i: Int32;
 begin
@@ -215,7 +215,7 @@ begin
 end;
 
 
-function TRSMapObjects.GetAll(name: String): TRSObjectV2Array;
+function TRSMapJSONParser.GetAll(name: String): TRSObjectV2Array;
 var
   i: Int32;
 begin
@@ -225,7 +225,7 @@ begin
       Result += TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
 end;
 
-function TRSMapObjects.GetAll(names: TStringArray): TRSObjectV2Array; overload;
+function TRSMapJSONParser.GetAll(names: TStringArray): TRSObjectV2Array; overload;
 var
   name: String;
 begin
@@ -233,7 +233,7 @@ begin
     Result += Self.GetAll(name);
 end;
 
-function TRSMapObjects.GetAllByAction(action: String): TRSObjectV2Array;
+function TRSMapJSONParser.GetAllByAction(action: String): TRSObjectV2Array;
 var
   i, j: Int32;
 begin
@@ -252,7 +252,7 @@ begin
     Result.Reduce();
 end;
 
-function TRSMapObjects.GetAllByCoordinate(p: TPoint; dist: Int32): TRSObjectV2Array;
+function TRSMapJSONParser.GetAllByCoordinate(p: TPoint; dist: Int32): TRSObjectV2Array;
 var
   i, j: Int32;
   coordJSON: TJSONArray;
@@ -274,7 +274,7 @@ begin
 end;
 
 
-procedure TRSMapObjects.Print();
+procedure TRSMapJSONParser.Print();
 var
   i, j: Int32;
   actions: TStringArray;
@@ -452,7 +452,7 @@ end;
 
 
 var
-  Objects: TRSMapObjects;
+  Objects: TRSMapJSONParser;
   NPCs: TRSMapNPCs;
 
 type

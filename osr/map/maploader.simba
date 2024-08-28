@@ -313,7 +313,7 @@ end;
 (*
 ## TRSChunkLoader.BuildGraph
 ```pascal
-function TRSChunkLoader.BuildGraph(name: String; map: TMufasaBitmap): TWebGraph;
+function TRSChunkLoader.BuildGraph(name: String; map: TMufasaBitmap): TWebGraphV2;
 ```
 Magically builds a webgraph for you for a given collision map passed into `map`.
 
@@ -327,7 +327,7 @@ The collision map can only have 4 colors:
 This is an internal method. Don't use it if you don't know what you are doing.
 ```
 *)
-function TRSChunkLoader.BuildGraph(name: String; map: TMufasaBitmap): TWebGraph;
+function TRSChunkLoader.BuildGraph(name: String; map: TMufasaBitmap): TWebGraphV2;
 
   function _FindDoors(doorATPA: T2DPointArray; white: TPointArray): TRSDoorArray;
   var
@@ -585,15 +585,15 @@ end;
 (*
 ## TRSChunkLoader.GetGraph
 ```pascal
-function TRSChunkLoader.GetGraph(name: String; plane: UInt32; map: TMufasaBitmap): TWebGraph;
+function TRSChunkLoader.GetGraph(name: String; plane: UInt32; map: TMufasaBitmap): TWebGraphV2;
 ```
-Returns a TWebGraph for the given `map`.
+Returns a TWebGraphV2 for the given `map`.
 If the graph is already cached we load it from cache, otherwise we build it and save it into cache.
 ```{note}
 This is an internal method. Don't use it if you don't know what you are doing.
 ```
 *)
-function TRSChunkLoader.GetGraph(name: String; plane: UInt32; map: TMufasaBitmap): TWebGraph;
+function TRSChunkLoader.GetGraph(name: String; plane: UInt32; map: TMufasaBitmap): TWebGraphV2;
 var
   cacheroot, cachename: String;
   json: TJSONObject;
@@ -893,7 +893,7 @@ TRSMapLoader = record(TSRLBaseRecord)
   DownscaledMap: TMufasaBitmap;
 
   MapBox: TBox;
-  Graph: TWebGraph;
+  Graph: TWebGraphV2;
 
   Regions: array of TRSMapRegion;
 
@@ -922,7 +922,7 @@ This is an internal type. Don't use it if you don't know what you are doing.
     DownscaledMap: TMufasaBitmap;
 
     MapBox: TBox;
-    Graph: TWebGraph;
+    Graph: TWebGraphV2;
 
     Regions: array of TRSMapRegion;
 
@@ -931,7 +931,7 @@ This is an internal type. Don't use it if you don't know what you are doing.
     Loader: TRSChunkLoader;
     LegacyLoader: TRSLegacyMapLoader;
 
-    UsingChunks, SkipGraph: Boolean;
+    UsingChunks: Boolean;
 
     ObjectData: TJSONArray;
     NPCData: TJSONArray;
@@ -1111,7 +1111,7 @@ begin
   Result.Downsample(Self.Downscale, Self.DownscaledMap);
 end;
 
-function TRSMapLoader.InternalGraphLoad(graphs: array of TWebGraph): TWebGraph;
+function TRSMapLoader.InternalGraphLoad(graphs: array of TWebGraphV2): TWebGraphV2;
 var
   i: Int32;
 begin
@@ -1176,7 +1176,7 @@ var
   i, j, n, idx: Int32;
   bitmaps, hbitmaps, cbitmaps: TMufasaBitmapArray;
   s, f, tmp: TPoint;
-  graphs: array of TWebGraph;
+  graphs: array of TWebGraphV2;
   json: TJSONArray;
   objects, npcs: array of TJSONArray;
   name: String;
@@ -1219,7 +1219,7 @@ begin
 
       cbitmaps += Self.Loader.GetMap(s, f, planes[i], ERSMap.COLLISION);
 
-      if not Self.SkipGraph then
+      if not GENERATED_GRAPH.Disabled then
       begin
         graphs += Self.Loader.GetGraph(name, planes[i], cbitmaps[idx]);
         graphs[idx].Nodes := Self.GetGlobal(idx, graphs[idx].Nodes, [padding, padding]);
@@ -1260,7 +1260,7 @@ begin
   Self.Heightmap  := Self._InternalLoad(hbitmaps);
   Self.Collision  := Self._InternalLoad(cbitmaps);
 
-  if not Self.SkipGraph then
+  if not GENERATED_GRAPH.Disabled then
     Self.Graph := Self.InternalGraphLoad(graphs);
 
   Self.ObjectData := Self.InternalJSONLoad(objects);
@@ -1276,7 +1276,7 @@ var
   i, j, n, idx: Int32;
   bitmaps, hbitmaps, cbitmaps: TMufasaBitmapArray;
   s, f, tmp: TPoint;
-  graphs: array of TWebGraph;
+  graphs: array of TWebGraphV2;
   json: TJSONArray;
   objects, npcs: array of TJSONArray;
   name: String;
@@ -1323,7 +1323,7 @@ begin
 
       cbitmaps += Self.Loader.GetMap(s, f, chunks[i].Planes[j], ERSMap.COLLISION);
 
-      if not Self.SkipGraph then
+      if not GENERATED_GRAPH.Disabled then
       begin
         graphs += Self.Loader.GetGraph(name, chunks[i].Planes[j], cbitmaps[idx]);
         graphs[idx].Nodes := Self.GetGlobal(idx, graphs[idx].Nodes, [padding, padding]);
@@ -1364,7 +1364,7 @@ begin
   Self.Heightmap  := Self._InternalLoad(hbitmaps);
   Self.Collision  := Self._InternalLoad(cbitmaps);
 
-  if not Self.SkipGraph then
+  if not GENERATED_GRAPH.Disabled then
     Self.Graph := Self.InternalGraphLoad(graphs);
 
   Self.ObjectData := Self.InternalJSONLoad(objects);
@@ -1591,6 +1591,21 @@ begin
 
   for p in tpa do
     Result += Self.GetGlobal(Self.LocalIndex(p), p, offset);
+end;
+
+function TRSMapLoader.GetGlobal(regionIndex: Int32; b: TBox; offset: TPoint = [0,0]): TBox; overload;
+var
+  tpa: TPointArray;
+begin
+  if regionIndex = -1 then Exit(b);
+  tpa := b.ToRectangle().ToTPA();
+  tpa := tpa.Offset(Self.Regions[regionIndex].Offset - [Self.Regions[regionIndex].Region.X1, Self.Regions[regionIndex].Region.Y1] + offset);
+  Result := tpa.Bounds();
+end;
+
+function TRSMapLoader.GetGlobal(b: TBox; offset: TPoint = [0,0]): TBox; overload;
+begin
+  Result := Self.GetGlobal(Self.LocalIndex(b.Center()), b, offset);
 end;
 
 

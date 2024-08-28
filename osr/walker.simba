@@ -40,7 +40,7 @@ end;
 
   TRSWalkerV2 = record(TSRLBaseRecord)
     Position: function (): TPoint of object;
-    Height: function (p: TPoint = [-1,-1]): Single of object;
+    Height:   function (p: TPoint = [-1,-1]): Single of object;
     GetLocal: function (tpa: TPointArray; offset: TPoint = [0,0]): TPointArray of object;
 
     MinEnergy, ClickRandomness, MouseAheadTimer: Int32;
@@ -51,7 +51,7 @@ end;
 
     WalkUpText, TargetUpText, ActionUpText: TStringArray;
 
-    WebGraph: ^TWebGraph;
+    WebGraph: ^TWebGraphV2;
     MapImage: TMufasaBitmap;
 
     OnWalkEvent, OnWaitMovingEvent: TRSWalkerEvent;
@@ -59,7 +59,6 @@ end;
     {%codetools off}
     _PathIndex: Int32;
     _Path: TPointArray;
-
 
     _DoorHandler: record
       Door: TRSDoor;
@@ -77,7 +76,7 @@ procedure TRSWalkerV2.Setup(
   position: function (): TPoint of object;
   height: function (p: TPoint = [-1,-1]): Single of object;
   getLocal: function (tpa: TPointArray; offset: TPoint = [0,0]): TPointArray of object;
-  graph: ^TWebGraph;
+  graph: ^TWebGraphV2;
   mapImage: TMufasaBitmap
 );
 ```
@@ -100,7 +99,7 @@ procedure TRSWalkerV2.Setup(
   position: function (): TPoint of object;
   height: function (p: TPoint = [-1,-1]): Single of object;
   getLocal: function (tpa: TPointArray; offset: TPoint = [0,0]): TPointArray of object;
-  graph: ^TWebGraph;
+  graph: ^TWebGraphV2;
   mapImage: TMufasaBitmap
 );
   type TRSWalkerV2 = TRSWalkerV2;
@@ -1242,7 +1241,7 @@ function TRSWalkerV2.WebWalkEx(me: TPoint; destination: TPoint; waitUntilDistanc
   function _GetPath(me: TPoint; safe: Boolean): TPointArray;
   var
     bmp: TMufasaBitmap;
-    tmp: TWebGraph;
+    tmp: TWebGraphV2;
     closestMe, closestDest: TIntegerArray;
     i: Int32;
   begin
