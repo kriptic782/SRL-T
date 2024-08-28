@@ -1121,7 +1121,7 @@ begin
   for destination in destinations do
   begin
     try
-      path := Self.WebGraph^.PathBetweenEx(me, destination, 0, 1);
+      path := Self.WebGraph^.PathBetweenEx(me, destination, 0, 4);
     except
       Continue;
     end;
