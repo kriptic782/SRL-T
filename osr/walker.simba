@@ -1121,7 +1121,7 @@ begin
   for destination in destinations do
   begin
     try
-      path := Self.WebGraph^.PathBetweenEx(me, destination, 0, 1);
+      path := Self.WebGraph^.PathBetweenEx(me, destination, 0, 4);
     except
       Continue;
     end;
@@ -1178,6 +1178,7 @@ begin
 
   me := Self.Position();
   rect := Self.GetRectMS(me, door.After, 0, [0,0], Minimap.GetCompassAngle(False));
+  if not Mainscreen.IsVisible(rect.mean) then Exit(False);
 
   //move mouse slightly below the mean of the rectangle
   tpa := rect.ToTPA();
