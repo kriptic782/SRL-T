@@ -301,7 +301,7 @@ begin
   end;
 
   if edge = [] then
-    Exit(pArea.NearestPoint(p))
+    Exit(pArea.NearestPoint(p));
 
   for i := 0 to high(pAreaClusters) do
   begin
