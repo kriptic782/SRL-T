@@ -1231,6 +1231,8 @@ begin
 
         cbitmaps[idx].FindColors(tpa, $333333);
         tpa := Self.GetGlobal(idx, tpa, [padding, padding]);
+        graphs[idx].WalkableSpace += tpa;
+
         clusters := tpa.NRCluster(1);
 
         for n := 0 to High(clusters) do
@@ -1335,6 +1337,8 @@ begin
 
         cbitmaps[idx].FindColors(tpa, $333333);
         tpa := Self.GetGlobal(idx, tpa, [padding, padding]);
+        graphs[idx].WalkableSpace += tpa;
+
         clusters := tpa.NRCluster(1);
 
         for n := 0 to High(clusters) do
