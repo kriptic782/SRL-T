@@ -380,8 +380,8 @@ function TRSChunkLoader.BuildGraph(name: String; map: TMufasaBitmap): TWebGraphV
 
 var
   a, b, i, j, n, len, hi, divider, nonSepDoors: Int32;
-  atpa, parts: T2DPointArray;
-  white, red, skeleton, nodes, tpa, doorsInTpa, doorNodes: TPointArray;
+  atpa, parts,  atpaDoors: T2DPointArray;
+  white, gray, whitegray, red, skeleton, nodes, tpa, doorsInTpa, doorNodes: TPointArray;
   bounds: TBox;
   p, q: TPoint;
   nodesTree, skeletonTree: TSlackTree;
@@ -393,12 +393,14 @@ var
 begin
   map.FindColors(white, $FFFFFF);
   map.FindColors(red, $FF);
-
+  map.FindColors(gray, $333333);
+  whitegray := white + gray;
   Self.DebugLn('Generating webgraph for region: ' + name);
 
   atpa := white.NRCluster(1);
+  atpaDoors := whitegray.NRCluster(1);
 
-  doors := _FindDoors(red.NRCluster(1), white);
+  doors := _FindDoors(red.NRCluster(1), whitegray);
 
   atpa.sortBySize(0, True);
 
@@ -542,15 +544,15 @@ begin
 
   len := Length(Result.Nodes);
 
-  for i := 0 to High(atpa) do
+  for i := 0 to High(atpaDoors) do
   begin
-    doorsInTpa := atpa[i].Intersection(doorNodes);
+    doorsInTpa := atpaDoors[i].Intersection(doorNodes);
 
     for j := 0 to High(doorsInTpa) do
     begin
       for p in nodesTree.KNearest(doorsInTpa[j], 20) do
       begin
-        if atpa[i].Contains(p) then
+        if atpaDoors[i].Contains(p) then
         begin
           n := Result.Nodes.Find(p);
           Result.Nodes += doorsInTpa[j];
