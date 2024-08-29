@@ -1153,7 +1153,7 @@ This is responsible for deciding wether we should walk to a TRSMapObject target 
 function TRSMapObject._WalkHoverHelper(attempts: Int32; trackTarget: Boolean): Boolean;
 var
   shouldExit: Boolean;
-  attempt, i: Int32;
+  attempt: Int32;
   atpa: T2DPointArray;
   tpa, path: TPointArray;
   me, closest: TPoint;
@@ -1297,8 +1297,7 @@ RSObjects.GEBank.WalkHover();
 function TRSMapObject.WalkHover(attempts: Int32 = 2): Boolean;
 var
   p, me: TPoint;
-  path, cluster, best: TPointArray;
-  i: Int32;
+  path: TPointArray;
   same: Boolean;
 begin
   if ChooseOption.IsOpen() then
