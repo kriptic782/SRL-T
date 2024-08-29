@@ -21,7 +21,7 @@ type
     Coordinates: TPointArray;
 
     Finder: TRSObjectFinder;
-    Offset: TPoint;
+    Offset: Vector3;
 
     Walker: PRSWalkerV2;
     Index: Int32;
@@ -150,7 +150,7 @@ function TRSMapObject.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF):
 var
   coordinates: TPointArray;
   p: TPoint;
-  vec: Vector3;
+  vec, off: Vector3;
   h, diff: Single;
 begin
   if me = [0,0] then
@@ -165,10 +165,10 @@ begin
 
   for p in coordinates.Sorted(me) do
   begin
-    p := p + Self.Offset;
     diff := -(h-Self.Walker^.Height(p));
     vec := Self.Walker^.PointToMMVec(me, p, angle);
-    Result += Minimap.GetCuboidMS(vec + [Round(0.15*diff), Round(0.11*diff), 0], Self.Size, [0,0,diff], angle);
+    off := Self.Offset.RotateXY(angle, 0, 0);
+    Result += Minimap.GetCuboidMS(vec + [Round(0.15*diff), Round(0.11*diff), 0], Self.Size, [0,0,diff] + off, angle);
   end;
 end;
 
@@ -535,7 +535,7 @@ function TRSObjectV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): 
 var
   Locations: TCoordsAngle;
   p: TPoint;
-  vec: Vector3;
+  vec, off: Vector3;
   h, diff: Single;
   i: Int32;
 begin
@@ -557,10 +557,11 @@ begin
 
   for i := 0 to High(Locations.Coordinates) do
   begin
-    p := Locations.Coordinates[i] + Self.Offset;
+    p := Locations.Coordinates[i];
     diff := -(h-Self.Walker^.Height(p));
     vec := Self.Walker^.PointToMMVec(me, p, angle);
-    Result += Minimap.GetCuboidMS(vec + [Round(0.15*diff), Round(0.11*diff), 0], Self.Size, [0,0,diff], angle - radians(Locations.Angles[i]));
+    off := Self.Offset.RotateXY(angle, 0, 0);
+    Result += Minimap.GetCuboidMS(vec + [Round(0.15*diff), Round(0.11*diff), 0], Self.Size, [0,0,diff] + off, angle - radians(Locations.Angles[i]));
   end;
 end;
 
@@ -777,7 +778,7 @@ function TRSNPCV2.GetCuboidArray(me: TPoint = [0,0]; angle: Single = $FFFF): TCu
 var
   dots: TPointArray;
   p: TPoint;
-  vec: Vector3;
+  vec, off: Vector3;
   h, diff: Single;
   i: Int32;
 begin
@@ -804,10 +805,10 @@ begin
     begin
       p := Self.Walker^.MMToMap(me, dots[i], angle); // transfer back from minimap grid to map grid
       p := RSTranslator.NormalizeNearestTile(p) + [2,2]*(Ceil(Max(Self.Size.X, Self.Size.Y))-1); //Go from topleft corner of npc to center
-      p := p + Self.Offset; //User specified offset
       diff := -(h-Self.Walker^.Height(p))/4;
       vec := Self.Walker^.PointToMMVec(me, p, angle); //translate back to MM space, use vectors to avoid rounding errors
-      Result += Minimap.GetCuboidMS(vec + [Round(0.15*diff), Round(0.11*diff), 0], Self.Size, [0,0,diff], angle);
+      off := Self.Offset.RotateXY(angle, 0, 0);
+      Result += Minimap.GetCuboidMS(vec + [Round(0.15*diff), Round(0.11*diff), 0], Self.Size, [0,0,diff]  + off, angle);
     end;
 
     Exit;
@@ -831,9 +832,10 @@ begin
 
   for i := 0 to High(dots) do
   begin
-    p := dots[i] + Self.Offset;
+    p := dots[i];
     vec := Self.Walker^.PointToMMVec(me, p, angle);
-    Result += Minimap.GetCuboidMS(vec, Self.Size, [0,0,0], angle);
+    off := Self.Offset.RotateXY(angle, 0, 0);
+    Result += Minimap.GetCuboidMS(vec, Self.Size, off, angle);
   end;
 end;
 
@@ -930,7 +932,7 @@ begin
   for p in mmPoints do
   begin
     p := p.Rotate(-angle, Minimap.Center());
-    p := p.Offset(Self.Offset);
+    p := p.Offset([Round(Self.Offset.X),Round(Self.Offset.Y)]);
     p := p.Rotate(angle, Minimap.Center());
 
     q := [Round(Self.Size.X * 4 / 2), Round(Self.Size.Y * 4 / 2)];
