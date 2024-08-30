@@ -1,3 +1,12 @@
+## [7.8.15](https://github.com/Torwent/SRL-T/compare/v7.8.14...v7.8.15) (2024-08-30)
+
+
+### Bug Fixes
+
+* middleground collision map ([a97b469](https://github.com/Torwent/SRL-T/commit/a97b469c757499e6475bbc46b15ecc4c1767e44a))
+
+
+
 ## [7.8.14](https://github.com/Torwent/SRL-T/compare/v7.8.13...v7.8.14) (2024-08-29)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * Update README.md ([e57dc3b](https://github.com/Torwent/SRL-T/commit/e57dc3ba491228d9641dbeb1cb910aefacb55b5c))
-
-
-
-## [7.8.10](https://github.com/Torwent/SRL-T/compare/v7.8.9...v7.8.10) (2024-08-28)
-
-
-### Bug Fixes
-
-* **objectsv2:** can now be walked to from multiple sides ([167f93f](https://github.com/Torwent/SRL-T/commit/167f93f373c1d446712b287335bc807638eb8471))
 
 
 
