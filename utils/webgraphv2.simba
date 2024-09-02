@@ -256,24 +256,20 @@ begin
   end;
 
   tpa := Self.Tree.KNearest(p, amount);
-  SetLength(Result, Length(tpa));
-  SetLength(weights, Length(tpa));
 
   for i :=0 to High(tpa) do
-    Result[i] := Self.Nodes.find(tpa[i]);
+  begin
+    if Self.WalkableClusters.InSameTPA(p, tpa[i]) then
+    begin
+      Result += Self.Nodes.Find(tpa[i]);
+      weights += Round(p.DistanceTo(tpa[i]))
+    end;
+  end;
 
-  for i := 0 to High(Result) do
-    weights[i] := Round(p.DistanceTo(Self.Nodes[Result[I]]));
-
-  for i := 0 to High(Result) do
-    if not Self.WalkableClusters.InSameTPA(p, Self.Nodes[Result[I]]) then weights[i] := $FFFFFF;
-
-  Result.SortWeighted(weights, 0, High(Result), True);
-  if weights[0] = $FFFFFF then
+  if Result = [] then
     RaiseException('No near nodes were found around point ' + p.ToString());
 
-  for i := 0 to High(weights.findAll($FFFFFF)) do
-    Result.Pop();
+  Result.SortWeighted(weights, 0, High(Result), True);
 end;
 
 function TWebGraphV2.FindNearestNodesEx(p: TPoint; amount: Int32): TPointArray;

@@ -1126,8 +1126,7 @@ begin
       Continue;
     end;
 
-    if path = [] then
-      Continue;
+    if path = [] then Continue;
 
     dist := Floor(path.TotalDistance());
     if dist < shortest then
