@@ -1,3 +1,12 @@
+## [7.8.16](https://github.com/Torwent/SRL-T/compare/v7.8.15...v7.8.16) (2024-09-02)
+
+
+### Bug Fixes
+
+* **TWebGraphV2:** performance improvement to FindNearestNodes ([f19fd8d](https://github.com/Torwent/SRL-T/commit/f19fd8d6278b28210779eb0ddc384cd82c28f208))
+
+
+
 ## [7.8.15](https://github.com/Torwent/SRL-T/compare/v7.8.14...v7.8.15) (2024-08-30)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([63765f9](https://github.com/Torwent/SRL-T/commit/63765f97cdc06a3034d8f09bfe77edb330773ebd))
-
-
-
-## [7.8.11](https://github.com/Torwent/SRL-T/compare/v7.8.10...v7.8.11) (2024-08-28)
-
-
-### Bug Fixes
-
-* Update README.md ([e57dc3b](https://github.com/Torwent/SRL-T/commit/e57dc3ba491228d9641dbeb1cb910aefacb55b5c))
 
 
 
