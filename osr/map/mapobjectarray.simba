@@ -484,7 +484,7 @@ begin
     Self.NPCsCache := NPCs.GetAllByAction('Bank');
     for i := 0 to High(Self.NPCsCache)  do
     begin
-      Self.ObjectsCache[i].Filter.Finder := False;
+      Self.NPCsCache[i].Filter.Finder := False;
       Self.MapObjects += @Self.NPCsCache[i];
     end;
   end;
