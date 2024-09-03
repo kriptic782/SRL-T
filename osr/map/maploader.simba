@@ -522,13 +522,16 @@ begin
     for j := 0 to High(nodesTree.Data) do
     begin
       p := nodesTree.Data[j].split;
+      Result.Nodes[j+len] := p;
       for n in connectionMap[p.X, p.Y] do
       begin
         q := nodesTree.Data[n].split;
-        Result.Nodes[j+len] := p;
         Result.Nodes[n+len] := q;
-        Result.Paths[j+len] += n+len;
-        Result.Paths[n+len] += j+len;
+
+        if not InIntArray(Result.Paths[j+len], n+len) then
+          Result.Paths[j+len] += n+len;
+        if not InIntArray(Result.Paths[n+len], j+len) then
+          Result.Paths[n+len] += j+len;
       end;
     end;
 
@@ -1120,8 +1123,6 @@ begin
   for i := 0 to High(graphs) do
     Result.Merge(graphs[i]);
 
-  Result.WalkableClusters := Result.WalkableSpace.NRCluster(1);
-
   for i := 0 to High(Result.Doors) do
   begin
     Result.Doors[i].Before := RSTranslator.Normalize(Result.Doors[i].Before);
@@ -1172,18 +1173,54 @@ begin
 end;
 
 
+function TRSMapLoader.SetupGraph(name: String; idx, plane, padding: Int32; cbitmap: TMufasaBitmap): TWebGraphV2;
+var
+  gray, white: TPointArray;
+  whiteClusters, grayClusters, tmp: T2DPointArray;
+  i, j: Int32;
+begin
+  Result := Self.Loader.GetGraph(name, plane, cbitmap);
+  Result.Nodes := Self.GetGlobal(idx, Result.Nodes, [padding, padding]);
+
+  cbitmap.FindColors(white, $FFFFFF);
+  cbitmap.FindColors(gray, $333333);
+
+  white := Self.GetGlobal(idx, white, [padding, padding]);
+  gray  := Self.GetGlobal(idx, gray,  [padding, padding]);
+
+  whiteClusters := white.NRCluster(1);
+  grayClusters := gray.NRCluster(1);
+
+  for i := 0 to High(grayClusters) do
+    tmp += grayClusters[i].Grow(1).Edges();
+
+  for i := 0 to High(whiteClusters) do
+    for j := 0 to High(tmp) do
+      if whiteClusters[i].Intersection(tmp[j]) <> [] then
+        whiteClusters[i] += grayClusters[j];
+
+  Result.WalkableSpace    := white + gray;
+  Result.WalkableClusters := whiteClusters;
+  Result.ObjectClusters   := grayClusters;
+
+  for i := 0 to High(Result.Doors) do
+  begin
+    Result.Doors[i].Before := Self.GetGlobal(idx, Result.Doors[i].Before, [padding, padding]);
+    Result.Doors[i].After  := Self.GetGlobal(idx, Result.Doors[i].After,  [padding, padding]);
+    Result.Doors[i].Center := Self.GetGlobal(idx, Result.Doors[i].Center, [padding, padding]);
+  end;
+end;
+
 
 procedure TRSMapLoader.Load(chunks: TBoxArray; planes: TIntegerArray = [0]; downscale: UInt32 = 8; padding: UInt32 = 40);
 var
-  i, j, n, idx: Int32;
+  i, j, idx: Int32;
   bitmaps, hbitmaps, cbitmaps: TMufasaBitmapArray;
   s, f, tmp: TPoint;
   graphs: array of TWebGraphV2;
   json: TJSONArray;
   objects, npcs: array of TJSONArray;
   name: String;
-  tpa: TPointArray;
-  clusters: T2DPointArray;
 begin
   Self.Init(downscale);
   SetLength(Self.Regions, Length(chunks) * Length(planes));
@@ -1222,31 +1259,7 @@ begin
       cbitmaps += Self.Loader.GetMap(s, f, planes[i], ERSMap.COLLISION);
 
       if not GENERATED_GRAPH.Disabled then
-      begin
-        graphs += Self.Loader.GetGraph(name, planes[i], cbitmaps[idx]);
-        graphs[idx].Nodes := Self.GetGlobal(idx, graphs[idx].Nodes, [padding, padding]);
-
-        cbitmaps[idx].FindColors(tpa, $FFFFFF);
-        graphs[idx].WalkableSpace := Self.GetGlobal(idx, tpa, [padding, padding]);
-
-        cbitmaps[idx].FindColors(tpa, $333333);
-        tpa := Self.GetGlobal(idx, tpa, [padding, padding]);
-        graphs[idx].WalkableSpace += tpa;
-
-        clusters := tpa.NRCluster(1);
-
-        for n := 0 to High(clusters) do
-          clusters[n] := clusters[n].Grow(1).Edges();
-
-        graphs[idx].ObjectEdges := clusters;
-
-        for n := 0 to High(graphs[idx].Doors) do
-        begin
-          graphs[idx].Doors[n].Before := Self.GetGlobal(idx, graphs[idx].Doors[n].Before, [padding, padding]);
-          graphs[idx].Doors[n].After  := Self.GetGlobal(idx, graphs[idx].Doors[n].After, [padding, padding]);
-          graphs[idx].Doors[n].Center := Self.GetGlobal(idx, graphs[idx].Doors[n].Center, [padding, padding]);
-        end;
-      end;
+        graphs += Self.SetupGraph(name, idx, planes[i], padding, cbitmaps[idx]);
 
       cbitmaps[idx].Pad(padding);
 
@@ -1277,15 +1290,13 @@ end;
 
 procedure TRSMapLoader.Load(chunks: array of TRSMapChunk; downscale: UInt32 = 8; padding: UInt32 = 40); overload;
 var
-  i, j, n, idx: Int32;
+  i, j, idx: Int32;
   bitmaps, hbitmaps, cbitmaps: TMufasaBitmapArray;
   s, f, tmp: TPoint;
   graphs: array of TWebGraphV2;
   json: TJSONArray;
   objects, npcs: array of TJSONArray;
   name: String;
-  tpa: TPointArray;
-  clusters: T2DPointArray;
 begin
   Self.Init(downscale);
 
@@ -1328,31 +1339,8 @@ begin
       cbitmaps += Self.Loader.GetMap(s, f, chunks[i].Planes[j], ERSMap.COLLISION);
 
       if not GENERATED_GRAPH.Disabled then
-      begin
-        graphs += Self.Loader.GetGraph(name, chunks[i].Planes[j], cbitmaps[idx]);
-        graphs[idx].Nodes := Self.GetGlobal(idx, graphs[idx].Nodes, [padding, padding]);
+        graphs += Self.SetupGraph(name, idx, chunks[i].Planes[j], padding, cbitmaps[idx]);
 
-        cbitmaps[idx].FindColors(tpa, $FFFFFF);
-        graphs[idx].WalkableSpace := Self.GetGlobal(idx, tpa, [padding, padding]);
-
-        cbitmaps[idx].FindColors(tpa, $333333);
-        tpa := Self.GetGlobal(idx, tpa, [padding, padding]);
-        graphs[idx].WalkableSpace += tpa;
-
-        clusters := tpa.NRCluster(1);
-
-        for n := 0 to High(clusters) do
-          clusters[n] := clusters[n].Grow(1).Edges();
-
-        graphs[idx].ObjectEdges := clusters;
-
-        for n :=0 to high(graphs[idx].Doors) do
-        begin
-          graphs[idx].Doors[n].Before := Self.GetGlobal(idx, graphs[idx].Doors[n].Before, [padding, padding]);
-          graphs[idx].Doors[n].After  := Self.GetGlobal(idx, graphs[idx].Doors[n].After, [padding, padding]);
-          graphs[idx].Doors[n].Center := Self.GetGlobal(idx, graphs[idx].Doors[n].Center, [padding, padding]);
-        end;
-      end;
 
       cbitmaps[idx].Pad(padding);
 

@@ -113,7 +113,7 @@ type
     Blocking: TIntegerArray;
 
     WalkableSpace: TPointArray;
-    WalkableClusters, ObjectEdges: T2DPointArray;
+    WalkableClusters, ObjectClusters: T2DPointArray;
 
     Tree: TSlackTree;
   end;
@@ -287,7 +287,7 @@ end;
 function TWebGraphV2.NearestWalkablePoint(p: TPoint): TPoint; constref;
 var
   pCircle: TCircle;
-  pArea, edge, tpa, bestEdge: TPointArray;
+  pArea, obj, tpa, bestObj: TPointArray;
   pAreaClusters: T2DPointArray;
   i, bestLength, tempLength: Int32;
 begin
@@ -295,36 +295,37 @@ begin
   pArea := pCircle.toTPA(True).Intersection(Self.WalkableSpace);
   pAreaClusters := pArea.NRCluster(1);
 
-  if Self.ObjectEdges = [] then Exit(pArea.NearestPoint(p));
+  if Self.ObjectClusters = [] then Exit(pArea.NearestPoint(p));
 
-  edge := [];
-  for i := 0 to High(Self.ObjectEdges) do
+  obj := [];
+  for i := 0 to High(Self.ObjectClusters) do
   begin
-    if not Self.ObjectEdges[i].Bounds().Contains(p) then Continue;
-    if SRL.PointInPoly(p, Self.ObjectEdges[i]) then
+    if not Self.ObjectClusters[i].Bounds().Contains(p) then Continue;
+    if Self.ObjectClusters[i].Contains(p) then
     begin
-      edge := Self.ObjectEdges[i];
+      obj := Self.ObjectClusters[i];
       {$IFDEF DEBUG_WALKERV2}
-      WriteLn('Point was inside object! with edges: ', edge);
+      WriteLn('Point was inside object! with edges: ', obj);
       {$ENDIF}
       Break;
     end;
   end;
 
-  if edge = [] then
+  if obj = [] then
     Exit(pArea.NearestPoint(p));
 
   for i := 0 to high(pAreaClusters) do
   begin
-    tpa := pAreaClusters[i].Intersection(edge);
+    tpa := pAreaClusters[i].Intersection(obj);
     tempLength := Length(tpa);
     if tempLength > bestLength then
     begin
       bestLength := tempLength;
-      bestEdge := tpa;
+      bestObj := tpa;
     end;
   end;
-  Result := bestEdge.NearestPoint(p);
+  Result := bestObj.NearestPoint(p);
+
   {$IFDEF DEBUG_WALKERV2}
   WriteLn('Found nearest walkable point as: ',result);
   {$ENDIF}
@@ -513,9 +514,6 @@ begin
     Self.Paths[b].Remove(a);
   end else
   begin
-    if (Self.InvalidConnection(Self.Nodes[a], Self.Nodes[b])) then
-      Exit(False);
-
     Self.Paths[a] += b;
     Self.Paths[b] += a;
   end;
@@ -750,10 +748,10 @@ begin
     Self.Names += graph.Names[i];
   end;
 
-  Self.Doors += graph.Doors;
-  Self.WalkableSpace += graph.WalkableSpace;
+  Self.Doors            += graph.Doors;
+  Self.WalkableSpace    += graph.WalkableSpace;
   Self.WalkableClusters += graph.WalkableClusters;
-  Self.ObjectEdges += graph.ObjectEdges;
+  Self.ObjectClusters   += graph.ObjectClusters;
 end;
 
 

@@ -721,14 +721,16 @@ begin
 end;
 
 
-{%codetools off}
 type
   TMapDebugger = record
     Form: TForm;
     ImageBox: TSimbaImageBox;
     Images: TMufasaBitmapArray;
     Graph: TWebGraphV2;
-    ShowGraph: Boolean;
+    ShowWalkableSpace, ShowWalkableClusters, ShowObjectClusters, ShowGraph: Boolean;
+    MousePos: TLabel;
+    GetLocal: function (tpa: TPointArray; offset: TPoint = [0,0]): TPointArray of object;
+    GetGlobal: function (p: TPoint; offset: TPoint = [0,0]): TPoint of object;
   end;
 
 procedure TMapDebugger.Free();
@@ -750,6 +752,18 @@ begin
   Self.ImageBox.Update();
 end;
 
+
+procedure TMapDebugger.DrawATPA(atpa: T2DPointArray; area: TBox);
+var
+  i: Int32;
+  canvas: TCanvas;
+begin
+  if atpa = [] then Exit;
+  canvas := Self.ImageBox.GetOverlay.GetCanvas();
+
+  for i := 0 to High(atpa) do
+    canvas.SetPixels(atpa[i].FilterBox(area), DEBUG_COLORS[i mod Length(DEBUG_COLORS)]);
+end;
 
 procedure TMapDebugger.DrawWeb(area: TBox);
 var
@@ -800,18 +814,76 @@ begin
 end;
 
 
-procedure TMapDebugger.CheckBoxOnChange(sender: TObject);
+procedure TMapDebugger.OnShowGraphChange(sender: TObject);
 begin
   Self.ShowGraph := TCheckBox(sender).getState() = TCheckBoxState.cbChecked;
   Self.ImageBox.BackgroundChanged(True);
   Self.ImageBox.Update();
 end;
 
+procedure TMapDebugger.OnShowWalkableSpaceChange(sender: TObject);
+begin
+  Self.ShowWalkableSpace := TCheckBox(sender).getState() = TCheckBoxState.cbChecked;
+  Self.ImageBox.BackgroundChanged(True);
+  Self.ImageBox.Update();
+end;
+
+procedure TMapDebugger.OnShowWalkableClustersChange(sender: TObject);
+begin
+  Self.ShowWalkableClusters := TCheckBox(sender).getState() = TCheckBoxState.cbChecked;
+  Self.ImageBox.BackgroundChanged(True);
+  Self.ImageBox.Update();
+end;
+
+procedure TMapDebugger.OnShowObjectClustersChange(sender: TObject);
+begin
+  Self.ShowObjectClusters := TCheckBox(sender).getState() = TCheckBoxState.cbChecked;
+  Self.ImageBox.BackgroundChanged(True);
+  Self.ImageBox.Update();
+end;
+
+
 procedure TMapDebugger.PaintArea({$H-}sender: TObject; canvas: TCanvas; {$H+}r: TRect);
 begin
+  if Self.ShowWalkableSpace then
+    Self.ImageBox.getOverlay().DebugTPA(Self.Graph.WalkableSpace);
+
+  if Self.ShowWalkableClusters then
+    Self.DrawATPA(Self.Graph.WalkableClusters, [r.Left, r.Top, r.Right, r.Bottom]);
+
+  if Self.ShowObjectClusters then
+    Self.DrawATPA(Self.Graph.ObjectClusters, [r.Left, r.Top, r.Right, r.Bottom]);
+
   if Self.ShowGraph then
     Self.DrawWeb([r.Left, r.Top, r.Right, r.Bottom]);
 end;
+
+procedure TMapDebugger.MouseMove({$H-}sender: TObject; shift: TShiftState;{$H+} x, y: Integer);
+var
+  p: TPoint;
+begin
+  p := [x, y];
+
+  if @Self.GetGlobal <> nil then
+    p := Self.GetGlobal(p, [0,0]);
+
+  Self.MousePos.setCaption('Coordinate: ' + Format('%d, %d', [p.X, p.Y]));
+end;
+
+procedure TMapDebugger.MouseDown({$H-}sender: TObject; btn: TMouseButton; shift: TShiftState;{$H+} x, y: Integer);
+var
+  p: TPoint;
+begin
+  if btn <> TMouseButton.mbLeft then Exit;
+
+  p := [x, y];
+
+  if @Self.GetGlobal <> nil then
+    p := Self.GetGlobal(p, [0,0]);
+
+  WriteLn('Clicked: ' + Format('[%d, %d]', [p.X, p.Y]));
+end;
+
 
 procedure TMapDebugger.Run();
   function _DPI(n, dpi: Int32): Int32;
@@ -823,7 +895,7 @@ var
   panel: TPanel;
   comboInfo: TLabel;
   combobox: TComboBox;
-  checkbox: TCheckBox;
+  checkbox, graphCheckbox: TCheckBox;
   font: TFont;
 begin
   try
@@ -859,23 +931,53 @@ begin
     combobox.setItemIndex(0);
     combobox.setLeft(_DPI(90, dpi));
     combobox.setWidth(_DPI(158, dpi));
+    combobox.setHeight(_DPI(10, dpi));
     combobox.setOnChange(@Self.ComboBoxOnChange);
+
+    graphCheckbox.Init(panel);
+    graphCheckbox.SetParent(panel);
+    graphCheckbox.setCaption('Show WebGraph');
+    graphCheckbox.SetState(TCheckBoxState.cbChecked);
+    graphCheckbox.setLeft(_DPI(260, dpi));
+    graphCheckbox.SetTop(_DPI(3, dpi));
+    graphCheckbox.setOnChange(@Self.OnShowGraphChange);
 
     checkbox.Init(panel);
     checkbox.SetParent(panel);
-    checkbox.setCaption('Show WebGraph');
-    checkbox.SetState(TCheckBoxState.cbChecked);
-    checkbox.setLeft(_DPI(260, dpi));
+    checkbox.setCaption('Show WalkableSpace');
+    checkbox.setLeft(_DPI(390, dpi));
     checkbox.SetTop(_DPI(3, dpi));
-    checkbox.setOnChange(@Self.CheckBoxOnChange);
+    checkbox.setOnChange(@Self.OnShowWalkableSpaceChange);
+
+    checkbox.Init(panel);
+    checkbox.SetParent(panel);
+    checkbox.setCaption('Show WalkableClusters');
+    checkbox.setLeft(_DPI(540, dpi));
+    checkbox.SetTop(_DPI(3, dpi));
+    checkbox.setOnChange(@Self.OnShowWalkableClustersChange);
+
+    checkbox.Init(panel);
+    checkbox.SetParent(panel);
+    checkbox.setCaption('Show ObjectClusters');
+    checkbox.setLeft(_DPI(700, dpi));
+    checkbox.SetTop(_DPI(3, dpi));
+    checkbox.setOnChange(@Self.OnShowObjectClustersChange);
+
+    Self.MousePos.Init(panel);
+    Self.MousePos.SetParent(panel);
+    Self.MousePos.setCaption('Coordinate: 0, 0');
+    Self.MousePos.setLeft(_DPI(900, dpi));
+    Self.MousePos.SetTop(_DPI(5, dpi));
 
     Self.ImageBox.Init(Self.Form);
     Self.ImageBox.SetParent(Self.Form);
     Self.ImageBox.setAlign(TAlign.alClient);
     Self.ImageBox.SetOnPaintArea(@Self.PaintArea);
+    Self.ImageBox.setOnMouseMove(@Self.MouseMove);
+    Self.ImageBox.setOnMouseDown(@Self.MouseDown);
 
     Self.ComboBoxOnChange(combobox);
-    Self.CheckBoxOnChange(checkbox);
+    Self.OnShowGraphChange(graphCheckbox);
 
     form.ShowModal();
     form.Free();
@@ -888,7 +990,7 @@ procedure TMapDebugger.Debug(map: ^TRSMap);
 var
   white: TPointArray;
   p: TPoint;
-  x, y: Int32;
+  x, y, i: Int32;
 begin
   Self.Images += map^.Loader.Map.Copy();
   Self.Images += map^.Loader.Heightmap.Copy();
@@ -903,12 +1005,21 @@ begin
     Self.Images[2].SetPixel(p.X, p.Y, $F7F7F7);
   end;
 
+  Self.GetGlobal := @map^.Loader.GetGlobal;
+  Self.GetLocal  := @map^.Loader.GetLocal;
+
   Self.Graph := map^.Loader.Graph;
-  Self.Graph.Nodes := map^.Loader.GetLocal(Self.Graph.Nodes, [0,0]);
+  Self.Graph.Nodes := Self.GetLocal(Self.Graph.Nodes);
+  Self.Graph.WalkableSpace := Self.GetLocal(Self.Graph.WalkableSpace);
+
+  for i := 0 to High(Self.Graph.WalkableClusters) do
+    Self.Graph.WalkableClusters[i] := Self.GetLocal(Self.Graph.WalkableClusters[i]);
+
+  for i := 0 to High(Self.Graph.ObjectClusters) do
+    Self.Graph.ObjectClusters[i] := Self.GetLocal(Self.Graph.ObjectClusters[i]);
 
   Sync(@Self.Run);
 end;
-{%codetools on}
 
 
 (*

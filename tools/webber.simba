@@ -17,7 +17,6 @@ Keep in mind that unless you send a PR with your additions, they will be lost wi
 
 {$DEFINE SRL_DISABLE_REMOTEINPUT}
 {$I SRL-T/osr.simba}
-{$I WaspLib/osr.simba}
 {$H-}
 const
   CHUNK: TBox = [24,63,26,61];
@@ -41,7 +40,7 @@ type
   TWebberForm = record
     Form: TForm;
     ImageBox: TSimbaImageBox;
-    Graph: TWebGraph;
+    Graph: TWebGraphV2;
     SelectedNode: Int32;
     Dragging, DragMode, DraggingBox: Boolean;
     Path: TIntegerArray;
@@ -59,12 +58,13 @@ var
   name: String;
   cbitmap: TMufasaBitmap;
 begin
+  Map.Loader.Init(8);
   s := [CHUNK.X1, CHUNK.Y1];
   f := [CHUNK.X2, CHUNK.Y2];
   name := ToStr(s.X) + '-' + ToStr(s.Y) + '_' + ToStr(f.X) + '-' + ToStr(f.Y);
 
   if FILE_NAME = '' then
-    Self.Bitmap := System.Map.Loader.Loader.GetMap(s, f, PLANE, ERSMap.NORMAL)
+    Self.Bitmap := Map.Loader.Loader.GetMap(s, f, PLANE, ERSMap.NORMAL)
   else
   begin
     Self.Bitmap.Init();
@@ -73,8 +73,8 @@ begin
 
   if (NODES_STR = '') and (PATHS_STR = '') and (NAMES_STR = '') then
   begin
-    cbitmap     := System.Map.Loader.Loader.GetMap(s, f, PLANE, ERSMap.COLLISION);
-    Self.Graph  := System.Map.Loader.Loader.GetGraph(name, PLANE, cbitmap);
+    cbitmap     := Map.Loader.Loader.GetMap(s, f, PLANE, ERSMap.COLLISION);
+    Self.Graph  := Map.Loader.Loader.GetGraph(name, PLANE, cbitmap);
     cbitmap.Free();
     Exit;
   end;
@@ -279,26 +279,26 @@ begin
   repeat
     curr := marked.Pop();
 
-    for n in Graph.Paths[curr] do
+    for n in Self.Graph.Paths[curr] do
     begin
-      Graph.Paths[n].Remove(curr, True);
-      if Length(Graph.Paths[n]) = 0 then
+      Self.Graph.Paths[n].Remove(curr, True);
+      if Length(Self.Graph.Paths[n]) = 0 then
         marked += n;
     end;
 
     // offset remainding nodes
-    for i:=0 to High(Graph.Paths) do
-      for j:=0 to High(Graph.Paths[i]) do
-        if Graph.Paths[i][j] > curr then
-          Dec(Graph.Paths[i][j]);
+    for i := 0 to High(Self.Graph.Paths) do
+      for j := 0 to High(Self.Graph.Paths[i]) do
+        if Self.Graph.Paths[i,j] > curr then
+          Dec(Self.Graph.Paths[i,j]);
 
     for i:=0 to High(marked) do
       if marked[i] > curr then Dec(marked[i]);
 
     // remove the node itself
-    Delete(Graph.Paths, curr, 1);
-    Delete(Graph.Nodes, curr, 1);
-    Delete(Graph.Names, curr, 1);
+    Delete(Self.Graph.Paths, curr, 1);
+    Delete(Self.Graph.Nodes, curr, 1);
+    Delete(Self.Graph.Names, curr, 1);
   until Length(marked) = 0;
 
   Self.SelectedNode := Self.Graph.FindNearestNode(p);
@@ -327,7 +327,7 @@ begin
   Canvas := Self.ImageBox.GetOverlay.GetCanvas();
   Canvas.GetPen.SetColor($00FFFF);
 
-  n := 3;
+  n := 2;
 
   for i := 0 to High(Graph.Paths) do
   begin
@@ -449,7 +449,7 @@ end;
 
 procedure TWebberForm.DragOnChange(sender: TObject);
 begin
-  Self.DragMode := TCheckBox(sender).IsChecked();
+  Self.DragMode := TCheckBox(sender).getState() = TCheckBoxState.cbChecked;
 
   if not Self.DragMode then
     Self.SelectBox := [-1, -1, -1, -1];
@@ -538,21 +538,31 @@ begin
 end;
 
 procedure TWebberForm.Run();
+  function _DPI(n, dpi: Int32): Int32;
+  begin
+    Result := Round(n * dpi / 96);
+  end;
 var
   panel: TPanel;
   button: TButton;
-  check: TLabeledCheckBox;
+  check: TCheckBox;
   bmp, tmp: TMufasaBitmap;
   path, fileName: String;
+  dpi: Int32;
+  font: TFont;
 begin
   Self.Setup();
 
   try
+    font.Init();
+    dpi := font.getPixelsPerInch();
+    font.Free();
+
     Self.Form.Init(nil);
     Self.Form.SetPosition(poScreenCenter);
     Self.Form.SetCaption('Webber');
-    Self.Form.SetWidth(TControl.AdjustToDPI(1200));
-    Self.Form.SetHeight(TControl.AdjustToDPI(900));
+    Self.Form.SetWidth(_DPI(1200, dpi));
+    Self.Form.SetHeight(_DPI(900, dpi));
     Self.Form.GetFont().SetSize(10);
     Self.Form.SetOnShow(@Self.OnFormShow);
     Self.Form.SetOnClose(@Self.OnFormClose);
@@ -562,12 +572,14 @@ begin
     panel.SetAutoSize(True);
     panel.SetAlign(alTop);
 
-    check.Create(panel);
+    check.Init(panel);
+    check.setParent(panel);
     check.SetCaption('Drag mode');
     check.SetAlign(alLeft);
-    check.CheckBox.setOnChange(@Self.DragOnChange);
+    check.setOnChange(@Self.DragOnChange);
 
-    button.Create(Panel);
+    button.Init(panel);
+    button.setParent(panel);
     button.SetAutoSize(True);
     button.SetCaption('Name Node');
     button.SetOnClick(@Self.OnNameSelectedNode);
