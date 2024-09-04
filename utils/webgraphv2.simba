@@ -259,7 +259,7 @@ begin
 
   for i :=0 to High(tpa) do
   begin
-    if Self.WalkableClusters.InSameTPA(p, tpa[i]) then
+    if Self.WalkableClusters.InSameTPAEx(p, tpa[i]) then
     begin
       Result += Self.Nodes.Find(tpa[i]);
       weights += Round(p.DistanceTo(tpa[i]))
@@ -311,10 +311,9 @@ begin
     end;
   end;
 
-  if obj = [] then
-    Exit(pArea.NearestPoint(p));
+  if obj = [] then Exit(pArea.NearestPoint(p));
 
-  for i := 0 to high(pAreaClusters) do
+  for i := 0 to High(pAreaClusters) do
   begin
     tpa := pAreaClusters[i].Intersection(obj);
     tempLength := Length(tpa);
@@ -364,17 +363,12 @@ function TWebGraphV2.PathBetweenEx(p, q: TPoint; rnd: Double = 0; attempts: Int3
 var
   i, j: Int32;
   nS, nG, nodes: TIntegerArray;
-  changed: Boolean;
 begin
   if not Self.WalkableSpace.Contains(p) or not Self.WalkableSpace.Contains(q) then
   begin
     p := RSTranslator.NormalizeDoor(p);
     q := RSTranslator.NormalizeDoor(q);
-    changed := True;
-  end;
 
-  if changed then
-  begin
     if not Self.WalkableSpace.Contains(p) then p := Self.NearestWalkablePoint(p);
     if not Self.WalkableSpace.Contains(q) then q := Self.NearestWalkablePoint(q);
   end;

@@ -731,6 +731,7 @@ type
     MousePos: TLabel;
     GetLocal: function (tpa: TPointArray; offset: TPoint = [0,0]): TPointArray of object;
     GetGlobal: function (p: TPoint; offset: TPoint = [0,0]): TPoint of object;
+    DebugATPA: T2DPointArray;
   end;
 
 procedure TMapDebugger.Free();
@@ -844,6 +845,10 @@ end;
 
 
 procedure TMapDebugger.PaintArea({$H-}sender: TObject; canvas: TCanvas; {$H+}r: TRect);
+var
+  i, j: Int32;
+  p: TPoint;
+  tpa: TPointArray;
 begin
   if Self.ShowWalkableSpace then
     Self.ImageBox.getOverlay().DebugTPA(Self.Graph.WalkableSpace);
@@ -856,6 +861,16 @@ begin
 
   if Self.ShowGraph then
     Self.DrawWeb([r.Left, r.Top, r.Right, r.Bottom]);
+
+  for i := 0 to High(Self.DebugATPA) do
+  begin
+    WriteLn 'here';
+    for j := 0 to High(Self.DebugATPA[i]) do
+    begin
+      tpa := TPAFromCircle(Self.DebugATPA[i,j].X, Self.DebugATPA[i,j].Y, 4);
+      Self.ImageBox.getOverlay().getCanvas().SetPixels(tpa, DEBUG_COLORS[i mod Length(DEBUG_COLORS)]);
+    end;
+  end;
 end;
 
 procedure TMapDebugger.MouseMove({$H-}sender: TObject; shift: TShiftState;{$H+} x, y: Integer);
@@ -986,7 +1001,7 @@ begin
   end;
 end;
 
-procedure TMapDebugger.Debug(map: ^TRSMap);
+procedure TMapDebugger.Debug(map: ^TRSMap; atpa: T2DPointArray);
 var
   white: TPointArray;
   p: TPoint;
@@ -1017,6 +1032,10 @@ begin
 
   for i := 0 to High(Self.Graph.ObjectClusters) do
     Self.Graph.ObjectClusters[i] := Self.GetLocal(Self.Graph.ObjectClusters[i]);
+
+  SetLength(Self.DebugATPA, Length(atpa));
+  for i := 0 to High(atpa) do
+    Self.DebugATPA[i] := Self.GetLocal(atpa[i]);
 
   Sync(@Self.Run);
 end;
@@ -1216,11 +1235,11 @@ Map.SetupChunks([[18,56,22,60], [42,50, 46, 45]], [0, 1]);
 Map.Debug(ERSMapType.HEIGHT);
 ```
 *)
-procedure TRSMap.Debug();
+procedure TRSMap.Debug(atpa: T2DPointArray = []);
 var
   debugger: TMapDebugger;
 begin
-  debugger.Debug(@Self);
+  debugger.Debug(@Self, atpa);
 end;
 
 procedure TRSMap.DebugObjects(map: ERSMap = ERSMap.NORMAL; rotations: TIntegerArray = [0,1,2,3]; useCorner: Boolean = False);

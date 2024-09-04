@@ -1050,7 +1050,6 @@ begin
   Result := Self.Find(atpa);
 end;
 
-{%codetools off}
 (*
 ## TRSMapObject._UpdateTarget
 ```pascal
@@ -1217,7 +1216,6 @@ begin
     end;
   end;
 end;
-{%codetools on}
 
 
 (*
