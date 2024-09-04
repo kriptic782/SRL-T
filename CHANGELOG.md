@@ -1,3 +1,12 @@
+## [7.8.18](https://github.com/Torwent/SRL-T/compare/v7.8.17...v7.8.18) (2024-09-04)
+
+
+### Bug Fixes
+
+* some webwalking fixes ([cf20531](https://github.com/Torwent/SRL-T/commit/cf20531c0623308505b103dfa2a97803f85f776f))
+
+
+
 ## [7.8.17](https://github.com/Torwent/SRL-T/compare/v7.8.16...v7.8.17) (2024-09-03)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **collision:** more tweaks ([b368759](https://github.com/Torwent/SRL-T/commit/b3687590257a318dd4ed99bdd71cba7898d0d7d0))
-
-
-
-## [7.8.13](https://github.com/Torwent/SRL-T/compare/v7.8.12...v7.8.13) (2024-08-29)
-
-
-### Bug Fixes
-
-* force-bump ([4abbb85](https://github.com/Torwent/SRL-T/commit/4abbb85dfc311ff8031a97b5f7f1c4bcef548408))
 
 
 
