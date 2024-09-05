@@ -196,7 +196,7 @@ begin
 end;
 
 
-function TPoint.ToString(): String;
+function TPoint.ToString(): String; constref;
 begin
   Result := '[' + ToStr(Self.X) + ',' + ToStr(Self.Y) + ']';
 end;

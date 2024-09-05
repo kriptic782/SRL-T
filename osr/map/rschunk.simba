@@ -26,7 +26,7 @@ function ERSChunk.Get(): TRSMapChunk;
 begin
   case Self of
     ERSChunk.AL_KHARID        : Result := [[50,51,53,48],  [0]      ];
-    ERSChunk.ARDOUGNE         : Result := [[40,51,41,52],  [0,3]    ];
+    ERSChunk.ARDOUGNE         : Result := [[40,52,41,51],  [0,3]    ];
     ERSChunk.CRAFTING_GUILD   : Result := [[45,51,46,51],  [0]      ];
     ERSChunk.EDGEVILLE        : Result := [[48,54,48,54],  [0]      ];
     ERSChunk.FALADOR          : Result := [[45,53,47,51],  [0]      ];

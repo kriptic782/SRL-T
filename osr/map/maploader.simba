@@ -1226,8 +1226,9 @@ begin
   for i := 0 to High(planes) do
     for j := 0 to High(chunks) do
     begin
-      s := [chunks[j].X1, chunks[j].Y1];
-      f := [chunks[j].X2, chunks[j].Y2];
+      s := Point(Min(chunks[j].X1, chunks[j].X2), Max(chunks[j].Y1, chunks[j].Y2));
+      f := Point(Max(chunks[j].X1, chunks[j].X2), Min(chunks[j].Y1, chunks[j].Y2));
+      chunks[i] := [s.X, s.Y, f.X, f.Y];
 
       idx += 1;
 
@@ -1306,8 +1307,9 @@ begin
   for i := 0 to High(chunks) do
     for j := 0 to High(chunks[i].Planes) do
     begin
-      s := [chunks[i].Chunk.X1, chunks[i].Chunk.Y1];
-      f := [chunks[i].Chunk.X2, chunks[i].Chunk.Y2];
+      s := Point(Min(chunks[i].Chunk.X1, chunks[i].Chunk.X2), Max(chunks[i].Chunk.Y1, chunks[i].Chunk.Y2));
+      f := Point(Max(chunks[i].Chunk.X1, chunks[i].Chunk.X2), Min(chunks[i].Chunk.Y1, chunks[i].Chunk.Y2));
+      chunks[i].Chunk := [s.X, s.Y, f.X, f.Y];
 
       idx += 1;
       name := ToStr(s.X) + '-' + ToStr(s.Y) + '_' + ToStr(f.X) + '-' + ToStr(f.Y);

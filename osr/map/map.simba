@@ -847,7 +847,6 @@ end;
 procedure TMapDebugger.PaintArea({$H-}sender: TObject; canvas: TCanvas; {$H+}r: TRect);
 var
   i, j: Int32;
-  p: TPoint;
   tpa: TPointArray;
 begin
   if Self.ShowWalkableSpace then
@@ -863,14 +862,11 @@ begin
     Self.DrawWeb([r.Left, r.Top, r.Right, r.Bottom]);
 
   for i := 0 to High(Self.DebugATPA) do
-  begin
-    WriteLn 'here';
     for j := 0 to High(Self.DebugATPA[i]) do
     begin
-      tpa := TPAFromCircle(Self.DebugATPA[i,j].X, Self.DebugATPA[i,j].Y, 4);
+      tpa := TPAGrow([Self.DebugATPA[i,j]], 1) + TPAFromCircle(Self.DebugATPA[i,j].X, Self.DebugATPA[i,j].Y, 4);
       Self.ImageBox.getOverlay().getCanvas().SetPixels(tpa, DEBUG_COLORS[i mod Length(DEBUG_COLORS)]);
     end;
-  end;
 end;
 
 procedure TMapDebugger.MouseMove({$H-}sender: TObject; shift: TShiftState;{$H+} x, y: Integer);
@@ -1235,11 +1231,11 @@ Map.SetupChunks([[18,56,22,60], [42,50, 46, 45]], [0, 1]);
 Map.Debug(ERSMapType.HEIGHT);
 ```
 *)
-procedure TRSMap.Debug(atpa: T2DPointArray = []);
+procedure TRSMap.Debug(debugPoints: T2DPointArray = []);
 var
   debugger: TMapDebugger;
 begin
-  debugger.Debug(@Self, atpa);
+  debugger.Debug(@Self, debugPoints);
 end;
 
 procedure TRSMap.DebugObjects(map: ERSMap = ERSMap.NORMAL; rotations: TIntegerArray = [0,1,2,3]; useCorner: Boolean = False);
