@@ -1228,7 +1228,7 @@ begin
     begin
       s := Point(Min(chunks[j].X1, chunks[j].X2), Max(chunks[j].Y1, chunks[j].Y2));
       f := Point(Max(chunks[j].X1, chunks[j].X2), Min(chunks[j].Y1, chunks[j].Y2));
-      chunks[i] := [s.X, s.Y, f.X, f.Y];
+      chunks[j] := [s.X, s.Y, f.X, f.Y];
 
       idx += 1;
 
