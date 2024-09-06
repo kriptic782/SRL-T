@@ -259,7 +259,7 @@ begin
 
   for i :=0 to High(tpa) do
   begin
-    if Self.WalkableClusters.InSameTPAEx(p, tpa[i]) then
+    if Self.WalkableClusters.InSameTPA(p, tpa[i]) then
     begin
       Result += Self.Nodes.Find(tpa[i]);
       weights += Round(p.DistanceTo(tpa[i]))

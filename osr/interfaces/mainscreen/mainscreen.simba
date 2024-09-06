@@ -218,7 +218,8 @@ begin
 
   // improve when bankscreen (and other interfaces) are open
   // replace orange title text with interface background color
-  Self.UpTextBitmapBuffer.ReplaceColor(2070783, 3424329);
+  Self.UpTextBitmapBuffer.ReplaceColor($1F98FF, $333E48);
+  Self.UpTextBitmapBuffer.ReplaceColor($0C0E0E, $333E48);
   Result := OCR._RecognizeStatic(Self.UpTextBitmapBuffer.ToMatrix(), Self.UpTextFilter, RS_FONT_BOLD_12_SHADOW);
 
   {$IFDEF SRL_DEBUG_UPTEXT}
