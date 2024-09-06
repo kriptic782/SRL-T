@@ -904,9 +904,9 @@ begin
     self.DebugLn('TRSGrandExchange.createSellOffer: Offer quantity did not show up, retrying');
 
     Self.Close();
-    wait(Random(750,1500));
+    wait(Random(2000,4500));
     Self.Open();
-    wait(Random(750,1500));
+    WaitUntil(Self.IsOpen, 500, 4000);
 
     Inventory.ClickSlot(invSlot, "Offer");
     if not waitUntil((self.GetItemQuantity > 0), 250, 3000) then
