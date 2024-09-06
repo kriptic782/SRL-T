@@ -894,10 +894,7 @@ begin
     exit(False);
   end;
 
-  Inventory.ClickSlot(invSlot);
-
-  if ChooseOption.IsOpen(600) then
-    ChooseOption.Select('Offer');
+  Mouse.Click(Inventory.GetSlotBox(InvSlot), MOUSE_LEFT);
 
   if not waitUntil((self.GetItemQuantity > 0), 250, 3000) then
   begin
@@ -908,7 +905,9 @@ begin
     Self.Open();
     WaitUntil(Self.IsOpen, 500, 4000);
 
-    Inventory.ClickSlot(invSlot, "Offer");
+    Mouse.Move(Inventory.GetSlotBox(InvSlot), True);
+    ChooseOption.Select('Offer');
+
     if not waitUntil((self.GetItemQuantity > 0), 250, 3000) then
     begin
       self.DebugLn('TRSGrandExchange.createSellOffer: Offer quantity did not show up, failed to open offer');
