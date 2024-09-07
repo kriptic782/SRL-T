@@ -1,3 +1,12 @@
+## [7.8.22](https://github.com/Torwent/SRL-T/compare/v7.8.21...v7.8.22) (2024-09-07)
+
+
+### Bug Fixes
+
+* **maps:** more map fixes ([627ce66](https://github.com/Torwent/SRL-T/commit/627ce6697badfa9af332ff498bd97c971c13c27d))
+
+
+
 ## [7.8.21](https://github.com/Torwent/SRL-T/compare/v7.8.20...v7.8.21) (2024-09-06)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * some webwalking fixes ([cf20531](https://github.com/Torwent/SRL-T/commit/cf20531c0623308505b103dfa2a97803f85f776f))
-
-
-
-## [7.8.17](https://github.com/Torwent/SRL-T/compare/v7.8.16...v7.8.17) (2024-09-03)
-
-
-### Bug Fixes
-
-* read notes ([324d2e4](https://github.com/Torwent/SRL-T/commit/324d2e4e8cea4ae845c11148924c7778ed93152e))
 
 
 
