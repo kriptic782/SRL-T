@@ -710,7 +710,7 @@ begin
       if plane > 0 then
       begin
         for l := 0 to coords.High do
-          coords.getJSONArray(l).Put(0, coords.getJSONArray(l).GetInt(0) + RSTranslator.MapWidth() * plane);
+          coords.getJSONArray(l).Put(0, Integer(coords.getJSONArray(l).GetInt(0) + RSTranslator.MapWidth() * plane));
       end;
 
       for n := 0 to Result.High() do

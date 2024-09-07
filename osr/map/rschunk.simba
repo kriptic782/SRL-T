@@ -11,10 +11,13 @@ type
     EDGEVILLE,
     FALADOR,
     FOSSIL_ISLAND,
+    HOSIDIUS_KITCHEN,
     LUMBRIDGE,
     LUNAR_ISLE,
     MOTHERLOADE_MINE,
+    MYTHS_GUILD,
     PRIFDDINAS,
+    ROGUES_DEN,
     RUINS_OF_UNKAH,
     SEERS_VILLAGE,
     TEMPOROSS_COVE,
@@ -30,11 +33,14 @@ begin
     ERSChunk.CRAFTING_GUILD   : Result := [[45,51,46,51],  [0]      ];
     ERSChunk.EDGEVILLE        : Result := [[48,54,48,54],  [0]      ];
     ERSChunk.FALADOR          : Result := [[45,53,47,51],  [0]      ];
-    ERSChunk.FOSSIL_ISLAND    : Result := [[56,61, 60,57], [0,1]    ];
+    ERSChunk.FOSSIL_ISLAND    : Result := [[56,61,60,57],  [0,1]    ];
+    ERSChunk.HOSIDIUS_KITCHEN : Result := [[25,56,26,56],  [0]      ];
     ERSChunk.LUMBRIDGE        : Result := [[49,51,50,49],  [0,1,2]  ];
     ERSChunk.LUNAR_ISLE       : Result := [[32,61,33,60],  [0]      ];
     ERSChunk.MOTHERLOADE_MINE : Result := [[57,89,59,87],  [0,1]    ];
+    ERSChunk.MYTHS_GUILD      : Result := [[38,44,38,44],  [0,1,2]  ];
     ERSChunk.PRIFDDINAS       : Result := [[50,95,51,94],  [0]      ];
+    ERSChunk.ROGUES_DEN       : Result := [[46,79,47,77],  [1]      ];
     ERSChunk.RUINS_OF_UNKAH   : Result := [[48,44,49,44],  [0]      ];
     ERSChunk.SEERS_VILLAGE    : Result := [[41,55,43,53],  [0,2]    ];
     ERSChunk.TEMPOROSS_COVE   : Result := [[47,46,47,46],  [0]      ];
