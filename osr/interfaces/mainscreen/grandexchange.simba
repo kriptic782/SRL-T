@@ -909,11 +909,7 @@ begin
   begin
     self.DebugLn('TRSGrandExchange.createSellOffer: Offer quantity did not show up, retrying');
 
-    Self.Close();
-    wait(Random(2000,4500));
-    Self.Open();
-    WaitUntil(Self.IsOpen, 500, 4000);
-
+    Self.Reboot();
     Mouse.Move(Inventory.GetSlotBox(InvSlot), True);
     ChooseOption.Select('Offer');
 
