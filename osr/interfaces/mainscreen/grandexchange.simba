@@ -264,6 +264,15 @@ begin
   Result := Self.ClickCloseButton(PressEscape) and WaitUntil(not Self.IsOpen(), SRL.TruncatedGauss(50, 1500), Random(1500, 2000));
 end;
 
+function TRSGrandExchange.Reboot() : Boolean;
+begin
+  if Self.IsOpen() then
+    if not Self.Close() then Exit(False);
+
+  WaitEx(800, 400);
+  Result := Self.Open();
+end;
+
 function TRSGrandExchange.changeTab(toHistory: Boolean = True) : Boolean;
 begin
   if (toHistory and (self.getCurrentInterface() = ERSGEInterface.HISTORY)) or
@@ -894,21 +903,16 @@ begin
     exit(False);
   end;
 
-  Inventory.ClickSlot(invSlot);
-
-  if ChooseOption.IsOpen(600) then
-    ChooseOption.Select('Offer');
+  Mouse.Click(Inventory.GetSlotBox(InvSlot), MOUSE_LEFT);
 
   if not waitUntil((self.GetItemQuantity > 0), 250, 3000) then
   begin
     self.DebugLn('TRSGrandExchange.createSellOffer: Offer quantity did not show up, retrying');
 
-    Self.Close();
-    wait(Random(750,1500));
-    Self.Open();
-    wait(Random(750,1500));
+    Self.Reboot();
+    Mouse.Move(Inventory.GetSlotBox(InvSlot), True);
+    ChooseOption.Select('Offer');
 
-    Inventory.ClickSlot(invSlot, "Offer");
     if not waitUntil((self.GetItemQuantity > 0), 250, 3000) then
     begin
       self.DebugLn('TRSGrandExchange.createSellOffer: Offer quantity did not show up, failed to open offer');
@@ -1049,9 +1053,16 @@ begin
   result := waitUntil(self.GetCurrentInterface() = ERSGEInterface.OVERVIEW, 200, 2000);
 end;
 
-function TRSGrandExchange.AbortOffer(slotNumber : Int32) : Boolean;
+function TRSGrandExchange._AbortFromMain(slotNumber : Int32) : Boolean;
+begin
+  Mouse.Move(self.GetOfferSlots()[slotNumber]);
+  ChooseOption.Select('Abort');
 
-  // Regular TRSButton does not allow CTS2 or circular buttons
+  Result := WaitUntil(self.GetStatus(slotNumber) = ERSGEOfferStatus.ABORTED, 100, 2500);
+end;
+
+function TRSGrandExchange._AbortFromSlot() : Boolean;
+// Regular TRSButton does not allow CTS2 or circular buttons
   // This is customized based on FindButtons but for this specific circle
   function findAbortButton() : tBox;
   var
@@ -1080,7 +1091,31 @@ function TRSGrandExchange.AbortOffer(slotNumber : Int32) : Boolean;
     end;
   end;
 
-var itemCount : Int32;
+var
+  itemCount : Int32;
+begin
+  if (self.GetCurrentInterface() <> ERSGEInterface.OFFER_STATUS) then
+  begin
+    Self.DebugLn('WARNING: Could not abort offer from slot, slot is not open');
+    exit(False);
+  end;
+
+  // Failsafe to last-second check if it's already aborted
+  if SRL.CountColor(143, self.GetOfferStatusButton(ERSGEOfferStatusButton.PROGRESS).Bounds) > 0 then
+  begin
+    self.DebugLn('AbortOffer: Slot is already aborted');
+    exit(true);
+  end;
+
+  itemCount := self.CountCollectionSlots();
+  Mouse.Click(FindAbortButton().Middle().Random(1,4), MOUSE_LEFT);
+  Result := waitUntil(self.GetStatus() = ERSGEOfferStatus.ABORTED, 200, 2000);
+
+  if Result then result := waitUntil((self.CountCollectionSlots() > itemCount), 250, 2000);
+end;
+
+function TRSGrandExchange.AbortOffer(slotNumber : Int32 = -1) : Boolean;
+var
 status: ERSGEOfferStatus;
 begin
   status := self.GetStatus(slotnumber);
@@ -1096,21 +1131,16 @@ begin
     exit(true);
   end;
 
-  if (self.GetCurrentInterface() <> ERSGEInterface.OFFER_STATUS) then
-    if not self.OpenActiveOffer(slotNumber) then exit(False);
-
-  // Failsafe in case the status wasn't read correctly above
-  if SRL.CountColor(143, self.GetOfferStatusButton(ERSGEOfferStatusButton.PROGRESS).Bounds) > 0 then
+  if (slotNumber = -1) and (self.GetCurrentInterface() <> ERSGEInterface.OFFER_STATUS) then
   begin
-    self.DebugLn('AbortOffer: Slot ' + toStr(slotNumber) + ' is already aborted');
-    exit(true);
+    self.DebugLn('AbortOffer: Cannot abort from the mainscreen without providing a slot number');
+    exit(False);
   end;
 
-  itemCount := self.CountCollectionSlots();
-  Mouse.Click(FindAbortButton().Middle().Random(1,4), MOUSE_LEFT);
-  Result := waitUntil(self.GetStatus() = ERSGEOfferStatus.ABORTED, 200, 2000);
-
-  if Result then waitUntil((self.CountCollectionSlots() > itemCount), 250, 2000);
+  if (slotNumber = -1) or (self.GetCurrentInterface() = ERSGEInterface.OFFER_STATUS) then
+    result := self._AbortFromSlot()
+  else
+    result := self._AbortFromMain(slotNumber)
 end;
 
 function TRSGrandExchange.CreateBuyOffer(itemName : String; price : String = '-1'; quantity: Int32 = 1; slotNumber : Int32 = -1; loops : Int32) : Boolean; overload;
