@@ -53,7 +53,7 @@ Record responsible for positioning.
   TRSMap = record
     Walker: TRSWalkerV2;
 
-    RegionIndex: Int32;
+    RegionIndex, Samples: Int32;
     Region: TRSMapRegion;
     Similarity: Double;
     Cache: TMatchTemplateRGBCache;
@@ -93,6 +93,8 @@ begin
     AddOnTerminate(@Self.Loader.Free);
     Self.IsSetup := True;
   end;
+
+  if Self.Samples = 0 then Self.Samples := 2;
 end;
 
 (*
@@ -467,8 +469,6 @@ WriteLn(Map.Similarity); // Check to see the match percentage if needed
 ```
 *)
 function TRSMap.Position(): TPoint;
-const
-  SAMPLES = 3;
 var
   cleanMinimap: TMufasaBitmap;
   tpa: TPointArray;
@@ -482,7 +482,7 @@ begin
 
   cleanMinimap := Minimap.GetCleanMinimap();
 
-  tpa := Self.ScaledSearch(cleanMinimap, SAMPLES);
+  tpa := Self.ScaledSearch(cleanMinimap, Self.Samples);
   for i := 0 to High(tpa) do
   begin
     hit := Self.FullSearch(cleanMinimap, Self.Loader.Map, tpa[i], match);

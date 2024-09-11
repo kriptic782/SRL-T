@@ -7,6 +7,7 @@ type
   ERSChunk = (
     AL_KHARID,
     ARDOUGNE,
+    BLAST_FURNACE,
     CRAFTING_GUILD,
     EDGEVILLE,
     FALADOR,
@@ -30,6 +31,7 @@ begin
   case Self of
     ERSChunk.AL_KHARID        : Result := [[50,51,53,48],  [0]      ];
     ERSChunk.ARDOUGNE         : Result := [[40,52,41,51],  [0,3]    ];
+    ERSChunk.BLAST_FURNACE    : Result := [[29,78,30,77],  [0]      ];
     ERSChunk.CRAFTING_GUILD   : Result := [[45,51,46,51],  [0]      ];
     ERSChunk.EDGEVILLE        : Result := [[48,54,48,54],  [0]      ];
     ERSChunk.FALADOR          : Result := [[45,53,47,51],  [0]      ];
