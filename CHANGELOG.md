@@ -1,3 +1,12 @@
+## [7.8.23](https://github.com/Torwent/SRL-T/compare/v7.8.22...v7.8.23) (2024-09-11)
+
+
+### Bug Fixes
+
+* **TRSMap:** give access to the number of samples taken for position ([2130e0d](https://github.com/Torwent/SRL-T/commit/2130e0d96e4add10672ed3b1fd639d2781e6885d))
+
+
+
 ## [7.8.22](https://github.com/Torwent/SRL-T/compare/v7.8.21...v7.8.22) (2024-09-07)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMap:** read notes ([f4143a9](https://github.com/Torwent/SRL-T/commit/f4143a92b39a69756a71074d7c496c4be9b372c4))
-
-
-
-## [7.8.18](https://github.com/Torwent/SRL-T/compare/v7.8.17...v7.8.18) (2024-09-04)
-
-
-### Bug Fixes
-
-* some webwalking fixes ([cf20531](https://github.com/Torwent/SRL-T/commit/cf20531c0623308505b103dfa2a97803f85f776f))
 
 
 
