@@ -1144,14 +1144,14 @@ Example:
 Debug(rsw.GetTileMS(rsw.GetMypos() + [10, 10]));
 ```
 *)
-function TRSWalker.GetTileMSEx(Me, Loc: TPoint; Height:Double=0; Offx,Offy:Double=0): TRectangle; override;
+function TRSWalker.GetTileMSEx(Me, Loc: TPoint; Height:Double=0; Offx,Offy:Double=0): TRectangle;
 var
   angle: Double;
   vec: Vector3;
 begin
   Loc   := Minimap.Center() + (Loc - Me);
   angle := Minimap.GetCompassAngle(False);
-  vec   := Loc.RotateXY(angle, Minimap.Center.X, Minimap.Center.Y);
+  vec   := Vec3(Loc.X,loc.Y).RotateXY(angle, Minimap.Center.X, Minimap.Center.Y);
 
   Result := Minimap.VectorToMSRect(vec + [-offx, -offy, height], 1, 1, angle);
 end;
