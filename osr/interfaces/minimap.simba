@@ -1762,9 +1762,7 @@ Example:
 Minimap.ScaleMinimap(Minimap.GetCleanMinimap(), 4).Debug();
 ```
 *)
-function TRSMinimap.ScaleMinimap(bitmap: TMufasaBitmap; scaling: Int32): TMufasaBitmap;
-var
-  RADIUS = 67;
+function TRSMinimap.ScaleMinimap(bitmap: TMufasaBitmap; scaling: Int32; radius: Int32 = 67): TMufasaBitmap;
 var
   p: TPoint;
   tmp: TMufasaBitmap;
@@ -1776,14 +1774,14 @@ begin
   if RSClient.Mode = ERSClientMode.FIXED then
     p := p.Offset(0, -8).Rotate(-Self.GetCompassAngle(False), p); // fixed
 
-  tmp.DrawCircleFilled(p.X, p.Y, RADIUS, True, 0);
+  tmp.DrawCircleFilled(p.X, p.Y, radius, True, 0);
 
-  RADIUS += 3;
+  radius += 3;
 
-  tmp.Crop(p.X - RADIUS, p.Y - RADIUS, p.X + RADIUS, p.Y + RADIUS);
+  tmp.Crop(p.X - radius, p.Y - radius, p.X + radius, p.Y + radius);
   tmp.FindColors(tpa, 0);
   tmp.Blend(tpa.Sorted(tmp.GetCenter()), 3);
-  tmp.DrawCircleFilled(tmp.GetCenter().X, tmp.GetCenter().Y, RADIUS, True, 0);
+  tmp.DrawCircleFilled(tmp.GetCenter().X, tmp.GetCenter().Y, radius, True, 0);
 
   Result := tmp.Downsample(scaling, False);
 

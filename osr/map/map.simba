@@ -53,11 +53,15 @@ Record responsible for positioning.
   TRSMap = record
     Walker: TRSWalkerV2;
 
-    RegionIndex, Samples: Int32;
+    RegionIndex: Int32;
     Region: TRSMapRegion;
     Similarity: Double;
     Cache: TMatchTemplateRGBCache;
     Loader: TRSMapLoader;
+
+    Sample: record
+      Amount, Radius: Int32;
+    end;
 
     IsSetup, DisableHeightmap: Boolean;
   end;
@@ -78,8 +82,11 @@ procedure TRSMap.InternalSetup();
 var
   minimapImage, minimapSample: TMufasaBitmap;
 begin
+  if Self.Sample.Amount = 0 then Self.Sample.Amount := 2;
+  if Self.Sample.Radius = 0 then Self.Sample.Radius := 67;
+
   minimapImage := Minimap.GetCleanMinimap();
-  minimapSample := Minimap.ScaleMinimap(minimapImage, Self.Loader.Downscale);
+  minimapSample := Minimap.ScaleMinimap(minimapImage, Self.Loader.Downscale, Self.Sample.Radius);
 
   Self.Cache := TMatchTemplateRGBCache.Create(Self.Loader.DownscaledMap.ToMatrix(), MinimapSample.ToMatrix());
 
@@ -93,8 +100,6 @@ begin
     AddOnTerminate(@Self.Loader.Free);
     Self.IsSetup := True;
   end;
-
-  if Self.Samples = 0 then Self.Samples := 2;
 end;
 
 (*
@@ -383,16 +388,16 @@ This is very innacurate by itself but by ruling down most of the map
 in a downscaled search before doing a full sized search speed has a dramatic boost.
 You probably won't ever need to call this directly.
 *)
-function TRSMap.ScaledSearch(bitmap: TMufasaBitmap; samples: Int32): TPointArray;
+function TRSMap.ScaledSearch(bitmap: TMufasaBitmap): TPointArray;
 var
   sample: TMufasaBitmap;
   matrix: TSingleMatrix;
   n: Int32;
 begin
-  sample := Minimap.ScaleMinimap(bitmap, Self.Loader.Downscale);
+  sample := Minimap.ScaleMinimap(bitmap, Self.Loader.Downscale, Self.Sample.Radius);
   matrix := MatchTemplateMask(Self.Cache, sample.ToMatrix(), TM_CCOEFF_NORMED);
 
-  while Length(Result) < samples do
+  while Length(Result) < Self.Sample.Amount do
     with matrix.ArgMax() do
     begin
       Result += Offset(sample.GetWidth() div 2, sample.GetHeight() div 2) * Self.Loader.Downscale;
@@ -482,7 +487,7 @@ begin
 
   cleanMinimap := Minimap.GetCleanMinimap();
 
-  tpa := Self.ScaledSearch(cleanMinimap, Self.Samples);
+  tpa := Self.ScaledSearch(cleanMinimap);
   for i := 0 to High(tpa) do
   begin
     hit := Self.FullSearch(cleanMinimap, Self.Loader.Map, tpa[i], match);
@@ -1051,7 +1056,7 @@ while True do
   Map.DebugPosition();
 ```
 *)
-function TRSMap.DebugPosition(): TPoint;
+function TRSMap.DebugPosition(print: Boolean = True): TPoint;
   function _BoxStr(b: TBox): String;
   begin
     Result := Format('[%d, %d, %d, %d]', [b.X1, b.Y1, b.X2, b.Y2]);
@@ -1065,9 +1070,9 @@ var
 begin
   Freeze();
 
-  time := PerformanceTimer();
+  time   := PerformanceTimer();
   Result := Self.Position();
-  time := PerformanceTimer() - time;
+  time   := PerformanceTimer() - time;
 
   case Self.RegionIndex of
     -1:  local := Result;
@@ -1126,7 +1131,7 @@ begin
 
   for i := 0 to High(lines) do
   begin
-    WriteLn lines[i];
+    if print then WriteLn(lines[i]);
     bitmap.DrawText(lines[i], [430, cleanMinimap.GetHeight() + 20 + 20 * i], $FFFFFF);
   end;
 
@@ -1137,8 +1142,9 @@ begin
   cleanMinimap.DrawTransparent(520, 10, bitmap);
   cleanMinimap.Free();
 
-  bitmap.Debug();
   DisplayDebugImgWindow(bitmap.getWidth(), bitmap.getHeight());
+  DrawBitmapDebugImg(bitmap);
+
   bitmap.Free();
 
   UnFreeze();
