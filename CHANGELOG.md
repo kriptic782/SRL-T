@@ -1,3 +1,12 @@
+# [7.9.0](https://github.com/Torwent/SRL-T/compare/v7.8.24...v7.9.0) (2024-09-13)
+
+
+### Features
+
+* **TRSMap:** give control of the sample radius to people ([1d8c88b](https://github.com/Torwent/SRL-T/commit/1d8c88b31226e5705cf2499857cb1b6c279cfc64))
+
+
+
 ## [7.8.24](https://github.com/Torwent/SRL-T/compare/v7.8.23...v7.8.24) (2024-09-13)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **MainScreen:** better ocr with ge open ([3650de2](https://github.com/Torwent/SRL-T/commit/3650de29e07b739049ff3ea791ecd5a0d792a057))
-
-
-
-## [7.8.20](https://github.com/Torwent/SRL-T/compare/v7.8.19...v7.8.20) (2024-09-05)
-
-
-### Bug Fixes
-
-* typo ([3bd8713](https://github.com/Torwent/SRL-T/commit/3bd87138e21430499254c90a8a9d4c7394bc62d2))
 
 
 
