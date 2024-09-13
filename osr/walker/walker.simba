@@ -1147,12 +1147,13 @@ Debug(rsw.GetTileMS(rsw.GetMypos() + [10, 10]));
 function TRSWalker.GetTileMSEx(Me, Loc: TPoint; Height:Double=0; Offx,Offy:Double=0): TRectangle;
 var
   angle: Double;
+  vec: Vector3;
 begin
   Loc   := Minimap.Center() + (Loc - Me);
   angle := Minimap.GetCompassAngle(False);
-  Loc   := Loc.Rotate(angle, Minimap.Center);
+  vec   := Vec3(Loc.X,loc.Y).RotateXY(angle, Minimap.Center.X, Minimap.Center.Y);
 
-  Result := Minimap.VectorToMSRect(Vec3(Loc.x - offx, Loc.y - offy, Height), 1, 1, angle);
+  Result := Minimap.VectorToMSRect(vec + [-offx, -offy, height], 1, 1, angle);
 end;
 
 function TRSWalker.GetTileMS(Loc: TPoint; Height:Double=0; Offx,Offy:Double=0): TRectangle;
