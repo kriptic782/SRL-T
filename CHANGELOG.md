@@ -1,3 +1,12 @@
+## [7.8.24](https://github.com/Torwent/SRL-T/compare/v7.8.23...v7.8.24) (2024-09-13)
+
+
+### Bug Fixes
+
+* no more rounding errors for walkerV1 ([963a367](https://github.com/Torwent/SRL-T/commit/963a36726bf5d2518e774b5d918b1a7df762e13f))
+
+
+
 ## [7.8.23](https://github.com/Torwent/SRL-T/compare/v7.8.22...v7.8.23) (2024-09-11)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * typo ([3bd8713](https://github.com/Torwent/SRL-T/commit/3bd87138e21430499254c90a8a9d4c7394bc62d2))
-
-
-
-## [7.8.19](https://github.com/Torwent/SRL-T/compare/v7.8.18...v7.8.19) (2024-09-05)
-
-
-### Bug Fixes
-
-* **TRSMap:** read notes ([f4143a9](https://github.com/Torwent/SRL-T/commit/f4143a92b39a69756a71074d7c496c4be9b372c4))
 
 
 
