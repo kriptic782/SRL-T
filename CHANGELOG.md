@@ -1,3 +1,12 @@
+## [7.9.1](https://github.com/Torwent/SRL-T/compare/v7.9.0...v7.9.1) (2024-09-13)
+
+
+### Bug Fixes
+
+* roll back bootie PR ([d102d99](https://github.com/Torwent/SRL-T/commit/d102d994c3bbce5dced1e953fe0f1d33de27e221))
+
+
+
 # [7.9.0](https://github.com/Torwent/SRL-T/compare/v7.8.24...v7.9.0) (2024-09-13)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **maps:** more map fixes ([627ce66](https://github.com/Torwent/SRL-T/commit/627ce6697badfa9af332ff498bd97c971c13c27d))
-
-
-
-## [7.8.21](https://github.com/Torwent/SRL-T/compare/v7.8.20...v7.8.21) (2024-09-06)
-
-
-### Bug Fixes
-
-* **MainScreen:** better ocr with ge open ([3650de2](https://github.com/Torwent/SRL-T/commit/3650de29e07b739049ff3ea791ecd5a0d792a057))
 
 
 
