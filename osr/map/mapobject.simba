@@ -1448,7 +1448,8 @@ begin
   {$ENDIF}
   bitmap.FromClient();
   obj._DrawRouter(bitmap);
-  bitmap.Debug();
+  DisplayDebugImgWindow(bitmap.getWidth(), bitmap.getHeight());
+  DrawBitmapDebugImg(bitmap);
   bitmap.Free();
 end;
 
@@ -1466,7 +1467,8 @@ begin
   {$ENDIF}
   bitmap.FromClient();
   npc.Draw(bitmap);
-  bitmap.Debug();
+  DisplayDebugImgWindow(bitmap.getWidth(), bitmap.getHeight());
+  DrawBitmapDebugImg(bitmap);
   bitmap.Free();
 end;
 
@@ -1484,7 +1486,8 @@ begin
   {$ENDIF}
   bitmap.FromClient();
   mapObj^._DrawRouter(bitmap);
-  bitmap.Debug();
+  DisplayDebugImgWindow(bitmap.getWidth(), bitmap.getHeight());
+  DrawBitmapDebugImg(bitmap);
   bitmap.Free();
 end;
 
@@ -1528,7 +1531,7 @@ end;
 
 function TRSObjectV2.Setup(height: Double; coordinates: TPointArray): TRSObjectV2; static; overload;
 begin
-  Result.Setup(1, height, coordinates);
+  Result := TRSObjectV2.Setup(1, height, coordinates);
 end;
 
 
