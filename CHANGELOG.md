@@ -1,3 +1,12 @@
+## [7.9.2](https://github.com/Torwent/SRL-T/compare/v7.9.1...v7.9.2) (2024-09-14)
+
+
+### Bug Fixes
+
+* **trsobjectv2:** fix for one of the setup methods ([56ec430](https://github.com/Torwent/SRL-T/commit/56ec4305a5a8309f7af5707a5078e0db4285ed28))
+
+
+
 ## [7.9.1](https://github.com/Torwent/SRL-T/compare/v7.9.0...v7.9.1) (2024-09-13)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMap:** give access to the number of samples taken for position ([2130e0d](https://github.com/Torwent/SRL-T/commit/2130e0d96e4add10672ed3b1fd639d2781e6885d))
-
-
-
-## [7.8.22](https://github.com/Torwent/SRL-T/compare/v7.8.21...v7.8.22) (2024-09-07)
-
-
-### Bug Fixes
-
-* **maps:** more map fixes ([627ce66](https://github.com/Torwent/SRL-T/commit/627ce6697badfa9af332ff498bd97c971c13c27d))
 
 
 
