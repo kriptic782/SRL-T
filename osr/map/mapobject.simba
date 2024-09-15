@@ -1393,7 +1393,9 @@ WriteLn RSObjects.GEBank.WalkClick();
 *)
 function TRSMapObject.WalkClick(leftClick: Boolean = True; attempts: Int32 = 2): Boolean;
 begin
+  Self.Walker^.TargetUpText := [Self.Name];
   Result := Self.WalkHover(attempts) and Self._ClickHelper(leftClick);
+  Self.Walker^.TargetUpText := [];
 end;
 
 (*
@@ -1411,8 +1413,10 @@ WriteLn RSObjects.GEBank.WalkSelectOption(['Collect']);
 *)
 function TRSMapObject.WalkSelectOption(action: TStringArray; attempts: Int32 = 2): Boolean;
 begin
-  Self.Walker^.TargetUpText := action;
+  Self.Walker^.TargetUpText := [Self.Name];
+  Self.Walker^.ActionUpText := action;
   Result := Self.WalkHover(attempts) and Self._SelectHelper(action);
+  Self.Walker^.TargetUpText := [];
   Self.Walker^.ActionUpText := [];
 end;
 
