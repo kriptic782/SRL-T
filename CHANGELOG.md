@@ -1,3 +1,12 @@
+## [7.9.3](https://github.com/Torwent/SRL-T/compare/v7.9.2...v7.9.3) (2024-09-15)
+
+
+### Bug Fixes
+
+* **TRSMapObject:** WalkClick and WalkSelectOption are working properly now ([4b09535](https://github.com/Torwent/SRL-T/commit/4b09535ae5133cdc77ab4609740c80e822bbfb44))
+
+
+
 ## [7.9.2](https://github.com/Torwent/SRL-T/compare/v7.9.1...v7.9.2) (2024-09-14)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * no more rounding errors for walkerV1 ([963a367](https://github.com/Torwent/SRL-T/commit/963a36726bf5d2518e774b5d918b1a7df762e13f))
-
-
-
-## [7.8.23](https://github.com/Torwent/SRL-T/compare/v7.8.22...v7.8.23) (2024-09-11)
-
-
-### Bug Fixes
-
-* **TRSMap:** give access to the number of samples taken for position ([2130e0d](https://github.com/Torwent/SRL-T/commit/2130e0d96e4add10672ed3b1fd639d2781e6885d))
 
 
 
