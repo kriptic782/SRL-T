@@ -1244,10 +1244,22 @@ function TRSWalkerV2.WebWalkEx(me: TPoint; destination: TPoint; waitUntilDistanc
     tmp: TWebGraphV2;
     closestMe, closestDest: TIntegerArray;
     i: Int32;
+    errorTimer: TCountdown;
   begin
     try
       Result := Self.WebGraph^.PathBetweenEx(me, destination, pathRandomness, 4, safe);
     except
+      errorTimer.Init(5000);
+      while not errorTimer.IsFinished do
+      begin
+        try
+          Result := Self.WebGraph^.PathBetweenEx(me, destination, pathRandomness, 4, safe);
+          Exit(Result);
+        except
+          Wait(100);
+        end;
+      end;
+
       if Assigned(Self.MapImage) and (Length(Self.WebGraph^.Nodes) > 0) then
       begin
         bmp := Self.MapImage.Copy();
