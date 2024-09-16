@@ -1,3 +1,12 @@
+## [7.9.4](https://github.com/Torwent/SRL-T/compare/v7.9.3...v7.9.4) (2024-09-16)
+
+
+### Bug Fixes
+
+* **TRSMap:** read notes ([5a88a80](https://github.com/Torwent/SRL-T/commit/5a88a804c7307c9693c581b9d5954a18055f7153))
+
+
+
 ## [7.9.3](https://github.com/Torwent/SRL-T/compare/v7.9.2...v7.9.3) (2024-09-15)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **TRSMap:** give control of the sample radius to people ([1d8c88b](https://github.com/Torwent/SRL-T/commit/1d8c88b31226e5705cf2499857cb1b6c279cfc64))
-
-
-
-## [7.8.24](https://github.com/Torwent/SRL-T/compare/v7.8.23...v7.8.24) (2024-09-13)
-
-
-### Bug Fixes
-
-* no more rounding errors for walkerV1 ([963a367](https://github.com/Torwent/SRL-T/commit/963a36726bf5d2518e774b5d918b1a7df762e13f))
 
 
 
