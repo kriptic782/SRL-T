@@ -63,6 +63,11 @@ Record responsible for positioning.
       Amount, Radius: Int32;
     end;
 
+    Filters: array of record
+      Box: TBox;
+      Inside: Boolean;
+    end;
+
     IsSetup, DisableHeightmap: Boolean;
   end;
 
@@ -393,6 +398,7 @@ var
   sample: TMufasaBitmap;
   matrix: TSingleMatrix;
   n: Int32;
+  p: TPoint;
 begin
   sample := Minimap.ScaleMinimap(bitmap, Self.Loader.Downscale, Self.Sample.Radius);
   matrix := MatchTemplateMask(Self.Cache, sample.ToMatrix(), TM_CCOEFF_NORMED);
@@ -400,7 +406,32 @@ begin
   while Length(Result) < Self.Sample.Amount do
     with matrix.ArgMax() do
     begin
-      Result += Offset(sample.GetWidth() div 2, sample.GetHeight() div 2) * Self.Loader.Downscale;
+      p := Offset(sample.GetWidth() div 2, sample.GetHeight() div 2) * Self.Loader.Downscale;
+
+      for n := 0 to High(Self.Filters) do
+      begin
+        if (Self.Filters[n].Inside and Self.Filters[n].Box.Contains(p)) or
+           (not Self.Filters[n].Inside and not Self.Filters[n].Box.Contains(p)) then
+        begin
+          Result += p;
+          matrix.Fill([X - 5, Y - 5, X + 5, Y + 5], 0);
+          Continue(2);
+        end;
+      end;
+
+      if Self.Filters = [] then
+      begin
+        for n := 0 to High(Self.Loader.Regions) do
+          if Self.Loader.Regions[n].Region.Expand(-40).Contains(p) then
+          begin
+            Result += p;
+            Break;
+          end;
+
+        if Self.Loader.Regions = [] then
+          Result += p;
+      end;
+
       matrix.Fill([X - 5, Y - 5, X + 5, Y + 5], 0);
     end;
 
