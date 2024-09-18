@@ -273,7 +273,7 @@ begin
     Result.Reduce();
 end;
 
-function TRSMapJSONParser.GetNearestSingle(names: TStringArray; point: TPoint; actions: TStringArray = []; maxDist: Integer = $FFFFFF): TRSObjectV2;
+function TRSMapJSONParser.GetNearest(names: TStringArray; point: TPoint; actions: TStringArray = []; maxDist: Integer = $FFFFFF): TRSObjectV2;
 var
   obj: TRSObjectV2;
   objArr: TRSObjectV2Array;
@@ -311,9 +311,9 @@ begin
   Result.Rotations := [angle];
 end;
 
-function TRSMapJSONParser.GetNearestSingle(name: String; point: TPoint; actions: TStringArray = []; maxDist: Integer = $FFFFFF): TRSObjectV2; overload;
+function TRSMapJSONParser.GetNearest(name: String; point: TPoint; actions: TStringArray = []; maxDist: Integer = $FFFFFF): TRSObjectV2; overload;
 begin
-  Result := Self.GetNearestSingle([name], point, actions, maxDist);
+  Result := Self.GetNearest([name], point, actions, maxDist);
 end;
 
 procedure TRSMapJSONParser.Print();
@@ -467,7 +467,7 @@ begin
     Result.Reduce();
 end;
 
-function TRSMapNPCs.GetNearestSingle(names: TStringArray; point:TPoint): TRSNPCV2;
+function TRSMapNPCs.GetNearest(names: TStringArray; point:TPoint): TRSNPCV2;
 var
   NPC: TRSNPCV2;
   npcArr: TRSNPCV2Array;
@@ -490,15 +490,9 @@ begin
   Result.Coordinates := [coordinate];
 end;
 
-function TRSMapNPCs.GetNearestSingle(name: String; point:TPoint): TRSNPCV2; overload;
-var
-  NPC: TRSNPCV2;
-  npcArr: TRSNPCV2Array;
-  coordinate: TPoint;
-  dist: Double;
-  i: Integer;
+function TRSMapNPCs.GetNearest(name: String; point:TPoint): TRSNPCV2; overload;
 begin
-  Result := Self.GetNearestSingle([name], point);
+  Result := Self.GetNearest([name], point);
 end;
 
 
