@@ -404,6 +404,26 @@ begin
   Result := Self.ItemInterface.CountStack(item);
 end;
 
+(*
+## Equipment.ClickSlot
+```pascal
+function TRSEquipment.ClickSlot(slot: Int32; option: String = ''): Boolean;
+Moves the mouse and clicks on the specified equipment slot. Slot is an Integer corresponding to the equipment slot indices.
+If option is empty, the slot is left clicked. Otherwise, a right click is performed
+and the specified option is selected from the context menu.
+
+if Equipment.ClickSlot(Ord(ERSEquipmentSlot.WEAPON)) then
+  WriteLn('Left clicked the weapon slot');
+if Equipment.ClickSlot(Ord(ERSEquipmentSlot.CAPE), 'Remove') then
+  WriteLn('Right clicked and selected "Remove" on the cape slot');
+*)
+
+function TRSEquipment.ClickSlot(slot: Int32; option: String = ''): Boolean;
+begin
+  if not Self.Open() then
+    Exit;
+  Result := Self.ItemInterface.InteractSlot(slot, option);
+end; 
 
 (*
 ## Equipment.IsSlotUsed
