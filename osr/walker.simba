@@ -1244,7 +1244,6 @@ function TRSWalkerV2.WebWalkEx(me: TPoint; destination: TPoint; waitUntilDistanc
     tmp: TWebGraphV2;
     closestMe, closestDest: TIntegerArray;
     i: Int32;
-    errorTimer: TCountdown;
   begin
     try
       Result := Self.WebGraph^.PathBetweenEx(me, destination, pathRandomness, 4, safe);
