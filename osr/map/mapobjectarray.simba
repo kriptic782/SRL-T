@@ -273,6 +273,48 @@ begin
     Result.Reduce();
 end;
 
+function TRSMapJSONParser.GetNearestSingle(names: TStringArray; point: TPoint; actions: TStringArray = []; maxDist: Integer = $FFFFFF): TRSObjectV2;
+var
+  obj: TRSObjectV2;
+  objArr: TRSObjectV2Array;
+  dist: Double;
+  coordinate: TPoint;
+  angle: Single;
+  i, j: Integer;
+  action: String;
+  actionFound: Boolean;
+begin
+  objArr := Self.GetAll(names);
+  dist := maxDist;
+  for obj in objArr do
+  begin
+    actionFound := False;
+    if actions <> [] then
+    begin
+      for action in obj.Actions do
+        for j := 0 to High(actions) do
+          if (actions[j] in action) or (actions[j] = action) then
+            actionFound := True;
+    end else actionFound := True;
+    for i := 0 to high(obj.Coordinates) do
+    begin
+      if actionFound and (obj.Coordinates[i].DistanceTo(point) < dist) then
+      begin
+        Result := obj;
+        coordinate := obj.Coordinates[i];
+        angle := obj.Rotations[i];
+        dist := obj.Coordinates[i].DistanceTo(point);
+      end;
+    end;
+  end;
+  Result.Coordinates := [coordinate];
+  Result.Rotations := [angle];
+end;
+
+function TRSMapJSONParser.GetNearestSingle(name: String; point: TPoint; actions: TStringArray = []; maxDist: Integer = $FFFFFF): TRSObjectV2; overload;
+begin
+  Result := Self.GetNearestSingle([name], point, actions, maxDist);
+end;
 
 procedure TRSMapJSONParser.Print();
 var
@@ -423,6 +465,40 @@ begin
 
   if Result <> [] then
     Result.Reduce();
+end;
+
+function TRSMapNPCs.GetNearestSingle(names: TStringArray; point:TPoint): TRSNPCV2;
+var
+  NPC: TRSNPCV2;
+  npcArr: TRSNPCV2Array;
+  coordinate: TPoint;
+  dist: Double;
+  i: Integer;
+begin
+  npcArr := Self.GetAll(names);
+  dist := $FFFFFF;
+  for NPC in npcArr do
+    for i := 0 to high(NPC.Coordinates) do
+    begin
+      if NPC.Coordinates[i].DistanceTo(point) < dist then
+      begin
+        Result := NPC;
+        coordinate := NPC.Coordinates[i];
+        dist := NPC.Coordinates[i].DistanceTo(point);
+      end;
+    end;
+  Result.Coordinates := [coordinate];
+end;
+
+function TRSMapNPCs.GetNearestSingle(name: String; point:TPoint): TRSNPCV2; overload;
+var
+  NPC: TRSNPCV2;
+  npcArr: TRSNPCV2Array;
+  coordinate: TPoint;
+  dist: Double;
+  i: Integer;
+begin
+  Result := Self.GetNearestSingle([name], point);
 end;
 
 
