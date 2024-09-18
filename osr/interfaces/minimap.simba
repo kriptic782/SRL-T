@@ -375,6 +375,8 @@ begin
   CustomMouse := Mouse;
   CustomMouse.MissChance := 0;
   CustomMouse.IdleInterval := 0;
+  CustomMouse.Gravity := 20;
+  CustomMouse.wind := 0;
 
   Available := GetClientBounds().Expand(-10);
   degrees := FixD(degrees);
