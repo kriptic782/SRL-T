@@ -1,3 +1,12 @@
+## [7.9.6](https://github.com/Torwent/SRL-T/compare/v7.9.5...v7.9.6) (2024-09-19)
+
+
+### Bug Fixes
+
+* read notes ([c128a45](https://github.com/Torwent/SRL-T/commit/c128a4573c2105c3ee36f871260265946b480ce8))
+
+
+
 ## [7.9.5](https://github.com/Torwent/SRL-T/compare/v7.9.4...v7.9.5) (2024-09-18)
 
 
@@ -32,15 +41,6 @@
 ### Bug Fixes
 
 * **trsobjectv2:** fix for one of the setup methods ([56ec430](https://github.com/Torwent/SRL-T/commit/56ec4305a5a8309f7af5707a5078e0db4285ed28))
-
-
-
-## [7.9.1](https://github.com/Torwent/SRL-T/compare/v7.9.0...v7.9.1) (2024-09-13)
-
-
-### Bug Fixes
-
-* roll back bootie PR ([d102d99](https://github.com/Torwent/SRL-T/commit/d102d994c3bbce5dced1e953fe0f1d33de27e221))
 
 
 
