@@ -338,7 +338,7 @@ Example:
 Inventory.ShiftDrop(Iventory.ErrorPattern(Inventory.RandomPattern()));
 ```
 *)
-function TRSInventory.ErrorPattern(Pattern: TIntegerArray=DROP_PATTERN_REGULAR; ErrorChance:Int32=5): TIntegerArray;
+function TRSInventory.ErrorPattern(pattern: TIntegerArray = DROP_PATTERN_REGULAR; errorChance: Int32 = 5): TIntegerArray;
 var i,j,h,k,tmp: Int32;
 begin
   Result := Copy(Pattern);

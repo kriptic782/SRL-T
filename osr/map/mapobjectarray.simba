@@ -653,7 +653,7 @@ begin
     Exit;
 
   Minimap.WaitMoving();
-  Result := WaitUntil(Bank.IsOpen() or BankPin.IsOpen(), SRL.TruncatedGauss(50, 1500), 3000);
+  Result := WaitUntil(RSInterface.IsOpen(), 300, 3000) and (Bank.IsOpen() or BankPin.IsOpen());
 end;
 
 function TRSBanks.WalkHover(mapObj: PRSMapObject = nil): Boolean;
@@ -688,7 +688,7 @@ begin
     Exit;
 
   Minimap.WaitMoving();
-  Result := WaitUntil(Bank.IsOpen(), SRL.TruncatedGauss(50, 1500), 3000);
+  Result := WaitUntil(RSInterface.IsOpen(), 300, 3000) and (Bank.IsOpen() or BankPin.IsOpen());
 end;
 
 var
