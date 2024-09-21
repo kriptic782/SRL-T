@@ -512,10 +512,10 @@ end;
 
 
 //Non rounding TPA.Cluster
-function TPointArray.NRCluster(dist: Double): T2DPointArray; constref;
+function TPointArray.NRCluster(dist: Single): T2DPointArray; constref;
 begin
   if (Length(Self) < 700) then
-    Exit(NRSplitTPA(Self, dist));
+    Exit(NRSplitTPA(Self, dist, dist));
   Result := NRClusterTPA(Self, dist);
 end;
 

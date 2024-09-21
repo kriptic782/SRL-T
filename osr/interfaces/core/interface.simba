@@ -190,25 +190,35 @@ begin
     Self.Cache.Y2 := [Self.Mode, ClientWidth, ClientHeight, Result];
 end;
 
+
 function TRSInterface.Bounds(): TBox;
 begin
-  Result := [Self.X1, Self.Y1, Self.X2, Self.Y2];
+  Result := Box(Self.X1(), Self.Y1(), Self.X2(), Self.Y2());
 end;
+
 
 function TRSInterface.Width(): Int32;
 begin
-  Result := Bounds.Width;
+  Result := Self.Bounds().Width();
 end;
 
 function TRSInterface.Height(): Int32;
 begin
-  Result := Bounds.Height;
+  Result := Self.Bounds().Height();
 end;
+
 
 function TRSInterface.Center(): TPoint;
 begin
   Result := Self.Bounds().Middle();
 end;
+
+
+function TRSInterface.Rectangle(): TRectangle;
+begin
+  Result := Self.Bounds().ToRectangle();
+end;
+
 
 type
   TRSButton = record
