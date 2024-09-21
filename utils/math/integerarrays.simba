@@ -18,7 +18,7 @@ begin
       Result += other[i];
 end;
 
-function TIntegerArray.Difference(Other: TIntegerArray): TIntegerArray;
+function TIntegerArray.Difference(other: TIntegerArray): TIntegerArray; constref;
 var
   i: Int64;
 begin

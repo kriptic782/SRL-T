@@ -330,6 +330,8 @@ begin
       FilterPointsDist(dotpts, 12, Radius, X,Y);
       g := dotpts.Cluster(4);
 
+      if Length(g) < 3 then Exit;
+
       if (g[0].Mean().DistanceTo(g[1].Mean()) > 25) then Swap(g[0], g[2]);
       if (g[0].Mean().DistanceTo(g[2].Mean()) > 25) then Swap(g[0], g[1]);
 

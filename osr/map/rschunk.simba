@@ -8,6 +8,8 @@ type
     AL_KHARID,
     ARDOUGNE,
     BLAST_FURNACE,
+    CATACOMBS_OF_KOUREND,
+    CORSAIR_COVE_DUNGEON,
     CRAFTING_GUILD,
     EDGEVILLE,
     FALADOR,
@@ -21,34 +23,40 @@ type
     ROGUES_DEN,
     RUINS_OF_UNKAH,
     SEERS_VILLAGE,
+    STRONGHOLD_SLAYER_CAVE,
     TEMPOROSS_COVE,
     VARROCK,
     WINTERTODT
   );
 
-function ERSChunk.Get(): TRSMapChunk;
+function ERSChunk.Get(planes: TIntegerArray = []): TRSMapChunk;
 begin
   case Self of
-    ERSChunk.AL_KHARID        : Result := [[50,51,53,48],  [0]      ];
-    ERSChunk.ARDOUGNE         : Result := [[40,52,41,51],  [0,3]    ];
-    ERSChunk.BLAST_FURNACE    : Result := [[29,78,30,77],  [0]      ];
-    ERSChunk.CRAFTING_GUILD   : Result := [[45,51,46,51],  [0]      ];
-    ERSChunk.EDGEVILLE        : Result := [[48,54,48,54],  [0]      ];
-    ERSChunk.FALADOR          : Result := [[45,53,47,51],  [0]      ];
-    ERSChunk.FOSSIL_ISLAND    : Result := [[56,61,60,57],  [0,1]    ];
-    ERSChunk.HOSIDIUS_KITCHEN : Result := [[25,56,26,56],  [0]      ];
-    ERSChunk.LUMBRIDGE        : Result := [[49,51,50,49],  [0,1,2]  ];
-    ERSChunk.LUNAR_ISLE       : Result := [[32,61,33,60],  [0]      ];
-    ERSChunk.MOTHERLOADE_MINE : Result := [[57,89,59,87],  [0,1]    ];
-    ERSChunk.MYTHS_GUILD      : Result := [[38,44,38,44],  [0,1,2]  ];
-    ERSChunk.PRIFDDINAS       : Result := [[50,95,51,94],  [0]      ];
-    ERSChunk.ROGUES_DEN       : Result := [[46,79,47,77],  [1]      ];
-    ERSChunk.RUINS_OF_UNKAH   : Result := [[48,44,49,44],  [0]      ];
-    ERSChunk.SEERS_VILLAGE    : Result := [[41,55,43,53],  [0,2]    ];
-    ERSChunk.TEMPOROSS_COVE   : Result := [[47,46,47,46],  [0]      ];
-    ERSChunk.VARROCK          : Result := [[49,54,50,53],  [0]      ];
-    ERSChunk.WINTERTODT       : Result := [[24,63,26,61],  [0]      ];
+    ERSChunk.AL_KHARID              : Result := Chunk(Box(50,51,53,48), 0);
+    ERSChunk.ARDOUGNE               : Result := Chunk(Box(40,52,41,51), [0,3]);
+    ERSChunk.BLAST_FURNACE          : Result := Chunk(Box(29,78,30,77), 0);
+    ERSChunk.CATACOMBS_OF_KOUREND   : Result := Chunk(Box(25,157,26,156), 0);
+    ERSChunk.CORSAIR_COVE_DUNGEON   : Result := Chunk(Box(29,142,32,140), 1);
+    ERSChunk.CRAFTING_GUILD         : Result := Chunk(Box(45,51,46,51), 0);
+    ERSChunk.EDGEVILLE              : Result := Chunk(Box(48,54,48,54), 0);
+    ERSChunk.FALADOR                : Result := Chunk(Box(45,53,47,51), 0);
+    ERSChunk.FOSSIL_ISLAND          : Result := Chunk(Box(56,61,60,57), [0,1]);
+    ERSChunk.HOSIDIUS_KITCHEN       : Result := Chunk(Box(25,56,26,56), 0);
+    ERSChunk.LUMBRIDGE              : Result := Chunk(Box(49,51,50,49), [0,1,2]);
+    ERSChunk.LUNAR_ISLE             : Result := Chunk(Box(32,61,33,60), 0);
+    ERSChunk.MOTHERLOADE_MINE       : Result := Chunk(Box(57,89,59,87), [0,1] );
+    ERSChunk.MYTHS_GUILD            : Result := Chunk(Box(38,44,38,44), [0,1,2]);
+    ERSChunk.PRIFDDINAS             : Result := Chunk(Box(50,95,51,94), 0);
+    ERSChunk.ROGUES_DEN             : Result := Chunk(Box(46,79,47,77), 1);
+    ERSChunk.RUINS_OF_UNKAH         : Result := Chunk(Box(48,44,49,44), 0);
+    ERSChunk.SEERS_VILLAGE          : Result := Chunk(Box(41,55,43,53), [0,2]);
+    ERSChunk.STRONGHOLD_SLAYER_CAVE : Result := Chunk(Box(37,153,38,152), 0);
+    ERSChunk.TEMPOROSS_COVE         : Result := Chunk(Box(47,46,47,46), 0);
+    ERSChunk.VARROCK                : Result := Chunk(Box(49,54,50,53), 0);
+    ERSChunk.WINTERTODT             : Result := Chunk(Box(24,63,26,61), 0);
   end;
+
+  if planes <> [] then Result.Planes := planes;
 end;
 
 function ERSChunk.Name(): String; constref;

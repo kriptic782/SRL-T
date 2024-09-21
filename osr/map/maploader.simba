@@ -43,6 +43,18 @@ Helper record to store chunk data with a name associated with.
     Planes: TIntegerArray;
   end;
 
+function Chunk(b: TBox; planes: TIntegerArray): TRSMapChunk;
+begin
+  Result.Chunk := b;
+  Result.Planes := planes;
+end;
+
+function Chunk(b: TBox; plane: Int32): TRSMapChunk; overload;
+begin
+  Result := Chunk(b, [plane]);
+end;
+
+type
 (*
 (ERSMap)=
 ## type ERSMap

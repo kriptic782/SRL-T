@@ -40,6 +40,15 @@ begin
   Result := Self.Find(value) > -1;
 end;
 
+function TRSItemArray.Intersection(other: TRSItemArray): TRSItemArray; constref;
+var
+  i: Int32;
+begin
+  for i := 0 to High(other) do
+    if Self.Find(other[i]) > -1 then
+      Result += other[i];
+end;
+
 type
   TRSItemFinderCustomFilter = procedure(constref image, templ: TMufasaBitmap) of object;
 
