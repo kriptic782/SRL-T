@@ -1,3 +1,12 @@
+## [7.9.8](https://github.com/Torwent/SRL-T/compare/v7.9.7...v7.9.8) (2024-09-21)
+
+
+### Bug Fixes
+
+* read notes ([c69f4e9](https://github.com/Torwent/SRL-T/commit/c69f4e9019a0086bb66691524debf7136a001563))
+
+
+
 ## [7.9.7](https://github.com/Torwent/SRL-T/compare/v7.9.6...v7.9.7) (2024-09-21)
 
 
@@ -32,15 +41,6 @@
 ### Bug Fixes
 
 * **TRSMap:** read notes ([5a88a80](https://github.com/Torwent/SRL-T/commit/5a88a804c7307c9693c581b9d5954a18055f7153))
-
-
-
-## [7.9.3](https://github.com/Torwent/SRL-T/compare/v7.9.2...v7.9.3) (2024-09-15)
-
-
-### Bug Fixes
-
-* **TRSMapObject:** WalkClick and WalkSelectOption are working properly now ([4b09535](https://github.com/Torwent/SRL-T/commit/4b09535ae5133cdc77ab4609740c80e822bbfb44))
 
 
 
