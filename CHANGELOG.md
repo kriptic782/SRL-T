@@ -1,3 +1,12 @@
+## [7.9.9](https://github.com/Torwent/SRL-T/compare/v7.9.8...v7.9.9) (2024-09-23)
+
+
+### Bug Fixes
+
+* some tweaks ([1d06926](https://github.com/Torwent/SRL-T/commit/1d06926455daa44dae659c16e2423388a26bf11b))
+
+
+
 ## [7.9.8](https://github.com/Torwent/SRL-T/compare/v7.9.7...v7.9.8) (2024-09-21)
 
 
@@ -32,15 +41,6 @@
 
 * make walker not insta quit upon not finding a path and wait 5 seconds before actually accepting the exception ([bfd9503](https://github.com/Torwent/SRL-T/commit/bfd9503c82b1fbea3a1d0caee41f31295205f493))
 * makes the rotate function not randomly geterate a mouse path that rotates like crazy (i.e. no more camera out of highest pitch angle) ([4ae5d44](https://github.com/Torwent/SRL-T/commit/4ae5d44e4a8ddcef7d138e13a5c99ad5b2c9357f))
-
-
-
-## [7.9.4](https://github.com/Torwent/SRL-T/compare/v7.9.3...v7.9.4) (2024-09-16)
-
-
-### Bug Fixes
-
-* **TRSMap:** read notes ([5a88a80](https://github.com/Torwent/SRL-T/commit/5a88a804c7307c9693c581b9d5954a18055f7153))
 
 
 
