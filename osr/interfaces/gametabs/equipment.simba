@@ -188,10 +188,8 @@ if Equipment.FindItem('Abyssal whip', bounds) then
 *)
 function TRSEquipment.FindItem(item: TRSItem; out bounds: TBox): Boolean;
 begin
-  if not Self.Open() then
-    Exit;
-
-  Result := Self.ItemInterface.Find([item], bounds);
+  if Self.Open() then
+    Result := Self.ItemInterface.Find([item], bounds);
 end;
 
 (*
@@ -215,8 +213,7 @@ end;
 *)
 function TRSEquipment.FindItems(items: TRSItemArray; out slots: TIntegerArray): Boolean;
 begin
-  if not Self.Open() then
-    Exit;
+  if not Self.Open() then Exit;
   slots := Self.ItemInterface.IndicesOf(items);
   Result := Length(slots) > 0;
 end;
@@ -237,9 +234,8 @@ WriteLn Equipment.ContainsItem('Abyssal whip');
 *)
 function TRSEquipment.ContainsItem(Item: TRSItem): Boolean;
 begin
-  if not Self.Open() then
-    Exit;
-  Result := Self.ItemInterface.Contains(item);
+  if Self.Open() then
+    Result := Self.ItemInterface.Contains(item);
 end;
 
 (*
@@ -256,9 +252,8 @@ WriteLn Equipment.ContainsAny(['Abyssal whip', 'Dragon dagger']);
 *)
 function TRSEquipment.ContainsAny(items: TRSItemArray): Boolean;
 begin
-  if not Self.Open() then
-    Exit;
-  Result := Self.ItemInterface.ContainsAny(items);
+  if Self.Open() then
+    Result := Self.ItemInterface.ContainsAny(items);
 end;
 
 (*
@@ -275,9 +270,8 @@ WriteLn Equipment.ContainsAll(['Abyssal whip', 'Dragon dagger']);
 *)
 function TRSEquipment.ContainsAll(items: TRSItemArray): Boolean;
 begin
-  if not Self.Open() then
-    Exit;
-  Result := Self.ItemInterface.ContainsAll(items);
+  if Self.Open() then
+    Result := Self.ItemInterface.ContainsAll(items);
 end;
 
 
@@ -299,16 +293,14 @@ if Equipment.Open() then
 *)
 function TRSEquipment.DiscoverAllEx(): array of TRSItemArray;
 begin
-  if not Self.Open() then
-    Exit;
-  Result := Self.ItemInterface.DiscoverAllEx();
+  if Self.Open() then
+    Result := Self.ItemInterface.DiscoverAllEx();
 end;
 
 function TRSEquipment.DiscoverAll(): TRSItemArray;
 begin
-  if not Self.Open() then
-    Exit;
-  Result := Self.ItemInterface.DiscoverAll();
+  if Self.Open() then
+    Result := Self.ItemInterface.DiscoverAll();
 end;
 
 (*
@@ -327,16 +319,14 @@ if Equipment.Open() then
 *)
 function TRSEquipment.Discover(slot: ERSEquipmentSlot): TRSItemArray;
 begin
-  if not Self.Open() then
-    Exit;
-  Result := Self.ItemInterface.Discover(Ord(slot));
+  if Self.Open() then
+    Result := Self.ItemInterface.Discover(Ord(slot));
 end;
 
 function TRSEquipment.Discover(slot: Int32): TRSItemArray; overload;
 begin
-  if not Self.Open() then
-    Exit;
-  Result := Self.ItemInterface.Discover(slot);
+  if Self.Open() then
+    Result := Self.ItemInterface.Discover(slot);
 end;
 
 
@@ -354,9 +344,7 @@ WriteLn Equipment.HoverItem('Abyssal whip');
 *)
 function TRSEquipment.HoverItem(item: TRSItem): Boolean;
 begin
-  if not Self.Open() then
-    Exit;
-  Result := Self.ItemInterface.MouseItem(item);
+  Result := Self.Open() and Self.ItemInterface.MouseItem(item);
 end;
 
 (*
@@ -376,9 +364,7 @@ WriteLn Equipment.ClickItem('Abyssal whip');
 *)
 function TRSEquipment.ClickItem(item: TRSItem; option: String = ''): Boolean;
 begin
-  if not Self.Open() then
-    Exit;
-  Result := Self.ItemInterface.InteractItem(item, option);
+  Result := Self.Open() and Self.ItemInterface.InteractItem(item, option);
 end;
 
 (*
@@ -399,9 +385,8 @@ WriteLn Equipment.CountItemStack('Broad bolts');
 *)
 function TRSEquipment.CountItemStack(item: TRSItem): Int32;
 begin
-  if not Self.IsOpen() then
-    Exit;
-  Result := Self.ItemInterface.CountStack(item);
+  if Self.IsOpen() then
+    Result := Self.ItemInterface.CountStack(item);
 end;
 
 (*
@@ -425,8 +410,7 @@ if Equipment.ClickSlot(ERSEquipmentSlot.RING, 'Rub') then
 *)
 function TRSEquipment.ClickSlot(slot: Int32; option: String = ''): Boolean;
 begin
-  if Self.Open() then
-    Result := Self.ItemInterface.InteractSlot(slot, option);
+  Result := Self.Open() and Self.ItemInterface.InteractSlot(slot, option);
 end;
 
 function TRSEquipment.ClickSlot(slot: ERSEquipmentSlot; option: String = ''): Boolean; overload;
@@ -473,9 +457,8 @@ WriteLn Equipment.CountGear();
 *)
 function TRSEquipment.CountGear(): Int32;
 begin
-  if not Self.Open() then
-    Exit;
-  Result := Self.ItemInterface.Count();
+  if Self.Open() then
+    Result := Self.ItemInterface.Count();
 end;
 
 

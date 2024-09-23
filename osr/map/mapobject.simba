@@ -731,7 +731,6 @@ begin
   Result := Result.Merge(json.getJSONArray('coordinates'), json.getJSONArray('colors'));
   Result.Finder.ColorClusters := [];
 
-
   Result.DotType := ERSMinimapDot.NPC;
   Result.Level := json.getInt('level');
   Result.Filter.Minimap := json.getBoolean('minimapdot');
@@ -839,7 +838,7 @@ begin
   end;
 end;
 
-procedure TRSNPCV2.Filter(polygon: TPointArray; inside: Boolean);
+procedure TRSNPCV2.AddFilter(polygon: TPointArray; inside: Boolean);
 var
   i: Int32;
 begin
@@ -853,7 +852,7 @@ begin
     end;
 end;
 
-procedure TRSNPCV2.Filter(circle: TCircle; inside: Boolean); overload;
+procedure TRSNPCV2.AddFilter(circle: TCircle; inside: Boolean); overload;
 var
   i: Int32;
 begin
