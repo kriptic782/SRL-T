@@ -255,12 +255,13 @@ begin
   if Self.Filter.UpText then
   begin
     strArray += Self.Name;
-    Self.Walker^.TargetUpText := strArray;
+    if Self.Filter.Walker then
+      Self.Walker^.TargetUpText := strArray;
   end;
 
   upText := MainScreen.GetUpText();
 
-  if upText.ContainsAny(['Use', '>']) and not Self.Walker^.TargetUpText.ContainsAny(['Use', '>']) then
+  if upText.ContainsAny(['Use', '>']) and not strArray.ContainsAny(['Use', '>']) then
   begin
     ChooseOption.Select('Cancel');
     Exit;
@@ -322,13 +323,16 @@ This is what's responsible for deciding if we click a target we are hovering or 
 *)
 function TRSMapObject._ClickHelper(leftClick: Boolean): Boolean;
 begin
-  Self.Walker^.TargetUpText := [];
-  Self.Walker^.ActionUpText := [];
-
-  if Self.Walker^.RedClicked then
+  if Self.Filter.Walker then
   begin
-    Self.Walker^.RedClicked := False;
-    Exit(True);
+    Self.Walker^.TargetUpText := [];
+    Self.Walker^.ActionUpText := [];
+
+    if Self.Walker^.RedClicked then
+    begin
+      Self.Walker^.RedClicked := False;
+      Exit(True);
+    end;
   end;
 
   if ChooseOption.IsOpen() then
@@ -1104,8 +1108,7 @@ var
   angle: Double;
 begin
   Result := Self._UpTextCheck(shouldExit);
-  if shouldExit then
-    Exit;
+  if shouldExit then Exit;
 
   for attempt := 0 to attempts do
   begin
@@ -1122,12 +1125,10 @@ begin
         Mouse.OnMovingEx := @Self._UpdateTarget;
       Mouse.Move(tpa[Random(0, High(tpa))]);
 
-      if not Self.Filter.UpText then
-        Exit(True);
+      if not Self.Filter.UpText then Exit(True);
     end;
 
-    if MainScreen.IsUpText(Self.Name) then
-      Exit(True);
+    if MainScreen.IsUpText(Self.Name) then Exit(True);
 
     //will rotate the screen for the last attempt if hasn't hovered properly yet
     if attempt = (attempts - 1) then
