@@ -1,3 +1,12 @@
+## [7.9.11](https://github.com/Torwent/SRL-T/compare/v7.9.10...v7.9.11) (2024-09-24)
+
+
+### Bug Fixes
+
+* **itemfinder:** better hash-generator ([2dd223b](https://github.com/Torwent/SRL-T/commit/2dd223b21e6857291927cecec5c9cc7282653c71))
+
+
+
 ## [7.9.10](https://github.com/Torwent/SRL-T/compare/v7.9.9...v7.9.10) (2024-09-23)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([d84ed79](https://github.com/Torwent/SRL-T/commit/d84ed7939af07a7a2b959c5c52b876702f69597a))
-
-
-
-## [7.9.6](https://github.com/Torwent/SRL-T/compare/v7.9.5...v7.9.6) (2024-09-19)
-
-
-### Bug Fixes
-
-* read notes ([c128a45](https://github.com/Torwent/SRL-T/commit/c128a4573c2105c3ee36f871260265946b480ce8))
 
 
 
