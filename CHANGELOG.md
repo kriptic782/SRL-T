@@ -1,3 +1,12 @@
+## [7.9.12](https://github.com/Torwent/SRL-T/compare/v7.9.11...v7.9.12) (2024-09-25)
+
+
+### Bug Fixes
+
+* **TRSNPCV2:** several small fixes ([87c23d8](https://github.com/Torwent/SRL-T/commit/87c23d86f96fe926a22bb4acd21567d4eda32ce3))
+
+
+
 ## [7.9.11](https://github.com/Torwent/SRL-T/compare/v7.9.10...v7.9.11) (2024-09-24)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([c69f4e9](https://github.com/Torwent/SRL-T/commit/c69f4e9019a0086bb66691524debf7136a001563))
-
-
-
-## [7.9.7](https://github.com/Torwent/SRL-T/compare/v7.9.6...v7.9.7) (2024-09-21)
-
-
-### Bug Fixes
-
-* read notes ([d84ed79](https://github.com/Torwent/SRL-T/commit/d84ed7939af07a7a2b959c5c52b876702f69597a))
 
 
 
