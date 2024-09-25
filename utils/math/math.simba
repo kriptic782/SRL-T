@@ -16,10 +16,25 @@ type
   TRectArray = array of TRectangle;
 
   TCircle = record
-    X,Y:Int32;
-    Radius: Int32;
+    X, Y, Radius: Int32;
   end;
   TCircleArray = array of TCircle;
+
+
+function Rectangle(top, right, btm, left: TPoint): TRectangle;
+begin
+  Result := [top, right, btm, left];
+end;
+
+function Circle(x, y, radius: Int32): TCircle;
+begin
+  Result := [x, y, radius];
+end;
+
+function Circle(center: TPoint; radius: Int32): TCircle; overload;
+begin
+  Result := [center.X, center.Y, radius];
+end;
 
 (*
 ## SRL.Modulo

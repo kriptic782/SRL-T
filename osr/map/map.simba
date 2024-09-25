@@ -768,6 +768,7 @@ type
     GetLocal: function (tpa: TPointArray; offset: TPoint = [0,0]): TPointArray of object;
     GetGlobal: function (p: TPoint; offset: TPoint = [0,0]): TPoint of object;
     DebugATPA: T2DPointArray;
+    DebugNPC: TRSNPCV2;
   end;
 
 procedure TMapDebugger.Free();
@@ -882,7 +883,7 @@ end;
 
 procedure TMapDebugger.PaintArea({$H-}sender: TObject; canvas: TCanvas; {$H+}r: TRect);
 var
-  i, j: Int32;
+  i, j, radius, c: Int32;
   tpa: TPointArray;
 begin
   if Self.ShowWalkableSpace then
@@ -903,6 +904,43 @@ begin
       tpa := TPAGrow([Self.DebugATPA[i,j]], 1) + TPAFromCircle(Self.DebugATPA[i,j].X, Self.DebugATPA[i,j].Y, 4);
       Self.ImageBox.getOverlay().getCanvas().SetPixels(tpa, DEBUG_COLORS[i mod Length(DEBUG_COLORS)]);
     end;
+
+  if Self.DebugNPC <> [] then
+  begin
+    for i := 0 to High(Self.DebugNPC.Coordinates) do
+    begin
+      radius := Round(4/2*Sqrt(2));
+      with Self.DebugNPC.Coordinates[i] do
+      begin
+        tpa += LineTo(Point(X - radius, Y - radius));
+        tpa += LineTo(Point(X + radius, Y + radius));
+        tpa += LineTo(Point(X + radius, Y - radius));
+        tpa += LineTo(Point(X - radius, Y + radius));
+      end;
+
+      Self.ImageBox.getOverlay().getCanvas().SetPixels(tpa, $FFFFFF);
+    end;
+
+    for i := 0 to High(Self.DebugNPC.DotFilters) do
+    begin
+      if Self.DebugNPC.DotFilters[i].Inside then
+        c := $00FF00
+      else
+        c := $0000FF;
+
+      if Self.DebugNPC.DotFilters[i].Bounds <> [] then
+      begin
+        tpa := Self.DebugNPC.DotFilters[i].Bounds.Connect();
+        Self.ImageBox.getOverlay().getCanvas().SetPixels(tpa, c);
+      end;
+
+      if Self.DebugNPC.DotFilters[i].Circle <> [] then
+      begin
+        tpa := Self.DebugNPC.DotFilters[i].Circle.ToTPA();
+        Self.ImageBox.getOverlay().getCanvas().SetPixels(tpa, c);
+      end;
+    end;
+  end;
 end;
 
 procedure TMapDebugger.MouseMove({$H-}sender: TObject; shift: TShiftState;{$H+} x, y: Integer);
@@ -1033,11 +1071,11 @@ begin
   end;
 end;
 
-procedure TMapDebugger.Debug(map: ^TRSMap; atpa: T2DPointArray);
+procedure TMapDebugger.Debug(map: ^TRSMap; atpa: T2DPointArray; npc: TRSNPCV2);
 var
   white: TPointArray;
   p: TPoint;
-  x, y, i: Int32;
+  x, y, i, j: Int32;
 begin
   Self.Images += map^.Loader.Map.Copy();
   Self.Images += map^.Loader.Heightmap.Copy();
@@ -1068,6 +1106,27 @@ begin
   SetLength(Self.DebugATPA, Length(atpa));
   for i := 0 to High(atpa) do
     Self.DebugATPA[i] := Self.GetLocal(atpa[i]);
+
+  if npc <> [] then
+  begin
+    Self.DebugNPC := npc;
+    for i := 0 to High(npc.Coordinates) do
+      Self.DebugNPC.Coordinates := Self.GetLocal(npc.Coordinates);
+
+    for i := 0 to High(npc.DotFilters) do
+    begin
+      if npc.DotFilters[i].Bounds <> [] then
+        for j := 0 to High(npc.DotFilters[i].Bounds) do
+          Self.DebugNPC.DotFilters[i].Bounds := Self.GetLocal(npc.DotFilters[i].Bounds);
+
+      if npc.DotFilters[i].Circle <> [] then
+      begin
+        p := Self.GetLocal([Point(npc.DotFilters[i].Circle.X, npc.DotFilters[i].Circle.Y)])[0];
+        Self.DebugNPC.DotFilters[i].Circle.X := p.X;
+        Self.DebugNPC.DotFilters[i].Circle.Y := p.Y;
+      end;
+    end;
+  end;
 
   Sync(@Self.Run);
 end;
@@ -1272,7 +1331,14 @@ procedure TRSMap.Debug(debugPoints: T2DPointArray = []);
 var
   debugger: TMapDebugger;
 begin
-  debugger.Debug(@Self, debugPoints);
+  debugger.Debug(@Self, debugPoints, []);
+end;
+
+procedure TRSMap.Debug(npc: TRSNPCV2); overload;
+var
+  debugger: TMapDebugger;
+begin
+  debugger.Debug(@Self, [], npc);
 end;
 
 procedure TRSMap.DebugObjects(map: ERSMap = ERSMap.NORMAL; rotations: TIntegerArray = [0,1,2,3]; useCorner: Boolean = False);
@@ -1363,6 +1429,8 @@ begin
   bmp.Debug();
   bmp.Free();
 end;
+
+
 
 var
 (*

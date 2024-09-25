@@ -107,7 +107,7 @@ begin
     begin
       x := getInt(0) * 0.8;
       y := getInt(1) * 0.8;
-      Result := Self.Size <> [x, y, getInt(2) / 40];
+      Result := Self.Size = [x, y, getInt(2) / 40];
     end;
 end;
 
@@ -691,12 +691,17 @@ var
   i, c, t: Int32;
   h, s: Extended;
   colors: TIntegerArray;
+  p: TPoint;
 begin
   Result := Self;
 
   for i := 0 to coordinatesJSON.High() do
+  begin
     with coordinatesJSON.getJSONArray(i) do
-      Result.Coordinates += [getInt(0), getInt(1)];
+      p := Point(getInt(0), getInt(1));
+    Result.Coordinates += p;
+    Result.DotFilters.SetupCircle(Circle(p, 30), True);
+  end;
 
   with colorsJSON do
     for i := 0 to High() do
@@ -717,9 +722,6 @@ begin
 end;
 
 function TRSNPCV2.Setup(pwalker: PRSWalkerV2; json: TJSONObject): TRSNPCV2; static;
-var
-  i: Int32;
-  circle: TCircle;
 begin
   Result.Walker := pwalker;
   Result.Filter := [True, True, True, True];
@@ -732,19 +734,13 @@ begin
   Result.Actions := TRSMapObject.GetActions(json.getJSONArray('actions'));
   Result.Size := TRSMapObject.GetSize(json.getJSONArray('size'));
 
+  SetLength(Result.DotFilters, 0);
   Result := Result.Merge(json.getJSONArray('coordinates'), json.getJSONArray('colors'));
   Result.Finder.ColorClusters := [];
 
   Result.DotType := ERSMinimapDot.NPC;
   Result.Level := json.getInt('level');
   Result.Filter.Minimap := json.getBoolean('minimapdot');
-  SetLength(Result.DotFilters, 0);
-
-  for i := 0 to High(Result.Coordinates) do
-  begin
-    circle := [Result.Coordinates[i].X, Result.Coordinates[i].Y, 30];
-    Result.DotFilters.SetupCircle(circle, True);
-  end;
 
   Result.MapObjectType := ERSMapObjectType.NPC;
 end;
@@ -869,7 +865,6 @@ begin
       Delete(Self.DotFilters, i, 1);
     end;
 end;
-
 
 
 
@@ -1321,7 +1316,7 @@ begin
   begin
     path := Self.Walker^.WebGraph^.FindObjectPath(me, p);
     if path = [] then
-      TerminateScript(SRL.TimeStamp() + ':[MapObject]:[Fatal]: Can''t path to object: ' + Self.Name);
+      TerminateScript(SRL.TimeStamp() + ':[MapObject]:[Fatal]: Can''t path to "' + Self.Name + '" from ' + me.ToString() + ' to ' + p.ToString());
     same := True;
   end;
 

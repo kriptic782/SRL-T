@@ -132,12 +132,12 @@ end;
 
 
 type
-  TRSMapJSONParser = record
+  TRSObjectJSONParser = record
     Data: TJSONArray;
     Walker: PRSWalkerV2;
   end;
 
-procedure TRSMapJSONParser.Setup(json: TJSONArray; walker: PRSWalkerV2);
+procedure TRSObjectJSONParser.Setup(json: TJSONArray; walker: PRSWalkerV2);
 begin
   if Self.Data = nil then
     Self.Data := json
@@ -148,7 +148,7 @@ begin
 end;
 
 
-function TRSMapJSONParser.Get(obj: Variant): TRSObjectV2;
+function TRSObjectJSONParser.Get(obj: Variant): TRSObjectV2;
 var
   i: Int32;
   name: String;
@@ -190,7 +190,7 @@ begin
     TerminateScript('Object ' + ToStr(obj) + ' doesn''t exist on the loaded maps.');
 end;
 
-function TRSMapJSONParser.GetByAction(action: String): TRSObjectV2;
+function TRSObjectJSONParser.GetByAction(action: String): TRSObjectV2;
 var
   i, j: Int32;
 begin
@@ -205,7 +205,7 @@ begin
     end;
 end;
 
-function TRSMapJSONParser.GetByCategory(category: Int32): TRSObjectV2;
+function TRSObjectJSONParser.GetByCategory(category: Int32): TRSObjectV2;
 var
   i: Int32;
 begin
@@ -215,7 +215,7 @@ begin
 end;
 
 
-function TRSMapJSONParser.GetAll(name: String): TRSObjectV2Array;
+function TRSObjectJSONParser.GetAll(name: String): TRSObjectV2Array;
 var
   i: Int32;
 begin
@@ -225,7 +225,7 @@ begin
       Result += TRSObjectV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
 end;
 
-function TRSMapJSONParser.GetAll(names: TStringArray): TRSObjectV2Array; overload;
+function TRSObjectJSONParser.GetAll(names: TStringArray): TRSObjectV2Array; overload;
 var
   name: String;
 begin
@@ -233,7 +233,7 @@ begin
     Result += Self.GetAll(name);
 end;
 
-function TRSMapJSONParser.GetAllByAction(action: String): TRSObjectV2Array;
+function TRSObjectJSONParser.GetAllByAction(action: String): TRSObjectV2Array;
 var
   i, j: Int32;
 begin
@@ -252,7 +252,7 @@ begin
     Result.Reduce();
 end;
 
-function TRSMapJSONParser.GetAllByCoordinate(p: TPoint; dist: Int32): TRSObjectV2Array;
+function TRSObjectJSONParser.GetAllByCoordinate(p: TPoint; dist: Int32): TRSObjectV2Array;
 var
   i, j: Int32;
   coordJSON: TJSONArray;
@@ -273,7 +273,7 @@ begin
     Result.Reduce();
 end;
 
-function TRSMapJSONParser.GetNearest(names: TStringArray; point: TPoint; actions: TStringArray = []; maxDist: Integer = $FFFFFF): TRSObjectV2;
+function TRSObjectJSONParser.GetNearest(names: TStringArray; point: TPoint; actions: TStringArray = []; maxDist: Integer = $FFFFFF): TRSObjectV2;
 var
   obj: TRSObjectV2;
   objArr: TRSObjectV2Array;
@@ -311,12 +311,12 @@ begin
   Result.Rotations := [angle];
 end;
 
-function TRSMapJSONParser.GetNearest(name: String; point: TPoint; actions: TStringArray = []; maxDist: Integer = $FFFFFF): TRSObjectV2; overload;
+function TRSObjectJSONParser.GetNearest(name: String; point: TPoint; actions: TStringArray = []; maxDist: Integer = $FFFFFF): TRSObjectV2; overload;
 begin
   Result := Self.GetNearest([name], point, actions, maxDist);
 end;
 
-procedure TRSMapJSONParser.Print();
+procedure TRSObjectJSONParser.Print();
 var
   i, j: Int32;
   actions: TStringArray;
@@ -343,12 +343,12 @@ end;
 
 
 type
-  TRSMapNPCs = record
+  TRSNPCJSONParser = record
     Data: TJSONArray;
     Walker: PRSWalkerV2;
   end;
 
-procedure TRSMapNPCs.Setup(json: TJSONArray; walker: PRSWalkerV2);
+procedure TRSNPCJSONParser.Setup(json: TJSONArray; walker: PRSWalkerV2);
 begin
   if Self.Data = nil then
     Self.Data := json
@@ -359,7 +359,7 @@ begin
 end;
 
 
-function TRSMapNPCs.Get(npc: Variant): TRSNPCV2;
+function TRSNPCJSONParser.Get(npc: Variant): TRSNPCV2;
 var
   i: Int32;
   name: String;
@@ -401,7 +401,7 @@ begin
     TerminateScript('NPC ' + name + ' doesn''t exist on the loaded maps.');
 end;
 
-function TRSMapNPCs.GetByAction(action: String): TRSNPCV2;
+function TRSNPCJSONParser.GetByAction(action: String): TRSNPCV2;
 var
   i, j: Int32;
 begin
@@ -414,7 +414,7 @@ begin
   TerminateScript('NPCs with action ' + action + ' don''t exist on the loaded maps.');
 end;
 
-function TRSMapNPCs.GetAll(name: String): TRSNPCV2Array;
+function TRSNPCJSONParser.GetAll(name: String): TRSNPCV2Array;
 var
   i: Int32;
 begin
@@ -424,7 +424,7 @@ begin
       Result += TRSNPCV2.Setup(Self.Walker, Self.Data.getJSONObject(i));
 end;
 
-function TRSMapNPCs.GetAll(names: TStringArray): TRSNPCV2Array; overload;
+function TRSNPCJSONParser.GetAll(names: TStringArray): TRSNPCV2Array; overload;
 var
   name: String;
 begin
@@ -432,7 +432,7 @@ begin
     Result += Self.GetAll(name);
 end;
 
-function TRSMapNPCs.GetAllByAction(action: String): TRSNPCV2Array;
+function TRSNPCJSONParser.GetAllByAction(action: String): TRSNPCV2Array;
 var
   i, j: Int32;
 begin
@@ -446,7 +446,7 @@ begin
     Result.Reduce();
 end;
 
-function TRSMapNPCs.GetAllByCoordinate(p: TPoint; dist: Int32): TRSNPCV2Array;
+function TRSNPCJSONParser.GetAllByCoordinate(p: TPoint; dist: Int32): TRSNPCV2Array;
 var
   i, j: Int32;
   coordJSON: TJSONArray;
@@ -467,7 +467,7 @@ begin
     Result.Reduce();
 end;
 
-function TRSMapNPCs.GetNearest(names: TStringArray; point:TPoint): TRSNPCV2;
+function TRSNPCJSONParser.GetNearest(names: TStringArray; point:TPoint): TRSNPCV2;
 var
   NPC: TRSNPCV2;
   npcArr: TRSNPCV2Array;
@@ -490,13 +490,13 @@ begin
   Result.Coordinates := [coordinate];
 end;
 
-function TRSMapNPCs.GetNearest(name: String; point:TPoint): TRSNPCV2; overload;
+function TRSNPCJSONParser.GetNearest(name: String; point:TPoint): TRSNPCV2; overload;
 begin
   Result := Self.GetNearest([name], point);
 end;
 
 
-procedure TRSMapNPCs.Print();
+procedure TRSNPCJSONParser.Print();
 var
   i, j: Int32;
   actions: TStringArray;
@@ -522,8 +522,8 @@ end;
 
 
 var
-  Objects: TRSMapJSONParser;
-  NPCs: TRSMapNPCs;
+  Objects: TRSObjectJSONParser;
+  NPCs: TRSNPCJSONParser;
 
 type
   TRSBanks = record
