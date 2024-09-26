@@ -15,7 +15,7 @@ type
     ID: Int32;
     Name: String;
     Category: Int32;
-    Actions: TStringArray;
+    UpText, Actions: TStringArray;
 
     Size: Vector3;
     Coordinates: TPointArray;
@@ -244,31 +244,25 @@ You probably don't need to use this directly.
 *)
 function TRSMapObject._UpTextCheck(out shouldExit: Boolean): Boolean;
 var
-  strArray: TStringArray;
-  upText: String;
+  text: String;
 begin
   shouldExit := True;
 
   if (MainScreen.Mode = ERSClientMode.FIXED) and RSInterface.IsOpen() then
     Exit;
 
-  if Self.Filter.UpText then
-  begin
-    strArray += Self.Name;
-    if Self.Filter.Walker then
-      Self.Walker^.TargetUpText := strArray;
-  end;
+  if Self.Filter.UpText and Self.Filter.Walker then
+    Self.Walker^.TargetUpText := Copy(Self.UpText);
 
-  upText := MainScreen.GetUpText();
+  text := MainScreen.GetUpText();
 
-  if upText.ContainsAny(['Use', '>']) and not strArray.ContainsAny(['Use', '>']) then
+  if text.ContainsAny(['Use', '>']) and not Self.UpText.ContainsAny(['Use', '>']) then
   begin
     ChooseOption.Select('Cancel');
     Exit;
   end;
 
-  if Self.Filter.UpText and (Self.Name in upText) then
-    Exit(True);
+  if Self.Filter.UpText and upText.ContainsAny(Self.UpText) then Exit(True);
 
   shouldExit := False;
 end;
@@ -283,29 +277,24 @@ You probably don't need to use this directly.
 *)
 function TRSMapObject._WalkUpTextCheck(out shouldExit: Boolean): Boolean;
 var
-  upText: String;
-  strArray: TStringArray;
+  text: String;
 begin
   shouldExit := True;
 
   if (MainScreen.Mode = ERSClientMode.FIXED) and RSInterface.IsOpen() then
     Exit;
 
-  if Self.Filter.UpText then
-  begin
-    strArray += Self.Name;
-    Self.Walker^.TargetUpText := strArray;
-  end;
+  if Self.Filter.UpText then Self.Walker^.TargetUpText := Copy(Self.UpText);
 
-  upText := MainScreen.GetUpText();
+  text := MainScreen.GetUpText();
 
-  if upText.ContainsAny(['Use', '>']) and not Self.Walker^.TargetUpText.ContainsAny(['Use', '>']) then
+  if text.ContainsAny(['Use', '>']) and not Self.Walker^.TargetUpText.ContainsAny(['Use', '>']) then
   begin
     ChooseOption.Select('Cancel');
     Exit;
   end;
 
-  if Self.Walker^.RedClicked or (Self.Filter.UpText and (Self.Name in upText)) then
+  if Self.Walker^.RedClicked or (Self.Filter.UpText and text.ContainsAny(Self.UpText)) then
     Exit(True);
 
   shouldExit := False;
@@ -337,7 +326,7 @@ begin
 
   if ChooseOption.IsOpen() then
   begin
-    if Self.Filter.UpText and ChooseOption.Select(Self.Name) then
+    if Self.Filter.UpText and ChooseOption.Select(Self.UpText) then
       Exit(True);
     ChooseOption.Close();
     Exit;
@@ -346,7 +335,7 @@ begin
   if leftClick then Mouse.Click(MOUSE_LEFT);
   if MainScreen.DidRedClick() then Exit(True);
 
-  Result := not leftClick and Self.Filter.UpText and ChooseOption.Select(Self.Name);
+  Result := not leftClick and Self.Filter.UpText and ChooseOption.Select(Self.UpText);
 end;
 
 (*
@@ -490,6 +479,8 @@ begin
   Result.Name := json.getString('name');
   Result.Category := json.getInt('category');
   Result.Offset := [0,0];
+
+  Result.UpText := [json.getString('name')];
   Result.Actions := TRSMapObject.GetActions(json.getJSONArray('actions'));
   Result.Size := TRSMapObject.GetSize(json.getJSONArray('size'));
 
@@ -731,6 +722,7 @@ begin
   Result.Category := json.getInt('category');
   Result.Offset := [0,0]; //We don't need standard offset anymore, now ppl can use this to acually offset an NPC that is offcenter
 
+  Result.UpText := [json.getString('name')];
   Result.Actions := TRSMapObject.GetActions(json.getJSONArray('actions'));
   Result.Size := TRSMapObject.GetSize(json.getJSONArray('size'));
 
@@ -1179,7 +1171,7 @@ begin
         Exit(True);
     end;
 
-    if MainScreen.IsUpText(Self.Name) then
+    if MainScreen.IsUpText(Self.UpText) then
       Exit(True);
 
     me := Self.Walker^.Position();
@@ -1256,7 +1248,7 @@ function TRSMapObject.Hover(attempts: Int32 = 2): Boolean;
 begin
   if ChooseOption.IsOpen() then
   begin
-    if Self.Filter.UpText and ChooseOption.HasOption(Self.Name) then
+    if Self.Filter.UpText and ChooseOption.HasOption(Self.UpText) then
       Exit(True);
     ChooseOption.Close();
   end;
@@ -1295,7 +1287,7 @@ var
 begin
   if ChooseOption.IsOpen() then
   begin
-    if Self.Filter.UpText and ChooseOption.HasOption(Self.Name) then
+    if Self.Filter.UpText and ChooseOption.HasOption(Self.UpText) then
       Exit(True);
     ChooseOption.Close();
   end;
@@ -1305,7 +1297,7 @@ begin
   if Self.Walker = nil then
     TerminateScript(SRL.TimeStamp() + ':[TRSMapObject]:[Fatal]: "' + Self.Name + '" has no walker pointer set.');
 
-  if Self.Filter.UpText then Self.Walker^.TargetUpText := [Self.Name];
+  if Self.Filter.UpText then Self.Walker^.TargetUpText := Copy(Self.UpText);
 
   me :=  Self.Walker^.Position();
 
@@ -1388,7 +1380,10 @@ WriteLn RSObjects.GEBank.WalkClick();
 *)
 function TRSMapObject.WalkClick(leftClick: Boolean = True; attempts: Int32 = 2): Boolean;
 begin
-  Self.Walker^.TargetUpText := [Self.Name];
+  if Self.Filter.Walker and (Self.Walker = nil) then
+    TerminateScript(SRL.TimeStamp() + ':[TRSMapObject]:[Fatal]: ' + Self.Name + ' has no walker pointer set.');
+
+  Self.Walker^.TargetUpText := Copy(Self.UpText);
   Result := Self.WalkHover(attempts) and Self._ClickHelper(leftClick);
   Self.Walker^.TargetUpText := [];
 end;
@@ -1408,7 +1403,10 @@ WriteLn RSObjects.GEBank.WalkSelectOption(['Collect']);
 *)
 function TRSMapObject.WalkSelectOption(action: TStringArray; attempts: Int32 = 2): Boolean;
 begin
-  Self.Walker^.TargetUpText := [Self.Name];
+  if Self.Filter.Walker and (Self.Walker = nil) then
+    TerminateScript(SRL.TimeStamp() + ':[TRSMapObject]:[Fatal]: ' + Self.Name + ' has no walker pointer set.');
+
+  Self.Walker^.TargetUpText := Copy(Self.UpText);
   Self.Walker^.ActionUpText := action;
   Result := Self.WalkHover(attempts) and Self._SelectHelper(action);
   Self.Walker^.TargetUpText := [];
@@ -1504,15 +1502,22 @@ begin
   Self.Coordinates := coordinates;
 end;
 
-procedure TRSMapObject.SetupUpText(upText: String);
+procedure TRSMapObject.SetupUpText(upText: TStringArray);
 begin
   Self._Setup();
 
-  Self.Name := upText;
+  if upText <> [] then
+    Self.Name := upText[0];
+  Self.UpText := upText;
 
   Self.Finder.ClusterDistance := 3;
   Self.Finder.Erode := 2;
   Self.Finder.Grow := 4;
+end;
+
+procedure TRSMapObject.SetupUpText(upText: String); overload;
+begin
+  Self.SetupUpText([upText]);
 end;
 
 
@@ -1585,16 +1590,23 @@ begin
   Result.Setup(radii, 1, height, coordinates);
 end;
 
-procedure TRSNPCV2.SetupUpText(upText: String); override;
+procedure TRSNPCV2.SetupUpText(upText: TStringArray); override;
 begin
   Self._Setup();
   Self.Filter.Minimap := True;
 
-  Self.Name := upText;
+  if upText <> [] then
+    Self.Name := upText[0];
+  Self.UpText := upText;
 
   Self.Finder.ClusterDistance := 3;
   Self.Finder.Erode := 2;
   Self.Finder.Grow := 4;
   Self.DotType := ERSMinimapDot.NPC;
+end;
+
+procedure TRSNPCV2.SetupUpText(upText: String); override;
+begin
+  Self.SetupUpText([upText]);
 end;
 
