@@ -1,3 +1,12 @@
+## [7.9.14](https://github.com/Torwent/SRL-T/compare/v7.9.13...v7.9.14) (2024-09-26)
+
+
+### Bug Fixes
+
+* **TRSMapObjects:** added the ability for setting up multiple strings ([7323759](https://github.com/Torwent/SRL-T/commit/7323759e83f641d9de8b326a423ba8a827e521aa))
+
+
+
 ## [7.9.13](https://github.com/Torwent/SRL-T/compare/v7.9.12...v7.9.13) (2024-09-26)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMapObject:** fixes for walkerless objects ([b27f6e6](https://github.com/Torwent/SRL-T/commit/b27f6e6f0a118f5fc1f388a4b57184570476a1e7))
-
-
-
-## [7.9.9](https://github.com/Torwent/SRL-T/compare/v7.9.8...v7.9.9) (2024-09-23)
-
-
-### Bug Fixes
-
-* some tweaks ([1d06926](https://github.com/Torwent/SRL-T/commit/1d06926455daa44dae659c16e2423388a26bf11b))
 
 
 
