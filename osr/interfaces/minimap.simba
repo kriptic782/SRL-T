@@ -1630,6 +1630,7 @@ function TRSMinimap.GetDots(dots: ERSMinimapDots; box: TBox): TPointArray;
 var
   bmp: TMufasaBitmap;
 begin
+  box.LimitTo(Self.Bounds());
   bmp.FromClient(box);
 
   Result := Self.GetDotsBitmap(bmp, dots);
