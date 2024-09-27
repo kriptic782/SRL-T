@@ -262,7 +262,7 @@ begin
     Exit;
   end;
 
-  if Self.Filter.UpText and Text.ContainsAny(Self.UpText) then Exit(True);
+  if Self.Filter.UpText and text.ContainsAny(Self.UpText) then Exit(True);
 
   shouldExit := False;
 end;
@@ -1522,24 +1522,6 @@ begin
   Self.Coordinates := coordinates;
 end;
 
-procedure TRSMapObject.SetupUpText(upText: TStringArray);
-begin
-  Self._Setup();
-
-  if upText <> [] then
-    Self.Name := upText[0];
-  Self.UpText := upText;
-
-  Self.Finder.ClusterDistance := 3;
-  Self.Finder.Erode := 2;
-  Self.Finder.Grow := 4;
-end;
-
-procedure TRSMapObject.SetupUpText(upText: String); overload;
-begin
-  Self.SetupUpText([upText]);
-end;
-
 
 procedure TRSObjectV2.SetupEx(size: Vector3; coordinates: TPointArray);
 begin
@@ -1556,6 +1538,24 @@ end;
 function TRSObjectV2.Setup(height: Double; coordinates: TPointArray): TRSObjectV2; static; overload;
 begin
   Result := TRSObjectV2.Setup(1, height, coordinates);
+end;
+
+procedure TRSObjectV2.SetupUpText(upText: TStringArray);
+begin
+  Self._Setup();
+
+  if upText <> [] then
+    Self.Name := upText[0];
+  Self.UpText := upText;
+
+  Self.Finder.ClusterDistance := 3;
+  Self.Finder.Erode := 2;
+  Self.Finder.Grow := 4;
+end;
+
+procedure TRSObjectV2.SetupUpText(upText: String); overload;
+begin
+  Self.SetupUpText([upText]);
 end;
 
 
@@ -1610,7 +1610,7 @@ begin
   Result.Setup(radii, 1, height, coordinates);
 end;
 
-procedure TRSNPCV2.SetupUpText(upText: TStringArray); override;
+procedure TRSNPCV2.SetupUpText(upText: TStringArray);
 begin
   Self._Setup();
   Self.Filter.Minimap := True;
@@ -1625,7 +1625,7 @@ begin
   Self.DotType := ERSMinimapDot.NPC;
 end;
 
-procedure TRSNPCV2.SetupUpText(upText: String); override;
+procedure TRSNPCV2.SetupUpText(upText: String); overload;
 begin
   Self.SetupUpText([upText]);
 end;
