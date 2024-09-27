@@ -1,3 +1,12 @@
+## [7.9.18](https://github.com/Torwent/SRL-T/compare/v7.9.17...v7.9.18) (2024-09-27)
+
+
+### Bug Fixes
+
+* **RSTranslator:** converting RSCoordinates to Global coordinates bug ([78fa805](https://github.com/Torwent/SRL-T/commit/78fa80560812189cbb2941ed6ef6184581c0c485))
+
+
+
 ## [7.9.17](https://github.com/Torwent/SRL-T/compare/v7.9.16...v7.9.17) (2024-09-27)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMapObjects:** added the ability for setting up multiple strings ([7323759](https://github.com/Torwent/SRL-T/commit/7323759e83f641d9de8b326a423ba8a827e521aa))
-
-
-
-## [7.9.13](https://github.com/Torwent/SRL-T/compare/v7.9.12...v7.9.13) (2024-09-26)
-
-
-### Bug Fixes
-
-* read notes ([687d7fa](https://github.com/Torwent/SRL-T/commit/687d7fa36a9b361ddb518770a1353d95c815c45c))
 
 
 
