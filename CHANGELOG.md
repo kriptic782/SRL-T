@@ -1,3 +1,12 @@
+## [7.9.15](https://github.com/Torwent/SRL-T/compare/v7.9.14...v7.9.15) (2024-09-27)
+
+
+### Bug Fixes
+
+* read notes ([26320fc](https://github.com/Torwent/SRL-T/commit/26320fceafe4559165e864a6e78385de4739fb66))
+
+
+
 ## [7.9.14](https://github.com/Torwent/SRL-T/compare/v7.9.13...v7.9.14) (2024-09-26)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **itemfinder:** better hash-generator ([2dd223b](https://github.com/Torwent/SRL-T/commit/2dd223b21e6857291927cecec5c9cc7282653c71))
-
-
-
-## [7.9.10](https://github.com/Torwent/SRL-T/compare/v7.9.9...v7.9.10) (2024-09-23)
-
-
-### Bug Fixes
-
-* **TRSMapObject:** fixes for walkerless objects ([b27f6e6](https://github.com/Torwent/SRL-T/commit/b27f6e6f0a118f5fc1f388a4b57184570476a1e7))
 
 
 
