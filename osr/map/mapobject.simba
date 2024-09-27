@@ -262,7 +262,7 @@ begin
     Exit;
   end;
 
-  if Self.Filter.UpText and upText.ContainsAny(Self.UpText) then Exit(True);
+  if Self.Filter.UpText and Text.ContainsAny(Self.UpText) then Exit(True);
 
   shouldExit := False;
 end;
