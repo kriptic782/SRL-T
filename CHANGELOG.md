@@ -1,3 +1,12 @@
+## [7.9.16](https://github.com/Torwent/SRL-T/compare/v7.9.15...v7.9.16) (2024-09-27)
+
+
+### Bug Fixes
+
+* bug in uptext checking ([71c391a](https://github.com/Torwent/SRL-T/commit/71c391a327d30e1eb24175cd16e901a9b02a5436))
+
+
+
 ## [7.9.15](https://github.com/Torwent/SRL-T/compare/v7.9.14...v7.9.15) (2024-09-27)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSNPCV2:** several small fixes ([87c23d8](https://github.com/Torwent/SRL-T/commit/87c23d86f96fe926a22bb4acd21567d4eda32ce3))
-
-
-
-## [7.9.11](https://github.com/Torwent/SRL-T/compare/v7.9.10...v7.9.11) (2024-09-24)
-
-
-### Bug Fixes
-
-* **itemfinder:** better hash-generator ([2dd223b](https://github.com/Torwent/SRL-T/commit/2dd223b21e6857291927cecec5c9cc7282653c71))
 
 
 
