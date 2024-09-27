@@ -1202,10 +1202,18 @@ begin
   for i := 0 to High(grayClusters) do
     tmp += grayClusters[i].Grow(1).Edges();
 
-  for i := 0 to High(whiteClusters) do
+  for i := High(whiteClusters) downto 0 do
+  begin
+    if Length(whiteClusters[i]) < 8 then
+    begin
+      Delete(whiteClusters, i, 1);
+      Continue;
+    end;
+
     for j := 0 to High(tmp) do
       if whiteClusters[i].Intersection(tmp[j]) <> [] then
         whiteClusters[i] += grayClusters[j];
+  end;
 
   Result.WalkableSpace    := white + gray;
   Result.WalkableClusters := whiteClusters;
@@ -1219,6 +1227,16 @@ begin
   end;
 end;
 
+{%codetools off}
+function TRSMapLoader._GetChunk(out chunk: TBox; out s, f: TPoint): String;
+begin
+  s := Point(Min(chunk.X1, chunk.X2), Max(chunk.Y1, chunk.Y2));
+  f := Point(Max(chunk.X1, chunk.X2), Min(chunk.Y1, chunk.Y2));
+  chunk := Box(s.X, s.Y, f.X, f.Y);
+
+  Result := ToStr(s.X) + '-' + ToStr(s.Y) + '_' + ToStr(f.X) + '-' + ToStr(f.Y);
+end;
+{%codetools on}
 
 procedure TRSMapLoader.Load(chunks: TBoxArray; planes: TIntegerArray = [0]; downscale: UInt32 = 8; padding: UInt32 = 40);
 var
@@ -1238,15 +1256,12 @@ begin
   for i := 0 to High(planes) do
     for j := 0 to High(chunks) do
     begin
-      s := Point(Min(chunks[j].X1, chunks[j].X2), Max(chunks[j].Y1, chunks[j].Y2));
-      f := Point(Max(chunks[j].X1, chunks[j].X2), Min(chunks[j].Y1, chunks[j].Y2));
-      chunks[j] := [s.X, s.Y, f.X, f.Y];
-
       idx += 1;
+      name := Self._GetChunk(chunks[j], s, f);
 
-      name := ToStr(s.X) + '-' + ToStr(s.Y) + '_' + ToStr(f.X) + '-' + ToStr(f.Y);
       Self.Regions[idx].Name :=  ToStr(planes[i]) + '_' + name;
       Self.Regions[idx].Original := RSTranslator.Chunk2Coordinate(chunks[j]);
+
       if planes[i] > 0 then
         Self.Regions[idx].Original := Self.Regions[idx].Original.Offset(Point(RSTranslator.MapWidth() * planes[i], 0));
 
@@ -1319,15 +1334,11 @@ begin
   for i := 0 to High(chunks) do
     for j := 0 to High(chunks[i].Planes) do
     begin
-      s := Point(Min(chunks[i].Chunk.X1, chunks[i].Chunk.X2), Max(chunks[i].Chunk.Y1, chunks[i].Chunk.Y2));
-      f := Point(Max(chunks[i].Chunk.X1, chunks[i].Chunk.X2), Min(chunks[i].Chunk.Y1, chunks[i].Chunk.Y2));
-      chunks[i].Chunk := [s.X, s.Y, f.X, f.Y];
-
       idx += 1;
-      name := ToStr(s.X) + '-' + ToStr(s.Y) + '_' + ToStr(f.X) + '-' + ToStr(f.Y);
-
+      name := Self._GetChunk(chunks[i].Chunk, s, f);
       Self.Regions[idx].Name :=  ToStr(chunks[i].Planes[j]) + '_' + name;
       Self.Regions[idx].Original := RSTranslator.Chunk2Coordinate(chunks[i].Chunk);
+
       if chunks[i].Planes[j] > 0 then
         Self.Regions[idx].Original := Self.Regions[idx].Original.Offset([RSTranslator.MapWidth() * chunks[i].Planes[j], 0]);
 
@@ -1350,7 +1361,6 @@ begin
 
       if not GENERATED_GRAPH.Disabled then
         graphs += Self.SetupGraph(name, idx, chunks[i].Planes[j], padding, cbitmaps[idx]);
-
 
       cbitmaps[idx].Pad(padding);
 

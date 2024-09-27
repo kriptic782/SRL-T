@@ -191,7 +191,7 @@ type
     TotalPausedTime: UInt64;
   end;
 
-procedure TStopWatch.Start;
+procedure TStopWatch.Start();
 begin
   if Self.PausedTime > 0 then
   begin
@@ -201,24 +201,24 @@ begin
     Self.StartTime := GetTickCount();
 end;
 
-procedure TStopWatch.Resume;
+procedure TStopWatch.Resume();
 begin
   Self.Start();
 end;
 
-procedure TStopWatch.Pause;
+procedure TStopWatch.Pause();
 begin
   Self.PausedTime := GetTickCount();
 end;
 
-procedure TStopWatch.Reset;
+procedure TStopWatch.Reset();
 begin
   Self.StartTime := GetTickCount();
   Self.PausedTime := 0;
   Self.TotalPausedTime := 0;
 end;
 
-function TStopWatch.ElapsedTime: UInt64;
+function TStopWatch.ElapsedTime(): UInt64;
 begin
   if Self.PausedTime > 0 then
     Result := (GetTickCount() - Self.StartTime) - (GetTickCount() - Self.PausedTime)
@@ -226,7 +226,7 @@ begin
     Result := (GetTickCount() - Self.StartTime) - Self.TotalPausedTime;
 end;
 
-function TStopWatch.IsPaused: Boolean;
+function TStopWatch.IsPaused(): Boolean;
 begin
   Result := Self.PausedTime > 0;
 end;

@@ -1359,9 +1359,17 @@ WriteLn RSObjects.GEBank.SelectOption(['Collect']);
 *)
 function TRSMapObject.SelectOption(action: TStringArray; attempts: Int32 = 2): Boolean;
 begin
-  Self.Walker^.ActionUpText := action;
+  if Self.Filter.Walker then
+  begin
+    if Self.Walker = nil then
+      TerminateScript(SRL.TimeStamp() + ':[TRSMapObject]:[Fatal]: ' + Self.Name + ' has no walker pointer set.');
+    Self.Walker^.ActionUpText := action;
+  end;
+
   Result := Self.Hover(attempts) and Self._SelectHelper(action);
-  Self.Walker^.ActionUpText := [];
+
+  if Self.Filter.Walker then
+    Self.Walker^.ActionUpText := [];
 end;
 
 
@@ -1380,12 +1388,17 @@ WriteLn RSObjects.GEBank.WalkClick();
 *)
 function TRSMapObject.WalkClick(leftClick: Boolean = True; attempts: Int32 = 2): Boolean;
 begin
-  if Self.Filter.Walker and (Self.Walker = nil) then
-    TerminateScript(SRL.TimeStamp() + ':[TRSMapObject]:[Fatal]: ' + Self.Name + ' has no walker pointer set.');
+  if Self.Filter.Walker then
+  begin
+    if Self.Walker = nil then
+      TerminateScript(SRL.TimeStamp() + ':[TRSMapObject]:[Fatal]: ' + Self.Name + ' has no walker pointer set.');
+    Self.Walker^.TargetUpText := Copy(Self.UpText);
+  end;
 
-  Self.Walker^.TargetUpText := Copy(Self.UpText);
   Result := Self.WalkHover(attempts) and Self._ClickHelper(leftClick);
-  Self.Walker^.TargetUpText := [];
+
+  if Self.Filter.Walker then
+    Self.Walker^.TargetUpText := [];
 end;
 
 (*
@@ -1403,14 +1416,21 @@ WriteLn RSObjects.GEBank.WalkSelectOption(['Collect']);
 *)
 function TRSMapObject.WalkSelectOption(action: TStringArray; attempts: Int32 = 2): Boolean;
 begin
-  if Self.Filter.Walker and (Self.Walker = nil) then
-    TerminateScript(SRL.TimeStamp() + ':[TRSMapObject]:[Fatal]: ' + Self.Name + ' has no walker pointer set.');
+  if Self.Filter.Walker then
+  begin
+    if Self.Walker = nil then
+      TerminateScript(SRL.TimeStamp() + ':[TRSMapObject]:[Fatal]: ' + Self.Name + ' has no walker pointer set.');
+    Self.Walker^.TargetUpText := Copy(Self.UpText);
+    Self.Walker^.ActionUpText := action;
+  end;
 
-  Self.Walker^.TargetUpText := Copy(Self.UpText);
-  Self.Walker^.ActionUpText := action;
   Result := Self.WalkHover(attempts) and Self._SelectHelper(action);
-  Self.Walker^.TargetUpText := [];
-  Self.Walker^.ActionUpText := [];
+
+  if Self.Filter.Walker then
+  begin
+    Self.Walker^.TargetUpText := [];
+    Self.Walker^.ActionUpText := [];
+  end;
 end;
 
 
