@@ -1,3 +1,12 @@
+## [7.9.19](https://github.com/Torwent/SRL-T/compare/v7.9.18...v7.9.19) (2024-09-27)
+
+
+### Bug Fixes
+
+* **collision:** fix lunar isle bank ([6a41104](https://github.com/Torwent/SRL-T/commit/6a4110419a63dad042fe3277d7eb4facaafe08c7))
+
+
+
 ## [7.9.18](https://github.com/Torwent/SRL-T/compare/v7.9.17...v7.9.18) (2024-09-27)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([26320fc](https://github.com/Torwent/SRL-T/commit/26320fceafe4559165e864a6e78385de4739fb66))
-
-
-
-## [7.9.14](https://github.com/Torwent/SRL-T/compare/v7.9.13...v7.9.14) (2024-09-26)
-
-
-### Bug Fixes
-
-* **TRSMapObjects:** added the ability for setting up multiple strings ([7323759](https://github.com/Torwent/SRL-T/commit/7323759e83f641d9de8b326a423ba8a827e521aa))
 
 
 
