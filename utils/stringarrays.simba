@@ -201,14 +201,12 @@ end;
 
 procedure TStringArray.ClearDuplicates();
 var
-  i: Integer;
+  i: Int32;
   unique: TStringArray;
 begin
   for i := 0 to High(Self) do
-  begin
-    if unique.Find(Self[i]) = -1 then
+    if (Self[i] <> '') and (unique.Find(Self[i]) = -1) then
       unique += Self[i];
-  end;
   Self := unique;
 end;
 
