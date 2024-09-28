@@ -215,7 +215,7 @@ end;
 function TStringArray.Sort(): TStringArray;
 begin
   Result := Copy(Self);
-  Sorted(Result);
+  System.Sort(Result);
 end;
 
 function TStringArray.Unique(): TStringArray;
