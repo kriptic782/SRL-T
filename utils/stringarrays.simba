@@ -198,3 +198,109 @@ begin
   for i:=1 to High(Self) do
     Result += glue + Self[i];
 end;
+
+procedure TStringArray.ClearDuplicates();
+var
+  i: Integer;
+  unique: TStringArray;
+begin
+  for i := 0 to High(Self) do
+  begin
+    if unique.Find(Self[i]) = -1 then
+      unique += Self[i];
+  end;
+  Self := unique;
+end;
+
+function TStringArray.Sort(): TStringArray;
+begin
+  Result := Copy(Self);
+  Sorted(Result);
+end;
+
+function TStringArray.Unique(): TStringArray;
+begin
+  Result := Copy(Self);
+  Result.ClearDuplicates();
+end;
+
+function TStringArray.Join(const Delimiter: String): String;
+begin
+  Result := Self.Merge(Delimiter);
+end;
+
+function TStringArray.Split(const S: String; const Delimiter: String): TStringArray; static;
+begin
+  Result := System.Explode(Delimiter, S);
+end;
+
+function TStringArray.IndexOf(const Value: String; const StartIndex: Integer = 0): Integer;
+var
+  i: Integer;
+begin
+  for i := StartIndex to High(Self) do
+    if Self[i] = Value then
+      Exit(i);
+  Result := -1;
+end;
+
+function TStringArray.LastIndexOf(const Value: String): Integer;
+var
+  i: Integer;
+begin
+  for i := High(Self) downto 0 do
+    if Self[i] = Value then
+      Exit(i);
+  Result := -1;
+end;
+
+function TStringArray.SubArray(const StartIndex, Count: Integer): TStringArray;
+begin
+  Result := Copy(Self, StartIndex, Count);
+end;
+
+function TStringArray.ToLower(): TStringArray;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i] := LowerCase(Self[i]);
+end;
+
+function TStringArray.ToUpper(): TStringArray;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i] := UpperCase(Self[i]);
+end;
+
+function TStringArray.Replace(const OldValue, NewValue: String): TStringArray;
+var
+  i: Integer;
+begin
+  SetLength(Result, Length(Self));
+  for i := 0 to High(Self) do
+    Result[i] := StringReplace(Self[i], OldValue, NewValue, [rfReplaceAll]);
+end;
+
+function TStringArray.CountSubstring(const SubStr: String): Integer;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    Result += Pos(SubStr, Self[i]);
+end;
+
+function TStringArray.Count(const Value: String): Integer;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    if Self[i] = Value then
+      Inc(Result);
+end;
