@@ -1,12 +1,28 @@
+(*
+# Drawing
+Extends TMufasaBitmap with mostly drawing functions.
+*)
 {$DEFINE SRL_DRAWING_INCLUDED}
 {$IFNDEF SRL_UTILS}
   {$I SRL-T/utils.simba}
 {$ENDIF}
 
-(*
-# Drawing
-Extends TMufasaBitmap with mostly drawing functions.
-*)
+
+function TSRL.CalculateTransparency(oldColor, newColor: Int32; alpha: Single; fast: Boolean = True): Int32;
+var
+  r, g, b, r2, g2, b2: Int32;
+  vec: Vector3;
+begin
+  if fast then
+    Exit(Round(alpha * newColor + (1 - alpha) * oldColor));
+
+  ColorToRGB(oldColor, r, g, b);
+  ColorToRGB(newColor, r2, g2, b2);
+
+  vec := Vec3(r2,g2,b2) * alpha + Vec3(r,g,b) * (1-alpha);
+
+  Result := RGBtoColor(Round(vec.x), Round(vec.y), Round(vec.z));
+end;
 
 type
   TMufasaBitmapArray = array of TMufasaBitmap;
