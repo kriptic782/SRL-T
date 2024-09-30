@@ -1,3 +1,12 @@
+## [7.9.20](https://github.com/Torwent/SRL-T/compare/v7.9.19...v7.9.20) (2024-09-30)
+
+
+### Bug Fixes
+
+* **TRSItemArray:** add array methods ([7e1d7cc](https://github.com/Torwent/SRL-T/commit/7e1d7cc5617f7cc370722abdc9e03e730e6c9664))
+
+
+
 ## [7.9.19](https://github.com/Torwent/SRL-T/compare/v7.9.18...v7.9.19) (2024-09-27)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * bug in uptext checking ([71c391a](https://github.com/Torwent/SRL-T/commit/71c391a327d30e1eb24175cd16e901a9b02a5436))
-
-
-
-## [7.9.15](https://github.com/Torwent/SRL-T/compare/v7.9.14...v7.9.15) (2024-09-27)
-
-
-### Bug Fixes
-
-* read notes ([26320fc](https://github.com/Torwent/SRL-T/commit/26320fceafe4559165e864a6e78385de4739fb66))
 
 
 
