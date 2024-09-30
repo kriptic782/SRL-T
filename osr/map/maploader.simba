@@ -1183,40 +1183,35 @@ end;
 
 function TRSMapLoader.SetupGraph(name: String; idx, plane, padding: Int32; cbitmap: TMufasaBitmap): TWebGraphV2;
 var
-  gray, white: TPointArray;
-  whiteClusters, grayClusters, tmp: T2DPointArray;
+  gray, white, merged, graySubset: TPointArray;
+  whiteClusters, grayClusters, mergedClusters: T2DPointArray;
   i, j: Int32;
 begin
   Result := Self.Loader.GetGraph(name, plane, cbitmap);
-  Result.Nodes := Self.GetGlobal(idx, Result.Nodes, [padding, padding]);
-
+  Result.Nodes := Self.GetGlobal(idx, Result.Nodes, [padding,padding]);
   cbitmap.FindColors(white, $FFFFFF);
   cbitmap.FindColors(gray, $333333);
-
-  white := Self.GetGlobal(idx, white, [padding, padding]);
-  gray  := Self.GetGlobal(idx, gray,  [padding, padding]);
-
+  white := Self.GetGlobal(idx, white, [padding,padding]);
+  gray  := Self.GetGlobal(idx, gray, [padding,padding]);
   whiteClusters := white.NRCluster(1);
   grayClusters := gray.NRCluster(1);
 
-  for i := 0 to High(grayClusters) do
-    tmp += grayClusters[i].Grow(1).Edges();
-
-  for i := High(whiteClusters) downto 0 do
+  for i := 0 to High(whiteClusters) do
   begin
-    if Length(whiteClusters[i]) < 8 then
-    begin
-      Delete(whiteClusters, i, 1);
-      Continue;
-    end;
-
-    for j := 0 to High(tmp) do
-      if whiteClusters[i].Intersection(tmp[j]) <> [] then
-        whiteClusters[i] += grayClusters[j];
+    if length(whiteClusters[i]) <= 8 then
+      continue;
+    graySubset := whiteclusters[i].Bounds.Expand(80).Filter(System.copy(gray));
+    merged := whiteclusters[i] + graySubset;
+    mergedClusters := merged.NRCluster(1);
+    for j := 0 to high(mergedClusters) do
+      if mergedClusters[j].Contains(whiteClusters[i][0]) then
+      begin
+        Result.WalkableClusters += mergedClusters[j];
+        break;
+      end;
   end;
 
   Result.WalkableSpace    := white + gray;
-  Result.WalkableClusters := whiteClusters;
   Result.ObjectClusters   := grayClusters;
 
   for i := 0 to High(Result.Doors) do
