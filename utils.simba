@@ -40,6 +40,7 @@ var
 
 {$IFNDEF SRL_STRING_INCLUDED}        {$I utils/string.simba}
 {$IFNDEF SRL_STRINGARRAY_INCLUDED}   {$I utils/stringarrays.simba}
+{$IFNDEF SRL_ITEMS_INCLUDED}         {$I utils/items.simba}
 
 {$IFNDEF SRL_TIME_INCLUDED}          {$I utils/system/time.simba}
 {$IFNDEF SRL_BASE_INCLUDED}          {$I utils/base.simba}
@@ -57,6 +58,7 @@ var
 {$IFNDEF SRL_WEBGRAPHV2_INCLUDED}    {$I utils/webgraphv2.simba}
 
 
+{$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}

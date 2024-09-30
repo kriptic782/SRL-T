@@ -9,47 +9,6 @@ Tool to find item sprites (bitmaps) in boxes.
 {$ENDIF}
 
 type
-  TRSItem = Variant;
-  TRSItemArray = array of TRSItem;
-
-(*
-## ItemArray.Find
-```pascal
-function TRSItemArray.Find(const value: TRSItem): Int32; constref;
-```
-Find a TRSItem in a TRSItemArray and return it's index.
-*)
-function TRSItemArray.Find(const value: TRSItem): Int32; constref;
-begin
-  for Result := 0 to High(Self) do
-    if (value = Self[Result]) then
-      Exit;
-
-  Result := -1;
-end;
-
-(*
-## ItemArray.Contains
-```pascal
-function TRSItemArray.Contains(const value: TRSItem): Boolean; constref;
-```
-Find a TRSItem in a TRSItemArray and return true or false.
-*)
-function TRSItemArray.Contains(const value: TRSItem): Boolean; constref;
-begin
-  Result := Self.Find(value) > -1;
-end;
-
-function TRSItemArray.Intersection(other: TRSItemArray): TRSItemArray; constref;
-var
-  i: Int32;
-begin
-  for i := 0 to High(other) do
-    if Self.Find(other[i]) > -1 then
-      Result += other[i];
-end;
-
-type
   TRSItemFinderCustomFilter = procedure(constref image, templ: TMufasaBitmap) of object;
 
   TRSItemFinder = record(TSRLBaseRecord)
