@@ -1189,25 +1189,30 @@ var
 begin
   Result := Self.Loader.GetGraph(name, plane, cbitmap);
   Result.Nodes := Self.GetGlobal(idx, Result.Nodes, [padding,padding]);
+
   cbitmap.FindColors(white, $FFFFFF);
   cbitmap.FindColors(gray, $333333);
+
   white := Self.GetGlobal(idx, white, [padding,padding]);
   gray  := Self.GetGlobal(idx, gray, [padding,padding]);
+
   whiteClusters := white.NRCluster(1);
   grayClusters := gray.NRCluster(1);
 
   for i := 0 to High(whiteClusters) do
   begin
-    if length(whiteClusters[i]) <= 8 then
-      continue;
-    graySubset := whiteclusters[i].Bounds.Expand(80).Filter(System.copy(gray));
+    if Length(whiteClusters[i]) <= 6 then
+      Continue;
+
+    graySubset := whiteclusters[i].Bounds.Expand(80).Filter(gray);
     merged := whiteclusters[i] + graySubset;
     mergedClusters := merged.NRCluster(1);
+
     for j := 0 to high(mergedClusters) do
       if mergedClusters[j].Contains(whiteClusters[i][0]) then
       begin
         Result.WalkableClusters += mergedClusters[j];
-        break;
+        Break;
       end;
   end;
 

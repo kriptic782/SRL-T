@@ -344,7 +344,7 @@ Extract all the points from `testSet` that fits within this rectangle.
 *)
 function TBox.Filter(testSet: TPointArray): TPointArray; constref;
 begin
-  Result := testSet;
+  Result := Copy(testSet);
   FilterPointsBox(Result, Self.X1, Self.Y1, Self.X2, Self.Y2);
 end;
 
