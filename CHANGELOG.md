@@ -1,3 +1,13 @@
+## [7.9.21](https://github.com/Torwent/SRL-T/compare/v7.9.20...v7.9.21) (2024-09-30)
+
+
+### Bug Fixes
+
+* Maploader faster algorithm based on clustering nearby gray zones ([c7e7bfc](https://github.com/Torwent/SRL-T/commit/c7e7bfcd28252f6b082d28151f780633908da078))
+* **TBox:** fixed small TPA filter bug ([abeb648](https://github.com/Torwent/SRL-T/commit/abeb64887d3a925a98cfeb28b91508ad4ee6aa09))
+
+
+
 ## [7.9.20](https://github.com/Torwent/SRL-T/compare/v7.9.19...v7.9.20) (2024-09-30)
 
 
@@ -31,15 +41,6 @@
 ### Bug Fixes
 
 * **TRSObjectsV2:** read notes ([f33ec8e](https://github.com/Torwent/SRL-T/commit/f33ec8e79c1e3ff04b93f8af9ae940e2523d043b))
-
-
-
-## [7.9.16](https://github.com/Torwent/SRL-T/compare/v7.9.15...v7.9.16) (2024-09-27)
-
-
-### Bug Fixes
-
-* bug in uptext checking ([71c391a](https://github.com/Torwent/SRL-T/commit/71c391a327d30e1eb24175cd16e901a9b02a5436))
 
 
 
