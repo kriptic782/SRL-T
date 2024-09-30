@@ -1,3 +1,12 @@
+## [7.9.22](https://github.com/Torwent/SRL-T/compare/v7.9.21...v7.9.22) (2024-09-30)
+
+
+### Bug Fixes
+
+* add a method to calculate transparency ([75c1e85](https://github.com/Torwent/SRL-T/commit/75c1e85523172c91bdfd90743ed2b1709103dfa0))
+
+
+
 ## [7.9.21](https://github.com/Torwent/SRL-T/compare/v7.9.20...v7.9.21) (2024-09-30)
 
 
@@ -32,15 +41,6 @@
 ### Bug Fixes
 
 * **RSTranslator:** converting RSCoordinates to Global coordinates bug ([78fa805](https://github.com/Torwent/SRL-T/commit/78fa80560812189cbb2941ed6ef6184581c0c485))
-
-
-
-## [7.9.17](https://github.com/Torwent/SRL-T/compare/v7.9.16...v7.9.17) (2024-09-27)
-
-
-### Bug Fixes
-
-* **TRSObjectsV2:** read notes ([f33ec8e](https://github.com/Torwent/SRL-T/commit/f33ec8e79c1e3ff04b93f8af9ae940e2523d043b))
 
 
 
