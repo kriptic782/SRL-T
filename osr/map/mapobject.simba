@@ -233,7 +233,6 @@ begin
 end;
 
 
-{%codetools off}
 (*
 ## TRSMapObject._UpTextCheck
 ```pascal
@@ -370,7 +369,6 @@ begin
 
   Result := ChooseOption.Select(action);
 end;
-{%codetools on}
 
 
 type
@@ -963,7 +961,6 @@ begin
 end;
 
 
-{%codetools off}
 (*
 ## TRSMapObject._Routers
 ```pascal
@@ -995,7 +992,6 @@ begin
     ERSMapObjectType.NPC: PRSNPCV2(@Self)^.Draw(bitmap);
   end;
 end;
-{%codetools on}
 
 
 function TRSMapObject.Find(out atpa: T2DPointArray): Boolean;
@@ -1115,7 +1111,7 @@ begin
       if not Self.Filter.UpText then Exit(True);
     end;
 
-    if MainScreen.IsUpText(Self.Name) then Exit(True);
+    if MainScreen.IsUpText(Self.UpText) then Exit(True);
 
     //will rotate the screen for the last attempt if hasn't hovered properly yet
     if attempt = (attempts - 1) then
@@ -1149,8 +1145,7 @@ begin
     Exit(Self._HoverHelper(attempts, trackTarget));
 
   Result := Self._WalkUpTextCheck(shouldExit);
-  if shouldExit then
-    Exit;
+  if shouldExit then Exit;
 
   for attempt := 0 to attempts do
   begin
@@ -1171,8 +1166,7 @@ begin
         Exit(True);
     end;
 
-    if MainScreen.IsUpText(Self.UpText) then
-      Exit(True);
+    if MainScreen.IsUpText(Self.UpText) then Exit(True);
 
     me := Self.Walker^.Position();
     closest := Self.Walker^.GetClosestPointEx(me, Self.Coordinates, path);
