@@ -1,3 +1,12 @@
+## [7.9.23](https://github.com/Torwent/SRL-T/compare/v7.9.22...v7.9.23) (2024-10-01)
+
+
+### Bug Fixes
+
+* **mapobject:** unhide hidden methods ([5528abc](https://github.com/Torwent/SRL-T/commit/5528abcc6866614bbad5da204946e631089a14f7))
+
+
+
 ## [7.9.22](https://github.com/Torwent/SRL-T/compare/v7.9.21...v7.9.22) (2024-09-30)
 
 
@@ -32,15 +41,6 @@
 ### Bug Fixes
 
 * **collision:** fix lunar isle bank ([6a41104](https://github.com/Torwent/SRL-T/commit/6a4110419a63dad042fe3277d7eb4facaafe08c7))
-
-
-
-## [7.9.18](https://github.com/Torwent/SRL-T/compare/v7.9.17...v7.9.18) (2024-09-27)
-
-
-### Bug Fixes
-
-* **RSTranslator:** converting RSCoordinates to Global coordinates bug ([78fa805](https://github.com/Torwent/SRL-T/commit/78fa80560812189cbb2941ed6ef6184581c0c485))
 
 
 
