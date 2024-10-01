@@ -230,10 +230,10 @@ var
   unique: TRSItemArray;
 begin
   for i := 0 to High(Self) do
-    if (Self[i] <> '') and (unique.Find(Self[i]) = -1) then
+    if (ToStr(Self[i]) <> '') and (unique.Find(Self[i]) = -1) then
       unique += Self[i];
   Self := unique;
-end;
+end; 
 
 function TRSItemArray.Unique(): TRSItemArray;
 begin
