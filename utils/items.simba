@@ -17,8 +17,9 @@ Find a TRSItem in a TRSItemArray and return it's index.
 function TRSItemArray.Find(const value: TRSItem): Int32; constref;
 begin
   for Result := 0 to High(Self) do
-    if value = Self[Result] then
+    if VarToStr(value) = VarToStr(Self[Result]) then
       Exit;
+
   Result := -1;
 end;
 
