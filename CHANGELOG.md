@@ -1,3 +1,12 @@
+## [7.9.25](https://github.com/Torwent/SRL-T/compare/v7.9.24...v7.9.25) (2024-10-02)
+
+
+### Bug Fixes
+
+* **TRSItemArray:** Find function should work better now ([bda91e6](https://github.com/Torwent/SRL-T/commit/bda91e632f1147f21b0d9c950fd64f1e80986368))
+
+
+
 ## [7.9.24](https://github.com/Torwent/SRL-T/compare/v7.9.23...v7.9.24) (2024-10-02)
 
 
@@ -32,15 +41,6 @@
 
 * Maploader faster algorithm based on clustering nearby gray zones ([c7e7bfc](https://github.com/Torwent/SRL-T/commit/c7e7bfcd28252f6b082d28151f780633908da078))
 * **TBox:** fixed small TPA filter bug ([abeb648](https://github.com/Torwent/SRL-T/commit/abeb64887d3a925a98cfeb28b91508ad4ee6aa09))
-
-
-
-## [7.9.20](https://github.com/Torwent/SRL-T/compare/v7.9.19...v7.9.20) (2024-09-30)
-
-
-### Bug Fixes
-
-* **TRSItemArray:** add array methods ([7e1d7cc](https://github.com/Torwent/SRL-T/commit/7e1d7cc5617f7cc370722abdc9e03e730e6c9664))
 
 
 
