@@ -1,3 +1,12 @@
+## [7.9.24](https://github.com/Torwent/SRL-T/compare/v7.9.23...v7.9.24) (2024-10-02)
+
+
+### Bug Fixes
+
+* more array methods and small fixes ([fb0590b](https://github.com/Torwent/SRL-T/commit/fb0590b67b23df414a8a190fb5dbe11c67cf74ce))
+
+
+
 ## [7.9.23](https://github.com/Torwent/SRL-T/compare/v7.9.22...v7.9.23) (2024-10-01)
 
 
@@ -32,15 +41,6 @@
 ### Bug Fixes
 
 * **TRSItemArray:** add array methods ([7e1d7cc](https://github.com/Torwent/SRL-T/commit/7e1d7cc5617f7cc370722abdc9e03e730e6c9664))
-
-
-
-## [7.9.19](https://github.com/Torwent/SRL-T/compare/v7.9.18...v7.9.19) (2024-09-27)
-
-
-### Bug Fixes
-
-* **collision:** fix lunar isle bank ([6a41104](https://github.com/Torwent/SRL-T/commit/6a4110419a63dad042fe3277d7eb4facaafe08c7))
 
 
 
