@@ -241,6 +241,20 @@ begin
   Result.ClearDuplicates();
 end;
 
+function TRSItemArray.Difference(other: TRSItemArray): TRSItemArray; constref;
+var
+  item: TRSItem;
+begin
+  for item in Self do
+    if Other.Find(item) = -1 then
+      Result += item;
+
+  for item in Other do
+    if Self.Find(item) = -1 then
+      Result += item;
+
+  Result.ClearDuplicates();
+end; 
 
 function TRSItemArray.Count(const value: TRSItem): Int32;
 var
