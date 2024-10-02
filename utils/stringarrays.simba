@@ -221,8 +221,9 @@ var
   unique: TStringArray;
 begin
   for i := 0 to High(Self) do
-    if (Self[i] <> '') and (unique.Find(Self[i]) = -1) then
+    if unique.Find(Self[i]) = -1 then
       unique += Self[i];
+
   Self := unique;
 end;
 
@@ -276,6 +277,37 @@ begin
     if Self[i] = value then
       Inc(Result);
 end;
+
+
+function TStringArray.Intersection(other: TStringArray): TStringArray; constref;
+var
+  i: Int32;
+begin
+  for i := 0 to High(other) do
+    if Self.Find(other[i]) > -1 then
+      Result += other[i];
+end;
+
+function TStringArray.Difference(other: TStringArray): TStringArray; constref;
+var
+  item: String;
+begin
+  for item in Self do
+    if other.Find(item) = -1 then
+      Result += item;
+
+  for item in other do
+    if Self.Find(item) = -1 then
+      Result += item;
+
+  Result.ClearDuplicates();
+end;
+
+function TStringArray.SymmetricDifference(other: TStringArray): TStringArray; constref;
+begin
+  Result := Self.Difference(other) + other.Difference(Self);
+end;
+
 
 
 function TStringArray.RandomValue(): String; constref;

@@ -32,16 +32,6 @@ begin
 end;
 
 
-function TRSItemArray.Intersection(other: TRSItemArray): TRSItemArray; constref;
-var
-  i: Int32;
-begin
-  for i := 0 to High(other) do
-    if Self.Find(other[i]) > -1 then
-      Result += other[i];
-end;
-
-
 procedure TRSItemArray.Insert(const value: String; index: Int32);
 var
   l: UInt32;
@@ -230,7 +220,7 @@ var
   unique: TRSItemArray;
 begin
   for i := 0 to High(Self) do
-    if (ToStr(Self[i]) <> '') and (unique.Find(Self[i]) = -1) then
+    if unique.Find(Self[i]) = -1 then
       unique += Self[i];
   Self := unique;
 end; 
@@ -241,20 +231,6 @@ begin
   Result.ClearDuplicates();
 end;
 
-function TRSItemArray.Difference(other: TRSItemArray): TRSItemArray; constref;
-var
-  item: TRSItem;
-begin
-  for item in Self do
-    if Other.Find(item) = -1 then
-      Result += item;
-
-  for item in Other do
-    if Self.Find(item) = -1 then
-      Result += item;
-
-  Result.ClearDuplicates();
-end; 
 
 function TRSItemArray.Count(const value: TRSItem): Int32;
 var
@@ -263,6 +239,36 @@ begin
   for i := 0 to High(Self) do
     if Self[i] = value then
       Inc(Result);
+end;
+
+
+function TRSItemArray.Intersection(other: TRSItemArray): TRSItemArray; constref;
+var
+  i: Int32;
+begin
+  for i := 0 to High(other) do
+    if Self.Find(other[i]) > -1 then
+      Result += other[i];
+end;
+
+function TRSItemArray.Difference(other: TRSItemArray): TRSItemArray; constref;
+var
+  item: TRSItem;
+begin
+  for item in Self do
+    if other.Find(item) = -1 then
+      Result += item;
+
+  for item in other do
+    if Self.Find(item) = -1 then
+      Result += item;
+
+  Result.ClearDuplicates();
+end;
+
+function TRSItemArray.SymmetricDifference(other: TRSItemArray): TRSItemArray; constref;
+begin
+  Result := Self.Difference(other) + other.Difference(Self);
 end;
 
 
