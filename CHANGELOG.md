@@ -1,3 +1,12 @@
+## [7.9.28](https://github.com/Torwent/SRL-T/compare/v7.9.27...v7.9.28) (2024-10-05)
+
+
+### Bug Fixes
+
+* **translator:** proper upper coordinates global 2 chunk ([86c14d7](https://github.com/Torwent/SRL-T/commit/86c14d79a7f518659e9e34d19485a10973aafc15))
+
+
+
 ## [7.9.27](https://github.com/Torwent/SRL-T/compare/v7.9.26...v7.9.27) (2024-10-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * more array methods and small fixes ([fb0590b](https://github.com/Torwent/SRL-T/commit/fb0590b67b23df414a8a190fb5dbe11c67cf74ce))
-
-
-
-## [7.9.23](https://github.com/Torwent/SRL-T/compare/v7.9.22...v7.9.23) (2024-10-01)
-
-
-### Bug Fixes
-
-* **mapobject:** unhide hidden methods ([5528abc](https://github.com/Torwent/SRL-T/commit/5528abcc6866614bbad5da204946e631089a14f7))
 
 
 
