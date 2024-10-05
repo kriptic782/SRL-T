@@ -204,6 +204,7 @@ WriteLn RSTranslator.Global2Chunk(Point(2000, 2000));
 *)
 function TRSTranslator.Global2Chunk(p: TPoint): TPoint;
 begin
+  while p.X > Self.MapWidth() do p.X -= Self.MapWidth();
   Result.X := Self.RSMap.Scope.X1 + Floor(p.X / Self.Map.ChunkSide);
   Result.Y := Self.RSMap.Scope.Y2 - Floor(p.Y / Self.Map.ChunkSide);
 end;
