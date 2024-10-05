@@ -257,7 +257,7 @@ begin
 
   tpa := Self.Tree.KNearest(p, amount);
 
-  for i :=0 to High(tpa) do
+  for i := 0 to High(tpa) do
   begin
     if Self.WalkableClusters.InSameTPA(p, tpa[i]) then
     begin
@@ -414,22 +414,27 @@ begin
       cluster := Self.WalkableClusters[i];
 
   if cluster = [] then
-    TerminateScript(SRL.TimeStamp() + ':[WebGraph]:[Fatal]: Can''t find player cluster containg: ' + me.ToString());
+    RaiseException(SRL.TimeStamp() + ':[WebGraph]:[Fatal]: Can''t find player cluster containg: ' + me.ToString());
 
   best := Self.FindNearestNodesEx(p, 12);
 
   for i := 0 to High(best) do
-    if cluster.Contains(best[i]) then
+  begin
+    p := best[i];
+
+    if cluster.Contains(p) then
     begin
-      p := best[i];
       try
-        Result := Self.PathBetweenEx(me, best[i], 0.2, 2);
+        Result := Self.PathBetweenEx(me, p, 0.2, 2);
       except
-        TerminateScript(SRL.TimeStamp() + ':[WebGraph]:[Fatal]: Can''t find a walkable path to ' + p.ToString() + ' object.');
+        if me.DistanceTo(p) > 52 then
+          RaiseException(SRL.TimeStamp() + ':[WebGraph]:[Fatal]: Can''t find a walkable path to ' + p.ToString() + ' object.');
+        Result := [p];
       end;
 
       Break;
     end;
+  end;
 end;
 
 
