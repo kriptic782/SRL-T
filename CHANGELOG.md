@@ -1,3 +1,12 @@
+## [7.9.27](https://github.com/Torwent/SRL-T/compare/v7.9.26...v7.9.27) (2024-10-05)
+
+
+### Bug Fixes
+
+* **webgraphv2:** some tweaks ([2aaef97](https://github.com/Torwent/SRL-T/commit/2aaef9729a1b4857a51ee1a26b342a0461416f21))
+
+
+
 ## [7.9.26](https://github.com/Torwent/SRL-T/compare/v7.9.25...v7.9.26) (2024-10-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **mapobject:** unhide hidden methods ([5528abc](https://github.com/Torwent/SRL-T/commit/5528abcc6866614bbad5da204946e631089a14f7))
-
-
-
-## [7.9.22](https://github.com/Torwent/SRL-T/compare/v7.9.21...v7.9.22) (2024-09-30)
-
-
-### Bug Fixes
-
-* add a method to calculate transparency ([75c1e85](https://github.com/Torwent/SRL-T/commit/75c1e85523172c91bdfd90743ed2b1709103dfa0))
 
 
 
