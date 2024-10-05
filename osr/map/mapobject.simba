@@ -251,7 +251,12 @@ begin
     Exit;
 
   if Self.Filter.UpText and Self.Filter.Walker then
+  begin
+    if Self.Walker = nil then
+      TerminateScript(SRL.TimeStamp() + ':[TRSMapObject]:[Fatal]: ' + Self.Name + ' has no walker pointer set.');
+
     Self.Walker^.TargetUpText := Copy(Self.UpText);
+  end;
 
   text := MainScreen.GetUpText();
 
@@ -278,6 +283,9 @@ function TRSMapObject._WalkUpTextCheck(out shouldExit: Boolean): Boolean;
 var
   text: String;
 begin
+  if Self.Walker = nil then
+    TerminateScript(SRL.TimeStamp() + ':[TRSMapObject]:[Fatal]: ' + Self.Name + ' has no walker pointer set.');
+
   shouldExit := True;
 
   if (MainScreen.Mode = ERSClientMode.FIXED) and RSInterface.IsOpen() then
@@ -313,6 +321,9 @@ function TRSMapObject._ClickHelper(leftClick: Boolean): Boolean;
 begin
   if Self.Filter.Walker then
   begin
+    if Self.Walker = nil then
+      TerminateScript(SRL.TimeStamp() + ':[TRSMapObject]:[Fatal]: ' + Self.Name + ' has no walker pointer set.');
+
     Self.Walker^.TargetUpText := [];
     Self.Walker^.ActionUpText := [];
 
@@ -349,13 +360,18 @@ This is what is responsible for deciding if we just left click a target we are h
 *)
 function TRSMapObject._SelectHelper(action: TStringArray): Boolean;
 begin
-  Self.Walker^.TargetUpText := [];
-  Self.Walker^.ActionUpText := [];
-
-  if Self.Walker^.RedClicked then
+  if Self.Filter.Walker then
   begin
-    Self.Walker^.RedClicked := False;
-    Exit(True);
+    if Self.Walker = nil then
+      TerminateScript(SRL.TimeStamp() + ':[TRSMapObject]:[Fatal]: ' + Self.Name + ' has no walker pointer set.');
+    Self.Walker^.TargetUpText := [];
+    Self.Walker^.ActionUpText := [];
+
+    if Self.Walker^.RedClicked then
+    begin
+      Self.Walker^.RedClicked := False;
+      Exit(True);
+    end;
   end;
 
   if ChooseOption.IsOpen() and ChooseOption.Select(action) then
@@ -1175,7 +1191,7 @@ begin
     begin
       path := Self.Walker^.WebGraph^.FindObjectPath(me, closest);
       if path = [] then
-        TerminateScript(SRL.TimeStamp() + ':[MapObject]:[Fatal]: Can''t path to object: ' + Self.Name);
+        RaiseException(SRL.TimeStamp() + ':[MapObject]:[Fatal]: Can''t path to object: ' + Self.Name);
       same := True;
     end;
 
@@ -1302,7 +1318,7 @@ begin
   begin
     path := Self.Walker^.WebGraph^.FindObjectPath(me, p);
     if path = [] then
-      TerminateScript(SRL.TimeStamp() + ':[MapObject]:[Fatal]: Can''t path to "' + Self.Name + '" from ' + me.ToString() + ' to ' + p.ToString());
+      RaiseException(SRL.TimeStamp() + ':[MapObject]:[Fatal]: Can''t path to "' + Self.Name + '" from ' + me.ToString() + ' to ' + p.ToString());
     same := True;
   end;
 
