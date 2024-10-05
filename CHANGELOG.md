@@ -1,3 +1,12 @@
+## [7.9.26](https://github.com/Torwent/SRL-T/compare/v7.9.25...v7.9.26) (2024-10-05)
+
+
+### Bug Fixes
+
+* change some webwalking script terminations to be raised exceptions ([5c6eb47](https://github.com/Torwent/SRL-T/commit/5c6eb47e4779a4563b9979ae7baf3bd5474498e3))
+
+
+
 ## [7.9.25](https://github.com/Torwent/SRL-T/compare/v7.9.24...v7.9.25) (2024-10-02)
 
 
@@ -31,16 +40,6 @@
 ### Bug Fixes
 
 * add a method to calculate transparency ([75c1e85](https://github.com/Torwent/SRL-T/commit/75c1e85523172c91bdfd90743ed2b1709103dfa0))
-
-
-
-## [7.9.21](https://github.com/Torwent/SRL-T/compare/v7.9.20...v7.9.21) (2024-09-30)
-
-
-### Bug Fixes
-
-* Maploader faster algorithm based on clustering nearby gray zones ([c7e7bfc](https://github.com/Torwent/SRL-T/commit/c7e7bfcd28252f6b082d28151f780633908da078))
-* **TBox:** fixed small TPA filter bug ([abeb648](https://github.com/Torwent/SRL-T/commit/abeb64887d3a925a98cfeb28b91508ad4ee6aa09))
 
 
 
