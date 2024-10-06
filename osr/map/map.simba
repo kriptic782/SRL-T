@@ -189,15 +189,27 @@ begin
   Self.Setup(filename, downscale);
 end;
 
-procedure TRSMap.SetupChunksEx(chunks: TBoxArray; planes: TIntegerArray = [0]; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunksEx(boxes: TBoxArray; planes: TIntegerArray = [0]; downscale: UInt32 = 8);
+var
+  i: Int32;
+  chunk: TRSMapChunk;
+  chunks: array of TRSMapChunk;
 begin
-  Self.Loader.Load(chunks, planes, downscale);
+  chunk.Planes := planes;
+
+  for i := 0 to High(boxes) do
+  begin
+    chunk.Chunk := boxes[i];
+    chunks += chunk;
+  end;
+
+  Self.Loader.Load(chunks, downscale);
   Self.InternalSetup();
 end;
 
-procedure TRSMap.SetupChunkEx(chunk: TBox; planes: TIntegerArray = [0]; downscale: UInt32 = 8);
+procedure TRSMap.SetupChunkEx(box: TBox; planes: TIntegerArray = [0]; downscale: UInt32 = 8);
 begin
-  Self.SetupChunksEx([chunk], planes, downscale);
+  Self.SetupChunksEx([box], planes, downscale);
 end;
 
 procedure TRSMap.SetupChunks(chunks: array of TRSMapChunk; downscale: UInt32 = 8);
@@ -308,9 +320,21 @@ begin
   Self.Add(filename, downscale);
 end;
 
-procedure TRSMap.AddChunksEx(chunks: TBoxArray; planes: TIntegerArray = [0]; downscale: UInt32 = 8);
+procedure TRSMap.AddChunksEx(boxes: TBoxArray; planes: TIntegerArray = [0]; downscale: UInt32 = 8);
+var
+  i: Int32;
+  chunk: TRSMapChunk;
+  chunks: array of TRSMapChunk;
 begin
-  Self.Loader.Add(chunks, planes, downscale);
+  chunk.Planes := planes;
+
+  for i := 0 to High(boxes) do
+  begin
+    chunk.Chunk := boxes[i];
+    chunks += chunk;
+  end;
+
+  Self.Loader.Add(chunks, downscale);
   Self.InternalSetup();
 end;
 
@@ -320,26 +344,14 @@ begin
 end;
 
 procedure TRSMap.AddChunks(chunks: array of TRSMapChunk; downscale: UInt32 = 8);
-var
-  chunk: TRSMapChunk;
-  p: Int32;
-  boxes: TBoxArray;
-  planes: TIntegerArray;
 begin
-  for chunk in chunks do
-  begin
-    boxes += chunk.Chunk;
-    for p in chunk.Planes do
-      if InRange(p, 0, 3) and (planes.Find(p) = -1) then
-        planes += p;
-  end;
-
-  Self.AddChunksEx(boxes, planes, downscale);
+  Self.Loader.Add(chunks, downscale);
+  Self.InternalSetup();
 end;
 
 procedure TRSMap.AddChunk(chunk: TRSMapChunk; downscale: UInt32 = 8);
 begin
-  Self.AddChunksEx([chunk.Chunk], chunk.Planes, downscale);
+  Self.AddChunks([chunk], downscale);
 end;
 
 procedure TRSMap.AddChunks(echunks: set of ERSChunk; downscale: UInt32 = 8); overload;

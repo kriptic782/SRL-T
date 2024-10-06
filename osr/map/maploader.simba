@@ -1238,79 +1238,6 @@ begin
 end;
 {%codetools on}
 
-procedure TRSMapLoader.Load(chunks: TBoxArray; planes: TIntegerArray = [0]; downscale: UInt32 = 8; padding: UInt32 = 40);
-var
-  i, j, idx: Int32;
-  bitmaps, hbitmaps, cbitmaps: TMufasaBitmapArray;
-  s, f, tmp: TPoint;
-  graphs: array of TWebGraphV2;
-  json: TJSONArray;
-  objects, npcs: array of TJSONArray;
-  name: String;
-begin
-  Self.Init(downscale);
-  SetLength(Self.Regions, Length(chunks) * Length(planes));
-  Self.Padding := padding;
-  idx := -1;
-
-  for i := 0 to High(planes) do
-    for j := 0 to High(chunks) do
-    begin
-      idx += 1;
-      name := Self._GetChunk(chunks[j], s, f);
-
-      Self.Regions[idx].Name :=  ToStr(planes[i]) + '_' + name;
-      Self.Regions[idx].Original := RSTranslator.Chunk2Coordinate(chunks[j]);
-
-      if planes[i] > 0 then
-        Self.Regions[idx].Original := Self.Regions[idx].Original.Offset(Point(RSTranslator.MapWidth() * planes[i], 0));
-
-      Self.Regions[idx].Plane := planes[i];
-
-      tmp :=  RSTranslator.Chunk2Coordinate(s);
-      tmp.X += RSTranslator.MapWidth() * planes[i]; //easy way to handle upper levels
-      Self.Regions[idx].Offset := [tmp.X - padding, tmp.Y - padding];
-
-      bitmaps += Self.Loader.GetMap(s, f, planes[i], ERSMap.NORMAL);
-      bitmaps[idx].Pad(padding);
-
-      if planes[i] = 0 then
-      begin
-        hbitmaps += Self.Loader.GetMap(s, f, 0, ERSMap.HEIGHT);
-        hbitmaps[High(hbitmaps)].Pad(padding);
-      end;
-
-      cbitmaps += Self.Loader.GetMap(s, f, planes[i], ERSMap.COLLISION);
-
-      if not GENERATED_GRAPH.Disabled then
-        graphs += Self.SetupGraph(name, idx, planes[i], padding, cbitmaps[idx]);
-
-      cbitmaps[idx].Pad(padding);
-
-      json := Self.Loader.GetJSON(s, f, planes[i], ERSMapJSON.OBJECTS);
-      objects += json;
-      json := Self.Loader.GetJSON(s, f, planes[i], ERSMapJSON.NPCS);
-      npcs += json;
-
-      Self.Regions[idx].Region := Box(0, 0, bitmaps[idx].GetWidth(), bitmaps[idx].GetHeight());
-    end;
-
-  Self.Pack();
-
-  Self.Map        := Self.InternalLoad(bitmaps);
-  Self.Heightmap  := Self._InternalLoad(hbitmaps);
-  Self.Collision  := Self._InternalLoad(cbitmaps);
-
-  if not GENERATED_GRAPH.Disabled then
-    Self.Graph := Self.InternalGraphLoad(graphs);
-
-  Self.ObjectData := Self.InternalJSONLoad(objects);
-  Self.NPCData    := Self.InternalJSONLoad(npcs);
-
-  Self.Map.Downsample(downscale, Self.DownscaledMap);
-
-  Self.UsingChunks := True;
-end;
 
 procedure TRSMapLoader.Load(chunks: array of TRSMapChunk; downscale: UInt32 = 8; padding: UInt32 = 40); overload;
 var
@@ -1389,23 +1316,58 @@ begin
   Self.UsingChunks := True;
 end;
 
-
-procedure TRSMapLoader.Add(chunks: TBoxArray; planes: TIntegerArray = [0]; downscale: UInt32 = 8; padding: UInt32 = 40);
+procedure TRSMapLoader.Add(chunks: array of TRSMapChunk; downscale: UInt32 = 8; padding: UInt32 = 40); overload;
 var
-  i: Int32;
+  i, j: Int32;
+  current: TRSMapChunk;
+  loaded, final: array of TRSMapChunk;
 begin
   for i := 0 to High(Self.Regions) do
   begin
-    if planes.Find(Self.Regions[i].Plane) = -1 then
-      planes += Self.Regions[i].Plane;
-    if chunks.Find(Self.Regions[i].Original) = -1 then
-      chunks += RSTranslator.Global2Chunk(Self.Regions[i].Original);
+    current := Chunk(RSTranslator.Global2Chunk(Self.Regions[i].Original), [Self.Regions[i].Plane]);
+    for j := 0 to High(Self.Regions) do
+    begin
+      if i = j then Continue;
+      if Self.Regions[i].Original <> Self.Regions[j].Original then Continue;
+      if current.Planes.Contains(Self.Regions[j].Plane) then Continue;
+      current.Planes += Self.Regions[j].Plane;
+    end;
+
+    current.Planes := current.Planes.Sorted();
+    loaded += current;
+    current := [];
   end;
+
+  for i := 0 to High(loaded) do
+  begin
+    current := loaded[i];
+
+    for j := High(chunks) downto 0 do
+    begin
+      if current = chunks[j] then
+      begin
+        Delete(chunks, j, 1);
+        Continue;
+      end;
+
+      if current.Chunk = chunks[j].Chunk then
+      begin
+        current.Planes += current.Planes.Difference(chunks[j].Planes);
+        Delete(chunks, j, 1);
+        Continue;
+      end;
+    end;
+
+    final += current;
+  end;
+
+  for i := 0 to High(chunks) do
+    final += chunks[i];
 
   Self.Free();
   Self.Regions := [];
 
-  Self.Load(chunks, planes, downscale, padding);
+  Self.Load(final, downscale, padding);
 end;
 
 

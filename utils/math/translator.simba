@@ -280,6 +280,7 @@ WriteLn RSTranslator.Coordinate2RSCoordinate(Point(4000, 35000));
 *)
 function TRSTranslator.Coordinate2RSCoordinate(p: TPoint): TPoint;
 begin
+  while p.X > Self.MapWidth() do p.X -= Self.MapWidth();
   Result := [p.X div Self.TileSize, p.Y div Self.TileSize];
 end;
 
