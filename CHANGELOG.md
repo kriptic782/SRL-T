@@ -1,3 +1,12 @@
+## [7.9.29](https://github.com/Torwent/SRL-T/compare/v7.9.28...v7.9.29) (2024-10-06)
+
+
+### Bug Fixes
+
+* **TRSMap:** adding maps post setup should now work properly ([471efc2](https://github.com/Torwent/SRL-T/commit/471efc24aedbf89f35fe97fffb9da865edbd9dbe))
+
+
+
 ## [7.9.28](https://github.com/Torwent/SRL-T/compare/v7.9.27...v7.9.28) (2024-10-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSItemArray:** Find function should work better now ([bda91e6](https://github.com/Torwent/SRL-T/commit/bda91e632f1147f21b0d9c950fd64f1e80986368))
-
-
-
-## [7.9.24](https://github.com/Torwent/SRL-T/compare/v7.9.23...v7.9.24) (2024-10-02)
-
-
-### Bug Fixes
-
-* more array methods and small fixes ([fb0590b](https://github.com/Torwent/SRL-T/commit/fb0590b67b23df414a8a190fb5dbe11c67cf74ce))
 
 
 
