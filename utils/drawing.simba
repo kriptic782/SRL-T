@@ -504,6 +504,6 @@ end;
 
 procedure TMufasaBitmap.Debug();
 begin
-  DrawBitmapDebugImg(Self);
+  ShowBitmap(Self);
 end;
 

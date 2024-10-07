@@ -579,7 +579,7 @@ Returns `[0, 0]` if the point couldn't be generated, e.g. it's too far away from
 function TRSMinimap.RandomPointOn(p: TPoint; randomness: Int32): TPoint;
 begin
   if not Self.IsPointOn(p) then
-    Self.Fatal(ToStr(p) + ' is not a valid point to generate a random point.');
+    Self.Fatal(p.ToString() + ' is not a valid point to generate a random point.');
 
   while not Self.IsPointOn(Result) do
     Result := p.Random(-randomness, randomness);

@@ -558,7 +558,7 @@ begin
     bmp.DrawCross(p, 4, $FF);
     bmp.Debug();
     bmp.Free();
-    Self.Fatal(ToStr(p) + ' is not a valid point to generate a random point on the zoom rectangle: ' + ToStr(rect) + '.');
+    Self.Fatal(p.ToString() + ' is not a valid point to generate a random point on the zoom rectangle: ' + rect.ToString() + '.');
   end;
 
   while not Result.InRect(rect) do

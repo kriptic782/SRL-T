@@ -293,3 +293,15 @@ begin
   Result := Round(Distance(Self.Btm, Self.Right)) *
             Round(Distance(Self.Btm, Self.Left));
 end;
+
+function TRectangle.ToString(): String; constref;
+  function PointStr(p: TPoint): String;
+  begin
+    Result := '[' + ToStr(p.X) + ',' + ToStr(p.Y) + ']';
+  end;
+begin
+  Result := '[' +
+    PointStr(Self.Top) + ', ' + PointStr(Self.Right) + ', ' +
+    PointStr(Self.Btm) + ', ' + PointStr(Self.Left) +
+  ']';
+end;
