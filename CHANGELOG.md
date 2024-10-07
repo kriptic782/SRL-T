@@ -1,3 +1,12 @@
+## [7.9.31](https://github.com/Torwent/SRL-T/compare/v7.9.30...v7.9.31) (2024-10-07)
+
+
+### Bug Fixes
+
+* read notes ([dc589e0](https://github.com/Torwent/SRL-T/commit/dc589e027e5350b6e4f154a52ca7f6f73df80107))
+
+
+
 ## [7.9.30](https://github.com/Torwent/SRL-T/compare/v7.9.29...v7.9.30) (2024-10-07)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **webgraphv2:** some tweaks ([2aaef97](https://github.com/Torwent/SRL-T/commit/2aaef9729a1b4857a51ee1a26b342a0461416f21))
-
-
-
-## [7.9.26](https://github.com/Torwent/SRL-T/compare/v7.9.25...v7.9.26) (2024-10-05)
-
-
-### Bug Fixes
-
-* change some webwalking script terminations to be raised exceptions ([5c6eb47](https://github.com/Torwent/SRL-T/commit/5c6eb47e4779a4563b9979ae7baf3bd5474498e3))
 
 
 
