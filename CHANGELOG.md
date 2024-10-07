@@ -1,3 +1,12 @@
+## [7.9.30](https://github.com/Torwent/SRL-T/compare/v7.9.29...v7.9.30) (2024-10-07)
+
+
+### Bug Fixes
+
+* pointintriangle ([a597092](https://github.com/Torwent/SRL-T/commit/a59709293b7e417f1b66bcb2fa47c13bbb36afd1))
+
+
+
 ## [7.9.29](https://github.com/Torwent/SRL-T/compare/v7.9.28...v7.9.29) (2024-10-06)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * change some webwalking script terminations to be raised exceptions ([5c6eb47](https://github.com/Torwent/SRL-T/commit/5c6eb47e4779a4563b9979ae7baf3bd5474498e3))
-
-
-
-## [7.9.25](https://github.com/Torwent/SRL-T/compare/v7.9.24...v7.9.25) (2024-10-02)
-
-
-### Bug Fixes
-
-* **TRSItemArray:** Find function should work better now ([bda91e6](https://github.com/Torwent/SRL-T/commit/bda91e632f1147f21b0d9c950fd64f1e80986368))
 
 
 
