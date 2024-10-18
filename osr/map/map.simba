@@ -1309,8 +1309,7 @@ begin
       if hideCollision and (Self.Loader.Collision.GetPixel(p) = $0) then
         Continue;
 
-      height := - (me.Z - Self.Height(p, False));
-      height := 4 * Power(height, 2) - 3 * height;
+      height := Self.HeightDifference(p, Self.Loader.GetLocal(Self.RegionIndex, Self.Position()), False);
 
       tile := Vec3(x, y, height).RotateXY(0, c.X, c.Y);
 
