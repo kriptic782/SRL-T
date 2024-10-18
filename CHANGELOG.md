@@ -1,3 +1,12 @@
+## [7.9.32](https://github.com/Torwent/SRL-T/compare/v7.9.31...v7.9.32) (2024-10-18)
+
+
+### Bug Fixes
+
+* slighly logic improvement on xj's PR ([200dacf](https://github.com/Torwent/SRL-T/commit/200dacff50efb4b13d95eaf9749beb5199d2a706))
+
+
+
 ## [7.9.31](https://github.com/Torwent/SRL-T/compare/v7.9.30...v7.9.31) (2024-10-07)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **translator:** proper upper coordinates global 2 chunk ([86c14d7](https://github.com/Torwent/SRL-T/commit/86c14d79a7f518659e9e34d19485a10973aafc15))
-
-
-
-## [7.9.27](https://github.com/Torwent/SRL-T/compare/v7.9.26...v7.9.27) (2024-10-05)
-
-
-### Bug Fixes
-
-* **webgraphv2:** some tweaks ([2aaef97](https://github.com/Torwent/SRL-T/commit/2aaef9729a1b4857a51ee1a26b342a0461416f21))
 
 
 
