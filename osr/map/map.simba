@@ -31,6 +31,12 @@ Record holding a player's full position:
     Plane: Int32;
   end;
 
+function TRSPosition.ToPoint(): TPoint; constref;
+begin
+  Result := Point(Self.X, Self.Y);
+end;
+
+type
 (*
 (TRSMap)=
 ## type TRSMap
@@ -1268,7 +1274,7 @@ begin
   me := Self.FullPosition();
 
   if Self.RegionIndex > -1 then
-    local := Self.Loader.GetLocal(Self.RegionIndex, [me.X, me.Y]);
+    local := Self.Loader.GetLocal(Self.RegionIndex, me.ToPoint());
 
   bitmap.FromClient();
 
@@ -1303,13 +1309,13 @@ begin
       if not Minimap.PointOnZoomRectangle(p) then
         Continue;
 
-      p := Self.MM2Map([me.X, me.Y], p, angle);
+      p := Self.MM2Map(me.ToPoint(), p, angle);
       p := Self.Loader.GetLocal(Self.RegionIndex, p);
 
       if hideCollision and (Self.Loader.Collision.GetPixel(p) = $0) then
         Continue;
 
-      height := Self.HeightDifference(p, Self.Loader.GetLocal(Self.RegionIndex, Self.Position()), False);
+      height := Self.HeightDifference(p, local, False);
 
       tile := Vec3(x, y, height).RotateXY(0, c.X, c.Y);
 
