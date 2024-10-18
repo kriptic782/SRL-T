@@ -1,3 +1,12 @@
+(*
+SRL-T is the core library used to bot OldSchool RuneScape with Simba.
+It's originally based on [SRL-Development](https://github.com/Villavu/SRL-Development)
+and scripts made with SRL-T may still work with SRL-Development but it's not
+guaranteed (The same applies the other way around).
+
+This library along with [WaspLib](https://github.com/Torwent/WaspLib) is the core of [WaspScripts](https://waspscripts.com).
+*)
+
 {$DEFINE SRL_OSR}
 {$I utils.simba}
 
