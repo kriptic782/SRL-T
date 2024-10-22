@@ -1,3 +1,12 @@
+## [7.9.33](https://github.com/Torwent/SRL-T/compare/v7.9.32...v7.9.33) (2024-10-22)
+
+
+### Bug Fixes
+
+* some tweaks to buildgraph so it's more flexible ([5d5595a](https://github.com/Torwent/SRL-T/commit/5d5595a7d1d5cb0f4825d4fc85f2984539c83cd9))
+
+
+
 ## [7.9.32](https://github.com/Torwent/SRL-T/compare/v7.9.31...v7.9.32) (2024-10-18)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMap:** adding maps post setup should now work properly ([471efc2](https://github.com/Torwent/SRL-T/commit/471efc24aedbf89f35fe97fffb9da865edbd9dbe))
-
-
-
-## [7.9.28](https://github.com/Torwent/SRL-T/compare/v7.9.27...v7.9.28) (2024-10-05)
-
-
-### Bug Fixes
-
-* **translator:** proper upper coordinates global 2 chunk ([86c14d7](https://github.com/Torwent/SRL-T/commit/86c14d79a7f518659e9e34d19485a10973aafc15))
 
 
 
