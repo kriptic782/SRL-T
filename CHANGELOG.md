@@ -1,3 +1,12 @@
+## [7.9.34](https://github.com/Torwent/SRL-T/compare/v7.9.33...v7.9.34) (2024-10-24)
+
+
+### Bug Fixes
+
+* **itemfinder:** update ([395b612](https://github.com/Torwent/SRL-T/commit/395b612248eb470a7ac1c244e3137814c305d696))
+
+
+
 ## [7.9.33](https://github.com/Torwent/SRL-T/compare/v7.9.32...v7.9.33) (2024-10-22)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * pointintriangle ([a597092](https://github.com/Torwent/SRL-T/commit/a59709293b7e417f1b66bcb2fa47c13bbb36afd1))
-
-
-
-## [7.9.29](https://github.com/Torwent/SRL-T/compare/v7.9.28...v7.9.29) (2024-10-06)
-
-
-### Bug Fixes
-
-* **TRSMap:** adding maps post setup should now work properly ([471efc2](https://github.com/Torwent/SRL-T/commit/471efc24aedbf89f35fe97fffb9da865edbd9dbe))
 
 
 
