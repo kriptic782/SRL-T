@@ -450,15 +450,21 @@ var
 begin
   Result := Self;
 
-  for i := 0 to coordinatesJSON.High() do
+  if Result.Size.X <> Result.Size.Y then
   begin
-    with coordinatesJSON.getJSONArray(i) do
-      Result.Coordinates += Point(getInt(0), getInt(1));
-
-    if Result.Size.X = Result.Size.Y then
-      Result.Rotations += 0
-    else
+    for i := 0 to coordinatesJSON.High() do
+    begin
+      with coordinatesJSON.getJSONArray(i) do
+        Result.Coordinates += [getInt(0), getInt(1)];
       Result.Rotations += 90 * rotationsJSON.getInt(i);
+    end;
+  end
+  else
+  begin
+    for i := 0 to coordinatesJSON.High() do
+      with coordinatesJSON.getJSONArray(i) do
+        Result.Coordinates += [getInt(0), getInt(1)];
+    SetLength(Result.Rotations, Length(Result.Coordinates));
   end;
 
   for i := 0 to colorsJSON.High() do
