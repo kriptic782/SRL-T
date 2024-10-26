@@ -1,3 +1,12 @@
+## [7.9.36](https://github.com/Torwent/SRL-T/compare/v7.9.35...v7.9.36) (2024-10-26)
+
+
+### Reverts
+
+* Revert "fix: read notes" ([0a9f97f](https://github.com/Torwent/SRL-T/commit/0a9f97fa66f075f1803ac6e8558da5809156b6f1))
+
+
+
 ## [7.9.35](https://github.com/Torwent/SRL-T/compare/v7.9.34...v7.9.35) (2024-10-25)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * slighly logic improvement on xj's PR ([200dacf](https://github.com/Torwent/SRL-T/commit/200dacff50efb4b13d95eaf9749beb5199d2a706))
-
-
-
-## [7.9.31](https://github.com/Torwent/SRL-T/compare/v7.9.30...v7.9.31) (2024-10-07)
-
-
-### Bug Fixes
-
-* read notes ([dc589e0](https://github.com/Torwent/SRL-T/commit/dc589e027e5350b6e4f154a52ca7f6f73df80107))
 
 
 
