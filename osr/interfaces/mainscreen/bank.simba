@@ -1444,7 +1444,8 @@ Depositis your inventory by clicking the deposit inventory button
 *)
 function TRSBank.DepositAll(): Boolean;
 begin
-  Result := (Inventory.Count() = 0) or Self.GetButton(ERSBankButton.DEPOSIT_INVENTORY).Click();
+  if Self.IsOpen() then
+    Result := (Inventory.Count() = 0) or Self.GetButton(ERSBankButton.DEPOSIT_INVENTORY).Click();
 end;
 
 var
