@@ -681,8 +681,7 @@ var
   b: TBox;
 begin
   b := Self.GetSlotBox(otherSlot);
-  if b = [] then
-    Exit;
+  if b = [] then Exit;
 
   Result := Self.SetSelectedSlot(slot);
   if Result then
