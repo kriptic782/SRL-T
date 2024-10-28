@@ -1,3 +1,12 @@
+## [7.9.37](https://github.com/Torwent/SRL-T/compare/v7.9.36...v7.9.37) (2024-10-28)
+
+
+### Bug Fixes
+
+* **collision:** collision map doesn't include stuff I'm not sure about anymore ([5141c91](https://github.com/Torwent/SRL-T/commit/5141c9108d238bfae21e5925ce68196d1637db9e))
+
+
+
 ## [7.9.36](https://github.com/Torwent/SRL-T/compare/v7.9.35...v7.9.36) (2024-10-26)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * some tweaks to buildgraph so it's more flexible ([5d5595a](https://github.com/Torwent/SRL-T/commit/5d5595a7d1d5cb0f4825d4fc85f2984539c83cd9))
-
-
-
-## [7.9.32](https://github.com/Torwent/SRL-T/compare/v7.9.31...v7.9.32) (2024-10-18)
-
-
-### Bug Fixes
-
-* slighly logic improvement on xj's PR ([200dacf](https://github.com/Torwent/SRL-T/commit/200dacff50efb4b13d95eaf9749beb5199d2a706))
 
 
 
