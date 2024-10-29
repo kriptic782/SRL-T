@@ -7,6 +7,17 @@ type
   TRSItem = Variant;
   TRSItemArray = array of TRSItem;
 
+{%codetools off}
+function _ItemSortComparison(constref l, r: TRSItem): Int32;
+var
+  left, right: String;
+begin
+  left := ToStr(l);
+  right := ToStr(r);
+  Result := CompareStr(left, right);
+end;
+{%codetools on}
+
 (*
 ## ItemArray.Find
 ```pascal
@@ -131,13 +142,13 @@ end;
 
 procedure TRSItemArray.Sort();
 begin
-  System.Sort(Self);
+  System.Sort(Self, @_ItemSortComparison);
 end;
 
 function TRSItemArray.Sorted(): TRSItemArray;
 begin
   Result := Copy(Self);
-  System.Sort(Result);
+  Result.Sort();
 end;
 
 
@@ -243,13 +254,43 @@ begin
 end;
 
 
-function TRSItemArray.Intersection(other: TRSItemArray): TRSItemArray; constref;
+function TRSItemArray.Intersection(other: TRSItemArray; unsorted: Boolean = True): TRSItemArray; constref;
 var
-  i: Int32;
+  i, j, resultIndex: Int32;
+  s1, s2: TRSItemArray;
+  a, b: String;
 begin
-  for i := 0 to High(other) do
-    if Self.Find(other[i]) > -1 then
-      Result += other[i];
+  s1 := Copy(Self);
+
+  if unsorted then
+  begin
+    s1.Sort();
+    s2 := other.Sorted();
+  end
+  else
+    s2 := Copy(other);
+
+  SetLength(Result, Min(Length(Self), Length(other)));
+
+  while (i < Length(s1)) and (j < Length(s2)) do
+  begin
+    a := ToStr(s1[i]);
+    b := ToStr(s2[j]);
+
+    if a = b then
+    begin
+      Result[resultIndex] := s1[i];
+      Inc(resultIndex);
+      Inc(i);
+      Inc(j);
+      Continue;
+    end;
+
+    if a < b then Inc(i)
+    else Inc(j);
+  end;
+
+  SetLength(Result, resultIndex);
 end;
 
 function TRSItemArray.Difference(other: TRSItemArray): TRSItemArray; constref;

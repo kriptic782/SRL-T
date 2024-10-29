@@ -87,8 +87,7 @@ begin
   h := $811C9DC5;
   for i:=0 to High(pixels) do
   begin
-    if pixels[i] = $0 then
-      Continue;
+    if pixels[i] = $0 then Continue;
     h := (h * $1000193) xor pixels[i];
   end;
 

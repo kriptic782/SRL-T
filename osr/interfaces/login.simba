@@ -845,22 +845,16 @@ WriteLn Login.GetPlayerBioHash();
 *)
 function TRSLogin.GetPlayerBioHash(): Double;
 var
-  h, i: UInt32;
-  k: String;
+  h: UInt32;
 begin
   if Self.Players = [] then
     Self.Fatal('No players declared: Add an account if you want scripts to handle login.');
   if not InRange(Self.PlayerIndex, 0, High(Self.Players)) then
     Self.Fatal('Player is out of range: Account number selected in script does not exist.');
 
-
   if (Self.Players[Self.PlayerIndex].BioHash = 0) then
   begin
-    k := Self.Players[Self.PlayerIndex].User;
-    h := $811C9DC5;
-    for i:=1 to Length(k) do
-      h := (h * $1000193) xor Ord(k[i]);
-
+    h := Self.Players[Self.PlayerIndex].User.Hash();
     Self.Players[Self.PlayerIndex].BioHash := h / $FFFFFFFF;
   end;
 

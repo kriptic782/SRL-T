@@ -577,13 +577,21 @@ Returns the hexadecimal value that represents the string.
 *)
 function String.Hex(): string; constref;
 var
-  n: Integer;
+  n: Int32;
 begin
   Result := '';
   for n := 1 to Length(Self) do
     Result := LowerCase(Result + IntToHex(Ord(Self[n]), 2));
 end;
 
+function String.Hash(): UInt32; constref;
+var
+  i: Int32;
+begin
+  Result := $811C9DC5;
+  for i := 1 to Length(Self) do
+    Result := (Result * $1000193) xor Ord(Self[i]);
+end;
 
 //---| operator overloads bellow this |---------------------------------------\\
 (*

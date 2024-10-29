@@ -801,8 +801,7 @@ begin
   h := $811C9DC5;
   for i := 0 to High(data) do
   begin
-    if data[i] = $0 then
-      Continue;
+    if data[i] = $0 then Continue;
     h := (h * $1000193) xor data[i];
   end;
 
