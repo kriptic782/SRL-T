@@ -1,3 +1,12 @@
+## [7.9.38](https://github.com/Torwent/SRL-T/compare/v7.9.37...v7.9.38) (2024-10-29)
+
+
+### Bug Fixes
+
+* read notes ([d44e733](https://github.com/Torwent/SRL-T/commit/d44e733c5c9978cc0cad40435fda09552b79627b))
+
+
+
 ## [7.9.37](https://github.com/Torwent/SRL-T/compare/v7.9.36...v7.9.37) (2024-10-28)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **itemfinder:** update ([395b612](https://github.com/Torwent/SRL-T/commit/395b612248eb470a7ac1c244e3137814c305d696))
-
-
-
-## [7.9.33](https://github.com/Torwent/SRL-T/compare/v7.9.32...v7.9.33) (2024-10-22)
-
-
-### Bug Fixes
-
-* some tweaks to buildgraph so it's more flexible ([5d5595a](https://github.com/Torwent/SRL-T/commit/5d5595a7d1d5cb0f4825d4fc85f2984539c83cd9))
 
 
 
