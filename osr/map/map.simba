@@ -1111,7 +1111,16 @@ begin
   Self.GetGlobal := @map^.Loader.GetGlobal;
   Self.GetLocal  := @map^.Loader.GetLocal;
 
-  Self.Graph := map^.Loader.Graph;
+  Self.Graph.Nodes := Copy(map^.Loader.Graph.Nodes);
+  Self.Graph.Paths := Copy(map^.Loader.Graph.Paths);
+  Self.Graph.Names := Copy(map^.Loader.Graph.Names);
+  Self.Graph.Doors := Copy(map^.Loader.Graph.Doors);
+  Self.Graph.Blocking := Copy(map^.Loader.Graph.Blocking);
+  Self.Graph.Doors := Copy(map^.Loader.Graph.Doors);
+  Self.Graph.WalkableSpace := Copy(map^.Loader.Graph.WalkableSpace);
+  Self.Graph.WalkableClusters := Copy(map^.Loader.Graph.WalkableClusters);
+  Self.Graph.ObjectClusters := Copy(map^.Loader.Graph.ObjectClusters);
+
   Self.Graph.Nodes := Self.GetLocal(Self.Graph.Nodes);
   Self.Graph.WalkableSpace := Self.GetLocal(Self.Graph.WalkableSpace);
 
