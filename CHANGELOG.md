@@ -1,3 +1,12 @@
+## [7.9.40](https://github.com/Torwent/SRL-T/compare/v7.9.39...v7.9.40) (2024-11-06)
+
+
+### Bug Fixes
+
+* **MM2MS:** improved performance of Minimap.GetTileMS() ([b6e038f](https://github.com/Torwent/SRL-T/commit/b6e038f4a72eea7a7588bd8dd422ad7f2a94367c))
+
+
+
 ## [7.9.39](https://github.com/Torwent/SRL-T/compare/v7.9.38...v7.9.39) (2024-10-30)
 
 
@@ -31,15 +40,6 @@
 ### Reverts
 
 * Revert "fix: read notes" ([0a9f97f](https://github.com/Torwent/SRL-T/commit/0a9f97fa66f075f1803ac6e8558da5809156b6f1))
-
-
-
-## [7.9.35](https://github.com/Torwent/SRL-T/compare/v7.9.34...v7.9.35) (2024-10-25)
-
-
-### Bug Fixes
-
-* read notes ([808eb0c](https://github.com/Torwent/SRL-T/commit/808eb0c0ca80f3090cbc2aaf7343ea6e25c92fa8))
 
 
 
