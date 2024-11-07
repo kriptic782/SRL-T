@@ -1,3 +1,12 @@
+## [7.9.41](https://github.com/Torwent/SRL-T/compare/v7.9.40...v7.9.41) (2024-11-07)
+
+
+### Bug Fixes
+
+* arr.Difference() should now working properly ([6111a76](https://github.com/Torwent/SRL-T/commit/6111a7614c87c06c078c491af69c2511f66c6606))
+
+
+
 ## [7.9.40](https://github.com/Torwent/SRL-T/compare/v7.9.39...v7.9.40) (2024-11-06)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **collision:** collision map doesn't include stuff I'm not sure about anymore ([5141c91](https://github.com/Torwent/SRL-T/commit/5141c9108d238bfae21e5925ce68196d1637db9e))
-
-
-
-## [7.9.36](https://github.com/Torwent/SRL-T/compare/v7.9.35...v7.9.36) (2024-10-26)
-
-
-### Reverts
-
-* Revert "fix: read notes" ([0a9f97f](https://github.com/Torwent/SRL-T/commit/0a9f97fa66f075f1803ac6e8558da5809156b6f1))
 
 
 
