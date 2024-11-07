@@ -13,9 +13,9 @@ function TIntegerArray.Intersection(other: TIntegerArray): TIntegerArray; constr
 var
   i: Int32;
 begin
-  for i := 0 to High(other) do
-    if Self.Find(other[i]) > -1 then
-      Result += other[i];
+  for i in other do
+    if InIntArray(Self, i) then
+      Result += i;
 end;
 
 function TIntegerArray.Difference(other: TIntegerArray): TIntegerArray; constref;
@@ -23,16 +23,28 @@ var
   i: Int64;
 begin
   for i in Self do
-    if other.Find(i) = -1 then
+    if not InIntArray(other, i) then
+      Result += i;
+
+  Result.ClearDuplicates();
+end;
+
+function TIntegerArray.SymmetricDifference(other: TIntegerArray): TIntegerArray; constref;
+var
+  i: Int64;
+begin
+  for i in Self do
+    if not InIntArray(other, i) then
       Result += i;
 
   for i in other do
-    if Self.Find(i) = -1 then
+    if not InIntArray(Self, i) then
       Result += i;
 
   Result.ClearDuplicates();
   Result.Sort();
 end;
+
 
 procedure TIntegerArray.Append(const Value: Integer);
 var top:Int32;

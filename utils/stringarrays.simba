@@ -295,17 +295,22 @@ begin
   for item in Self do
     if other.Find(item) = -1 then
       Result += item;
+  Result.ClearDuplicates();
+end;
+
+function TStringArray.SymmetricDifference(other: TStringArray): TStringArray; constref;
+var
+  item: String;
+begin
+  for item in Self do
+    if other.Find(item) = -1 then
+      Result += item;
 
   for item in other do
     if Self.Find(item) = -1 then
       Result += item;
 
   Result.ClearDuplicates();
-end;
-
-function TStringArray.SymmetricDifference(other: TStringArray): TStringArray; constref;
-begin
-  Result := Self.Difference(other) + other.Difference(Self);
 end;
 
 
