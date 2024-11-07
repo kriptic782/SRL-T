@@ -1,3 +1,12 @@
+# [7.10.0](https://github.com/Torwent/SRL-T/compare/v7.9.41...v7.10.0) (2024-11-07)
+
+
+### Features
+
+* add SetCount() ([45f37a6](https://github.com/Torwent/SRL-T/commit/45f37a65ae09ea44af87cbad9e4c1585e0c11bac))
+
+
+
 ## [7.9.41](https://github.com/Torwent/SRL-T/compare/v7.9.40...v7.9.41) (2024-11-07)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([d44e733](https://github.com/Torwent/SRL-T/commit/d44e733c5c9978cc0cad40435fda09552b79627b))
-
-
-
-## [7.9.37](https://github.com/Torwent/SRL-T/compare/v7.9.36...v7.9.37) (2024-10-28)
-
-
-### Bug Fixes
-
-* **collision:** collision map doesn't include stuff I'm not sure about anymore ([5141c91](https://github.com/Torwent/SRL-T/commit/5141c9108d238bfae21e5925ce68196d1637db9e))
 
 
 
