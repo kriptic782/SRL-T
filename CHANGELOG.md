@@ -1,3 +1,12 @@
+## [7.10.1](https://github.com/Torwent/SRL-T/compare/v7.10.0...v7.10.1) (2024-11-08)
+
+
+### Bug Fixes
+
+* read notes ([8a94248](https://github.com/Torwent/SRL-T/commit/8a94248a340c1f3726b515e2ae2bd7b78f9c06bb))
+
+
+
 # [7.10.0](https://github.com/Torwent/SRL-T/compare/v7.9.41...v7.10.0) (2024-11-07)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **dev tools:** Map.Debug() shouldn't offset the webgraph coordinates anymore ([ab575e4](https://github.com/Torwent/SRL-T/commit/ab575e4330a74e7715d39a787d05d42dd4b5d819))
-
-
-
-## [7.9.38](https://github.com/Torwent/SRL-T/compare/v7.9.37...v7.9.38) (2024-10-29)
-
-
-### Bug Fixes
-
-* read notes ([d44e733](https://github.com/Torwent/SRL-T/commit/d44e733c5c9978cc0cad40435fda09552b79627b))
 
 
 
