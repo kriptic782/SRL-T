@@ -295,7 +295,7 @@ begin
 
   text := MainScreen.GetUpText();
 
-  if text.ContainsAny(['Use', '>']) and not Self.Walker^.TargetUpText.ContainsAny(['Use', '>']) then
+  if text.ContainsAny(['Use', '>']) and not Self.Walker^.ActionUpText.ContainsAny(['Use', '>']) then
   begin
     ChooseOption.Select('Cancel');
     Exit;

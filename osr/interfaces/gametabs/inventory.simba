@@ -859,16 +859,13 @@ begin
         Exit;
     end;
   finally
+    Result := attempts <= 5;
     if Keyboard.IsKeyDown(VK_SHIFT) then
       Keyboard.KeyUp(VK_SHIFT);
   end;
 
-  Result := attempts <= 5;
-  if not Result then
-  begin
-    Self.DebugLn('Shift drop is not enabled, consider enabling it for better performance.');
-    Self.ShiftEnabled := False;
-  end;
+  Self.DebugLn('Shift drop is not enabled, consider enabling it for better performance.');
+  Self.ShiftEnabled := False;
 end;
 
 function TRSInventory.ShiftDrop(slots: TIntegerArray; pattern: TIntegerArray): Boolean; overload;
