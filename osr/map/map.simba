@@ -92,6 +92,8 @@ This is caleld automatically for you and you shouldn't need to call it.
 procedure TRSMap.InternalSetup();
 var
   minimapImage, minimapSample: TMufasaBitmap;
+  i: Int32;
+  b: TBox;
 begin
   if Self.Sample.Amount = 0 then Self.Sample.Amount := 2;
   if Self.Sample.Radius = 0 then Self.Sample.Radius := 67;
@@ -100,6 +102,13 @@ begin
   minimapSample := Minimap.ScaleMinimap(minimapImage, Self.Loader.Downscale, Self.Sample.Radius);
 
   Self.Cache := TMatchTemplateRGBCache.Create(Self.Loader.DownscaledMap.ToMatrix(), MinimapSample.ToMatrix());
+
+  Self.Filters := [];
+  for i := 0 to High(Self.Loader.Regions) do
+  begin
+    b := Self.Loader.Regions[i].Region.Expand(-(Self.Loader.Padding+20));
+    Self.Filters += [b, True];
+  end;
 
   if not Self.IsSetup then
   begin
@@ -437,19 +446,6 @@ begin
         end;
       end;
 
-      if Self.Filters = [] then
-      begin
-        for n := 0 to High(Self.Loader.Regions) do
-          if Self.Loader.Regions[n].Region.Expand(-40).Contains(p) then
-          begin
-            Result += p;
-            Break;
-          end;
-
-        if Self.Loader.Regions = [] then
-          Result += p;
-      end;
-
       matrix.Fill([X - 5, Y - 5, X + 5, Y + 5], 0);
     end;
 
@@ -759,10 +755,11 @@ var
   radians: Double;
   mapVec: Vector3;
 begin
+  radians    := Minimap.GetCompassAngle(False);
+
   with Minimap.Center() do
   begin
     mapPoint   := [X, Y] + (mapPoint - playerPoint);
-    radians    := Minimap.GetCompassAngle(False);
     mapVec     := Vec3(mapPoint.X,mapPoint.Y).RotateXY(radians, X, Y);
   end;
 
