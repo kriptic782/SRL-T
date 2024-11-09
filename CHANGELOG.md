@@ -1,3 +1,12 @@
+## [7.10.2](https://github.com/Torwent/SRL-T/compare/v7.10.1...v7.10.2) (2024-11-09)
+
+
+### Bug Fixes
+
+* **TRSMap:** Map filters are automatically setup ([9ec2170](https://github.com/Torwent/SRL-T/commit/9ec2170c5d29f9a304e828a6560882c367ec8927))
+
+
+
 ## [7.10.1](https://github.com/Torwent/SRL-T/compare/v7.10.0...v7.10.1) (2024-11-08)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **MM2MS:** improved performance of Minimap.GetTileMS() ([b6e038f](https://github.com/Torwent/SRL-T/commit/b6e038f4a72eea7a7588bd8dd422ad7f2a94367c))
-
-
-
-## [7.9.39](https://github.com/Torwent/SRL-T/compare/v7.9.38...v7.9.39) (2024-10-30)
-
-
-### Bug Fixes
-
-* **dev tools:** Map.Debug() shouldn't offset the webgraph coordinates anymore ([ab575e4](https://github.com/Torwent/SRL-T/commit/ab575e4330a74e7715d39a787d05d42dd4b5d819))
 
 
 
