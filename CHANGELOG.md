@@ -1,3 +1,12 @@
+## [7.10.3](https://github.com/Torwent/SRL-T/compare/v7.10.2...v7.10.3) (2024-11-10)
+
+
+### Bug Fixes
+
+* **walkerV2:** the door handler is now disabled by default ([bfc1dde](https://github.com/Torwent/SRL-T/commit/bfc1dde439bc4636ecc798c1a95149f31241ad58))
+
+
+
 ## [7.10.2](https://github.com/Torwent/SRL-T/compare/v7.10.1...v7.10.2) (2024-11-09)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * arr.Difference() should now working properly ([6111a76](https://github.com/Torwent/SRL-T/commit/6111a7614c87c06c078c491af69c2511f66c6606))
-
-
-
-## [7.9.40](https://github.com/Torwent/SRL-T/compare/v7.9.39...v7.9.40) (2024-11-06)
-
-
-### Bug Fixes
-
-* **MM2MS:** improved performance of Minimap.GetTileMS() ([b6e038f](https://github.com/Torwent/SRL-T/commit/b6e038f4a72eea7a7588bd8dd422ad7f2a94367c))
 
 
 
