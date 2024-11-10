@@ -56,16 +56,14 @@ end;
 
     OnWalkEvent, OnWaitMovingEvent: TRSWalkerEvent;
 
-    {%codetools off}
+    //Don't touch:
     _PathIndex: Int32;
     _Path: TPointArray;
-
     _DoorHandler: record
       Door: TRSDoor;
       DoorsOnPath: TRSDoorArray;
-      FlagMoved, Handling, SettingUp, Skipped: Boolean;
+      FlagMoved, Handling, SettingUp, Skipped, Enabled: Boolean;
     end;
-    {%codetools on}
   end;
 
 
@@ -1293,6 +1291,13 @@ var
 begin
   if not System.InRange(pathRandomness, 0, 1) then
     Self.Fatal('TRSWalkerV2.WebWalk `PathRandomness` must be within 0..1');
+
+  if not Self._DoorHandler.Enabled then
+  begin
+    if me = destination then Exit(True);
+    path := _GetPath(me, True);
+    Exit(Self.WalkPath(path, waitUntilDistance, debug));
+  end;
 
   for tries := 0 to 4 do
   begin

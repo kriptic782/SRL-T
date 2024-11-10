@@ -71,7 +71,7 @@ begin
   Result := MsToTime(GetTimeRunning(), TheType);
 end;
 
-function TSRL.TimeStamp: String;
+function TSRL.TimeStamp(): String;
 var
   Time: Int64;
   Hours, Mins, Secs, Millis: Int32;
@@ -138,7 +138,7 @@ begin
   Self.Timeout := Self.Timeout + Time;
 end;
 
-function TCountDown.TimeRemaining: UInt32;
+function TCountDown.TimeRemaining(): UInt32;
 begin
   if Self.IsPaused() then
     Result := Max(Self.Timeout - Self.Paused, 0)
@@ -146,23 +146,23 @@ begin
     Result := Max(Self.Timeout - GetTickCount(), 0);
 end;
 
-function TCountDown.IsFinished: Boolean;
+function TCountDown.IsFinished(): Boolean;
 begin
   Result := (Self.Timeout > 0) and (Self.Paused = 0) and (TimeRemaining() = 0);
 end;
 
-function TCountDown.IsPaused: Boolean;
+function TCountDown.IsPaused(): Boolean;
 begin
   Result := Self.Paused > 0;
 end;
 
-procedure TCountDown.Pause;
+procedure TCountDown.Pause();
 begin
   if not Self.IsPaused() then
     Self.Paused := GetTickCount();
 end;
 
-procedure TCountDown.Resume;
+procedure TCountDown.Resume();
 begin
   if Self.IsPaused() then
   begin
