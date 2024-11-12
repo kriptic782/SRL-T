@@ -1,3 +1,12 @@
+## [7.10.4](https://github.com/Torwent/SRL-T/compare/v7.10.3...v7.10.4) (2024-11-12)
+
+
+### Bug Fixes
+
+* **Magic:** GetSpellBook ([acb354a](https://github.com/Torwent/SRL-T/commit/acb354a52d4b967dd0fbcc4f4421471dad3315b0))
+
+
+
 ## [7.10.3](https://github.com/Torwent/SRL-T/compare/v7.10.2...v7.10.3) (2024-11-10)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * add SetCount() ([45f37a6](https://github.com/Torwent/SRL-T/commit/45f37a65ae09ea44af87cbad9e4c1585e0c11bac))
-
-
-
-## [7.9.41](https://github.com/Torwent/SRL-T/compare/v7.9.40...v7.9.41) (2024-11-07)
-
-
-### Bug Fixes
-
-* arr.Difference() should now working properly ([6111a76](https://github.com/Torwent/SRL-T/commit/6111a7614c87c06c078c491af69c2511f66c6606))
 
 
 
