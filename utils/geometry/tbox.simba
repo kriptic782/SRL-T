@@ -349,6 +349,14 @@ begin
 end;
 
 
+function TBox.ToString(): String; constref;
+begin
+  Result := '[' +
+    ToStr(Self.X1) + ', ' + ToStr(Self.Y1) + ', ' +
+    ToStr(Self.X2) + ', ' + ToStr(Self.Y2) +
+  ']';
+end;
+
 operator > (left, right: TBox): Boolean;
 begin
   Result := left.Area() > right.Area();

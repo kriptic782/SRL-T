@@ -19,7 +19,7 @@ Keep in mind that unless you send a PR with your additions, they will be lost wi
 {$I SRL-T/osr.simba}
 {$H-}
 const
-  CHUNK: TBox = [24,63,26,61];
+  CHUNK_B: TBox = [20,152,24,148];
   FILE_NAME: String = '';
   PLANE: Int32 = 0;
   GRAPH_OFFSET: TPoint = [0, 0];
@@ -59,8 +59,8 @@ var
   cbitmap: TMufasaBitmap;
 begin
   Map.Loader.Init(8);
-  s := [CHUNK.X1, CHUNK.Y1];
-  f := [CHUNK.X2, CHUNK.Y2];
+  s := [CHUNK_B.X1, CHUNK_B.Y1];
+  f := [CHUNK_B.X2, CHUNK_B.Y2];
   name := ToStr(s.X) + '-' + ToStr(s.Y) + '_' + ToStr(f.X) + '-' + ToStr(f.Y);
 
   if FILE_NAME = '' then

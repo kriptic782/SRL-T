@@ -28,15 +28,8 @@ type
     UNKNOWN
   );
 
-{
-function TRSGameTabs.X1: Int32; constref; override;
-begin
-  Result := inherited
-end;
-}
-
 // Needed because depending on the client width the tabs stack into row(s)
-function TRSGameTabs.Y1: Int32; override;
+function TRSGameTabs.Y1(): Int32; override;
 begin
   Result := inherited;
 
@@ -44,15 +37,8 @@ begin
     Result += 36;
 end;
 
-{
-function TRSGameTabs.X2: Int32; override;
-begin
-  Result := inherited;
-end;
-}
-
 // Needed because depending on the client width the tabs stack into row(s)
-function TRSGameTabs.Y2: Int32; override;
+function TRSGameTabs.Y2(): Int32; override;
 begin
   Result := inherited;
 
@@ -60,14 +46,14 @@ begin
     Result += 36;
 end;
 
-function TRSGameTabs.GetTabBoxes: TBoxArray;
+function TRSGameTabs.GetTabBoxes(): TBoxArray;
 var
-  I: Int32;
+  i: Int32;
 begin
   case Self.Mode of
     ERSClientMode.FIXED, ERSClientMode.RESIZABLE_CLASSIC:
       begin
-        Result := Grid(7, 2, 30, 33, [3, 265], [Self.X1 + 6, Self.Y1 + 1]);
+        Result := Grid(7, 2, 30, 33, [3, 265], [Self.X1() + 6, Self.Y1() + 1]);
       end;
 
     ERSClientMode.RESIZABLE_MODERN:
@@ -75,50 +61,50 @@ begin
         // One row
         if (RootInterface.Width >= 948) then
         begin
-          Result := Grid(14, 1, 30, 33, [3, 0], [Self.X1 - 197, Self.Y2 - 70]);
+          Result := Grid(14, 1, 30, 33, [3, 0], [Self.X1() - 197, Self.Y2() - 70]);
           for I := Ord(ERSGameTab.MUSIC) downto Ord(ERSGameTab.FRIENDS) - 1 do
-            Result[I] := Result[I-1];
+            Result[i] := Result[i-1];
         end else
         // Two rows
-          Result := Grid(7, 2, 30, 33, [3, 3], [Self.X1, Self.Y2 - 70]);
+          Result := Grid(7, 2, 30, 33, [3, 3], [Self.X1(), Self.Y2() - 70]);
 
         // Logout button is moved to top right corner
         Result[7] := Result[10];
-        Result[10] := [RootInterface.X2 - 19, RootInterface.Y1 + 9, RootInterface.X2 - 10, RootInterface.Y1 + 18];
+        Result[10] := [RootInterface.X2() - 19, RootInterface.Y1() + 9, RootInterface.X2() - 10, RootInterface.Y1() + 18];
       end;
   end;
 end;
 
-function TRSGameTabs.GetTabBox(Tab: ERSGameTab): TBox;
+function TRSGameTabs.GetTabBox(tab: ERSGameTab): TBox;
 var
-  Tabs: TBoxArray := Self.GetTabBoxes;
+  tabs: TBoxArray;
 begin
-  if (Tabs = []) or (Tab = ERSGameTab.UNKNOWN) then
-    Exit;
-  Result := Tabs[Tab];
+  tabs := Self.GetTabBoxes();
+  if (tabs = []) or (tab = ERSGameTab.UNKNOWN) then Exit;
+  Result := tabs[tab];
 end;
 
-function TRSGameTabs.GetCurrentTab: ERSGametab;
+function TRSGameTabs.GetCurrentTab(): ERSGametab;
 var
-  Tabs: TBoxArray;
-  I: Int32;
+  tabs: TBoxArray;
+  i: Int32;
 begin
-  Tabs := Self.GetTabBoxes();
+  tabs := Self.GetTabBoxes();
   
-  if (Self.Mode = ERSClientMode.RESIZABLE_MODERN) and (SRL.CountColor(8639715, Tabs[ERSGameTab.LOGOUT]) > 0) then
+  if (Self.Mode = ERSClientMode.RESIZABLE_MODERN) and (SRL.CountColor(8639715, tabs[ERSGameTab.LOGOUT]) > 0) then
     Exit(ERSGameTab.LOGOUT);
   
-  for I := 0 to High(Tabs) do
-    if (SRL.CountColor(CTS1(1778534, 22), Tabs[I]) > 50) then
-      Exit(ERSGameTab(I));
+  for i := 0 to High(tabs) do
+    if (SRL.CountColor(CTS1(1778534, 22), tabs[i]) > 50) then
+      Exit(ERSGameTab(i));
       
-  Exit(ERSGameTab.UNKNOWN);
+  Result := ERSGameTab.UNKNOWN;
 end;
 
 (*
 ## GameTabs.Open()
 ```pascal
-function TRSGameTabs.Open(Tab: ERSGameTab): Boolean;
+function TRSGameTabs.Open(tab: ERSGameTab): Boolean;
 ```
 Opens the specified `Tab`.
 
@@ -127,20 +113,18 @@ Example:
 WriteLn GameTabs.Open(ERSGameTab.INVENTORY);
 ```
 *)
-function TRSGameTabs.Open(Tab: ERSGameTab): Boolean;
+function TRSGameTabs.Open(tab: ERSGameTab): Boolean;
 var
   i: Int32;
 begin
-  if Self.GetCurrentTab() = Tab then
-    Exit(True);
+  if Self.GetCurrentTab() = tab then Exit(True);
 
   for i := 1 to 3 do
   begin
-    Mouse.Click(GetTabBox(Tab), MOUSE_LEFT, SRL.Dice(50));
+    Mouse.Click(Self.GetTabBox(tab), MOUSE_LEFT, SRL.Dice(50));
 
-    Result := WaitUntil(Self.GetCurrentTab() = Tab, SRL.TruncatedGauss(50, 2000), SRL.TruncatedGauss(2000, 3000));
-    if Result then
-      Exit;
+    Result := WaitUntil(Self.GetCurrentTab() = tab, SRL.TruncatedGauss(50, 2000), SRL.TruncatedGauss(2000, 3000));
+    if Result then Exit;
   end;
 end;
 
@@ -151,7 +135,7 @@ begin
   Bitmap.DrawBoxes(GetTabBoxes(), $00FFFF);
 end;
 
-procedure TRSGameTabs.Setup; override;
+procedure TRSGameTabs.Setup(); override;
 begin
   inherited;
     

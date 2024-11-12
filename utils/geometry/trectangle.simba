@@ -288,7 +288,7 @@ begin
   Result := TSRL.NearestEdge(p, Self);
 end;
 
-function TRectangle.Area: Int32; constref;
+function TRectangle.Area(): Int32; constref;
 begin
   Result := Round(Distance(Self.Btm, Self.Right)) *
             Round(Distance(Self.Btm, Self.Left));

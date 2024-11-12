@@ -179,7 +179,7 @@ var
   box: TBox;
 begin
   box := Gametabs.GetTabBox(ERSGameTab.MAGIC);
-  if SRL.CountColor(ARCEUUS_COLOR, box) >= 85 then Exit(ERSSpellBook.ARCEUUS);
+  if SRL.CountColor(ARCEUUS_COLOR, box) >= 81 then Exit(ERSSpellBook.ARCEUUS);
   if SRL.CountColor(ANCIENT_COLOR, box) >= 85 then Exit(ERSSpellBook.ANCIENT);
   if SRL.CountColor(LUNAR_COLOR,   box) >= 85 then Exit(ERSSpellBook.LUNAR);
 end;
