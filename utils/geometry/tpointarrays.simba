@@ -1068,8 +1068,7 @@ end;
 
 function TPointArray.NearestPoint(other: TPoint): TPoint;
 begin
-  if Length(Self) <= 0 then
-    Exit;
+  if Length(Self) <= 0 then Exit;
   Result := Self.Sorted(other)[0];
 end;
 

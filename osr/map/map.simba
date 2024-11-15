@@ -106,7 +106,7 @@ begin
   Self.Filters := [];
   for i := 0 to High(Self.Loader.Regions) do
   begin
-    b := Self.Loader.Regions[i].Region.Expand(-(Self.Loader.Padding+20));
+    b := Self.Loader.Regions[i].Region.Expand(-(Self.Loader.Padding));
     Self.Filters += [b, True];
   end;
 

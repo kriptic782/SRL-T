@@ -354,6 +354,14 @@ begin
   end;
 end;
 
+function TPoint.RandomBetween(other: TPoint): TPoint; constref;
+var
+  r: Double;
+begin
+  r := System.Random();
+  Result.X := Self.X + Round(r * (other.X - Self.X));
+  Result.Y := Self.Y + Round(r * (other.Y - Self.Y));
+end;
 
 function TPointArray.RandomValue(): TPoint; constref;
 begin

@@ -540,6 +540,15 @@ begin
   Result := Self.ConnectNodes(a, i);
 end;
 
+function TWebGraphV2.ConnectNodesEx(a,b: TPoint): Boolean; overload;
+var
+  i, j: Int32;
+begin
+  i := Self.FindNearestNode(a);
+  j := Self.FindNearestNode(b);
+  Result := Self.ConnectNodes(i,j);
+end;
+
 
 function TWebGraphV2.DeleteNode(node: Int32): Int32;
 var
