@@ -1,3 +1,12 @@
+## [7.10.5](https://github.com/Torwent/SRL-T/compare/v7.10.4...v7.10.5) (2024-11-15)
+
+
+### Bug Fixes
+
+* **TRSMap:** read notes ([ba36a25](https://github.com/Torwent/SRL-T/commit/ba36a2533184906b91787d8151ef2cc2d424ec90))
+
+
+
 ## [7.10.4](https://github.com/Torwent/SRL-T/compare/v7.10.3...v7.10.4) (2024-11-12)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([8a94248](https://github.com/Torwent/SRL-T/commit/8a94248a340c1f3726b515e2ae2bd7b78f9c06bb))
-
-
-
-# [7.10.0](https://github.com/Torwent/SRL-T/compare/v7.9.41...v7.10.0) (2024-11-07)
-
-
-### Features
-
-* add SetCount() ([45f37a6](https://github.com/Torwent/SRL-T/commit/45f37a65ae09ea44af87cbad9e4c1585e0c11bac))
 
 
 
