@@ -574,6 +574,57 @@ begin
 end;
 
 
+procedure TRSMap.ReplaceFilter(index: Int32; box: TBox; inside: Boolean; globalCoordinates: Boolean = True);
+var
+  a, b: TPoint;
+begin
+  if globalCoordinates then
+  begin
+    a := Self.Loader.GetLocal(Point(box.X1, box.Y1));
+    b := Self.Loader.GetLocal(Point(box.X2, box.Y2));
+    box.X1 := a.X;
+    box.Y1 := a.Y;
+    box.X2 := b.X;
+    box.Y2 := b.Y;
+  end;
+
+  Self.Filters[index] := [box, inside];
+end;
+
+procedure TRSMap.AddFilter(box: TBox; inside: Boolean; globalCoordinates: Boolean = True);
+var
+  a, b: TPoint;
+  i: Int32;
+begin
+  if globalCoordinates then
+  begin
+    a := Self.Loader.GetLocal(Point(box.X1, box.Y1));
+    b := Self.Loader.GetLocal(Point(box.X2, box.Y2));
+    box.X1 := a.X;
+    box.Y1 := a.Y;
+    box.X2 := b.X;
+    box.Y2 := b.Y;
+  end;
+
+  for i := 0 to High(Self.Filters) do
+  begin
+    if Self.Filters[i].Box.Overlap(box) then
+      RaiseException('New filter overlaps an existing one at index' + ToStr(i) + ' please use TRSMap.ReplaceFilter() instead to replace it.');
+
+    //check if our new box is within or contains an existing filter box.
+    //if it does we should replace it because they will conflict with each other.
+    if Self.Filters[i].Box.Contains(box) or
+       box.Contains(Self.Filters[i].Box) then
+    begin
+      Self.Filters[i] := [box, inside];
+      Exit;
+    end;
+  end;
+
+  Self.Filters += [box, inside];
+end;
+
+
 (*
 ## Map.Height
 ```pascal

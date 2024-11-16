@@ -105,16 +105,16 @@ end;
 
 function TBox.Contains(other: TPoint): Boolean; constref;
 begin
-  Result := InRange(other.x, self.x1,self.x2) and
-            InRange(other.y, self.y1,self.y2);
+  Result := InRange(other.X, Self.X1, Self.X2) and
+            InRange(other.Y, Self.Y1, Self.Y2);
 end;
 
 function TBox.Contains(other: TBox): Boolean; constref; overload;
 begin
-  Result := InRange(Other.x1, self.x1,self.x2) and
-            InRange(Other.x2, self.x1,self.x2) and
-            InRange(Other.y1, self.y1,self.y2) and
-            InRange(Other.y2, self.y1,self.y2);
+  Result := InRange(other.X1, Self.X1, Self.X2) and
+            InRange(other.X2, Self.X1, Self.X2) and
+            InRange(other.Y1, Self.Y1, Self.Y2) and
+            InRange(other.Y2, Self.Y1, Self.Y2);
 end;
 
 function TBox.Contains(other: TRectangle): Boolean; constref; overload;

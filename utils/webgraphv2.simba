@@ -22,7 +22,6 @@ type
 
   TRSDoorArray = array of TRSDoor;
 
-
 //This is the number of degrees you need to face the compass to face the door directly.
 //It works by selecting the cardinal direction that gives the highest inner product
 //with the vector from the tile before the door to the door center.
@@ -115,6 +114,7 @@ type
     WalkableSpace: TPointArray;
     WalkableClusters, ObjectClusters: T2DPointArray;
 
+    UseCollisionData: Boolean;
     Tree: TSlackTree;
   end;
 
@@ -259,12 +259,13 @@ begin
 
   for i := 0 to High(tpa) do
   begin
-    if Self.WalkableClusters.InSameTPA(p, tpa[i]) then
+    if not Self.UseCollisionData or Self.WalkableClusters.InSameTPA(p, tpa[i]) then
     begin
       Result += Self.Nodes.Find(tpa[i]);
       weights += Round(p.DistanceTo(tpa[i]))
     end;
   end;
+
 
   if Result = [] then
     RaiseException('No near nodes were found around point ' + p.ToString());
@@ -364,14 +365,15 @@ var
   i, j: Int32;
   nS, nG, nodes: TIntegerArray;
 begin
-  if not Self.WalkableSpace.Contains(p) or not Self.WalkableSpace.Contains(q) then
-  begin
-    p := RSTranslator.NormalizeDoor(p);
-    q := RSTranslator.NormalizeDoor(q);
+  if Self.UseCollisionData then
+    if not Self.WalkableSpace.Contains(p) or not Self.WalkableSpace.Contains(q) then
+    begin
+      p := RSTranslator.NormalizeDoor(p);
+      q := RSTranslator.NormalizeDoor(q);
 
-    if not Self.WalkableSpace.Contains(p) then p := Self.NearestWalkablePoint(p);
-    if not Self.WalkableSpace.Contains(q) then q := Self.NearestWalkablePoint(q);
-  end;
+      if not Self.WalkableSpace.Contains(p) then p := Self.NearestWalkablePoint(p);
+      if not Self.WalkableSpace.Contains(q) then q := Self.NearestWalkablePoint(q);
+    end;
 
   nS := Self.FindNearestNodes(p, attempts);
   nG := Self.FindNearestNodes(q, attempts);
@@ -409,29 +411,34 @@ var
   i: Int32;
   cluster, best: TPointArray;
 begin
-  for i := 0 to High(Self.WalkableClusters) do
-    if Self.WalkableClusters[i].Contains(me) then
-      cluster := Self.WalkableClusters[i];
+  if Self.UseCollisionData then
+  begin
+    for i := 0 to High(Self.WalkableClusters) do
+      if Self.WalkableClusters[i].Contains(me) then
+        cluster := Self.WalkableClusters[i];
 
-  if cluster = [] then
-    RaiseException(SRL.TimeStamp() + ':[WebGraph]:[Fatal]: Can''t find player cluster containg: ' + me.ToString());
+    if cluster = [] then
+      RaiseException(SRL.TimeStamp() + ':[WebGraph]:[Fatal]: Can''t find player cluster containg: ' + me.ToString());
+  end;
 
   best := Self.FindNearestNodesEx(p, 12);
-
   for i := 0 to High(best) do
   begin
     p := best[i];
 
-    if cluster.Contains(p) then
+    if not Self.UseCollisionData or cluster.Contains(p) then
     begin
       try
         Result := Self.PathBetweenEx(me, p, 0.2, 2);
+        if Result = [] then
+        begin
+          if me.InRange(p, 52) then Exit([p]);
+          RaiseException('Path empty');
+        end;
       except
-        if me.DistanceTo(p) > 52 then
-          RaiseException(SRL.TimeStamp() + ':[WebGraph]:[Fatal]: Can''t find a walkable path to ' + p.ToString() + ' object.');
-        Result := [p];
+        if me.InRange(p, 52) then Exit([p]);
+        RaiseException(SRL.TimeStamp() + ':[WebGraph]:[Fatal]: Can''t find a walkable path to ' + p.ToString() + ' object.');
       end;
-
       Break;
     end;
   end;
