@@ -1,3 +1,12 @@
+# [7.11.0](https://github.com/Torwent/SRL-T/compare/v7.10.5...v7.11.0) (2024-11-16)
+
+
+### Features
+
+* read notes ([5c1262c](https://github.com/Torwent/SRL-T/commit/5c1262c7a4c50735537f10c69108461cd033e9f0))
+
+
+
 ## [7.10.5](https://github.com/Torwent/SRL-T/compare/v7.10.4...v7.10.5) (2024-11-15)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMap:** Map filters are automatically setup ([9ec2170](https://github.com/Torwent/SRL-T/commit/9ec2170c5d29f9a304e828a6560882c367ec8927))
-
-
-
-## [7.10.1](https://github.com/Torwent/SRL-T/compare/v7.10.0...v7.10.1) (2024-11-08)
-
-
-### Bug Fixes
-
-* read notes ([8a94248](https://github.com/Torwent/SRL-T/commit/8a94248a340c1f3726b515e2ae2bd7b78f9c06bb))
 
 
 
