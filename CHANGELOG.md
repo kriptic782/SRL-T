@@ -1,3 +1,12 @@
+## [7.11.1](https://github.com/Torwent/SRL-T/compare/v7.11.0...v7.11.1) (2024-11-23)
+
+
+### Bug Fixes
+
+* **webberV2:** now works with multiple chunks ([5824445](https://github.com/Torwent/SRL-T/commit/5824445ff0ed7541483c0dd1a941b30591e65174))
+
+
+
 # [7.11.0](https://github.com/Torwent/SRL-T/compare/v7.10.5...v7.11.0) (2024-11-16)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **walkerV2:** the door handler is now disabled by default ([bfc1dde](https://github.com/Torwent/SRL-T/commit/bfc1dde439bc4636ecc798c1a95149f31241ad58))
-
-
-
-## [7.10.2](https://github.com/Torwent/SRL-T/compare/v7.10.1...v7.10.2) (2024-11-09)
-
-
-### Bug Fixes
-
-* **TRSMap:** Map filters are automatically setup ([9ec2170](https://github.com/Torwent/SRL-T/commit/9ec2170c5d29f9a304e828a6560882c367ec8927))
 
 
 
