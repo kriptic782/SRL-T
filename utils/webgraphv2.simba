@@ -266,11 +266,10 @@ begin
     end;
   end;
 
-
   if Result = [] then
     RaiseException('No near nodes were found around point ' + p.ToString());
 
-  Result.SortWeighted(weights, 0, High(Result), True);
+  Result.WeightedSort(weights, 0, High(Result), True);
 end;
 
 function TWebGraphV2.FindNearestNodesEx(p: TPoint; amount: Int32): TPointArray;

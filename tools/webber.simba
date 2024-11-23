@@ -19,11 +19,12 @@ Keep in mind that unless you send a PR with your additions, they will be lost wi
 {$I SRL-T/osr.simba}
 {$H-}
 const
-  CHUNK_B: TBox = [20,152,24,148];
-  FILE_NAME: String = '';
-  PLANE: Int32 = 0;
-  GRAPH_OFFSET: TPoint = [0, 0];
+  CHUNKS: array of TRSMapChunk := [
+    Chunk([20,152,24,148], 0), Chunk([21,151,23,149], 1)
+  ];
 
+  GRAPH_OFFSET: TPoint = [0, 0];
+  FILE_NAME: String = '';
   NODES_STR: String = '';
   PATHS_STR: String = '';
   NAMES_STR: String = '';
@@ -53,35 +54,25 @@ var
   Webber: TWebberForm;
 
 procedure TWebberForm.Setup();
-var
-  s, f: TPoint;
-  name: String;
-  cbitmap: TMufasaBitmap;
 begin
-  Map.Loader.Init(8);
-  s := [CHUNK_B.X1, CHUNK_B.Y1];
-  f := [CHUNK_B.X2, CHUNK_B.Y2];
-  name := ToStr(s.X) + '-' + ToStr(s.Y) + '_' + ToStr(f.X) + '-' + ToStr(f.Y);
-
   if FILE_NAME = '' then
-    Self.Bitmap := Map.Loader.Loader.GetMap(s, f, PLANE, ERSMap.NORMAL)
+    Map.Loader.Load(CHUNKS)
   else
-  begin
-    Self.Bitmap.Init();
-    Self.Bitmap.LoadFromFile(FILE_NAME);
-  end;
+    Map.Loader.LoadEx(FILE_NAME);
+
+  AddOnTerminate(@Map.Loader.Free);
+
+  Self.Graph := Map.Loader.Graph;
+  Self.Graph.Nodes := Map.Loader.GetLocal(Map.Loader.Graph.Nodes).Offset(GRAPH_OFFSET);
 
   if (NODES_STR = '') and (PATHS_STR = '') and (NAMES_STR = '') then
-  begin
-    cbitmap     := Map.Loader.Loader.GetMap(s, f, PLANE, ERSMap.COLLISION);
-    Self.Graph  := Map.Loader.Loader.GetGraph(name, PLANE, cbitmap);
-    cbitmap.Free();
     Exit;
-  end;
 
   Self.Graph.LoadNodesFromString(NODES_STR);
   Self.Graph.LoadPathsFromString(PATHS_STR);
   Self.Graph.LoadNamesFromString(NAMES_STR);
+
+  Self.Graph.Nodes := Map.Loader.GetLocal(Map.Loader.Graph.Nodes).Offset(GRAPH_OFFSET);
 
   if Length(Self.Graph.Nodes) <> Length(Self.Graph.Names) then
     SetLength(Self.Graph.Names, Length(Self.Graph.Nodes));
@@ -480,8 +471,13 @@ end;
 
 
 function TWebberForm.GetFileString(): String;
+var
+  global: TWebGraphV2;
 begin
-  Result += 'Map.Loader.Graph.LoadNodesFromString(' + #39 + Graph.NodesToString() + #39 + ');' + LineEnding;
+  global := Self.Graph;
+  global.Nodes := Map.Loader.GetGlobal(global.Nodes);
+
+  Result += 'Map.Loader.Graph.LoadNodesFromString(' + #39 + global.NodesToString() + #39 + ');' + LineEnding;
   Result += 'Map.Loader.Graph.LoadPathsFromString(' + #39 + Graph.PathsToString() + #39 + ');' + LineEnding;
   Result += 'Map.Loader.Graph.LoadNamesFromString(' + #39 + Graph.NamesToString() + #39 + ');' + LineEnding;
 end;
@@ -608,7 +604,7 @@ begin
     Self.ImageBox.SetOnMouseDown(@Self.OnMouseDown);
     Self.ImageBox.SetOnMouseUp(@Self.OnMouseUp);
     Self.ImageBox.SetOnKeyDown(@Self.OnKeyDown);
-    Self.ImageBox.getBackground().LoadFromMufasaBitmap(Self.Bitmap);
+    Self.ImageBox.getBackground().LoadFromMufasaBitmap(Map.Loader.Map);
     Self.ImageBox.BackgroundChanged();
 
     WriteLn('Click:                Add or select node'    + LineEnding +

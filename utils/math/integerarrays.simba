@@ -238,7 +238,7 @@ begin
 end;
 
 
-procedure TIntegerArray.SortWeighted(Weights: TIntegerArray; iLo, iHi: Int32; SortUp: Boolean);
+procedure TIntegerArray.WeightedSort(weights: TIntegerArray; iLo, iHi: Int32; sortUp: Boolean);
 var
   lo, hi, mid: Int32;
 begin
@@ -264,8 +264,14 @@ begin
       Dec(hi);
     end;
   until Lo > Hi;
-  if (hi > iLo) then self.SortWeighted(weights, iLo, hi, SortUp);
-  if (lo < iHi) then self.SortWeighted(weights, lo, iHi, SortUp);
+  if (hi > iLo) then self.WeightedSort(weights, iLo, hi, SortUp);
+  if (lo < iHi) then self.WeightedSort(weights, lo, iHi, SortUp);
+end;
+
+function TIntegerArray.WeightSorted(weights: TIntegerArray; iLo, iHi: Int32; sortUp: Boolean): TIntegerArray; constref;
+begin
+  Result := Copy(Self);
+  Result.WeightedSort(weights, iLo, iHi, sortUp);
 end;
 
 procedure TIntegerArray.SortFrom(X: Int32);
@@ -277,9 +283,8 @@ begin
   if (L <= 0) then Exit;
   SetLength(weights, L + 1);
   for i := 0 To L do Weights[i] := Round(Abs(X - Self[i]));
-  Self.SortWeighted(weights, 0, L, True);
+  Self.WeightedSort(weights, 0, L, True);
 end;
-
 
 
 

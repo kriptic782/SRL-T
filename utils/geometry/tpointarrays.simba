@@ -353,7 +353,7 @@ begin
   if (lo < iHi) then Self.WeightedSort(weights, lo, iHi, sortUp);
 end;
 
-function TPointArray.WeightedSorted(weights: TIntegerArray; iLo, iHi: Int32; sortUp: Boolean): TPointArray; constref;
+function TPointArray.WeightSorted(weights: TIntegerArray; iLo, iHi: Int32; sortUp: Boolean): TPointArray; constref;
 begin
   Result := Copy(Self);
   Result.WeightedSort(weights, iLo, iHi, sortUp);

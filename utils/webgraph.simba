@@ -192,7 +192,7 @@ begin
   for i := 0 to High(Result) do
     weights[i] := Sqr(p.X - Self.Nodes[Result[i]].X) + Sqr(p.Y - Self.Nodes[Result[i]].Y);
 
-  Result.SortWeighted(weights, 0, High(Result), True);
+  Result.WeightedSort(weights, 0, High(Result), True);
 end;
 
 

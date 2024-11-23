@@ -420,8 +420,7 @@ var
   box: TBox;
 begin
   Result := Self.Find([item], box);
-  if Result then
-    Mouse.Move(box);
+  if Result then Mouse.Move(box);
 end;
 
 

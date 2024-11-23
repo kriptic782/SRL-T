@@ -1253,7 +1253,6 @@ end;
 ```pascal
 function TRSBank.MouseItem(Item: TRSItem): Boolean;
 ```
-
 Moves the mouse to an item.
 
 Example:
