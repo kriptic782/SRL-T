@@ -1,3 +1,12 @@
+# [7.12.0](https://github.com/Torwent/SRL-T/compare/v7.11.1...v7.12.0) (2024-11-24)
+
+
+### Bug Fixes
+
+* force bump ([91e2208](https://github.com/Torwent/SRL-T/commit/91e22080ecdc8dde6564f7d0d9c3069f47cfacf4))
+
+
+
 ## [7.11.1](https://github.com/Torwent/SRL-T/compare/v7.11.0...v7.11.1) (2024-11-23)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **Magic:** GetSpellBook ([acb354a](https://github.com/Torwent/SRL-T/commit/acb354a52d4b967dd0fbcc4f4421471dad3315b0))
-
-
-
-## [7.10.3](https://github.com/Torwent/SRL-T/compare/v7.10.2...v7.10.3) (2024-11-10)
-
-
-### Bug Fixes
-
-* **walkerV2:** the door handler is now disabled by default ([bfc1dde](https://github.com/Torwent/SRL-T/commit/bfc1dde439bc4636ecc798c1a95149f31241ad58))
 
 
 
