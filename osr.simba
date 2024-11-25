@@ -86,7 +86,6 @@ end;
 {$IFNDEF SRL_COMBAT_INCLUDED}               {$I osr/interfaces/gametabs/combat.simba}
 {$IFNDEF SRL_MAGIC_INCLUDED}                {$I osr/interfaces/gametabs/magic.simba}
 {$IFNDEF SRL_PRAYER_INCLUDED}               {$I osr/interfaces/gametabs/prayer.simba}
-{$IFNDEF SRL_MUSIC_INCLUDED}                {$I osr/interfaces/gametabs/music.simba}
 {$IFNDEF SRL_KEYBINDINGS_INCLUDED}          {$I osr/keybindings.simba}
 {$IFNDEF SRL_MAPLOADER_INCLUDED}            {$I osr/map/maploader.simba}
 {$IFNDEF SRL_WALKERV2_INCLUDED}             {$I osr/walker.simba}
@@ -94,6 +93,7 @@ end;
 {$IFNDEF SRL_MAPOBJECTARRAY_INCLUDED}       {$I osr/map/mapobjectarray.simba}
 {$IFNDEF SRL_RSCHUNK_INCLUDED}              {$I osr/map/rschunk.simba}
 {$IFNDEF SRL_MAP_INCLUDED}                  {$I osr/map/map.simba}
+{$IFNDEF SRL_MUSIC_INCLUDED}                {$I osr/interfaces/gametabs/music.simba}
 
 {$IFNDEF SRL_DEPRECATED_INCLUDED} {$I osr/deprecated.simba} {$ELSE}{$ENDIF}
 
