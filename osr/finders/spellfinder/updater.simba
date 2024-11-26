@@ -242,8 +242,8 @@ const
   FIRST_SPELL : ERSSpell = ERSSPell.LUMBRIDGE_HOME_TELEPORT;
   LAST_SPELL : ERSSPell = ERSSpell.SINISTER_OFFERING;
   UPDATED_SPELL_DIRECTORY : string = {$MACRO CURRENT_DIRECTORY} + "images" + DirectorySeparator;
-  ZIPPED_DUMP_DIRECTORY : string = {$MACRO CURRENT_DIRECTORY} + "sprites.zip";
-  DUMP_OUTPUT_DIRECTORY : string = {$MACRO CURRENT_DIRECTORY} + "SpriteDump" + DirectorySeparator;
+  ZIPPED_DUMP_DIRECTORY : string = {$MACRO CURRENT_DIRECTORY} + '..' + DirectorySeparator + "sprites.zip";
+  DUMP_OUTPUT_DIRECTORY : string = {$MACRO CURRENT_DIRECTORY} + "current" + DirectorySeparator;
 var
   dumpImages : TMufasaBitmapArray;
   SpellImageMapping : array [ERSSpell] of TStringArray;
