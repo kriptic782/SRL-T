@@ -1,3 +1,12 @@
+## [7.12.1](https://github.com/Torwent/SRL-T/compare/v7.12.0...v7.12.1) (2024-11-26)
+
+
+### Bug Fixes
+
+* **spells:** read notes ([8bbb30a](https://github.com/Torwent/SRL-T/commit/8bbb30aab634fd48107770f4ad1a9829a59e9574))
+
+
+
 # [7.12.0](https://github.com/Torwent/SRL-T/compare/v7.11.1...v7.12.0) (2024-11-24)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMap:** read notes ([ba36a25](https://github.com/Torwent/SRL-T/commit/ba36a2533184906b91787d8151ef2cc2d424ec90))
-
-
-
-## [7.10.4](https://github.com/Torwent/SRL-T/compare/v7.10.3...v7.10.4) (2024-11-12)
-
-
-### Bug Fixes
-
-* **Magic:** GetSpellBook ([acb354a](https://github.com/Torwent/SRL-T/commit/acb354a52d4b967dd0fbcc4f4421471dad3315b0))
 
 
 
