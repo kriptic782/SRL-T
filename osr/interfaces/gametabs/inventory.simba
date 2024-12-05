@@ -280,13 +280,11 @@ var
   selected: Int32;
 begin
   selected := Self.GetSelectedSlot();
-  if (selected = slot) then
-    Exit(True);
+  if selected = slot then Exit(True);
 
-  if (selected > -1) then
-    Mouse.Click(Self.GetSlotBox(selected), MOUSE_LEFT);
+  if selected > -1 then Mouse.Click(Self.GetSlotBox(selected), MOUSE_LEFT);
 
-  if (slot > -1) then
+  if slot > -1 then
   begin
     Mouse.Move(Self.GetSlotBox(slot), True);
     if MainScreen.IsUpText('Use') then

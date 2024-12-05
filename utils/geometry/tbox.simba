@@ -31,6 +31,13 @@ begin
   Result.Left  := [Self.X1, Self.Y2];
 end;
 
+function TBox.ToTPA(): TPointArray; constref;
+begin
+  Result := [
+    [Self.X1, Self.Y1], [Self.X2, Self.Y1], [Self.X2, Self.Y2], [Self.X1, Self.Y2]
+  ];
+end;
+
 procedure TBox.GetDimensions(out w, h: Int32); constref;
 begin
   w := Self.X2 - Self.X1 + 1;
@@ -88,18 +95,18 @@ begin
   Result.LimitTo(MaxBounds);
 end;
 
-function TBox.Combine(Other: TBox): TBox; constref;
+function TBox.Combine(other: TBox): TBox; constref;
 begin
-  Result.X1 := Min(Min(Self.X1, Other.X2), Min(Other.X1, Self.X2));
-  Result.Y1 := Min(Min(Self.Y1, Other.Y2), Min(Other.Y1, Self.Y2));
-  Result.X2 := Max(Max(Self.X1, Other.X2), Max(Other.X1, Self.X2));
-  Result.Y2 := Max(Max(Self.Y1, Other.Y2), Max(Other.Y1, Self.Y2));
+  Result.X1 := Min(Min(Self.X1, other.X2), Min(other.X1, Self.X2));
+  Result.Y1 := Min(Min(Self.Y1, other.Y2), Min(other.Y1, Self.Y2));
+  Result.X2 := Max(Max(Self.X1, other.X2), Max(other.X1, Self.X2));
+  Result.Y2 := Max(Max(Self.Y1, other.Y2), Max(other.Y1, Self.Y2));
 end;
 
-function TBox.Overlap(Other: TBox): Boolean; constref;
+function TBox.Overlap(other: TBox): Boolean; constref;
 begin
-  Result := (Self.X1 <= Other.X2) and (Self.X2 >= Other.X1) and 
-            (Self.Y1 <= Other.Y2) and (Self.Y2 >= Other.Y1);
+  Result := (Self.X1 <= other.X2) and (Self.X2 >= other.X1) and 
+            (Self.Y1 <= other.Y2) and (Self.Y2 >= other.Y1);
 end;
 
 
@@ -119,7 +126,7 @@ end;
 
 function TBox.Contains(other: TRectangle): Boolean; constref; overload;
 begin
-  Result := Self.Contains(Other.Top) and Self.Contains(Other.Left) and Self.Contains(Other.Btm) and Self.Contains(Other.Right);
+  Result := Self.Contains(other.Top) and Self.Contains(other.Left) and Self.Contains(other.Btm) and Self.Contains(other.Right);
 end;
 
 function TBox.ContainsAny(other: TPointArray): Boolean; constref; overload;
@@ -217,10 +224,10 @@ begin
     end;
 end;
 
-function TBox.EqualDimensions(const Other: TBox): Boolean; constref;
+function TBox.EqualDimensions(const other: TBox): Boolean; constref;
 begin
-  Result := ((Self.X2 - Self.X1) = (Other.X2 - Other.X1)) and
-            ((Self.Y2 - Self.Y1) = (Other.Y2 - Other.Y1));
+  Result := ((Self.X2 - Self.X1) = (other.X2 - other.X1)) and
+            ((Self.Y2 - Self.Y1) = (other.Y2 - other.Y1));
 end;
 
 function TBox.InnerBorder(Size: Integer): TBoxArray; constref;

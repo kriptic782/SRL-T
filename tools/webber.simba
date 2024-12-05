@@ -304,18 +304,16 @@ begin
     Self.DeleteNode(Self.SelectedNode);
 end;
 
-procedure TWebberForm.DrawWeb(area: TBox);
+procedure TWebberForm.DrawWeb(area: TBox; canvas: TCanvas);
 var
   i,j,n,color: Int32;
   p,q: TPoint;
   nodes,line: TPointArray;
-  canvas: TCanvas;
 begin
   nodes := Self.Graph.Nodes;
   if Length(nodes) = 0 then
     Exit;
 
-  Canvas := Self.ImageBox.GetOverlay.GetCanvas();
   Canvas.GetPen.SetColor($00FFFF);
 
   n := 2;
@@ -360,21 +358,19 @@ begin
   end;
 end;
 
-procedure TWebberForm.DrawPath(area: TBox);
+procedure TWebberForm.DrawPath(area: TBox; canvas: TCanvas);
 var
   i,j,W,H: Int32;
   p,q: TPoint;
   Nodes: TPointArray;
-  Canvas: TCanvas;
   TPA: TPointArray;
 begin
   Nodes := Self.Graph.Nodes;
   if Length(Nodes) = 0 then
     Exit;
 
-  Canvas := Self.ImageBox.GetOverlay.GetCanvas();
-  Canvas.GetPen().SetColor(clNavy);
-  Canvas.GetPen().setWidth(3);
+  canvas.GetPen().SetColor(clNavy);
+  canvas.GetPen().setWidth(3);
 
   for i := 0 to High(Path) do
   begin
@@ -395,17 +391,15 @@ begin
   Canvas.GetPen().setWidth(1);
 end;
 
-procedure TWebberForm.DrawBox(area: TBox);
+procedure TWebberForm.DrawBox(area: TBox; canvas: TCanvas);
 var
   i,j,W,H: Int32;
   p,q: TPoint;
   corners: TPointArray;
-  canvas: TCanvas;
   TPA: TPointArray;
 begin
   corners := Self.SelectBox.ToRectangle().ToTPA();
 
-  canvas := Self.ImageBox.GetOverlay.GetCanvas();
   canvas.GetPen().SetColor(clOrange);
   canvas.GetPen().setWidth(2);
 
@@ -429,12 +423,12 @@ end;
 
 procedure TWebberForm.PaintArea(sender: TObject; Canvas: TCanvas; R: TRect);
 begin
-  Self.DrawWeb([R.Left, R.Top, R.Right, R.Bottom]);
+  Self.DrawWeb([R.Left, R.Top, R.Right, R.Bottom], canvas);
   if Self.Path <> [] then
-    Self.DrawPath([R.Left, R.Top, R.Right, R.Bottom]);
+    Self.DrawPath([R.Left, R.Top, R.Right, R.Bottom], canvas);
 
   if Self.DragMode and Self.BoxIsValid() then
-    Self.DrawBox([R.Left, R.Top, R.Right, R.Bottom]);
+    Self.DrawBox([R.Left, R.Top, R.Right, R.Bottom], canvas);
 end;
 
 
@@ -621,9 +615,10 @@ begin
     //WriteLn 'Done clearing invalid nodes';
     Self.ImageBox.Update();
     Self.Form.ShowModal();
-    Self.Form.Free();
   except
     Writeln GetExceptionMessage();
+  finally
+    Self.Form.Free();
   end;
 end;
 
