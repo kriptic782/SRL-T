@@ -1,3 +1,12 @@
+## [7.12.3](https://github.com/Torwent/SRL-T/compare/v7.12.2...v7.12.3) (2024-12-05)
+
+
+### Bug Fixes
+
+* **itemfinder:** updated items ([e85005e](https://github.com/Torwent/SRL-T/commit/e85005e3d43ba60257a6d9a61601923ff29c4247))
+
+
+
 ## [7.12.2](https://github.com/Torwent/SRL-T/compare/v7.12.1...v7.12.2) (2024-11-26)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **webberV2:** now works with multiple chunks ([5824445](https://github.com/Torwent/SRL-T/commit/5824445ff0ed7541483c0dd1a941b30591e65174))
-
-
-
-# [7.11.0](https://github.com/Torwent/SRL-T/compare/v7.10.5...v7.11.0) (2024-11-16)
-
-
-### Features
-
-* read notes ([5c1262c](https://github.com/Torwent/SRL-T/commit/5c1262c7a4c50735537f10c69108461cd033e9f0))
 
 
 
