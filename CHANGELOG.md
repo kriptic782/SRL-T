@@ -1,3 +1,12 @@
+## [7.12.4](https://github.com/Torwent/SRL-T/compare/v7.12.3...v7.12.4) (2024-12-06)
+
+
+### Bug Fixes
+
+* update spell sprites ([9055ede](https://github.com/Torwent/SRL-T/commit/9055ede6a057679068055bcf4f6b4156d7542830))
+
+
+
 ## [7.12.3](https://github.com/Torwent/SRL-T/compare/v7.12.2...v7.12.3) (2024-12-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * force bump ([91e2208](https://github.com/Torwent/SRL-T/commit/91e22080ecdc8dde6564f7d0d9c3069f47cfacf4))
-
-
-
-## [7.11.1](https://github.com/Torwent/SRL-T/compare/v7.11.0...v7.11.1) (2024-11-23)
-
-
-### Bug Fixes
-
-* **webberV2:** now works with multiple chunks ([5824445](https://github.com/Torwent/SRL-T/commit/5824445ff0ed7541483c0dd1a941b30591e65174))
 
 
 
