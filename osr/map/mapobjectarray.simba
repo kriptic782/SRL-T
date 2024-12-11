@@ -434,6 +434,7 @@ begin
     Result += Self.GetAll(name);
 end;
 
+
 function TRSNPCJSONParser.GetAllByAction(action: String): TRSNPCV2Array;
 var
   i, j: Int32;

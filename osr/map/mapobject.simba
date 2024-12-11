@@ -967,10 +967,14 @@ begin
     for j := 0 to i-1 do
     begin
       if Self[i].Name <> Self[j].Name then Continue;
-
       if not Self[i].Category = Self[j].Category then Continue;
+
       Self[j].Coordinates += Self[i].Coordinates;
       Self[j].DotFilters += Self[i].DotFilters;
+      if Self[j].Finder.Colors <> Self[i].Finder.Colors then
+        Self[j].Finder.Colors += Self[i].Finder.Colors;
+      if Self[j].Finder.ColorClusters <> Self[i].Finder.ColorClusters then
+        Self[j].Finder.ColorClusters += Self[i].Finder.ColorClusters;
       Delete(Self, i, 1);
       Break;
     end;
