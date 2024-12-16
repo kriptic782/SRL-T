@@ -1,3 +1,12 @@
+## [7.12.6](https://github.com/Torwent/SRL-T/compare/v7.12.5...v7.12.6) (2024-12-16)
+
+
+### Bug Fixes
+
+* some tweaks on some ToString() stuff ([a881646](https://github.com/Torwent/SRL-T/commit/a88164650d329c90707d24f2a363540cbe184430))
+
+
+
 ## [7.12.5](https://github.com/Torwent/SRL-T/compare/v7.12.4...v7.12.5) (2024-12-11)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * some tweaks to the previous commit ([c34cbe6](https://github.com/Torwent/SRL-T/commit/c34cbe60f41ce020d68515f82d7a13bbf3bf02b0))
-
-
-
-## [7.12.1](https://github.com/Torwent/SRL-T/compare/v7.12.0...v7.12.1) (2024-11-26)
-
-
-### Bug Fixes
-
-* **spells:** read notes ([8bbb30a](https://github.com/Torwent/SRL-T/commit/8bbb30aab634fd48107770f4ad1a9829a59e9574))
 
 
 
