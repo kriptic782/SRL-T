@@ -392,8 +392,7 @@ begin
       if Length(nodes) > 0 then Break(2);
     end;
 
-  if safe and (Length(nodes) = 0) then
-    Exit;
+  if safe and (Length(nodes) = 0) then Exit;
 
   Result += p;
   Result += Self.NodesToPoints(nodes);

@@ -195,8 +195,13 @@ begin
   Result := True;
 end;
 
-
-function TPoint.ToString(): String; constref;
+function ToString(p: TPoint): String; override;
 begin
-  Result := '[' + ToStr(Self.X) + ',' + ToStr(Self.Y) + ']';
+  Result := 'Point(' + ToString(p.X) + ',' + ToString(p.Y) + ')';
+end;
+
+function TPoint.ToString(short: Boolean = True): String; constref;
+begin
+  if not short then Exit(System.ToString(Self));
+  Result := '[' + System.ToString(Self.X) + ',' + System.ToString(Self.Y) + ']';
 end;

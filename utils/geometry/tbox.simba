@@ -356,13 +356,24 @@ begin
 end;
 
 
-function TBox.ToString(): String; constref;
+function ToString(b: TBox): String; override;
 begin
+  Result := 'Box(' +
+    ToString(b.X1) + ', ' + ToString(b.Y1) + ', ' +
+    ToString(b.X2) + ', ' + ToString(b.Y2) +
+  ')';
+end;
+
+function TBox.ToString(short: Boolean = True): String; constref;
+begin
+  if not short then Exit(System.ToString(Self));
+
   Result := '[' +
-    ToStr(Self.X1) + ', ' + ToStr(Self.Y1) + ', ' +
-    ToStr(Self.X2) + ', ' + ToStr(Self.Y2) +
+    System.ToString(Self.X1) + ', ' + System.ToString(Self.Y1) + ', ' +
+    System.ToString(Self.X2) + ', ' + System.ToString(Self.Y2) +
   ']';
 end;
+
 
 operator > (left, right: TBox): Boolean;
 begin
