@@ -1,3 +1,12 @@
+## [7.12.7](https://github.com/Torwent/SRL-T/compare/v7.12.6...v7.12.7) (2024-12-20)
+
+
+### Bug Fixes
+
+* made the sample from TRSMap into it's own record ([2ab6ef9](https://github.com/Torwent/SRL-T/commit/2ab6ef92e44b9f5caad8f49164f66ed08c5e17a1))
+
+
+
 ## [7.12.6](https://github.com/Torwent/SRL-T/compare/v7.12.5...v7.12.6) (2024-12-16)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **itemfinder:** updated items ([e85005e](https://github.com/Torwent/SRL-T/commit/e85005e3d43ba60257a6d9a61601923ff29c4247))
-
-
-
-## [7.12.2](https://github.com/Torwent/SRL-T/compare/v7.12.1...v7.12.2) (2024-11-26)
-
-
-### Bug Fixes
-
-* some tweaks to the previous commit ([c34cbe6](https://github.com/Torwent/SRL-T/commit/c34cbe60f41ce020d68515f82d7a13bbf3bf02b0))
 
 
 
