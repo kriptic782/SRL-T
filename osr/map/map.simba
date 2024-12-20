@@ -31,6 +31,10 @@ Record holding a player's full position:
     Plane: Int32;
   end;
 
+  TRSMapSample = record
+    Amount, Radius: Int32;
+  end;
+
 function TRSPosition.ToPoint(): TPoint; constref;
 begin
   Result := Point(Self.X, Self.Y);
@@ -65,9 +69,7 @@ Record responsible for positioning.
     Cache: TMatchTemplateRGBCache;
     Loader: TRSMapLoader;
 
-    Sample: record
-      Amount, Radius: Int32;
-    end;
+    Sample: TRSMapSample;
 
     Filters: array of record
       Box: TBox;
