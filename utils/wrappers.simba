@@ -19,6 +19,26 @@ begin
       Inc(Result);
 end;
 
+function SetFirst(var val): Integer;
+var
+  i: Integer;
+begin
+  Result := -1;
+  for i := 0 to 31 do
+    if (Int32(val) and (1 shl i)) <> 0 then
+      Exit(i);
+end;
+
+function SetLast(var val): Integer;
+var
+  i: Integer;
+begin
+  Result := -1;
+  for i := 31 downto 0 do
+    if (Int32(val) and (1 shl i)) <> 0 then
+      Exit(i);
+end;
+
 function TPAFromLine(Start, Stop: TPoint): TPointArray; overload;
 begin
   Result := TPAFromLine(Start.X, Start.Y, Stop.X, Stop.Y);
