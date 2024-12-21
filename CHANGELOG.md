@@ -1,3 +1,12 @@
+# [7.13.0](https://github.com/Torwent/SRL-T/compare/v7.12.7...v7.13.0) (2024-12-21)
+
+
+### Features
+
+* added SetFirst() and SetLast() ([d2f6d93](https://github.com/Torwent/SRL-T/commit/d2f6d93a89742c51cc3b3fda63d8487eaa339d32))
+
+
+
 ## [7.12.7](https://github.com/Torwent/SRL-T/compare/v7.12.6...v7.12.7) (2024-12-20)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * update spell sprites ([9055ede](https://github.com/Torwent/SRL-T/commit/9055ede6a057679068055bcf4f6b4156d7542830))
-
-
-
-## [7.12.3](https://github.com/Torwent/SRL-T/compare/v7.12.2...v7.12.3) (2024-12-05)
-
-
-### Bug Fixes
-
-* **itemfinder:** updated items ([e85005e](https://github.com/Torwent/SRL-T/commit/e85005e3d43ba60257a6d9a61601923ff29c4247))
 
 
 
