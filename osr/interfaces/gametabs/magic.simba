@@ -402,7 +402,7 @@ begin
   if not Self.MouseSpell(spell) then
     Exit;
 
-  if (option = '') or (option = 'Cast') then
+  if (option = '') or MainScreen.IsUpText(option) then
   begin
     Mouse.Click(MOUSE_LEFT);
     Exit(True);
