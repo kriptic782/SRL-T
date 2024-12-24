@@ -1,3 +1,12 @@
+## [7.13.1](https://github.com/Torwent/SRL-T/compare/v7.13.0...v7.13.1) (2024-12-24)
+
+
+### Bug Fixes
+
+* **Magic:** small bug fixed in casting certain spells ([64fc5c2](https://github.com/Torwent/SRL-T/commit/64fc5c2b473f2cf8f7ce0c88c8dd6b780d462f36))
+
+
+
 # [7.13.0](https://github.com/Torwent/SRL-T/compare/v7.12.7...v7.13.0) (2024-12-21)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * read notes ([caaa0fb](https://github.com/Torwent/SRL-T/commit/caaa0fbacc4f02edc3edcbe13d28036dfbeb2cd7))
-
-
-
-## [7.12.4](https://github.com/Torwent/SRL-T/compare/v7.12.3...v7.12.4) (2024-12-06)
-
-
-### Bug Fixes
-
-* update spell sprites ([9055ede](https://github.com/Torwent/SRL-T/commit/9055ede6a057679068055bcf4f6b4156d7542830))
 
 
 
