@@ -1,3 +1,12 @@
+## [7.13.3](https://github.com/Torwent/SRL-T/compare/v7.13.2...v7.13.3) (2024-12-26)
+
+
+### Bug Fixes
+
+* small fix for TRSMapObject.SelectOption() ([33cd332](https://github.com/Torwent/SRL-T/commit/33cd33272f68ad0cfa6bf1966bbaca4171808d66))
+
+
+
 ## [7.13.2](https://github.com/Torwent/SRL-T/compare/v7.13.1...v7.13.2) (2024-12-24)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * made the sample from TRSMap into it's own record ([2ab6ef9](https://github.com/Torwent/SRL-T/commit/2ab6ef92e44b9f5caad8f49164f66ed08c5e17a1))
-
-
-
-## [7.12.6](https://github.com/Torwent/SRL-T/compare/v7.12.5...v7.12.6) (2024-12-16)
-
-
-### Bug Fixes
-
-* some tweaks on some ToString() stuff ([a881646](https://github.com/Torwent/SRL-T/commit/a88164650d329c90707d24f2a363540cbe184430))
 
 
 
