@@ -244,6 +244,7 @@ You probably don't need to use this directly.
 function TRSMapObject._UpTextCheck(out shouldExit: Boolean): Boolean;
 var
   text: String;
+  actions: TStringArray;
 begin
   shouldExit := True;
 
@@ -256,11 +257,12 @@ begin
       TerminateScript(SRL.TimeStamp() + ':[TRSMapObject]:[Fatal]: ' + Self.Name + ' has no walker pointer set.');
 
     Self.Walker^.TargetUpText := Copy(Self.UpText);
+    actions := Copy(Self.Walker^.ActionUpText);
   end;
 
   text := MainScreen.GetUpText();
 
-  if text.ContainsAny(['Use', '>']) and not Self.UpText.ContainsAny(['Use', '>']) then
+  if text.ContainsAny(['Use', '>']) and not Self.UpText.ContainsAny(['Use', '>']) and not actions.ContainsAny(['Use', '>']) then
   begin
     ChooseOption.Select('Cancel');
     Exit;
