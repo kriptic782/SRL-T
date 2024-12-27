@@ -1,3 +1,12 @@
+## [7.13.4](https://github.com/Torwent/SRL-T/compare/v7.13.3...v7.13.4) (2024-12-27)
+
+
+### Bug Fixes
+
+* removed SetCount SetFirst and SetLast ([5599705](https://github.com/Torwent/SRL-T/commit/55997052f0d5202557ea721c90bb1a53d63ce4d5))
+
+
+
 ## [7.13.3](https://github.com/Torwent/SRL-T/compare/v7.13.2...v7.13.3) (2024-12-26)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * added SetFirst() and SetLast() ([d2f6d93](https://github.com/Torwent/SRL-T/commit/d2f6d93a89742c51cc3b3fda63d8487eaa339d32))
-
-
-
-## [7.12.7](https://github.com/Torwent/SRL-T/compare/v7.12.6...v7.12.7) (2024-12-20)
-
-
-### Bug Fixes
-
-* made the sample from TRSMap into it's own record ([2ab6ef9](https://github.com/Torwent/SRL-T/commit/2ab6ef92e44b9f5caad8f49164f66ed08c5e17a1))
 
 
 
