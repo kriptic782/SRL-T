@@ -706,6 +706,9 @@ begin
   timeout := GetTickCount() + 40000;
   while not Self.IsReady() do
   begin
+    if Self.FindText('CLICK HERE TO PLAY') then
+      Exit(Self.EnterGame());
+      
     if Self.HandleDialogs() then
       Wait(500);
 
