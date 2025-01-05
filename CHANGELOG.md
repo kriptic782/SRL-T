@@ -1,3 +1,12 @@
+## [7.13.5](https://github.com/Torwent/SRL-T/compare/v7.13.4...v7.13.5) (2025-01-05)
+
+
+### Bug Fixes
+
+* **itemfinder:** firecape filter should be more reliable now ([7e0d815](https://github.com/Torwent/SRL-T/commit/7e0d815c239ee4b63468054370304cd323015c48))
+
+
+
 ## [7.13.4](https://github.com/Torwent/SRL-T/compare/v7.13.3...v7.13.4) (2024-12-27)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **Magic:** small bug fixed in casting certain spells ([64fc5c2](https://github.com/Torwent/SRL-T/commit/64fc5c2b473f2cf8f7ce0c88c8dd6b780d462f36))
-
-
-
-# [7.13.0](https://github.com/Torwent/SRL-T/compare/v7.12.7...v7.13.0) (2024-12-21)
-
-
-### Features
-
-* added SetFirst() and SetLast() ([d2f6d93](https://github.com/Torwent/SRL-T/commit/d2f6d93a89742c51cc3b3fda63d8487eaa339d32))
 
 
 
