@@ -9,7 +9,6 @@ The wrappers include contains wrapper functions used throughout SRL, some of the
 The source for this file can be found `here <https://github.com/Olly-/SRL/blob/master/lib/utilities/wrappers.simba>`_.
 *)
 
-
 function TPAFromLine(Start, Stop: TPoint): TPointArray; overload;
 begin
   Result := TPAFromLine(Start.X, Start.Y, Stop.X, Stop.Y);

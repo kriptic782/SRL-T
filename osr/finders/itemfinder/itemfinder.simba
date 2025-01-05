@@ -475,7 +475,7 @@ begin
 end;
 
 
-procedure TRSItemFinderCustomFilter.ClearSparkles(constref Image, Templ: TMufasaBitmap); static;
+procedure TRSItemFinderCustomFilter.ClearSparkles(constref image, templ: TMufasaBitmap); static;
 var
   I: Int32;
   ImagePtr, TemplPtr: PRGB32;
@@ -495,26 +495,35 @@ begin
   end;
 end;
 
-procedure TRSItemFinderCustomFilter.FireCape(constref Image, Templ: TMufasaBitmap); static;
+procedure TRSItemFinderCustomFilter.FireCape(constref image, templ: TMufasaBitmap); static;
 var
-  I: Int32;
-  ImagePtr, TemplPtr: PRGB32;
+  i: Int32;
+  imgPixel, tmplPixel: TColor;
+  imagePtr, templPtr: PRGB32;
 begin
-  ImagePtr := Image.GetData();
-  TemplPtr := Templ.GetData();
+  imagePtr := image.GetData();
+  templPtr := templ.GetData();
 
-  for I := 0 to (Image.GetWidth() * Image.GetHeight())-1 do
+  for i := 0 to (Image.GetWidth() * Image.GetHeight())-1 do
   begin
-    if ((ImagePtr^.R + ImagePtr^.G + ImagePtr^.B) > 300) or
-       ((TemplPtr^.R + TemplPtr^.G + TemplPtr^.B) > 300) then
-      ImagePtr^ := TemplPtr^ := Default(TRGB32);
+    imgPixel := RGBtoColor(imagePtr^.R, imagePtr^.G, imagePtr^.B);
+    tmplPixel := RGBtoColor(templPtr^.R, templPtr^.G, templPtr^.B);
 
-    Inc(ImagePtr);
-    Inc(TemplPtr);
+    if not (imgPixel in [0, $10435D, RS_ITEM_BORDER]) and
+       not (tmplPixel in [0, $10435D, RS_ITEM_BORDER]) then
+    begin
+      //set any pixel that is not 0, $10435D or ITEMBORDER to red.
+      //basically paint both images red on everything that is not the border and "neck" rope
+      imagePtr^ := [0, 0, 255, 0];
+      templPtr^ := [0, 0, 255, 0];
+    end;
+
+    Inc(imagePtr);
+    Inc(templPtr);
   end;
 end;
 
-procedure TRSItemFinderCustomFilter.LavaScales(constref Image, Templ: TMufasaBitmap); static;
+procedure TRSItemFinderCustomFilter.LavaScales(constref image, templ: TMufasaBitmap); static;
 var
   I: Int32;
   ImagePtr, TemplPtr: PRGB32;
@@ -533,7 +542,7 @@ begin
   end;
 end;
 
-procedure TRSItemFinderCustomFilter.DarkEss(constref Image, Templ: TMufasaBitmap); static;
+procedure TRSItemFinderCustomFilter.DarkEss(constref image, templ: TMufasaBitmap); static;
 var
   I: Int32;
   ImagePtr, TemplPtr: PRGB32;
