@@ -1,3 +1,12 @@
+## [7.13.6](https://github.com/Torwent/SRL-T/compare/v7.13.5...v7.13.6) (2025-01-08)
+
+
+### Bug Fixes
+
+* **map:** update maps ([d4f2754](https://github.com/Torwent/SRL-T/commit/d4f2754092473de383c98bf376f28e1abff01fa5))
+
+
+
 ## [7.13.5](https://github.com/Torwent/SRL-T/compare/v7.13.4...v7.13.5) (2025-01-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **magic:** proper fix to what I tried fixing before lol ([d763f9c](https://github.com/Torwent/SRL-T/commit/d763f9c5cc501ae989bc4c8d4fe587a683e65927))
-
-
-
-## [7.13.1](https://github.com/Torwent/SRL-T/compare/v7.13.0...v7.13.1) (2024-12-24)
-
-
-### Bug Fixes
-
-* **Magic:** small bug fixed in casting certain spells ([64fc5c2](https://github.com/Torwent/SRL-T/commit/64fc5c2b473f2cf8f7ce0c88c8dd6b780d462f36))
 
 
 
