@@ -1,3 +1,12 @@
+## [7.13.7](https://github.com/Torwent/SRL-T/compare/v7.13.6...v7.13.7) (2025-01-09)
+
+
+### Bug Fixes
+
+* **inventory:** shift drop calculates faster now ([e710c9e](https://github.com/Torwent/SRL-T/commit/e710c9e2d13d20c06953e7504b00cdeafcd29296))
+
+
+
 ## [7.13.6](https://github.com/Torwent/SRL-T/compare/v7.13.5...v7.13.6) (2025-01-08)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * small fix for TRSMapObject.SelectOption() ([33cd332](https://github.com/Torwent/SRL-T/commit/33cd33272f68ad0cfa6bf1966bbaca4171808d66))
-
-
-
-## [7.13.2](https://github.com/Torwent/SRL-T/compare/v7.13.1...v7.13.2) (2024-12-24)
-
-
-### Bug Fixes
-
-* **magic:** proper fix to what I tried fixing before lol ([d763f9c](https://github.com/Torwent/SRL-T/commit/d763f9c5cc501ae989bc4c8d4fe587a683e65927))
 
 
 
