@@ -795,6 +795,7 @@ begin
   end;
 end;
 
+
 function TRSInventory.ShiftDrop(slots: TIntegerArray): Boolean;
 var
   boxes: TBoxArray;
@@ -803,8 +804,7 @@ var
   selected: Int32;
   circle: TCircle;
 begin
-  if (Length(slots) = 0) then
-    Exit(True);
+  if (Length(slots) = 0) then Exit(True);
 
   if not Self.ShiftEnabled then
     Exit(Self.RightClickDrop(slots));
@@ -866,32 +866,18 @@ begin
   Self.ShiftEnabled := False;
 end;
 
-function TRSInventory.ShiftDrop(slots: TIntegerArray; pattern: TIntegerArray): Boolean; overload;
-var
-  order: TIntegerArray;
-  i: Int32;
+function TRSInventory.ShiftDrop(slots, pattern: TIntegerArray): Boolean; overload;
 begin
-  for i := 0 to High(pattern) do
-    if slots.Find(pattern[i]) > -1 then
-      order += pattern[i];
-
-  Result := Self.ShiftDrop(order);
+  Result := Self.ShiftDrop(slots.Intersection(pattern));
 end;
 
 
 function TRSInventory.ShiftDrop(items: TRSItemArray; pattern: TIntegerArray): Boolean; overload;
 var
-  slots, order: TIntegerArray;
-  i: Int32;
+  slots: TIntegerArray;
 begin
-  if Self.FindItems(items, slots) then
-  begin
-    for i := 0 to High(pattern) do
-      if slots.Find(pattern[i]) > -1 then
-        order += pattern[i];
-  
-    Result := Self.ShiftDrop(order);
-  end;
+  if not Self.FindItems(items, slots) then Exit;
+  Result := Self.ShiftDrop(slots.Intersection(pattern));
 end;
 
 var
