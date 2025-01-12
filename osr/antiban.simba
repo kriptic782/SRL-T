@@ -726,6 +726,22 @@ begin
   end;
 end;
 
+procedure TAntiban.RandomKeyboard();
+begin
+  case Random(20) of
+    0..9:
+      case Random(3) of
+        0: Keyboard.PressKey(VK_LEFT);
+        1: Keyboard.PressKey(VK_RIGHT);
+        2: Keyboard.PressKey(VK_UP);
+      end;
+    10..14: Keyboard.PressKey(KEYBOARD_MISC[Random(0, High(KEYBOARD_MISC))]);
+    15, 16: Keyboard.PressKey(KEYBOARD_CHARACTERS[Random(0, High(KEYBOARD_CHARACTERS))]);
+    17, 18: Keyboard.PressKey(KEYBOARD_NUMBERS[Random(0, High(KEYBOARD_NUMBERS))]);
+    19: Keyboard.PressKey(KEYBOARD_FKEYS[Random(0, High(KEYBOARD_FKEYS))]);
+  end;
+end;
+
 //
 //
 // ---------------- End of random taks ----------------

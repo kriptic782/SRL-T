@@ -11,11 +11,18 @@ The Keyboard file holds functions and procedures that are related to the keyboar
 const
   VK_ENTER = VK_RETURN;
 
+  KEYBOARD_ARROWS: TIntegerArray = [VK_LEFT..VK_DOWN];
+  KEYBOARD_FKEYS: TIntegerArray = [VK_ESCAPE, VK_F1..VK_F12];
+  KEYBOARD_CHARACTERS: TIntegerArray = [VK_A..VK_Z];
+  KEYBOARD_NUMBERS: TIntegerArray = [VK_0..VK_9, VK_NUMPAD0..VK_NUMPAD9];
+  KEYBOARD_MISC: TIntegerArray = [VK_LCONTROL, VK_CONTROL, VK_SPACE, VK_SHIFT, VK_RSHIFT];
+
 type
   TKeyboard = record
     KeyDelay, SentenceDelay: record
-      Min, Max: Int32;
+      Min, Max: Integer;
     end;
+    LastKey: Integer;
   end;
 
 (*
@@ -44,22 +51,6 @@ end;
 
 
 (*
-## Keyboard.PressKey
-```pascal
-procedure TKeyboard.PressKey(Key: Integer);
-```
-Presses the given virtual key. 
-
-Note: See `VK_` constants for values to pass it.
-*)
-procedure TKeyboard.PressKey(Key: Integer);
-begin
-  Self.KeyDown(Key);
-  Wait(Trunc(srl.SkewedRand(60,45,180)));
-  Self.KeyUp(Key);
-end;
-
-(*
 ## Keyboard.KeyDown
 ```pascal
 procedure TKeyboard.KeyDown(Key: Integer);
@@ -68,9 +59,10 @@ Presses down the given virtual key.
 
 Note: See `VK_` constants for values to pass it.
 *)
-procedure TKeyboard.KeyDown(const Key: Integer);
+procedure TKeyboard.KeyDown(const key: Integer);
 begin
-  System.KeyDown(Key);
+  System.KeyDown(key);
+  Self.LastKey := key;
 end;
 
 (*
@@ -86,6 +78,23 @@ procedure TKeyboard.KeyUp(const Key: Integer);
 begin
   System.KeyUp(Key);
 end;
+
+(*
+## Keyboard.PressKey
+```pascal
+procedure TKeyboard.PressKey(const key: Integer);
+```
+Presses the given virtual key.
+
+Note: See `VK_` constants for values to pass it.
+*)
+procedure TKeyboard.PressKey(const key: Integer);
+begin
+  Self.KeyDown(key);
+  Wait(Trunc(SRL.SkewedRand(60,45,180)));
+  Self.KeyUp(key);
+end;
+
 
 (*
 ## Keyboard.IsKeyDown
