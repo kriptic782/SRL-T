@@ -1,3 +1,12 @@
+# [7.14.0](https://github.com/Torwent/SRL-T/compare/v7.13.7...v7.14.0) (2025-01-12)
+
+
+### Features
+
+* **keyboard:** nows caches the last used key ([93c38dc](https://github.com/Torwent/SRL-T/commit/93c38dca40080861dfea1b7c9b7f7e0325ad20ae))
+
+
+
 ## [7.13.7](https://github.com/Torwent/SRL-T/compare/v7.13.6...v7.13.7) (2025-01-09)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * removed SetCount SetFirst and SetLast ([5599705](https://github.com/Torwent/SRL-T/commit/55997052f0d5202557ea721c90bb1a53d63ce4d5))
-
-
-
-## [7.13.3](https://github.com/Torwent/SRL-T/compare/v7.13.2...v7.13.3) (2024-12-26)
-
-
-### Bug Fixes
-
-* small fix for TRSMapObject.SelectOption() ([33cd332](https://github.com/Torwent/SRL-T/commit/33cd33272f68ad0cfa6bf1966bbaca4171808d66))
 
 
 
