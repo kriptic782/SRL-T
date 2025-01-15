@@ -1,3 +1,12 @@
+# [7.15.0](https://github.com/Torwent/SRL-T/compare/v7.14.0...v7.15.0) (2025-01-15)
+
+
+### Features
+
+* **banks:** add a way to easily add a custom bank object/npc ([ad5275d](https://github.com/Torwent/SRL-T/commit/ad5275d500720a1fa380ce88555489baab0fa394))
+
+
+
 # [7.14.0](https://github.com/Torwent/SRL-T/compare/v7.13.7...v7.14.0) (2025-01-12)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **itemfinder:** firecape filter should be more reliable now ([7e0d815](https://github.com/Torwent/SRL-T/commit/7e0d815c239ee4b63468054370304cd323015c48))
-
-
-
-## [7.13.4](https://github.com/Torwent/SRL-T/compare/v7.13.3...v7.13.4) (2024-12-27)
-
-
-### Bug Fixes
-
-* removed SetCount SetFirst and SetLast ([5599705](https://github.com/Torwent/SRL-T/commit/55997052f0d5202557ea721c90bb1a53d63ce4d5))
 
 
 
