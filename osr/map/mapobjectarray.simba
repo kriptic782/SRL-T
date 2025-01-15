@@ -564,6 +564,18 @@ begin
     TerminateScript('No bank objects nor npcs available in the loaded TRSMap');
 end;
 
+procedure TRSBanks._AddObject(obj: TRSObjectV2);
+begin
+  Self.ObjectsCache += obj;
+  Self.MapObjects += @Self.ObjectsCache[High(Self.ObjectsCache)];
+end;
+
+procedure TRSBanks._AddNPC(npc: TRSNPCV2);
+begin
+  Self.NPCsCache += npc;
+  Self.MapObjects += @Self.NPCsCache[High(Self.NPCsCache)];
+end;
+
 procedure TRSBanks._FilterLocation(polygon: TPointArray; inside: Boolean);
 begin
   if Self.MapObjects = [] then
