@@ -1,3 +1,12 @@
+## [7.15.2](https://github.com/Torwent/SRL-T/compare/v7.15.1...v7.15.2) (2025-01-17)
+
+
+### Bug Fixes
+
+* **antiban:** decrease the rate that RandomKeyboard presses a character key ([7d1d799](https://github.com/Torwent/SRL-T/commit/7d1d79950a81d468b600e79065ff4f295b0781a7))
+
+
+
 ## [7.15.1](https://github.com/Torwent/SRL-T/compare/v7.15.0...v7.15.1) (2025-01-17)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **inventory:** shift drop calculates faster now ([e710c9e](https://github.com/Torwent/SRL-T/commit/e710c9e2d13d20c06953e7504b00cdeafcd29296))
-
-
-
-## [7.13.6](https://github.com/Torwent/SRL-T/compare/v7.13.5...v7.13.6) (2025-01-08)
-
-
-### Bug Fixes
-
-* **map:** update maps ([d4f2754](https://github.com/Torwent/SRL-T/commit/d4f2754092473de383c98bf376f28e1abff01fa5))
 
 
 
