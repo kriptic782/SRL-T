@@ -1,3 +1,12 @@
+## [7.15.1](https://github.com/Torwent/SRL-T/compare/v7.15.0...v7.15.1) (2025-01-17)
+
+
+### Bug Fixes
+
+* **TRSMap:** found a small bug in TRSMapLoader where it was doing double work ([d884071](https://github.com/Torwent/SRL-T/commit/d884071ad796213028069609d3eeb978b1e2f50f))
+
+
+
 # [7.15.0](https://github.com/Torwent/SRL-T/compare/v7.14.0...v7.15.0) (2025-01-15)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **map:** update maps ([d4f2754](https://github.com/Torwent/SRL-T/commit/d4f2754092473de383c98bf376f28e1abff01fa5))
-
-
-
-## [7.13.5](https://github.com/Torwent/SRL-T/compare/v7.13.4...v7.13.5) (2025-01-05)
-
-
-### Bug Fixes
-
-* **itemfinder:** firecape filter should be more reliable now ([7e0d815](https://github.com/Torwent/SRL-T/commit/7e0d815c239ee4b63468054370304cd323015c48))
 
 
 
