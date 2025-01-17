@@ -79,6 +79,8 @@ Record responsible for positioning.
     IsSetup, DisableHeightmap: Boolean;
   end;
 
+  PRSMap = ^TRSMap;
+
 function TRSMap.Position(): TPoint; forward;
 
 function TRSMap.Height(p: TPoint = [-1,-1]): Single; forward;

@@ -1319,8 +1319,6 @@ begin
   Self.ObjectData := Self.InternalJSONLoad(objects);
   Self.NPCData    := Self.InternalJSONLoad(npcs);
 
-  Self.Map.Downsample(downscale, Self.DownscaledMap);
-
   Self.UsingChunks := True;
 end;
 

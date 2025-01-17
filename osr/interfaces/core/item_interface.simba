@@ -5,7 +5,7 @@
 
 type
   TRSItemInterface = record(TSRLBaseRecord)
-    GetSearchBoxesFunction: function: TBoxArray of object;
+    GetSearchBoxesFunction: function (): TBoxArray of object;
     DiscoverOffset: TBox;
   end;
 
