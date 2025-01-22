@@ -1,3 +1,12 @@
+## [7.15.3](https://github.com/Torwent/SRL-T/compare/v7.15.2...v7.15.3) (2025-01-22)
+
+
+### Bug Fixes
+
+* force bump ([8f7fbe6](https://github.com/Torwent/SRL-T/commit/8f7fbe608934415528245ca877505dd96b5e46b6))
+
+
+
 ## [7.15.2](https://github.com/Torwent/SRL-T/compare/v7.15.1...v7.15.2) (2025-01-17)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **keyboard:** nows caches the last used key ([93c38dc](https://github.com/Torwent/SRL-T/commit/93c38dca40080861dfea1b7c9b7f7e0325ad20ae))
-
-
-
-## [7.13.7](https://github.com/Torwent/SRL-T/compare/v7.13.6...v7.13.7) (2025-01-09)
-
-
-### Bug Fixes
-
-* **inventory:** shift drop calculates faster now ([e710c9e](https://github.com/Torwent/SRL-T/commit/e710c9e2d13d20c06953e7504b00cdeafcd29296))
 
 
 
