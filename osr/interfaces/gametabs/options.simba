@@ -190,14 +190,15 @@ end;
 
 function TRSOptions.GetCurrentTab: ERSOptionsTab;
 var
-  Tabs: TBoxArray;
-  I: Int32;
+  tabs: TBoxArray;
+  count, i: Int32;
 begin
-  Tabs := Self.GetTabs;
+  tabs := Self.GetTabs;
 
-  for I := 0 to High(Tabs) do
+  for I := 0 to High(tabs) do
   begin
-    if SRL.CountColor(4741213, Tabs[I]) < 50 then //finds the one without the bottom white line
+    count := SRL.CountColor(4741213, tabs[i]) + SRL.CountColor($1E2528, tabs[i]);
+    if count < 50 then //finds the one without the bottom white line
       Exit(ERSOptionsTab(I));
   end
 end;
