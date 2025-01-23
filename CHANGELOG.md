@@ -1,3 +1,12 @@
+## [7.15.5](https://github.com/Torwent/SRL-T/compare/v7.15.4...v7.15.5) (2025-01-23)
+
+
+### Bug Fixes
+
+* **mouse:** mouse speed bug ([10a56c4](https://github.com/Torwent/SRL-T/commit/10a56c41467ea8370d81e392436edd536da192af))
+
+
+
 ## [7.15.4](https://github.com/Torwent/SRL-T/compare/v7.15.3...v7.15.4) (2025-01-23)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMap:** found a small bug in TRSMapLoader where it was doing double work ([d884071](https://github.com/Torwent/SRL-T/commit/d884071ad796213028069609d3eeb978b1e2f50f))
-
-
-
-# [7.15.0](https://github.com/Torwent/SRL-T/compare/v7.14.0...v7.15.0) (2025-01-15)
-
-
-### Features
-
-* **banks:** add a way to easily add a custom bank object/npc ([ad5275d](https://github.com/Torwent/SRL-T/commit/ad5275d500720a1fa380ce88555489baab0fa394))
 
 
 
