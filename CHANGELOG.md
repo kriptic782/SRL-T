@@ -1,3 +1,12 @@
+## [7.15.6](https://github.com/Torwent/SRL-T/compare/v7.15.5...v7.15.6) (2025-01-23)
+
+
+### Bug Fixes
+
+* **TRSMap:** fixed a small possibility of a infinite loop ([ddf6e2a](https://github.com/Torwent/SRL-T/commit/ddf6e2a096ed4004285e7938a57960d6ab7f69de))
+
+
+
 ## [7.15.5](https://github.com/Torwent/SRL-T/compare/v7.15.4...v7.15.5) (2025-01-23)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **antiban:** decrease the rate that RandomKeyboard presses a character key ([7d1d799](https://github.com/Torwent/SRL-T/commit/7d1d79950a81d468b600e79065ff4f295b0781a7))
-
-
-
-## [7.15.1](https://github.com/Torwent/SRL-T/compare/v7.15.0...v7.15.1) (2025-01-17)
-
-
-### Bug Fixes
-
-* **TRSMap:** found a small bug in TRSMapLoader where it was doing double work ([d884071](https://github.com/Torwent/SRL-T/commit/d884071ad796213028069609d3eeb978b1e2f50f))
 
 
 
