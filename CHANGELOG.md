@@ -1,3 +1,12 @@
+## [7.15.4](https://github.com/Torwent/SRL-T/compare/v7.15.3...v7.15.4) (2025-01-23)
+
+
+### Bug Fixes
+
+* **options:** now supports transparent tabs ([cb2f942](https://github.com/Torwent/SRL-T/commit/cb2f9428fb872bb238939cede8f3e863175c834a))
+
+
+
 ## [7.15.3](https://github.com/Torwent/SRL-T/compare/v7.15.2...v7.15.3) (2025-01-22)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **banks:** add a way to easily add a custom bank object/npc ([ad5275d](https://github.com/Torwent/SRL-T/commit/ad5275d500720a1fa380ce88555489baab0fa394))
-
-
-
-# [7.14.0](https://github.com/Torwent/SRL-T/compare/v7.13.7...v7.14.0) (2025-01-12)
-
-
-### Features
-
-* **keyboard:** nows caches the last used key ([93c38dc](https://github.com/Torwent/SRL-T/commit/93c38dca40080861dfea1b7c9b7f7e0325ad20ae))
 
 
 
