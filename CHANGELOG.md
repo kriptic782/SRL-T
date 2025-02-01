@@ -1,3 +1,12 @@
+## [7.15.7](https://github.com/Torwent/SRL-T/compare/v7.15.6...v7.15.7) (2025-02-01)
+
+
+### Bug Fixes
+
+* force bump ([d6bbec6](https://github.com/Torwent/SRL-T/commit/d6bbec6ee63e6bfb185f056987896a0d3cf58992))
+
+
+
 ## [7.15.6](https://github.com/Torwent/SRL-T/compare/v7.15.5...v7.15.6) (2025-01-23)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * force bump ([8f7fbe6](https://github.com/Torwent/SRL-T/commit/8f7fbe608934415528245ca877505dd96b5e46b6))
-
-
-
-## [7.15.2](https://github.com/Torwent/SRL-T/compare/v7.15.1...v7.15.2) (2025-01-17)
-
-
-### Bug Fixes
-
-* **antiban:** decrease the rate that RandomKeyboard presses a character key ([7d1d799](https://github.com/Torwent/SRL-T/commit/7d1d79950a81d468b600e79065ff4f295b0781a7))
 
 
 
