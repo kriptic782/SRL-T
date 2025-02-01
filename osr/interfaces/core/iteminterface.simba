@@ -5,7 +5,7 @@
 
 type
   TRSItemInterface = record(TSRLBaseRecord)
-    GetSearchBoxesFunction: function (): TBoxArray of object;
+    SlotBoxesFunction: function (): TBoxArray of object;
     DiscoverOffset: TBox;
   end;
 
@@ -14,10 +14,10 @@ var
   boxes: TBoxArray;
   i: Int32;
 begin
-  if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemInterface.GetSearchBoxesFunction = nil');
+  if (@Self.SlotBoxesFunction = nil) then
+    Self.Fatal('ItemInterface.SlotBoxesFunction = nil');
 
-  boxes := Self.GetSearchBoxesFunction();
+  boxes := Self.SlotBoxesFunction();
   for i := 0 to High(slots) do
     if InRange(slots[i], 0, High(boxes)) then
       Result += boxes[slots[i]];
@@ -27,10 +27,10 @@ function TRSItemInterface.GetSlotBox(slot: Int32): TBox;
 var
   boxes: TBoxArray;
 begin
-  if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+  if (@Self.SlotBoxesFunction = nil) then
+    RaiseException(Self.Name + '.SlotBoxesFunction = nil');
 
-  boxes := Self.GetSearchBoxesFunction();
+  boxes := Self.SlotBoxesFunction();
   if InRange(slot, 0, High(boxes)) then
     Result := boxes[slot];
 end;
@@ -41,15 +41,15 @@ var
   i: Int32;
   boxes, tmp: TBoxArray;
 begin
-  if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+  if (@Self.SlotBoxesFunction = nil) then
+    RaiseException(Self.Name + '.SlotBoxesFunction = nil');
 
   slots.Remove(slot);
 
   if (Length(Slots) = 0) then
     Self.Fatal('RandomSlotNearby: No slots to choose from');
 
-  boxes := Self.GetSearchBoxesFunction();
+  boxes := Self.SlotBoxesFunction();
 
   SetLength(tmp, Length(slots));
   for i := 0 to High(slots) do
@@ -63,10 +63,10 @@ var
   i: Int32;
   slots: TBoxArray;
 begin
-  if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+  if (@Self.SlotBoxesFunction = nil) then
+    RaiseException(Self.Name + '.SlotBoxesFunction = nil');
 
-  slots := Self.GetSearchBoxesFunction();
+  slots := Self.SlotBoxesFunction();
   for i := 0 to High(slots) do
     if slots[i].Contains(p) then
       Exit(i);
@@ -80,10 +80,10 @@ var
   slots: TBoxArray;
   i: Int32;
 begin
-  if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+  if (@Self.SlotBoxesFunction = nil) then
+    RaiseException(Self.Name + '.SlotBoxesFunction = nil');
 
-  slots := Self.GetSearchBoxesFunction();
+  slots := Self.SlotBoxesFunction();
   for i := 0 to High(slots) do
     if SRL.CountColor(CTS1(1118740, 35), slots[i]) > 0 then
       Result += i;
@@ -94,10 +94,10 @@ var
   slots: TBoxArray;
   i: Int32;
 begin
-  if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+  if (@Self.SlotBoxesFunction = nil) then
+    RaiseException(Self.Name + '.SlotBoxesFunction = nil');
 
-  slots := Self.GetSearchBoxesFunction();
+  slots := Self.SlotBoxesFunction();
   for i := 0 to High(slots) do
     if SRL.CountColor(CTS1(1118740, 35), slots[i]) = 0 then
       Result += i;
@@ -108,10 +108,10 @@ function TRSItemInterface.SlotUsed(slot: Int32): Boolean;
 var
   slots: TBoxArray;
 begin
-  if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+  if (@Self.SlotBoxesFunction = nil) then
+    RaiseException(Self.Name + '.SlotBoxesFunction = nil');
 
-  slots := Self.GetSearchBoxesFunction();
+  slots := Self.SlotBoxesFunction();
   Result := SRL.CountColor(CTS1(1118740, 35), slots[slot]) > 0;
 end;
 
@@ -147,10 +147,10 @@ function TRSItemInterface.IndexOf(items: TRSItemArray): Int32;
 var
   Match: TRSItemFinderMatch;
 begin
-  if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+  if (@Self.SlotBoxesFunction = nil) then
+    RaiseException(Self.Name + '.SlotBoxesFunction = nil');
 
-  if ItemFinder.Find(items, Self.GetSearchBoxesFunction(), Match) then
+  if ItemFinder.Find(items, Self.SlotBoxesFunction(), Match) then
     Result := Match.Index
   else
     Result := -1;
@@ -161,10 +161,10 @@ var
   matches: TRSItemFinderMatchArray;
   I: Integer;
 begin
-  if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+  if (@Self.SlotBoxesFunction = nil) then
+    RaiseException(Self.Name + '.SlotBoxesFunction = nil');
 
-  matches := ItemFinder.FindAll(items, Self.GetSearchBoxesFunction());
+  matches := ItemFinder.FindAll(items, Self.SlotBoxesFunction());
 
   SetLength(Result, Length(matches));
   for I := 0 to High(matches) do
@@ -176,10 +176,10 @@ function TRSItemInterface.Find(items: TRSItemArray; out box: TBox): Boolean;
 var
   match: TRSItemFinderMatch;
 begin
-  if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+  if (@Self.SlotBoxesFunction = nil) then
+    RaiseException(Self.Name + '.SlotBoxesFunction = nil');
 
-  Result := ItemFinder.Find(items, Self.GetSearchBoxesFunction(), match);
+  Result := ItemFinder.Find(items, Self.SlotBoxesFunction(), match);
   if Result then
     Box := match.Box;
 end;
@@ -189,10 +189,10 @@ var
   matches: TRSItemFinderMatchArray;
   I: Integer;
 begin
-  if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+  if (@Self.SlotBoxesFunction = nil) then
+    RaiseException(Self.Name + '.SlotBoxesFunction = nil');
 
-  matches := ItemFinder.FindAll(items, Self.GetSearchBoxesFunction());
+  matches := ItemFinder.FindAll(items, Self.SlotBoxesFunction());
 
   SetLength(Result, Length(matches));
   for I := 0 to High(matches) do
@@ -205,7 +205,7 @@ var
   found: TRSItemArray;
   i: Integer;
 begin
-  matches := ItemFinder.FindAll(items, Self.GetSearchBoxesFunction());
+  matches := ItemFinder.FindAll(items, Self.SlotBoxesFunction());
   for i := 0 to High(matches) do
   begin
     if not found.Contains(matches[i].Item) then
@@ -220,7 +220,7 @@ function TRSItemInterface.FindAny(items: TRSItemArray): TRSItemFinderMatch;
 var
   matches: TRSItemFinderMatchArray;
 begin
-  matches := ItemFinder.FindAll(items, Self.GetSearchBoxesFunction(), 1);
+  matches := ItemFinder.FindAll(items, Self.SlotBoxesFunction(), 1);
   if matches <> [] then
     Result := matches[0];
 end;
@@ -252,10 +252,10 @@ var
   found: TRSItemArray;
   i: Integer;
 begin
-  if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+  if (@Self.SlotBoxesFunction = nil) then
+    RaiseException(Self.Name + '.SlotBoxesFunction = nil');
 
-  matches := ItemFinder.FindAll(items, Self.GetSearchBoxesFunction());
+  matches := ItemFinder.FindAll(items, Self.SlotBoxesFunction());
   for i := 0 to High(matches) do
     if not found.Contains(matches[i].Item) then
       found += matches[i].Item;
@@ -269,10 +269,10 @@ var
   b: TBox;
   bmp: TMufasaBitmap;
 begin
-  if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemInterface.GetSearchBoxesFunction = nil');
+  if (@Self.SlotBoxesFunction = nil) then
+    Self.Fatal('ItemInterface.SlotBoxesFunction = nil');
 
-  for b in Self.GetSearchBoxesFunction() do
+  for b in Self.SlotBoxesFunction() do
   begin
     b.X1 += DiscoverOffset.X1;
     b.Y1 += DiscoverOffset.Y1;
@@ -294,10 +294,10 @@ var
   b: TBox;
   bmp: TMufasaBitmap;
 begin
-  if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemInterface.GetSearchBoxesFunction = nil');
+  if (@Self.SlotBoxesFunction = nil) then
+    Self.Fatal('ItemInterface.SlotBoxesFunction = nil');
 
-  for b in Self.GetSearchBoxesFunction() do
+  for b in Self.SlotBoxesFunction() do
   begin
     b.X1 += DiscoverOffset.X1;
     b.Y1 += DiscoverOffset.Y1;
@@ -406,10 +406,10 @@ function TRSItemInterface.MouseSlot(slot: Int32): Boolean;
 var
   slots: TBoxArray;
 begin
-  if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+  if (@Self.SlotBoxesFunction = nil) then
+    RaiseException(Self.Name + '.SlotBoxesFunction = nil');
 
-  slots := Self.GetSearchBoxesFunction();
+  slots := Self.SlotBoxesFunction();
   Result := InRange(slot, 0, High(slots));
   if Result then
     Mouse.Move(slots[slot]);
@@ -443,13 +443,13 @@ function TRSItemInterface.Move(slot, destination: Int32): Boolean;
 var
   slots: TBoxArray;
 begin
-  if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+  if (@Self.SlotBoxesFunction = nil) then
+    RaiseException(Self.Name + '.SlotBoxesFunction = nil');
 
   if slot = destination then
     Exit(True);
 
-  slots := Self.GetSearchBoxesFunction();
+  slots := Self.SlotBoxesFunction();
   Result := InRange(slot, 0, High(slots)) and InRange(destination, 0, High(slots));
 
   if Result then
@@ -468,10 +468,10 @@ var
   slots: TBoxArray;
   match: TRSItemFinderMatch;
 begin
-  if (@Self.GetSearchBoxesFunction = nil) then
-    Self.Fatal('ItemFinder.GetSearchBoxesFunction = nil');
+  if (@Self.SlotBoxesFunction = nil) then
+    RaiseException(Self.Name + '.SlotBoxesFunction = nil');
 
-  slots := Self.GetSearchBoxesFunction();
+  slots := Self.SlotBoxesFunction();
   if ItemFinder.Find([item], slots, match) then
   begin
     if match.Index = destination then

@@ -1,4 +1,4 @@
-{$DEFINE SRL_GAMEERSGameTab.INCLUDED}
+{$DEFINE SRL_GAMETAB_INCLUDED}
 {$IFNDEF SRL_OSR}
   {$I SRL-T/osr.simba}
 {$ENDIF}
@@ -6,57 +6,69 @@
 type
   TRSGameTab = type TRSInterface;
 
-procedure TRSGameTab.Setup; override;
+procedure TRSGameTab.Setup(); override;
 begin
-  inherited; 
-  
+  inherited;
   Self.Name := 'GameTab';
 end;
 
-procedure TRSGameTab.SetupAlignment(Mode: ERSClientMode); override;
+procedure TRSGameTab.SetupAlignment(); overload;
+var
+  alignment: TRSInterfaceAlignment;
 begin
-  inherited;
+  case RSClient.Mode of
+    ERSClientMode.FIXED:
+    begin
+      alignment.Left   := RootInterface.Bounds.X2 - 214;
+      alignment.Right  := RootInterface.Bounds.X2 - 31;
+      alignment.Top    := RootInterface.Bounds.Y2 - 298;
+      alignment.Bottom := RootInterface.Bounds.Y2 - 37;
+    end;
 
-  case Self.Mode of
-    ERSClientMode.FIXED, ERSClientMode.RESIZABLE_CLASSIC:
-      begin
-        Self.Alignment.Left := [@GameTabs.X1, 28];
-        Self.Alignment.Right := [@GameTabs.X2, -29];
-        Self.Alignment.Top := [@GameTabs.Y1, 36];
-        Self.Alignment.Bottom := [@GameTabs.Y2, -37];
-      end;
+    ERSClientMode.RESIZABLE_CLASSIC:
+    begin
+      alignment.Left   := RootInterface.Bounds.X2 - 212;
+      alignment.Right  := RootInterface.Bounds.X2 - 29;
+      alignment.Top    := RootInterface.Bounds.Y2 - 298;
+      alignment.Bottom := RootInterface.Bounds.Y2 - 37;
+    end;
 
     ERSClientMode.RESIZABLE_MODERN:
-      begin
-        Self.Alignment.Left := [@GameTabs.X1, 37];
-        Self.Alignment.Right := [@GameTabs.X2, -10];
-        Self.Alignment.Top := [@GameTabs.Y1, 6];
-        Self.Alignment.Bottom := [@GameTabs.Y2, -78];
-      end;
+    begin
+      alignment.Left   := RootInterface.Bounds.X2 - 193;
+      alignment.Right  := RootInterface.Bounds.X2 - 10;
+      alignment.Top    := GameTabs.Bounds.Y1 - 269;
+      alignment.Bottom := GameTabs.Bounds.Y1 - 7;
+    end;
   end;
+
+  Self.SetupAlignment(alignment);
 end;
 
 var
   GameTab: TRSGameTab;
 
-procedure TRSClient.ClientModeChanged; override;
+procedure TRSClient.ClientModeChanged(); override;
 begin
   inherited;
-  
-  GameTab.SetupAlignment(Self.Mode);
+  GameTab.SetupAlignment();
 end;
 
-procedure TSRL.Setup; override;
+procedure TSRL.Setup(); override;
 begin
   inherited;
-
   GameTab.Setup();
 end;
 
-procedure TSRL.Debug(Bitmap: TMufasaBitmap); override;
+procedure TSRL.Debug(bitmap: TMufasaBitmap); override;
 begin
   inherited;
-
-  GameTab.Draw(Bitmap);
+  GameTab.Draw(bitmap);
 end;
 
+type
+  TRSItemGameTab = record(TRSInterface)
+    Items: TRSItemInterface;
+    SlotBoxes: TBoxArray;
+  end;
+  PRSItemGameTab = ^TRSItemGameTab;

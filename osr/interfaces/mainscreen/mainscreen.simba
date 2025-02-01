@@ -171,31 +171,33 @@ begin
   AddOnTerminate(@Self.UpTextBitmapBuffer.Free);
 end;
 
-procedure TRSMainScreen.SetupAlignment(Mode: ERSClientMode); override;
+procedure TRSMainScreen.SetupAlignment(); overload;
+var
+  alignment: TRSInterfaceAlignment;
 begin
-  inherited;
-
-  case Self.Mode of
+  case RSClient.Mode of
     ERSClientMode.RESIZABLE_CLASSIC, ERSClientMode.RESIZABLE_MODERN:
-      begin
-        Self.Alignment.Left := [@RootInterface.X1];
-        Self.Alignment.Right := [@RootInterface.X2];
-        Self.Alignment.Top := [@RootInterface.Y1];
-        Self.Alignment.Bottom := [@RootInterface.Y2];
+    begin
+      alignment.Left := RootInterface.Bounds.X1;
+      alignment.Right := RootInterface.Bounds.X2;
+      alignment.Top := RootInterface.Bounds.Y1;
+      alignment.Bottom := RootInterface.Bounds.Y2;
 
-        Self.UpTextArea := [3, 3, 500, 21];
-      end;
+      Self.UpTextArea := [3, 3, 500, 21];
+    end;
 
     ERSClientMode.FIXED:
-      begin
-        Self.Alignment.Left := [@RootInterface.X1, 4];
-        Self.Alignment.Right := [@RootInterface.X1, 515];
-        Self.Alignment.Top := [@RootInterface.Y1, 4];
-        Self.Alignment.Bottom := [@RootInterface.Y1, 337];
+    begin
+      alignment.Left := RootInterface.Bounds.X1 + 4;
+      alignment.Right := RootInterface.Bounds.X1 + 515;
+      alignment.Top := RootInterface.Bounds.Y1 + 4;
+      alignment.Bottom := RootInterface.Bounds.Y1 + 337;
 
-        Self.UpTextArea := [7, 7, 500, 25];
-      end;
+      Self.UpTextArea := [7, 7, 500, 25];
+    end;
   end;
+
+  Self.SetupAlignment(alignment);
 end;
 
 (*
@@ -301,7 +303,7 @@ begin
 
   try
     for i := 1 to 10 do // 2500ms timeout
-      if (SRL.GetPixelShift(Self.Bounds(), 250) / Self.Bounds.Area() * 100) < 10 then // less than 10% of the screen changed in 250ms
+      if (SRL.GetPixelShift(Self.Bounds, 250) / Self.Bounds.Area() * 100) < 10 then // less than 10% of the screen changed in 250ms
         Break;
   finally
     Keyboard.KeyUp(VK_UP);
@@ -406,7 +408,7 @@ begin
   if Finder = [] then
     Self.Fatal('Empty TRSObjectFinder passed');
 
-  Area.LimitTo(Self.Bounds());
+  Area.LimitTo(Self.Bounds);
 
   // Translate distances
   Finder.ClusterDistance := Self.NormalizeDistance(Finder.ClusterDistance);
@@ -480,7 +482,7 @@ end;
 
 function TRSMainScreen.FindObject(Finder: TRSObjectFinder): T2DPointArray; overload;
 begin
-  Result := Self.FindObject(Finder, Self.Bounds());
+  Result := Self.FindObject(Finder, Self.Bounds);
 end;
 
 
@@ -506,18 +508,18 @@ if MainScreen.IsVisible([100, 100]) then
 *)
 function TRSMainScreen.IsVisible(p: TPoint): Boolean;
 begin
-  Result := Self.Bounds().Expand(-10).Contains(p);
+  Result := Self.Bounds.Expand(-10).Contains(p);
 
   if not Result or (RSClient.Mode = ERSClientMode.FIXED) then
     Exit;
 
-  if Chat.Bounds().Expand(5).Contains(p) and Chat.IsOpen() then
+  if Chat.Bounds.Expand(5).Contains(p) and Chat.IsOpen() then
     Exit(False);
-  if ChatButtons.Bounds().Expand(5).Contains(p) then
+  if ChatButtons.Bounds.Expand(5).Contains(p) then
     Exit(False);
-  if Minimap.Bounds().Expand(55).Contains(p) then
+  if Minimap.Bounds.Expand(55).Contains(p) then
     Exit(False);
-  if GameTabs.Bounds().Expand(5).Contains(p) then
+  if GameTabs.Bounds.Expand(5).Contains(p) then
     Exit(False);
 end;
 
@@ -525,18 +527,18 @@ function TRSMainScreen.IsVisible(tpa: TPointArray; useCenter: Boolean = True): B
 begin
   if useCenter then
     Exit(Self.IsVisible(tpa.Mean()));
-  Result := Self.Bounds().Expand(-10).ContainsAll(tpa);
+  Result := Self.Bounds.Expand(-10).ContainsAll(tpa);
 
   if not Result or (RSClient.Mode = ERSClientMode.FIXED) then
     Exit;
 
-  if Chat.Bounds().Expand(5).ContainsAll(tpa) and Chat.IsOpen() then
+  if Chat.Bounds.Expand(5).ContainsAll(tpa) and Chat.IsOpen() then
     Exit(False);
-  if ChatButtons.Bounds().Expand(5).ContainsAll(tpa) then
+  if ChatButtons.Bounds.Expand(5).ContainsAll(tpa) then
     Exit(False);
-  if Minimap.Bounds().Expand(55).ContainsAll(tpa) then
+  if Minimap.Bounds.Expand(55).ContainsAll(tpa) then
     Exit(False);
-  if GameTabs.Bounds().Expand(5).ContainsAll(tpa) then
+  if GameTabs.Bounds.Expand(5).ContainsAll(tpa) then
     Exit(False);
 end;
 
@@ -570,24 +572,24 @@ Filters the given TPointArray, TBoxArray, TRectArray or TCuboidArray and returns
 *)
 function TRSMainScreen.Filter(arr: TPointArray): TPointArray;
 begin
-  Result := arr := arr.FilterBox(Self.Bounds());
+  Result := arr := arr.FilterBox(Self.Bounds);
 
   if (Result = []) or (RSClient.Mode = ERSClientMode.FIXED) then
     Exit;
 
   if Chat.IsOpen() then
   begin
-    arr := Result.FilterBox(Chat.Bounds());
+    arr := Result.FilterBox(Chat.Bounds);
     Result := Result.Difference(arr);
   end;
 
-  arr := Result.FilterBox(ChatButtons.Bounds().Expand(0, 2));
+  arr := Result.FilterBox(ChatButtons.Bounds.Expand(0, 2));
   Result := Result.Difference(arr);
 
-  arr := Result.FilterBox(Minimap.Bounds().Expand(54, 13));
+  arr := Result.FilterBox(Minimap.Bounds.Expand(54, 13));
   Result := Result.Difference(arr);
 
-  arr := Result.FilterBox(GameTabs.Bounds());
+  arr := Result.FilterBox(GameTabs.Bounds);
   Result := Result.Difference(arr);
 end;
 
@@ -749,7 +751,7 @@ end;
 
 function TRSMainScreen.FindHitsplats(): TRSHitsplatArray; overload;
 begin
-  Result := Self.FindHitsplats(Self.Bounds());
+  Result := Self.FindHitsplats(Self.Bounds);
 end;
 
 
@@ -919,7 +921,7 @@ end;
 
 function TRSMainScreen.FindHPBars(): TRSHPBarArray; overload;
 begin
-  Result := Self.FindHPBars(Self.Bounds());
+  Result := Self.FindHPBars(Self.Bounds);
 end;
 
 
@@ -998,7 +1000,7 @@ var
   area: TBox;
 begin
   area := Box(Mouse.Position(), 10, 10);
-  area.LimitTo(Self.Bounds());
+  area.LimitTo(Self.Bounds);
   Result := WaitUntil(SRL.CountColor(CTS1(255,0), area) + SRL.CountColor(CTS1(262600,0), area) > 0, 50, time);
 end;
 
@@ -1022,7 +1024,7 @@ var
   area: TBox;
 begin
   area := Box(Mouse.Position(), 10, 10);
-  area.LimitTo(Self.Bounds());
+  area.LimitTo(Self.Bounds);
   Result := WaitUntil(SRL.CountColor(CTS1(65535,0), area) > 0, 50, time);
 end;
 
@@ -1031,7 +1033,7 @@ var
   splats: TRSHitsplatArray;
   bars: TRSHPBarArray;
 begin
-  bitmap.DrawBox(Self.Bounds(), $00FFFF);
+  bitmap.DrawBox(Self.Bounds, $00FFFF);
 
   splats := Self.FindHitsplats();
   splats.Draw(bitmap);
@@ -1046,8 +1048,7 @@ var
 procedure TRSClient.ClientModeChanged(); override;
 begin
   inherited;
-
-  MainScreen.SetupAlignment(Self.Mode);
+  MainScreen.SetupAlignment();
 end;
 
 procedure TSRL.Setup(); override;

@@ -9,38 +9,29 @@ Methods to interact with the Bank.
 {$ENDIF}
 
 type
-  ERSBankLocation = (
-    CASTLE_WARS,
-    FEROX,
-    GRAND_EXCHANGE,
-    FALADOR_EAST
-  );
+  ERSBankLocation = (CASTLE_WARS, FEROX, GRAND_EXCHANGE, FALADOR_EAST);
   
   // In order FindButtons returns
   ERSBankButton = (
-    WORN,
-    MENU,
-    SWAP,
-    INSERT,
-    ITEM,
-    NOTE,
-    QUANTITY_1,
-    QUANTITY_5,
-    QUANTITY_10,
-    QUANTITY_CUSTOM,
-    QUANTITY_ALL,
-    PLACEHOLDERS,
-    SEARCH,
-    DEPOSIT_INVENTORY,
-    DEPOSIT_WORN   
+    WORN, MENU,
+    SWAP, INSERT,
+    ITEM, NOTE,
+    QUANTITY_1, QUANTITY_5, QUANTITY_10, QUANTITY_CUSTOM, QUANTITY_ALL,
+    PLACEHOLDERS, SEARCH, DEPOSIT_INVENTORY, DEPOSIT_WORN
   );
 
   TRSBank = record(TRSTitledInterface)
+    Items: TRSItemInterface;
     FINDER_UPTEXT: TStringArray;
     FINDER_OPTION: TStringArray;
+
     QUANTITY_ALL: Int32;
     QUANTITY_ALL_BUT_ONE: Int32;
+
     CachedQuantity: Int32;
+
+    InceneratorBox, SlotsArea: TBox;
+    Tabs, SlotBoxes: TBoxArray;
   end;
 
   TRSBankItem = record
@@ -97,72 +88,38 @@ type
     Quantity: Int32;
   end;
 
-function TRSBank.GetSlotBoxes(): TBoxArray; 
-begin
-  Result := Grid(8, (Self.Height() - 135) div 35, 31, 31, [17, 5], [Self.X1 + 57, Self.Y1 + 77]);
-end;
-
-
-function TRSBank.GetTabBoxes(): TBoxArray;
-begin
-  Result := Grid(10, 1, 35, 28, [5, 0], [Self.X1 + 47, Self.Y1 + 42]);
-  Result[0].X1 += 1;
-  Result[0].X2 -= 2;
-end;
 
 function TRSBank.GetTabBox(tab: Int32): TBox;
-var
-  tabs: TBoxArray;
 begin
-  tabs := Self.GetTabBoxes();
-  if InRange(tab, 0, Length(tabs)) then
-    Result := tabs[tab];
+  if InRange(tab, 0, High(Self.Tabs)) then
+    Result := Self.Tabs[tab];
 end;
 
-
-function TRSBank.GetIncinerator(): TBox;
-begin
-  Result := Self.Bounds();
-  Result.X1 += 5;
-  Result.Y1 := Result.Y2 - 113;
-  Result.X2 := Result.X1 + 51;
-  Result.Y2 -= 44;
-end;
 
 function TRSBank.HasIncinerator(): Boolean;
 var
   b: TBox;
 begin
-  b := Self.GetIncinerator();
+  b := Self.InceneratorBox;
   b.Y1 += 55;
   Result := SRL.CountColor(CTS2(6842995, 32, 0.10, 0.11), b) > 0;
 end;
 
 function TRSBank.InceneratorTooltipVisible(): Boolean;
-var
-  b: TBox;
 begin
-  b := Self.Bounds();
-  b.X1 += 5;
-  b.Y1 := b.Y2 - 113;
-  b.X2 := b.X1 + 51;
-  b.Y2 -= 44;
-
-  Result := SRL.CountColor(10551295, b) > 0;
+  Result := SRL.CountColor(10551295, Self.InceneratorBox) > 0;
 end;
 
 function TRSBank.UnHoverIncinerator(): Boolean;
 var
-  b: TBox;
   p: TPoint;
 begin
-  b := Self.GetIncinerator();
-  if not b.Contains(Mouse.Position) then
+  if not Self.InceneratorBox.Contains(Mouse.Position) then
     Exit(True);
 
   repeat
-    p := SRL.RandomPoint(Self.Bounds());
-  until not b.Contains(p);
+    p := SRL.RandomPoint(Self.Bounds);
+  until not Self.InceneratorBox.Contains(p);
 
   Mouse.Move(p);
   Result := WaitUntil(not Self.InceneratorTooltipVisible(), 100, 1000);
@@ -231,10 +188,9 @@ var
   b: TBox;
   count1, count2: Int32;
 begin
-  if not Self.ClosePopUp() then
-    Exit;
+  if not Self.ClosePopUp() then Exit;
 
-  b := Self.Bounds();
+  b := Self.Bounds;
   b.Y1 := b.Y2 - 39;
   b.X1 += 240;
   b.X2 -= 155;
@@ -246,10 +202,7 @@ begin
   Result := ((count1 = 94) and (count2 = 116)) or Self.IsTitle('Bank') or Self.IsTitle('Equip');
 
   if Result and waitForItems then
-  begin
-    b := Self.GetSlotBoxes().Merge();
-    WaitUntil(SRL.CountColor(RS_ITEM_BORDER, b) > 0, 50, 1000);
-  end;
+    WaitUntil(SRL.CountColor(RS_ITEM_BORDER, Self.SlotsArea) > 0, 50, 1000);
 end;
 
 function TRSBank.IsOpen(waitTime: Int32; interval: Int32 = -1): Boolean; overload;
@@ -293,8 +246,8 @@ begin
   buttons := Self.GetButtons();
   buttons.Draw(bitmap);
 
-  Bitmap.DrawBoxes(Self.GetTabBoxes(), $00FFFF);
-  Bitmap.DrawBoxes(Self.GetSlotBoxes(), $00FFFF);
+  Bitmap.DrawBoxes(Self.Tabs, $00FFFF);
+  Bitmap.DrawBoxes(Self.SlotBoxes, $00FFFF);
 end;
 
 (*
@@ -302,33 +255,27 @@ end;
 ```pascal
 function TRSBank.FindItemBoundaries(): TBoxArray;
 ```
-
 Finds item boundaries. This is an internal function used to retrieve the boxes we
 search for items in.
 
 Example:
 ```pascal
 Boxes := Self.FindItemBoundaries();
-WriteLn ItemInterface.Find(Item, Boxes);
+WriteLn Items.Find(Item, Boxes);
 ```
 *)
 function TRSBank.FindItemBoundaries(): TBoxArray;
 var
   tpa, final: TPointArray;
   atpa: T2DPointArray;
-  area, b: TBox;
+  b: TBox;
   i: Int32;
 begin
-  area.X1 := Self.X1() + 57;
-  area.Y1 := Self.Y1() + 77;
-  area.X2 := Self.X2() - 63;
-  area.Y2 := Self.Y2() - 44;
-
-  if SRL.FindColors(final, RS_ITEM_BORDER, area) = 0 then
+  if SRL.FindColors(final, RS_ITEM_BORDER, Self.SlotsArea) = 0 then
     Exit;
 
   for i in [RS_ITEM_YELLOW_STACK, RS_ITEM_WHITE_STACK, RS_ITEM_GREEN_STACK] do
-    if SRL.FindColors(tpa, i, area) > 0 then
+    if SRL.FindColors(tpa, i, Self.SlotsArea) > 0 then
       final += tpa;
 
   atpa := final.Cluster(200, 3);
@@ -336,22 +283,10 @@ begin
   for i := 0 to High(atpa) do
   begin
     b := atpa[i].Bounds();
-    if b.Height() <= 5 then
-      Continue;
-
-    Result += Grid(8, 1, 32, 32, [16], [area.X1, b.Y1 - 1]);
+    if b.Height() <= 5 then Continue;
+    Result += Grid(8, 1, 32, 32, [16], [Self.SlotsArea.X1, b.Y1 - 1]);
   end;
 end;
-
-function TRSBank.ScrollAreaFunction(): TBox;
-begin
-  Result := Self.Bounds();
-  Result.X1 += 5;
-  Result.Y1 += 77;
-  Result.X2 -= 24;
-  Result.Y2 -= 44;
-end;
-
 
 (*
 ## Bank.Setup
@@ -369,10 +304,9 @@ begin
   inherited;
     
   Self.Name := 'Bank';
-  Self.ItemInterface.Name := Self.Name + '.ItemInterface';
-  Self.ItemInterface.GetSearchBoxesFunction := @Self.FindItemBoundaries;
-  Self.ItemInterface.DiscoverOffset := [0, 10, 3, 0];
-  Self.GetScrollAreaFunction := @Self.ScrollAreaFunction;
+  Self.Items.Name := Self.Name + '.Items';
+  Self.Items.SlotBoxesFunction := @Self.FindItemBoundaries;
+  Self.Items.DiscoverOffset := [0, 10, 3, 0];
 
   Self.FINDER_UPTEXT := ['Use Bank', 'Bank chest', 'Bank Bank', 'Bank booth', 'Banker'];
   Self.FINDER_OPTION := ['Use Bank', 'Bank Bank'];
@@ -380,31 +314,42 @@ begin
   Self.QUANTITY_ALL_BUT_ONE := -2;
 end;
 
-procedure TRSBank.SetupAlignment(Mode: ERSClientMode); override;
+procedure TRSBank.SetupAlignment(); overload;
+var
+  alignment: TRSInterfaceAlignment;
 begin
-  inherited;
+  alignment.Left := InterfaceArea.Bounds.X1;
+  alignment.Right := InterfaceArea.Bounds.X2;
+  alignment.Top := InterfaceArea.Bounds.Y1 + 2;
+  alignment.MaxWidth := 488;
+  alignment.MaxHeight := 800;
 
-  case Self.Mode of
+  case RSClient.Mode of
     ERSClientMode.FIXED:
-      begin
-        Self.Alignment.Left := [@InterfaceArea.X1];
-        Self.Alignment.Right := [@InterfaceArea.X2];
-        Self.Alignment.Top := [@InterfaceArea.Y1, 2];
-        Self.Alignment.Bottom := [@InterfaceArea.Y2, -1];
-        Self.Alignment.Center.MaxWidth := 488;
-        Self.Alignment.Center.MaxHeight := 800;
-      end;
-
+      alignment.Bottom := InterfaceArea.Bounds.Y2 - 1;
     ERSClientMode.RESIZABLE_CLASSIC, ERSClientMode.RESIZABLE_MODERN:
-      begin
-        Self.Alignment.Left := [@InterfaceArea.X1];
-        Self.Alignment.Right := [@InterfaceArea.X2];
-        Self.Alignment.Top := [@InterfaceArea.Y1, 2];
-        Self.Alignment.Bottom := [@InterfaceArea.Y2, -2];
-        Self.Alignment.Center.MaxWidth := 488;
-        Self.Alignment.Center.MaxHeight := 800;
-      end;
+      alignment.Bottom := InterfaceArea.Bounds.Y2 - 2;
   end;
+
+  Self.SetupAlignment(alignment);
+
+  Self.Tabs := Grid(10, 1, 35, 28, [5, 0], [Self.Bounds.X1 + 47, Self.Bounds.Y1 + 42]);
+  Self.SlotBoxes := Grid(8, (Self.Height - 135) div 35, 31, 31, [17, 5], [Self.Bounds.X1 + 57, Self.Bounds.Y1 + 77]);
+
+  Self.SlotsArea.X1 := Self.Bounds.X1 + 57;
+  Self.SlotsArea.Y1 := Self.Bounds.Y1 + 77;
+  Self.SlotsArea.X2 := Self.Bounds.X2 - 63;
+  Self.SlotsArea.Y2 := Self.Bounds.Y2 - 44;
+
+  Self.InceneratorBox.X1 := Self.Bounds.X1 + 5;
+  Self.InceneratorBox.Y1 := Self.Bounds.Y2 - 113;
+  Self.InceneratorBox.X2 := Self.Bounds.X1 + 51;
+  Self.InceneratorBox.Y2 := Self.Bounds.Y2 - 44;
+
+  Self.ScrollArea.X1 := Self.Bounds.X1 + 5;
+  Self.ScrollArea.Y1 := Self.Bounds.Y1 + 77;
+  Self.ScrollArea.X2 := Self.Bounds.X2 - 24;
+  Self.ScrollArea.Y2 := Self.Bounds.Y2 - 44;
 end;
 
 
@@ -629,16 +574,15 @@ WriteLn Bank.GetCurrentTab;
 *)
 function TRSBank.GetCurrentTab(): Int32;
 var
-  tabs: TBoxArray;
   tab: TBox;
   i: Int32;
 begin
-  tabs := Self.GetTabBoxes();
-  for i := 0 to High(tabs) do
+  for i := 0 to High(Self.Tabs) do
   begin
-    tab := tabs[i];
+    tab := Self.Tabs[i];
+    tab.Y1 := tab.Y2 - 3;
     tab.Y2 += 3;
-    if SRL.CountColor(CTS1(5334129, 0), Tab) = 0 then
+    if SRL.CountColor(CTS1(5334129, 0), tab) = 0 then
       Exit(i);
   end;
 end;
@@ -750,7 +694,7 @@ begin
 
   //Here is where the interesting stuff starts. We are going to look for the BankTab text on the left side that shows up when you search for an item.
   //In particular, we are interested in the BankTab text that is right above the item we found.
-  searchBox := [Self.X1 + 56, Self.Y1 + 77, Self.X1 + 84, b.Y1]; //First we restrict the search box. SearchBox.Y2 will be Box.Y1 because we are not interested in anything below the item.
+  searchBox := [Self.Bounds.X1 + 56, Self.Bounds.Y1 + 77, Self.Bounds.X1 + 84, b.Y1]; //First we restrict the search box. SearchBox.Y2 will be Box.Y1 because we are not interested in anything below the item.
                                                                  //We also set X1, Y1, X2 to known values that will make the search box smaller based on the Bank.Bounds.
   if searchBox.Height < 8 then
   begin
@@ -1048,7 +992,7 @@ end;
 
 function TRSBank.FindAny(items: TRSItemArray; out box: TBox): Boolean;
 begin
-  Result := Self.ItemInterface.FindAny(items, box);
+  Result := Self.Items.FindAny(items, box);
 end;
 
 (*
@@ -1072,7 +1016,7 @@ begin
   if not Self.IsOpen() then
     Exit;
 
-  Result := Self.ItemInterface.Find([item], box);
+  Result := Self.Items.Find([item], box);
 end;
 
 function TRSBank.FindItem(out item: TRSBankItem; out box: TBox; attempts: Int32 = 0): Boolean; overload;
@@ -1085,10 +1029,10 @@ begin
       item.Tab := Self.FindItemTab(item.Item, False);
 
     if item.Tab = 0 then
-      count := Self.ItemInterface.Count();
+      count := Self.Items.Count();
 
     if Self.OpenTab(item.Tab) then
-      if item.Tab = 0 then WaitUntil(count <> Self.ItemInterface.Count(), 300, 3000);
+      if item.Tab = 0 then WaitUntil(count <> Self.Items.Count(), 300, 3000);
 
     if not Self.FindItem(item.Item, box) then
     begin
@@ -1136,7 +1080,7 @@ WriteLn Bank.ContainsItem('Coins');
 *)
 function TRSBank.ContainsItem(item: TRSItem): Boolean;
 begin
-  Result := Self.ItemInterface.Contains(item);
+  Result := Self.Items.Contains(item);
 end;
 
 function TRSBank.ContainsItem(out item: TRSBankItem): Boolean; overload;
@@ -1165,12 +1109,12 @@ if Bank.Open() then
 *)
 function TRSBank.DiscoverAllEx(): array of TRSItemArray;
 begin
-  Result := Self.ItemInterface.DiscoverAllEx();
+  Result := Self.Items.DiscoverAllEx();
 end;
 
 function TRSBank.DiscoverAll(): TRSItemArray;
 begin
-  Result := Self.ItemInterface.DiscoverAll();
+  Result := Self.Items.DiscoverAll();
 end;
 
 (*
@@ -1188,7 +1132,7 @@ if Bank.Open() then
 *)
 function TRSBank.Discover(slot: Int32): TRSItemArray;
 begin
-  Result := Self.ItemInterface.Discover(slot);
+  Result := Self.Items.Discover(slot);
 end;
 
 
@@ -1201,7 +1145,7 @@ Returns true/false whether any item in **items** is visible in the bank.
 *)
 function TRSBank.ContainsAny(items: TRSItemArray): Boolean;
 begin
-  Result := Self.ItemInterface.ContainsAny(items);
+  Result := Self.Items.ContainsAny(items);
 end;
 
 
@@ -1223,12 +1167,12 @@ begin
   if not Self.IsOpen() then
     Exit;
 
-  Result := Self.ItemInterface.Count(item);
+  Result := Self.Items.Count(item);
 end;
 
 function TRSBank.CountSlotStack(slot: Int32): Int32;
 begin
-  Result := Self.ItemInterface.CountStack(slot);
+  Result := Self.Items.CountStack(slot);
 end;
 
 (*
@@ -1245,7 +1189,7 @@ WriteLn Bank.CountItemStack('Coins');
 *)
 function TRSBank.CountItemStack(item: TRSItem): Int32;
 begin
-  Result := Self.ItemInterface.CountStack(item);
+  Result := Self.Items.CountStack(item);
 end;
 
 (*
@@ -1265,7 +1209,7 @@ begin
   if not Self.IsOpen() then
     Exit;
 
-  Result := Self.ItemInterface.MouseItem(item);
+  Result := Self.Items.MouseItem(item);
 end;
 
 (*
@@ -1286,7 +1230,7 @@ begin
   if not Self.IsOpen() then
     Exit;
 
-  Result := Self.ItemInterface.InteractItem(item, option);
+  Result := Self.Items.InteractItem(item, option);
 end;
 
 (*
@@ -1349,7 +1293,7 @@ end;
 
 function TRSBank.WithdrawSlot(Item: TRSBankWithdrawSlot; useQuantityButtons: Boolean): Boolean;
 begin
-  Result := Self.WithdrawHelper(Self.GetSlotBoxes()[Item.Slot], Item.Quantity, Item.Noted, useQuantityButtons);
+  Result := Self.WithdrawHelper(Self.SlotBoxes[Item.Slot], Item.Quantity, Item.Noted, useQuantityButtons);
 end;
 
 (*
@@ -1381,7 +1325,7 @@ begin
   if not isStackable then
     count := Inventory.CountItem(item.Item);
 
-  if Inventory.ItemInterface.FindAny([item.Item], slot) then
+  if Inventory.Items.FindAny([item.Item], slot) then
     Result := Self.DepositHelper(slot, item.Quantity, useQuantityButtons);
 
   if Result then
@@ -1405,7 +1349,7 @@ function TRSBank.DepositItem(item: TRSBankDepositItem; useQuantityButtons: Boole
 var
   slot: TBox;
 begin
-  if Inventory.ItemInterface.FindAny([item.Item], slot) then
+  if Inventory.Items.FindAny([item.Item], slot) then
     Result := Self.DepositHelper(slot, item.Quantity, useQuantityButtons);
 end;
 
@@ -1482,7 +1426,7 @@ begin
   if not Result or (RSClient.Mode = ERSClientMode.FIXED) then
     Exit;
 
-  if Bank.Bounds().Expand(5).Contains(p) and Bank.IsOpen() then
+  if Bank.Bounds.Expand(5).Contains(p) and Bank.IsOpen() then
     Exit(False);
 end;
 
@@ -1496,7 +1440,7 @@ begin
   if not Result or (RSClient.Mode = ERSClientMode.FIXED) then
     Exit;
 
-  if Bank.Bounds().Expand(5).ContainsAll(tpa) and Bank.IsOpen() then
+  if Bank.Bounds.Expand(5).ContainsAll(tpa) and Bank.IsOpen() then
     Exit(False);
 end;
 
@@ -1509,7 +1453,7 @@ begin
 
   if Bank.IsOpen() then
   begin
-    arr := Result.FilterBox(Bank.Bounds());
+    arr := Result.FilterBox(Bank.Bounds);
     Result := Result.Difference(arr);
   end;
 end;
@@ -1519,8 +1463,7 @@ end;
 procedure TRSClient.ClientModeChanged(); override;
 begin
   inherited;
-
-  Bank.SetupAlignment(Self.Mode);
+  Bank.SetupAlignment();
 end;
 
 procedure TSRL.Setup(); override;

@@ -162,10 +162,10 @@ You probably will never to use this directly.
 *)
 function TRSLogin.FindText(text: String; out b: TBox): Boolean;
 begin
-  Result := (OCR.LocateText(Self.Bounds(), text, RS_FONT_BOLD_12,  Self.WhiteOCRFilter, b) = 1) or
-            (OCR.LocateText(Self.Bounds(), text, RS_FONT_BOLD_12,  Self.YellowOCRFilter, b) = 1) or
-            (OCR.LocateText(Self.Bounds(), text, RS_FONT_PLAIN_12, Self.WhiteOCRFilter, b) = 1) or
-            (OCR.LocateText(Self.Bounds(), text, RS_FONT_PLAIN_11, Self.WhiteOCRFilter, b) = 1);
+  Result := (OCR.LocateText(Self.Bounds, text, RS_FONT_BOLD_12,  Self.WhiteOCRFilter, b) = 1) or
+            (OCR.LocateText(Self.Bounds, text, RS_FONT_BOLD_12,  Self.YellowOCRFilter, b) = 1) or
+            (OCR.LocateText(Self.Bounds, text, RS_FONT_PLAIN_12, Self.WhiteOCRFilter, b) = 1) or
+            (OCR.LocateText(Self.Bounds, text, RS_FONT_PLAIN_11, Self.WhiteOCRFilter, b) = 1);
 end;
 
 function TRSLogin.FindText(text: String): Boolean; overload;
@@ -622,7 +622,7 @@ var
 begin
   if launcher then
   begin
-    SRL.FindColors(tpa, CTS0(591881, 12), Self.Bounds());
+    SRL.FindColors(tpa, CTS0(591881, 12), Self.Bounds);
 
     if tpa = [] then
       Exit;
@@ -907,22 +907,25 @@ end;
 (*
 ## Login.SetupAlignment
 ```pascal
-procedure TRSLogin.SetupAlignment(Mode: ERSClientMode); override;
+procedure TRSLogin.SetupAlignment(); overload;
 ```
 Internal TRSLogin aligment method. This is automatically called by SRL and you
 probably will never need to call this directly.
 
 This is responsible for setting up the TRSLogin interface coordinates.
 *)
-procedure TRSLogin.SetupAlignment(Mode: ERSClientMode); override;
+procedure TRSLogin.SetupAlignment(); overload;
+var
+  alignment: TRSInterfaceAlignment;
 begin
-  inherited;
+  alignment.Left   := RootInterface.Bounds.X1;
+  alignment.Right  := RootInterface.Bounds.X2;
+  alignment.Top    := RootInterface.Bounds.Y1;
+  alignment.Bottom := RootInterface.Bounds.Y1 + 502;
+  alignment.MaxWidth := 764;
+  alignment.MaxHeight := 0;
 
-  Self.Alignment.Left := [@RootInterface.X1];
-  Self.Alignment.Right := [@RootInterface.X2];
-  Self.Alignment.Top := [@RootInterface.Y1];
-  Self.Alignment.Bottom := [@RootInterface.Y1, 502];
-  Self.Alignment.Center := [764, 0];
+  Self.SetupAlignment(alignment);
 end;
 
 (*
@@ -936,8 +939,7 @@ var
 procedure TRSClient.ClientModeChanged(); override;
 begin
   inherited;
-
-  Login.SetupAlignment(Self.Mode);
+  Login.SetupAlignment();
 end;
 
 procedure TSRL.Setup(); override;

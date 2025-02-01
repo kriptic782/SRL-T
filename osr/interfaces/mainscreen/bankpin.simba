@@ -23,31 +23,24 @@ begin
   Self.ButtonFilter := TOCRColorFilter.Create([$007FFF])
 end;
 
-procedure TRSBankPin.SetupAlignment(Mode: ERSClientMode); override;
+procedure TRSBankPin.SetupAlignment(); overload;
+var
+  alignment: TRSInterfaceAlignment;
 begin
-  inherited;
+  alignment.Left := InterfaceArea.Bounds.X1;
+  alignment.Right := InterfaceArea.Bounds.X2;
+  alignment.Bottom := InterfaceArea.Bounds.Y2;
+  alignment.MaxWidth := 488;
+  alignment.MaxHeight := 305;
 
-  case Self.Mode of
+  case RSClient.Mode of
     ERSClientMode.FIXED:
-      begin
-        Self.Alignment.Left := [@InterfaceArea.X1];
-        Self.Alignment.Right := [@InterfaceArea.X2];
-        Self.Alignment.Top := [@InterfaceArea.Y1, 11];
-        Self.Alignment.Bottom := [@InterfaceArea.Y2];
-        Self.Alignment.Center.MaxWidth := 488;
-        Self.Alignment.Center.MaxHeight := 305;
-      end;
-
+      alignment.Top := InterfaceArea.Bounds.Y1 + 11;
     ERSClientMode.RESIZABLE_CLASSIC, ERSClientMode.RESIZABLE_MODERN:
-      begin
-        Self.Alignment.Left := [@InterfaceArea.X1];
-        Self.Alignment.Right := [@InterfaceArea.X2];
-        Self.Alignment.Top := [@InterfaceArea.Y1, 10];
-        Self.Alignment.Bottom := [@InterfaceArea.Y2];
-        Self.Alignment.Center.MaxWidth := 488;
-        Self.Alignment.Center.MaxHeight := 305;
-      end;
+      alignment.Top := InterfaceArea.Bounds.Y1 + 10;
   end;
+
+  Self.SetupAlignment(alignment);
 end;
 
 function TRSBankPin.GetButtons(): TRSButtonArray;
@@ -165,7 +158,7 @@ function TRSBankPin.Enter(pin: String; attempts: Int32 = 3): Boolean;
     i: Int32;
   begin
     for i := 0 to High(DIGITS) do
-      if OCR.LocateText(Self.Bounds(), DIGITS[i],  RS_FONT_BOLD_12, Self.DigitFilter, 1) then
+      if OCR.LocateText(Self.Bounds, DIGITS[i],  RS_FONT_BOLD_12, Self.DigitFilter, 1) then
         Exit(pin[i+1]);
   end;
 
@@ -242,20 +235,17 @@ end;
 procedure TRSClient.ClientModeChanged(); override;
 begin
   inherited;
-
-  BankPin.SetupAlignment(Self.Mode);
+  BankPin.SetupAlignment();
 end;
 
 procedure TSRL.Setup(); override;
 begin
   inherited;
-
   BankPin.Setup();
 end;
 
 procedure TSRL.Debug(Bitmap: TMufasaBitmap); override;
 begin
   inherited;
-
   BankPin.Draw(Bitmap);
 end;
