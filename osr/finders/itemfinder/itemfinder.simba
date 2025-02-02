@@ -414,6 +414,7 @@ type
 
 function TRSItemFinder.FindAll(items: TRSItemArray; boxes: TBoxArray; maxToFind: Integer = 0): TRSItemFinderMatchArray;
 var
+  b: TBox;
   i, j: Integer;
   images: TMufasaBitmapArray;
   template: TMufasaBitmap;
@@ -442,11 +443,13 @@ begin
   end;
 
   for i := 0 to High(boxes) do
+  begin
+    b := boxes[i];
     for j := 0 to High(itemsToSearchFor) do
     begin
-      if boxes[i].Width() < 36 then
-        boxes[i].X2 := boxes[i].X1 + 36;
-      template.FromClient(boxes[i]);
+      if b.Width() < 36 then
+        b.X2 := b.X1 + 36;
+      template.FromClient(b);
 
       try
         // Search for item image *ON* the screen image since screen image is never larger than 36x36 item image.
@@ -461,6 +464,7 @@ begin
         template.Free();
       end;
     end;
+  end;
 end;
 
 function TRSItemFinder.Find(Items: TRSItemArray; Boxes: TBoxArray; out Match: TRSItemFinderMatch): Boolean;

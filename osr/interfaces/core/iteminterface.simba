@@ -320,11 +320,10 @@ var
   bmp: TMufasaBitmap;
 begin
   b := Self.GetSlotBox(slot);
-
-  b.X1 += DiscoverOffset.X1;
-  b.Y1 += DiscoverOffset.Y1;
-  b.X2 += DiscoverOffset.X2;
-  b.Y2 += DiscoverOffset.Y2;
+  b.X1 += Self.DiscoverOffset.X1;
+  b.Y1 += Self.DiscoverOffset.Y1;
+  b.X2 += Self.DiscoverOffset.X2;
+  b.Y2 += Self.DiscoverOffset.Y2;
 
   if (b.Width() <> 36) or (b.Height() <> 23) then
     Self.Fatal('Discover methods box has to be 36x23. You passed w: ' + ToStr(b.Width()) + ' h: ' + ToStr(b.Height()));
