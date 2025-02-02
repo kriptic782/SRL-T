@@ -1,3 +1,12 @@
+## [7.15.8](https://github.com/Torwent/SRL-T/compare/v7.15.7...v7.15.8) (2025-02-02)
+
+
+### Bug Fixes
+
+* **itemfinder:** fix a bug introduced with the tweaks to iteminterface ([45fba12](https://github.com/Torwent/SRL-T/commit/45fba128706b0a1ce98b11a8b7c96a57d7364767))
+
+
+
 ## [7.15.7](https://github.com/Torwent/SRL-T/compare/v7.15.6...v7.15.7) (2025-02-01)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **options:** now supports transparent tabs ([cb2f942](https://github.com/Torwent/SRL-T/commit/cb2f9428fb872bb238939cede8f3e863175c834a))
-
-
-
-## [7.15.3](https://github.com/Torwent/SRL-T/compare/v7.15.2...v7.15.3) (2025-01-22)
-
-
-### Bug Fixes
-
-* force bump ([8f7fbe6](https://github.com/Torwent/SRL-T/commit/8f7fbe608934415528245ca877505dd96b5e46b6))
 
 
 
