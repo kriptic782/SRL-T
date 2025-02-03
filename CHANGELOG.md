@@ -1,3 +1,12 @@
+## [7.15.10](https://github.com/Torwent/SRL-T/compare/v7.15.9...v7.15.10) (2025-02-03)
+
+
+### Bug Fixes
+
+* force bump ([200855b](https://github.com/Torwent/SRL-T/commit/200855b44a43e1691f90f2a2fe85c98071de439e))
+
+
+
 ## [7.15.9](https://github.com/Torwent/SRL-T/compare/v7.15.8...v7.15.9) (2025-02-03)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **TRSMap:** fixed a small possibility of a infinite loop ([ddf6e2a](https://github.com/Torwent/SRL-T/commit/ddf6e2a096ed4004285e7938a57960d6ab7f69de))
-
-
-
-## [7.15.5](https://github.com/Torwent/SRL-T/compare/v7.15.4...v7.15.5) (2025-01-23)
-
-
-### Bug Fixes
-
-* **mouse:** mouse speed bug ([10a56c4](https://github.com/Torwent/SRL-T/commit/10a56c41467ea8370d81e392436edd536da192af))
 
 
 
