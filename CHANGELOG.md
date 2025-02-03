@@ -1,3 +1,12 @@
+## [7.15.9](https://github.com/Torwent/SRL-T/compare/v7.15.8...v7.15.9) (2025-02-03)
+
+
+### Bug Fixes
+
+* very minor performance improvements to chooseoption and stats ([8fdf64b](https://github.com/Torwent/SRL-T/commit/8fdf64b7d3b0bdbf277c1ab5fbfb89fa8e42f16e))
+
+
+
 ## [7.15.8](https://github.com/Torwent/SRL-T/compare/v7.15.7...v7.15.8) (2025-02-02)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **mouse:** mouse speed bug ([10a56c4](https://github.com/Torwent/SRL-T/commit/10a56c41467ea8370d81e392436edd536da192af))
-
-
-
-## [7.15.4](https://github.com/Torwent/SRL-T/compare/v7.15.3...v7.15.4) (2025-01-23)
-
-
-### Bug Fixes
-
-* **options:** now supports transparent tabs ([cb2f942](https://github.com/Torwent/SRL-T/commit/cb2f9428fb872bb238939cede8f3e863175c834a))
 
 
 
