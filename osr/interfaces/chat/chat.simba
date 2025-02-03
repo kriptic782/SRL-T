@@ -167,11 +167,11 @@ WriteLn('The user name is: ', Chat.GetDisplayName);
 *)
 function TRSChat.GetDisplayName(Colors: TIntegerArray = [$FFFFFF, $000000]): String;
 var
-  Color: Int32;
+  color: Int32;
 begin
-  for Color in Colors do
+  for color in Colors do
   begin
-    Result := OCR.RecognizeStatic(Self.LineBoxes[CHAT_INPUT_LINE], TOCRColorFilter.Create([Color]), RS_FONT_PLAIN_12);
+    Result := OCR.RecognizeStatic(Self.LineBoxes[CHAT_INPUT_LINE], TOCRColorFilter.Create([color]), RS_FONT_PLAIN_12);
     if Result <> '' then Break;
   end;
 

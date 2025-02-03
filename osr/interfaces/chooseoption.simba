@@ -52,6 +52,8 @@ Main record responsible for handling the ChooseOption menu.
     BitmapHeight: Int32;
 
     Bounds: TBox;
+
+    OCRFilter: TOCRFilter;
   end;
 
 (*
@@ -69,26 +71,22 @@ WriteLn ChooseOption.IsOpen();
 *)
 function TRSChooseOption.IsOpen(): Boolean;
 var
-  TPA: TPointArray;
-  ATPA: T2DPointArray;
-  P: TPoint;
-  B: TBox;
+  tpa: TPointArray;
+  atpa: T2DPointArray;
+  p: TPoint;
 begin
-  B := GetClientBounds();
+  if not FindBitmap(Self.Bitmap, p.X, p.Y) then
+    Exit;
 
-  if FindBitmap(Self.Bitmap, P.X, P.Y) then
+  p.Y += Self.BitmapHeight;
+
+  if FindColors(tpa, 0, P.X, P.Y, RSClient.Bounds.X2, RSClient.Bounds.Y2) then
   begin
-    P.Y += Self.BitmapHeight;
+    atpa := tpa.Cluster(1, 1);
+    atpa.SortByIndex(p, 0);
 
-    if FindColors(TPA, 0, P.X, P.Y, B.X2, B.Y2) then
-    begin
-      ATPA := TPA.Cluster(1, 1);
-      ATPA.SortByIndex(P, 0);
-
-      Self.Bounds := ATPA[0].Bounds().Expand(-1);
-
-      Exit(True);
-    end;
+    Self.Bounds := atpa[0].Bounds().Expand(-1);
+    Exit(True);
   end;
 end;
 
@@ -151,6 +149,8 @@ begin
   Self.Bitmap := BitmapFromString(20, 18, 'meJxzD4l1pwAxkAsGj15Mv+DyGpogXBmyemL04lEzgHqxhgPxehkwwoEkN9NCLwMRcYRHL5rvSNVLPBhAvWQjAO6IcGE=');
   GetBitmapSize(Self.Bitmap, Self.BitmapWidth, Self.BitmapHeight);
   AddOnTerminate(@Self.Free);
+
+  Self.OCRFilter := TOCRThresholdFilter.Create(-1);
 end;
 
 (*
@@ -163,25 +163,29 @@ This is a internal method, you probably don't need to call it.
 *)
 function TRSChooseOption.GetOptions(): TRSChooseOption_OptionArray;
 var
-  i: Int32;
+  i, h: Int32;
   b: TBox;
 begin
-  if Self.Open() then
+  if not Self.Open() then Exit;
+
+  h := Self.Bounds.Height();
+  if (h < 15) then Exit;
+
+  SetLength(Result, h div 15);
+
+  b.X1 := Self.Bounds.X1;
+  b.X2 := Self.Bounds.X2;
+
+  for i := 0 to High(Result) do
   begin
-    if (Self.Bounds.Height() < 15) then
-      Exit;
+    b.Y1 := Self.Bounds.Y1 + (i * 15);
+    b.Y2 := b.Y1 + 15;
 
-    SetLength(Result, Self.Bounds.Height() div 15);
-    for i := 0 to High(Result) do
-    begin
-      b := [Self.Bounds.X1, Self.Bounds.Y1 + (i * 15), Self.Bounds.X2, Self.Bounds.Y1 + (i * 15) + 15];
-      if (b.Y2 > Self.Bounds.Y2) then
-        Exit;
+    if (b.Y2 > Self.Bounds.Y2) then Exit;
 
-      Result[i].Text := OCR.RecognizeStatic(b, TOCRThresholdFilter.Create(-1), RS_FONT_BOLD_12_SHADOW);
-      Result[i].Bounds := b;
-      Result[i].OptionIndex := i;
-    end;
+    Result[i].Text := OCR.RecognizeStatic(b, Self.OCRFilter, RS_FONT_BOLD_12_SHADOW);
+    Result[i].Bounds := b;
+    Result[i].OptionIndex := i;
   end;
 end;
 

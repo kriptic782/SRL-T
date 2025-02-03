@@ -81,6 +81,7 @@ type
   TRSStats = record(TRSInterface)
     Levels: array [ERSSkill] of Int32;
     SkillBoxes: array [ERSSkill] of TBox;
+    OCRFilter: TOCRColorFilter;
   end;
 
 (*
@@ -95,6 +96,7 @@ begin
   inherited;
 
   Self.Name := 'Stats';
+  Self.OCRFilter := TOCRColorFilter.Create([65535]);
 end;
 
 (*
@@ -253,13 +255,12 @@ begin
       Exit;
   end;
 
-  if not Self.Open() then
-    Exit(-1);
+  if not Self.Open() then Exit(-1);
 
   b := Self.SkillBoxes[skill];
   b.Y1 := b.Y2 - (b.Height() div 2);
 
-  text := OCR.Recognize(b, TOCRColorFilter.Create([65535]), RS_FONT_PLAIN_11);
+  text := OCR.Recognize(b, Self.OCRFilter, RS_FONT_PLAIN_11);
   Result := StrToIntDef(ExtractFromStr(text, Numbers), -1);
 
   if Result > 0 then
