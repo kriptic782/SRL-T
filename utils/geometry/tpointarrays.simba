@@ -1378,6 +1378,15 @@ begin
 end;
 
 
+function T2DPointArray.Means(): TPointArray; constref;
+var i:Int32;
+begin
+  SetLength(Result, Length(self));
+  for i:=0 to High(Self) do
+    Result[i] := MiddleTPA(Self[i]);
+end;
+
+
 function T2DPointArray.Equals(Other:T2DPointArray): Boolean;
 var i:Int32;
 begin
@@ -1567,13 +1576,116 @@ begin
   QuickATPASort(Weights, Self, Low(Self), High(Self), LowToHi);
 end;
 
-function T2DPointArray.Means(): TPointArray; constref;
-var i:Int32;
+
+//Credits to someone from SRL. IDK who sorry.
+procedure T2DPointArray.WeightedSort(weights: TIntegerArray; iLo, iHi: Int32; sortUp: Boolean);
+var
+  lo, hi, mid: Int32;
 begin
-  SetLength(Result, Length(self));
-  for i:=0 to High(Self) do
-    Result[i] := MiddleTPA(Self[i]);
+  if (Length(weights) <> Length(Self)) then Exit;
+  lo := iLo;
+  hi := iHi;
+  mid := weights[(lo + hi) shr 1];
+  repeat
+    if sortUp then
+    begin
+      while (weights[lo] < mid) do Inc(lo);
+      while (weights[hi] > mid) do Dec(hi);
+    end
+    else
+    begin
+      while (weights[lo] > mid) do Inc(lo);
+      while (weights[hi] < mid) do Dec(hi);
+    end;
+
+    if (lo <= hi) then
+    begin
+      Swap(weights[lo], weights[hi]);
+      Swap(Self[lo], Self[hi]);
+      Inc(lo);
+      Dec(hi);
+    end;
+  until lo > hi;
+
+  if (hi > iLo) then Self.WeightedSort(weights, iLo, hi, sortUp);
+  if (lo < iHi) then Self.WeightedSort(weights, lo, iHi, sortUp);
 end;
+
+function T2DPointArray.WeightSorted(weights: TIntegerArray; iLo, iHi: Int32; sortUp: Boolean): T2DPointArray; constref;
+begin
+  Result := Copy(Self);
+  Result.WeightedSort(weights, iLo, iHi, sortUp);
+end;
+
+
+procedure T2DPointArray.SortByRow(reverse:Boolean=False);
+var
+  i,hi,w: Int32;
+  weights: TIntegerArray;
+  area : TBox;
+  means: TPointArray;
+begin
+  hi := High(Self);
+  if hi <= 1 then Exit;
+
+  area := GetATPABounds(Self);
+  w := area.X2 - area.X1 + 1;
+  SetLength(weights, hi+1);
+  means := Self.Means();
+
+  for i := 0 to hi do
+    weights[i] := means[i].Y * w + means[i].X;
+
+  Self.WeightedSort(weights, 0, hi, not reverse);
+end;
+
+procedure T2DPointArray.SortByColumn(reverse:Boolean=False);
+var
+  i,hi,h: Int32;
+  weights: TIntegerArray;
+  area: TBox;
+  means: TPointArray;
+begin
+  hi := High(Self);
+  if hi <= 1 then Exit;
+
+  area := GetATPABounds(Self);
+  h := area.Y2 - area.Y1 + 1;
+  SetLength(weights, hi+1);
+  means := Self.Means();
+
+  for i := 0 to hi do
+    weights[i] := means[i].X * h + means[i].Y;
+
+  Self.WeightedSort(weights, 0, hi, not reverse);
+end;
+
+
+procedure T2DPointArray.SortByXY(tolerance: Int32 = 0);
+var
+  hi, i, j: Int32;
+  weights: TIntegerArray;
+  means: TPointArray;
+begin
+  hi := High(Self);
+  if hi <= 1 then Exit;
+
+  SetLength(weights, hi + 1);
+  means := Self.Means();
+
+  for i := 0 to High(Self) do
+  begin
+    weights[i] := means[i].X + (means[i].Y * 1000);
+    if tolerance = 0 then Continue;
+
+    for j := 0 to High(Self) do
+      if Abs(means[i].Y - means[j].Y) < tolerance then
+        weights[i] := means[i].X + (means[j].Y * 1000);
+  end;
+
+  Self.WeightedSort(weights, 0, hi, True);
+end;
+
 
 function T2DPointArray.ToTBA(): TBoxArray; constref;
 var
