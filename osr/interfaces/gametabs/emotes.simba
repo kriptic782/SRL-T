@@ -1,221 +1,184 @@
-{$DEFINE SRL_EMOTES_INCLUDED}
-{$IFNDEF SRL_OSR}
-  {$I SRL-T/osr.simba}
+{$DEFINE WL_EMOTES_INCLUDED}
+{$IFNDEF WL_OSR}
+  {$I WaspLib/osr.simba}
 {$ENDIF}
 
-//By Kriptic & Taze
 type
+  ERSEmote = (
+    YES, NO, BOW, ANGRY, THINK, WAVE, SHRUG, CHEER, BECKON, LAUGH,
+    JUMP_FOR_JOY, YAWN, DANCE, JIG, SPIN, HEADBANG, CRY, BLOW_KISS,
+    PANIC, RASPBERRY, CLAP, SALUTE
+  );
+
   TRSEmotes = record(TRSInterface)
-    SortedEmotesList: TStringArray;
+    Area: TBox;
+    Slots: TBoxArray;
   end;
-
-procedure TRSEmotes.SetupAlignment(); overload;
-var
-  alignment: TRSInterfaceAlignment;
-begin
-  alignment.Left := GameTab.Bounds.X1;
-  alignment.Right := GameTab.Bounds.X2 + 5;
-  alignment.Top := GameTab.Bounds.Y1;
-  alignment.Bottom := GameTab.Bounds.Y2;
-
-  Self.SetupAlignment(alignment);
-  Self.ScrollArea := Self.Bounds;
-end;
-
-function TRSEmotes.ScrollAreaFunction(): TBox;
-begin
-  Result := Self.Bounds;
-end;
 
 procedure TRSEmotes.Setup(); override;
 begin
   inherited;
   Self.Name := 'Emotes';
-  SortedEmotesList := [
-    'Yes', 'No', 'Bow', 'Angry', 'Think', 'Wave', 'Shrug', 'Cheer', 'Beckon', 'Laugh',
-    'Jump for Joy', 'Yawn', 'Dance', 'Jig', 'Spin', 'Headbang', 'Cry', 'Blow Kiss',
-    'Panic', 'Raspberry', 'Clap', 'Salute'
-  ];
 end;
 
-procedure TRSEmotes.Scroll(down: Boolean);
-var
-  scrollBar: TRSScrollBar;
+function TRSEmotes.GetEmoteUpText(emote: ERSEmote): String;
 begin
-  scrollBar := Self.GetScrollBar();
-  if not scrollBar.IsVisible() or not Self.CanScroll() then
-    Exit;
-
-  Mouse.Scroll(Self.GetScrollArea(scrollBar), Random(1, 3), down, True);
-
+  case emote of
+    ERSEmote.YES: Result := 'Yes';
+    ERSEmote.NO: Result := 'No';
+    ERSEmote.BOW: Result := 'Bow';
+    ERSEmote.ANGRY: Result := 'Angry';
+    ERSEmote.THINK: Result := 'Think';
+    ERSEmote.WAVE: Result := 'Wave';
+    ERSEmote.SHRUG: Result := 'Shrug';
+    ERSEmote.CHEER: Result := 'Cheer';
+    ERSEmote.BECKON: Result := 'Beckon';
+    ERSEmote.LAUGH: Result := 'Laugh';
+    ERSEmote.JUMP_FOR_JOY: Result := 'Jump for Joy';
+    ERSEmote.YAWN: Result := 'Yawn';
+    ERSEmote.DANCE: Result := 'Dance';
+    ERSEmote.JIG: Result := 'Jig';
+    ERSEmote.SPIN: Result := 'Spin';
+    ERSEmote.HEADBANG: Result := 'Headbang';
+    ERSEmote.CRY: Result := 'Cry';
+    ERSEmote.BLOW_KISS: Result := 'Blow Kiss';
+    ERSEmote.PANIC: Result := 'Panic';
+    ERSEmote.RASPBERRY: Result := 'Raspberry';
+    ERSEmote.CLAP: Result := 'Clap';
+    ERSEmote.SALUTE: Result := 'Salute';
+  else
+    Result := '';
+  end;
 end;
+
+
+procedure TRSEmotes.SetupAlignment(); overload;
+var
+  alignment: TRSInterfaceAlignment;
+  i: Int32;
+begin
+  alignment.Left   := GameTab.Bounds.X1;
+  alignment.Right  := GameTab.Bounds.X2 + 5;
+  alignment.Top    := GameTab.Bounds.Y1;
+  alignment.Bottom := GameTab.Bounds.Y2;
+
+  Self.SetupAlignment(alignment);
+
+  Self.ScrollArea := Self.Bounds;
+  Self.Area := [Self.Bounds.X1, Self.Bounds.Y1, Self.Bounds.X2-19, Self.Bounds.Y2];
+  Self.Slots := Grid(4, 14, 40, 47, [1,2], [Self.Area.X1-1, Self.Area.Y1+7]);
+
+  for i := 0 to High(Self.Slots) do
+    Self.Slots[i] := Self.Slots[i].Expand(-5); //shrink boxes because calculating scrolling is not linear.
+end;
+
 
 function TRSEmotes.IsOpen(): Boolean;
 begin
-  Result := (GameTabs.GetCurrentTab = ERSGameTab.EMOTES);
+  Result := GameTabs.GetCurrentTab() = ERSGameTab.Emotes;
 end;
 
 function TRSEmotes.Open(): Boolean;
 begin
-  Result := GameTabs.Open(ERSGameTab.EMOTES);
+  Result := GameTabs.Open(ERSGameTab.Emotes);
 end;
 
-function TRSEmotes.CreateDTMForEmote(emoteName: String): Integer;
+
+function TRSEmotes._GetOffset(): Int32;
 begin
-  // Create a DTM based on the emote name
-  if emoteName = 'Yes' then
-    Result := DTMFromString('mggAAAHicY2NgYLBlYmAwBmJzJgjbBYhdgfgpUI6RkYHhEZC+DcS3GEACDAwnD64CMy7OSWV4+vQhg6uNMcPcqY0MuAAjDgwBAFU9Dh4=')
-  else if emoteName = 'No' then
-    Result := DTMFromString('mggAAAHicY2NgYEhjYmBIAuJsIM4D4lggLgDiB0C5+1B8HYgZGCH42pWzDJ+3VIDxr18/GbasncVQUZTDgAsw4sAQAADfQhLx')
-  else if emoteName = 'Bow' then
-    Result := DTMFromString('mggAAAHicY2NgYOhjYmDoBOIOIO4H4rlAPB2IXwPlGBgZGB4CqQdA/AzEBfK3rJ0FxicPrgLTn7dUQBTiAIw4MAQAAKLZEVU=')
-  else if emoteName = 'Angry' then
-    Result := DTMFromString('mbQAAAHicY2VgYNjJxMCwHogPAvFGID4AxPeB4teA+CUQMzACERBfu3KW4fOWCjDesnYWRAILYMSCwQAANLAPAQ==')
-  else if emoteName = 'Think' then
-    Result := DTMFromString('mbQAAAHicY2VgYLBhYmCwBGJ3IDYGYicg5mdkYGADYmkgNoTiYHdhhg1NIQwX56Qy6MvyMMhKCTNgA4xYMBgAALNiBoQ=')
-  else if emoteName = 'Wave' then
-    Result := DTMFromString('mggAAAHicY2NgYMhgYmCIB+IoJgg7H4jzgFiSkYHBEIg5gJgHiGWB2AiIg92FGfRleRg+b6mAYwYGoAQOwIgDQwAAS6UKlQ==')
-  else if emoteName = 'Shrug' then
-    Result := DTMFromString('mggAAAHicY2NgYJjAxMDQDsStTBD2HCCeBcTijAwMhkAsDcScQCwF5Qe7CzPoy/IwfN5SwXBxTiqYVhHlZMAFGHFgCAAAvFoLjw==')
-  else if emoteName = 'Cheer' then
-    Result := DTMFromString('mggAAAHicY2NgYNjNxMCwEYjXAPEuID4BxEeAWIyRgcEQiNmAmAtKg/iFiQoM+rI8DJ+3VMCxiignAy7AiANDAABIhQz0')
-  else if emoteName = 'Beckon' then
-    Result := DTMFromString('mbQAAAHicY2VgYLBhYmAwBmJ3IDYBYmcgdmBkYLAAYh8gToJiJSVThs9bKhguzkll0JflYZCVEmbABhixYDAAABJzB9s=')
-  else if emoteName = 'Laugh' then
-    Result := DTMFromString('mbQAAAHicY2VgYEhjYmBIAuJsII4F4gIgdmRkYPCC4iQoVlIyZfi8pQKM9WV5GFREORmwAUYsGAwAd0sJBA==')
-  else if emoteName = 'Jump for Joy' then
-    Result := DTMFromString('mbQAAAHicY2VgYJjExMDQAsQLgLgTiHuB2IGRgcEMiC2AOBKIY4FYScmU4fOWCjDWl+UBY2yAEQsGAwC5Egmx')
-  else if emoteName = 'Yawn' then
-    Result := DTMFromString('mbQAAAHicY2VgYNjDxMCwFogPAfFWID4IxA6MDAw+QGwBxElQrKRkynBxTirD5y0VDPqyPAyyUsIM2AAjFgwGAP93Ck8=')
-  else if emoteName = 'Dance' then
-    Result := DTMFromString('mggAAAHicY2NgYLBlYmDQA2JzJgjbGYqrGBkYuoE4A4hzoPQEIG5vYWHoF2Bj+LylguHinFQwXZ7MzYALMOLAEAAA8DgM/g==')
-  else if emoteName = 'Jig' then
-    Result := DTMFromString('mggAAAHicY2NgYEhnYmBIAeJIJgg7B4jzgbiakYFhAhDXAnE2EGcAcQcQJ4QJM/QLsDFsaAphuDgnleHzlgqGtSvZGHABRhwYAgBIGw2p')
-  else if emoteName = 'Spin' then
-    Result := DTMFromString('mbQAAAHicY2VgYJjIxMBQB8SLgHgCEM8G4gJGBoY8IM4H4olAPAGIg9iZGD5vqWA4MzmZwUlMi2HWPEkGbIARCwYDACpzC3M=')
-  else if emoteName = 'Headbang' then
-    Result := DTMFromString('mggAAAHicY2NgYNjFxMCwGojXAfEmID4NxHuAuIaRgWECEGcAcQEQV0D5CWHCDP0CbAyft1Qw7N/HxnBmcjKYxgUYcWAIAAAupA+s')
-  else if emoteName = 'Cry' then
-    Result := DTMFromString('mbQAAAHicY2VgYLBhYmCwAmJ7ILYAYkcgXszIwDAPio9A8dQZExk+b6kAY0EeOQYlJVMGbIARCwYDAAgHC18=')
-  else if emoteName = 'Blow Kiss' then
-    Result := DTMFromString('mbQAAAHicY2VgYEhhYmCIBOJ8II4H4jwgXsTIwDAPiDcC8REovnblLMPFOakMG5pCGJSUTBmEhQUZsAFGLBgMAFTmDAs=')
-  else if emoteName = 'Panic' then
-    Result := DTMFromString('mbQAAAHicY2VgYJjIxMDQB8RTgLgXiCcD8WJGBob1QLwAiI9A8cq1axguzkkFY1lpVQYlJVMGbIARCwYDAKJ/DOM=')
-  else if emoteName = 'Raspberry' then
-    Result := DTMFromString('mbQAAAHicY2VgYNjFxMCwFYgPAPE2IN4PxEsZGRhmQfERKD56eCfD5y0VYCzII8egpGTKgA0wYsFgAAAVug5S')
-  else if emoteName = 'Clap' then
-    Result := DTMFromString('mbQAAAHicY2VgYLBjYmAwBWJzIDYDYg8grmBkYCgG4lIgng3D1X4Mn7dUgPGWtbMYKopyGLABRiwYDAA1FwzL')
-  else if emoteName = 'Salute' then
-    Result := DTMFromString('mbQAAAHicY2VgYEhlYmCIB+J0IE4E4iwgrmJkYOgC4iIgng3FMUFmDBubQhg+b6lg2LJ2FsOKBV0M2AAjFgwGAF3ADRM=')
-  else
-    Result := -1; // Return -1 if the emote is not recognized
+  Result := -Round(Self.GetScrollPosition() * 4.3);
 end;
 
-function TRSEmotes.LocateEmotes(emoteName: String): TBox;
+function TRSEmotes.GetSlots: TBoxArray;
 var
-  DTM: Integer;
-  x, y: Integer;
-  grid: TBox;
-  timeOut: UInt64;
-  scrollAttempts: Integer;
+  i: Int32;
 begin
-  Result := [0, 0, 0, 0];
-  timeOut := GetSystemTime() + 15000; // 15 seconds timeout
-  scrollAttempts := 0;
+  Result := Self.Slots.Offset([0, Self._GetOffset()]);
 
-  // Scroll to the top before starting the search
-  Self.SetScrollPosition(0);
-
-  // Create the DTM for the emote
-  DTM := Self.CreateDTMForEmote(emoteName);
-
-  if DTM <> -1 then
+  for i := High(Result) downto 0 do
   begin
-    grid := Self.ScrollAreaFunction();
+    if Self.Area.Contains([Result[i].X1, Result[i].Y1]) or
+       Self.Area.Contains([Result[i].X2, Result[i].Y2]) then
+    begin
+      Result[i].LimitTo(Self.Area);
+      Continue;
+    end;
 
-    repeat
-      // Find the DTM within the grid area.
-      if FindDTM(DTM, x, y, grid.X1, grid.Y1, grid.X2, grid.Y2) then
+    Delete(Result, i, 1);
+  end;
+end;
+
+
+function TRSEmotes.Find(emote: ERSEmote; out bounds: TBox): Boolean;
+begin
+  bounds := Self.GetSlots[emote];
+  Result := Self.Area.Contains([bounds.X1, bounds.Y1]) or
+            Self.Area.Contains([bounds.X2, bounds.Y2]);
+
+  if Result then bounds.LimitTo(Self.Area);
+end;
+
+function TRSEmotes.Contains(emote: ERSEmote): Boolean;
+var
+  b: TBox;
+begin
+  Result := Self.Find(emote, b);
+end;
+
+function TRSEmotes.UseEmote(emote: ERSEmote): Boolean;
+var
+  b: TBox;
+  emoteText: String;
+  attempts: Int32;
+begin
+  Result := False;
+
+  if not Self.Open() then
+    Exit;
+
+  Self.SetScrollPosition(0);
+  Wait(50);
+
+  emoteText := Self.GetEmoteUpText(emote);  // Get the correct uptext for the emote
+  if emoteText = '' then
+    Exit; // Invalid emote
+
+  attempts := 0;
+  while (attempts < 5) and (not Result) do
+  begin
+    if Self.Find(emote, b) then
+    begin
+      Mouse.Move(b, True);
+      if MainScreen.IsUpText(emoteText) then
       begin
-        // Assuming a box size of 30x30 pixels for the emote icon.
-        Result := [x-10, y-15, x + 10, y+15];
-        FreeDTM(DTM);
+        Mouse.Click(b, MOUSE_LEFT);
+        Result := True;
         Exit;
       end;
-
-      // Scroll down to search further if the emote is not found
-      Self.Scroll(True);
-      Inc(scrollAttempts);
-
-      // Optional: Scroll back up if maximum scroll attempts are reached
-      if scrollAttempts > 10 then
-      begin
-        Self.Scroll(False);
-        Dec(scrollAttempts);
-      end;
-
-    until GetSystemTime() > timeOut;
-
-    FreeDTM(DTM);
-  end;
-end;
-
-function TRSEmotes.UseEmote(emoteName: String): Boolean;
-var
-  emoteBox: TBox;
-begin
-  if not Self.Open() then
-    Exit(False);
-
-  emoteBox := Self.LocateEmotes(emoteName);
-  if emoteBox.Area > 0 then
-  begin
-    Mouse.move(emotebox,true);
-    if emotename in mainscreen.getuptext then begin
-    Mouse.Click(emoteBox, MOUSE_LEFT);
-    writeln('Emote used: ', emotename);
-    Result := True; // Assume success if the click is performed.
-    Exit;
     end;
+
+    Inc(attempts);
+    Wait(RandomRange(150, 300)); // Add a slight delay before retrying
   end;
-
-  Result := False;
-  if result = false then
-    self.useemote(emotename);
 end;
-
-function TRSEmotes.UseRandomEmote(): Boolean;
-var
-  randomIndex: Integer;
-  emoteName: String;
-begin
-  if not Self.Open() then
-    Exit(False);
-
-  randomIndex := Random(Length(SortedEmotesList));
-  emoteName := SortedEmotesList[randomIndex];
-
-  Result := Self.UseEmote(emoteName);
-end;
-
 var
   Emotes: TRSEmotes;
 
 procedure TRSClient.ClientModeChanged(); override;
 begin
   inherited;
-
   Emotes.SetupAlignment();
 end;
 
 procedure TSRL.Setup(); override;
 begin
   inherited;
-  Emotes.Setup;
+  Emotes.Setup();
 end;
 
-procedure TSRL.Debug(Bitmap: TMufasaBitmap); override;
+procedure TSRL.Debug(bitmap: TMufasaBitmap); override;
 begin
   inherited;
-  Emotes.Draw(Bitmap);
+  Emotes.Draw(bitmap);
 end;
+
