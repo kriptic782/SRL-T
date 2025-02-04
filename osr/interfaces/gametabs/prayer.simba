@@ -47,7 +47,7 @@ type
   );
 
   TRSPrayer = record(TRSInterface)
-    PrayerBoxes: array [ERSPrayer] of TBox;
+    PrayerBoxes: TBoxArray;
   end;
   TRSQuickPrayer = type TRSInterface;
 
@@ -57,7 +57,6 @@ type
 ```pascal
 procedure TRSPrayer.Setup; override;
 ```
-
 Initializes **Prayer** variables.
 
 ```{note}
@@ -84,8 +83,6 @@ This is automatically called on the **TRSClient.ClientModeChanged** function.
 procedure TRSPrayer.SetupAlignment(); overload;
 var
   alignment: TRSInterfaceAlignment;
-  boxes: TBoxArray;
-  i: Int32;
 begin
   alignment.Left := GameTab.Bounds.X1;
   alignment.Right := GameTab.Bounds.X2;
@@ -93,10 +90,7 @@ begin
   alignment.Bottom := GameTab.Bounds.Y2;
   Self.SetupAlignment(alignment);
 
-  boxes := Grid(5, 6, 33, 33, [4, 4], [Self.Bounds.X1 + 1, Self.Bounds.Y1 + 10]);
-
-  for i := 0 to Ord(High(ERSPrayer)) do
-    Self.PrayerBoxes[ERSPrayer(i)] := boxes[i];
+  Self.PrayerBoxes := Grid(5, 6, 33, 33, [4, 4], [Self.Bounds.X1 + 1, Self.Bounds.Y1 + 10]);
 end;
 
 (*

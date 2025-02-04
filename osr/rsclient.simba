@@ -332,8 +332,7 @@ procedure TRSClient.Setup();
 begin
   Self.Name := 'RSClient';
 
-  if not Self.Revalidate() then
-    TerminateScript('Please refocus the client!');
+  if not Self.Revalidate() then TerminateScript('Please refocus the client!');
 
   {$IFNDEF SIMBAHEADLESS}
   Self.Client := Self.GetCurrentClient();
@@ -355,4 +354,15 @@ procedure TSRL.Setup(); override;
 begin
   inherited;
   RSClient.Setup();
+end;
+
+procedure TRemoteInput.Setup(); override;
+begin
+  inherited;
+
+  if SRL.IsSetup then
+  begin
+    RSClient.Mode := RSClient.DetectClientMode(True);
+    RSClient.ClientModeChanged();
+  end;
 end;

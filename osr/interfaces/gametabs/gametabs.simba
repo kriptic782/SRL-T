@@ -80,16 +80,16 @@ begin
   case RSClient.Mode of
     ERSClientMode.FIXED:
     begin
-      alignment.Left := RootInterface.Bounds.X2 - 242;
+      alignment.Left  := RootInterface.Bounds.X2 - 242;
       alignment.Right := RootInterface.Bounds.X2 - 2;
-      alignment.Top := RootInterface.Bounds.Y2 - 334;
+      alignment.Top   := RootInterface.Bounds.Y2 - 334;
     end;
 
     ERSClientMode.RESIZABLE_CLASSIC:
     begin
-      alignment.Left := RootInterface.Bounds.X2 - 240;
+      alignment.Left  := RootInterface.Bounds.X2 - 240;
       alignment.Right := RootInterface.Bounds.X2;
-      alignment.Top := RootInterface.Bounds.Y2 - 334;
+      alignment.Top   := RootInterface.Bounds.Y2 - 334;
     end;
 
     ERSClientMode.RESIZABLE_MODERN:
@@ -100,12 +100,12 @@ begin
       if RootInterface.Width >= 948 then
       begin
         alignment.Left := RootInterface.Bounds.X2 - 428;
-        alignment.Top := RootInterface.Bounds.Y2 - 35;
+        alignment.Top  := RootInterface.Bounds.Y2 - 35;
       end
       else
       begin
         alignment.Left := RootInterface.Bounds.X2 - 230;
-        alignment.Top := RootInterface.Bounds.Y2 - 71;
+        alignment.Top  := RootInterface.Bounds.Y2 - 71;
       end;
     end;
   end;

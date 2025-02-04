@@ -509,9 +509,9 @@ var
 begin
   inherited;
 
-  alignment.Left := Self.Bounds.X1;
-  alignment.Top := Self.Bounds.Y1;
-  alignment.Right := Self.Bounds.X2;
+  alignment.Left   := Self.Bounds.X1;
+  alignment.Top    := Self.Bounds.Y1;
+  alignment.Right  := Self.Bounds.X2;
   alignment.Bottom := Self.Bounds.Y2;
 
   RootInterface.SetupAlignment(alignment);
