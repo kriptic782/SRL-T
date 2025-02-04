@@ -1,3 +1,12 @@
+# [7.16.0](https://github.com/Torwent/SRL-T/compare/v7.15.10...v7.16.0) (2025-02-04)
+
+
+### Features
+
+* read notes ([00312dd](https://github.com/Torwent/SRL-T/commit/00312dd191b763e5277e0d3b83c3d9b156ea6a59))
+
+
+
 ## [7.15.10](https://github.com/Torwent/SRL-T/compare/v7.15.9...v7.15.10) (2025-02-03)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * force bump ([d6bbec6](https://github.com/Torwent/SRL-T/commit/d6bbec6ee63e6bfb185f056987896a0d3cf58992))
-
-
-
-## [7.15.6](https://github.com/Torwent/SRL-T/compare/v7.15.5...v7.15.6) (2025-01-23)
-
-
-### Bug Fixes
-
-* **TRSMap:** fixed a small possibility of a infinite loop ([ddf6e2a](https://github.com/Torwent/SRL-T/commit/ddf6e2a096ed4004285e7938a57960d6ab7f69de))
 
 
 
