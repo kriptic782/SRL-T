@@ -1,3 +1,12 @@
+# [7.17.0](https://github.com/Torwent/SRL-T/compare/v7.16.1...v7.17.0) (2025-02-04)
+
+
+### Features
+
+* **emotes:** rewrite for something that requires less maintenance ([25df9f6](https://github.com/Torwent/SRL-T/commit/25df9f6ab98a20d749960b6252eed20c0f7dbdaf))
+
+
+
 ## [7.16.1](https://github.com/Torwent/SRL-T/compare/v7.16.0...v7.16.1) (2025-02-04)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * very minor performance improvements to chooseoption and stats ([8fdf64b](https://github.com/Torwent/SRL-T/commit/8fdf64b7d3b0bdbf277c1ab5fbfb89fa8e42f16e))
-
-
-
-## [7.15.8](https://github.com/Torwent/SRL-T/compare/v7.15.7...v7.15.8) (2025-02-02)
-
-
-### Bug Fixes
-
-* **itemfinder:** fix a bug introduced with the tweaks to iteminterface ([45fba12](https://github.com/Torwent/SRL-T/commit/45fba128706b0a1ce98b11a8b7c96a57d7364767))
 
 
 
