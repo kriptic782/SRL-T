@@ -61,6 +61,82 @@ begin
 end;
 {$H+}
 
+
+function TRSClient.OfficialClientMode(width, height: Int32; update: Boolean = False): ERSClientMode;
+var
+  half, n,c: Int32;
+  bmp: TMufasaBitmap;
+begin
+  if (width < 765) or (height < 503) then
+    Self.Fatal('Please resize the window to be larger, your client can''t be less than 765x503 pixels.');
+
+  half := width div 2;
+  bmp.FromClient([0,0,width-1,height-1]);
+
+  if bmp.GetPixel(half - 330, 399) = $00FFFF then //'Fullscreen?' in loginscreen
+  begin
+    if Update then
+    begin
+      Self.Mode := ERSClientMode.UNKNOWN;
+      Self.Width := width;
+      Self.Height := height;
+      Self.Bounds := Box(0, 0, Max(0, width-1), Max(0, height-1));
+    end;
+
+    bmp.Free();
+    Exit(ERSClientMode.UNKNOWN);
+  end;
+
+  c := bmp.GetPixel(0,0);
+  if (c = 0) or (c = $051319) then
+  begin
+    if Update then
+    begin
+      Self.Mode := ERSClientMode.FIXED;
+      Self.Width := 765;
+      Self.Height := 503;
+
+      if c = $051319 then
+        Self.Bounds := Box(0, 0, 764, 502)
+      else
+      begin
+        half := Self.Width div 2; //no point going further than half of the client
+        for n := 1 to half do
+          if bmp.GetPixel(n,0) = $051319 then
+            Break;
+
+
+        if n = half then Self.Fatal('Can''t find the start of the client.');
+        Self.Bounds := Box(n, 0, n+764, 502);
+      end;
+    end;
+
+    bmp.Free();
+    Exit(ERSClientMode.FIXED);
+  end;
+
+  if bmp.GetPixel(width-5, height-36) = $010000 then
+    Result := ERSClientMode.RESIZABLE_MODERN
+  else if bmp.GetPixel(width-47, height-36) = $010000 then
+  begin
+    Result := ERSClientMode.RESIZABLE_MODERN;
+    width -= 42;
+  end
+  else
+    Result := ERSClientMode.RESIZABLE_CLASSIC;
+
+  bmp.Free();
+
+  if Update then
+  begin
+    Self.Mode := ERSClientMode.UNKNOWN;
+    Self.Width := width;
+    Self.Height := height;
+    Self.Bounds := Box(0, 0, Max(0, Self.Width-1), Max(0, Self.Height-1));
+  end;
+end;
+
+
 (*
 ## RSClient.DetectClientMode()
 ```pascal
@@ -89,9 +165,12 @@ begin
     for proc in {$H-}GetProcesses(){$H+} do
       if proc.PID = pid then
         Break;
-    WriteLn('Please refocus the client!');
-    TerminateScript(GetExceptionMessage());
+
+    Self.Fatal('Please refocus the client!' + LineEnding + GetExceptionMessage());
   end;
+
+  if Self.Client = ERSClient.OFFICIAL then
+    Exit(Self.OfficialClientMode(width, height, update));
 
   // Music tab in each mode there are different colors at W-4, H-21
   // Two colors each because tab can be active(red) or not(grey)

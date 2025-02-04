@@ -82,15 +82,21 @@ begin
   Self.Crop(b.X1, b.Y1, b.X2, b.Y2);
 end;
 
-procedure TMufasaBitmap.FromClient(Area: TBox=[0,0,-1,-1]);
+procedure TMufasaBitmap.FromClient(area: TBox = [0,0,-1,-1]);
 var
-  W,H: Int32;
+  w,h: Int32;
 begin
-  client.GetIOManager().GetDimensions(W,H);
-  if Area = TBox([0,0,-1,-1]) then Area := [0,0,W-1,H-1];
-  if (self <> nil) and (self.GetIndex() <> -1) then self.Free();
-  Self.Init(client.GetMBitmaps);
-  Self.CopyClientToBitmap(client.GetIOManager(), True, Area.X1, Area.Y1, Area.X2, Area.Y2);
+  if area = [0,0,-1,-1] then
+  begin
+    Client.GetIOManager().GetDimensions(w,h);
+    area := [0,0,w-1,h-1];
+  end;
+
+  if (self <> nil) and (self.GetIndex() <> -1) then
+    Self.Free();
+
+  Self.Init(Client.GetMBitmaps());
+  Self.CopyClientToBitmap(Client.GetIOManager(), True, area.X1, area.Y1, area.X2, area.Y2);
 end;
 
 procedure TMufasaBitmap.FromFile(path: String);

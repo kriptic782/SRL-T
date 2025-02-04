@@ -182,8 +182,6 @@ begin
       alignment.Right := RootInterface.Bounds.X2;
       alignment.Top := RootInterface.Bounds.Y1;
       alignment.Bottom := RootInterface.Bounds.Y2;
-
-      Self.UpTextArea := [3, 3, 500, 21];
     end;
 
     ERSClientMode.FIXED:
@@ -192,12 +190,20 @@ begin
       alignment.Right := RootInterface.Bounds.X1 + 515;
       alignment.Top := RootInterface.Bounds.Y1 + 4;
       alignment.Bottom := RootInterface.Bounds.Y1 + 337;
-
-      Self.UpTextArea := [7, 7, 500, 25];
     end;
   end;
 
   Self.SetupAlignment(alignment);
+
+  Self.UpTextArea := [Self.Bounds.X1 + 3, Self.Bounds.Y1 + 3, Self.Bounds.X1 + 500, Self.Bounds.Y1 + 21];
+
+  if RSClient.Client = ERSClient.OFFICIAL then
+  begin
+    if RSClient.Mode = ERSClientMode.FIXED then
+      Self.UpTextArea := Self.UpTextArea.Offset([-2,-2])
+    else
+      Self.UpTextArea := Self.UpTextArea.Offset([0,2]);
+  end;
 end;
 
 (*

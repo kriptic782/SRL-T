@@ -504,9 +504,17 @@ begin
 end;
 
 procedure TRSClient.ClientModeChanged(); override;
+var
+  alignment: TRSInterfaceAlignment;
 begin
   inherited;
-  RootInterface.SetupAlignment([0,0,RSClient.Width-1,RSClient.Height-1,0,0]);
+
+  alignment.Left := Self.Bounds.X1;
+  alignment.Top := Self.Bounds.Y1;
+  alignment.Right := Self.Bounds.X2;
+  alignment.Bottom := Self.Bounds.Y2;
+
+  RootInterface.SetupAlignment(alignment);
 end;
 
 procedure Debug(buttons: TRSButtonArray); overload;

@@ -1,7 +1,8 @@
-{$DEFINE WL_EMOTES_INCLUDED}
-{$IFNDEF WL_OSR}
-  {$I WaspLib/osr.simba}
+{$DEFINE SRL_EMOTES_INCLUDED}
+{$IFNDEF SRL_OSR}
+  {$I SRL-T/osr.simba}
 {$ENDIF}
+
 //By Kriptic & Taze
 type
   TRSEmotes = record(TRSInterface)

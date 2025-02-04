@@ -94,9 +94,11 @@ end;
 {$IFNDEF SRL_RSCHUNK_INCLUDED}              {$I osr/map/rschunk.simba}
 {$IFNDEF SRL_MAP_INCLUDED}                  {$I osr/map/map.simba}
 {$IFNDEF SRL_MUSIC_INCLUDED}                {$I osr/interfaces/gametabs/music.simba}
+{$IFNDEF SRL_EMOTES_INCLUDED}               {$I osr/interfaces/gametabs/emotes.simba}
 
 {$IFNDEF SRL_DEPRECATED_INCLUDED} {$I osr/deprecated.simba} {$ELSE}{$ENDIF}
 
+{$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}
 {$ELSE}{$ENDIF}

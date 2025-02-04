@@ -80,6 +80,7 @@ begin
   Result := Self.PID > 0;
 end;
 
+
 procedure TRemoteInput.DisableRealInput();
 begin
   EIOS_SetInputEnabled(Self.EIOS, False);
@@ -89,6 +90,7 @@ procedure TRemoteInput.EnableRealInput();
 begin
   EIOS_SetInputEnabled(Self.EIOS, True);
 end;
+
 
 procedure TRemoteInput.ReleaseClient();
 begin
@@ -126,12 +128,16 @@ begin
   Self.EIOS := nil;
 end;
 
+
 procedure TRemoteInput.Setup();
 const
   RS_EXECUTABLES: TStringArray = [{$IFDEF WINDOWS}'RuneLite.exe', 'JagexLauncher.exe'{$ELSE}'java'{$ENDIF}];
   BITNESS: String = {$IFDEF CPU386}'32'{$ELSE}'64'{$ENDIF};
+  INVERTED_BITNESS: String = {$IFDEF CPU386}'64'{$ELSE}'32'{$ENDIF};
+var
+  response: Int32;
 begin
-  Self.Name := 'Remote Input';
+  Self.Name := 'RemoteInput';
 
   {$IFNDEF SIMBAHEADLESS}
   if (Self.PID = 0) then
@@ -141,23 +147,53 @@ begin
   try
     if (Self.PID = 0) then
     begin
-      if (MessageDlg('SRL', 'Automatically try to find a RS client?', mtConfirmation, [mbYes, mbNo]) = mrNo) then
-        raise 'No RS clients found';
+      response := MessageDlg(
+        'SRL Auto Client Target',
+        'Automatically try to find a RS client?' + LineEnding + LineEnding +
+        'Having issues?' + LineEnding + 'Consider manual targetting. ' +
+        'Drag the green crosshair in Simba to the center of your client.',
+        mtConfirmation, [mbYes, mbNo]
+      );
+
+      if response = mrNo then RaiseException('No RS clients found');
 
       Self.DebugLn('Automatically finding the client may take a few seconds.');
       Self.DebugLn('Finding a RuneLite client may also have unexpected results.');
-      RIInject(RS_EXECUTABLES, Self.PID); 
-    end else
+      RIInject(RS_EXECUTABLES, Self.PID);
+    end
+    else
       RIInject(Self.PID);
+
     Self.EIOS := EIOS_PairClient(Self.PID);
     if (Self.EIOS <> nil) then
       SetEIOSTarget({$libpath ../plugins/libremoteinput/libremoteinput}, ToString(Self.PID));
   except
-    MessageDlg(
-      'Unsupported client!', 'This client is not supported!' + LineEnding +
-      'You are using Simba ' + BITNESS + ' bits and for it you need a ' + BITNESS + ' bits client.',
-      TMsgDlgType.mtError, [mbOk]);
-    Self.Fatal(GetExceptionMessage());
+    response := MessageDlg(
+      'Unsupported client!',
+      'This client is not supported or automatic target failed!' + LineEnding +
+      'You are using Simba ' +  BITNESS + ' bits and for it you need a ' +
+      BITNESS + ' bits client.' + LineEnding + LineEnding +
+      'Click "Okay" to try running Simba ' + INVERTED_BITNESS +
+      ' or "Cancel" to exit.',
+      TMsgDlgType.mtError, [mbOk, mbCancel]
+    );
+
+    if response <> mrOK then Self.Fatal(GetExceptionMessage());
+
+    try
+      RunCommand(AppPath + 'Simba' + INVERTED_BITNESS + '.exe', [ScriptFile]);
+    except
+      MessageDlg(
+        'Simba Executable Missing',
+        'Simba' + INVERTED_BITNESS + '.exe is missing.' + LineEnding +
+        'It may have been delete by your anti-virus, otherwise reinstall it.'
+        + LineEnding + 'If it was deleted by your anti-virus make sure you ' +
+        'add it as an exception!',
+        TMsgDlgType.mtError, [mbOk]
+      );
+    end;
+
+    TerminateScript();
   end;
   AddOnTerminate(@Self.Free);
 end;
