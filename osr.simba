@@ -155,7 +155,6 @@ begin
     
   inherited;
 
-  RSClient.ClientModeChanged();
   Self.IsSetup := True;
 end;
 

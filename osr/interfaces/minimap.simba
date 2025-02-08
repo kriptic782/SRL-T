@@ -359,7 +359,6 @@ begin
   Self.Name := 'Minimap';
   Self.FlagBitmap := BitmapFromString(2, 2, 'meJxjYPgvaBzLEnYMSAIAFJIDYg==');
 
-  SetLength(Self.Orbs, Ord(High(ERSMinimapOrb))+1);
   AddOnTerminate(@Self.Free);
 end;
 
@@ -386,6 +385,8 @@ begin
   end;
 
   Self.SetupAlignment(alignment);
+
+  SetLength(Self.Orbs, Ord(High(ERSMinimapOrb))+1);
 
   case RSClient.Mode of
     ERSClientMode.RESIZABLE_CLASSIC, ERSClientMode.RESIZABLE_MODERN:

@@ -746,8 +746,8 @@ end;
 *)
 function TRSMap.Map2MM(playerPoint, mapPoint: TPoint; radians: Double): TPoint;
 begin
-  Result := mapPoint - playerPoint + [Minimap.Center.X, Minimap.Center.Y];
-  Result := Result.Rotate(radians, [Minimap.Center.X, Minimap.Center.Y]);
+  Result := mapPoint - playerPoint + Minimap.Center;
+  Result := Result.Rotate(radians, Minimap.Center);
 end;
 
 function TRSMap.Map2MM(mapPoint: TPoint): TPoint; overload;
@@ -821,7 +821,7 @@ var
 begin
   radians := Minimap.GetCompassAngle(False);
 
-  mapPoint := [Minimap.Center.X, Minimap.Center.Y] + (mapPoint - playerPoint);
+  mapPoint := Minimap.Center + (mapPoint - playerPoint);
   mapVec := Vec3(mapPoint.X,mapPoint.Y).RotateXY(radians, Minimap.Center.X, Minimap.Center.Y);
 
   Result := Minimap.VectorToMSRect(Vec3(mapVec.x - offset.X, mapVec.y - offset.Y, height), 1, 1, radians);

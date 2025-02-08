@@ -36,13 +36,13 @@ This is automatically called on the **XPBar** variable.
 procedure TRSXPBar.Setup(); override;
 begin
   inherited;
-
   Self.Name := 'XPBar';
-  SetLength(Self.Alignments, 3);
 end;
 
 procedure TRSXPBar.SetupAlignment(); overload;
 begin
+  SetLength(Self.Alignments, 3);
+
   with Self.Alignments[0] do
   begin
     Left := InterfaceArea.Bounds.X1 + 2;
