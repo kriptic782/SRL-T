@@ -1,3 +1,12 @@
+## [7.17.1](https://github.com/Torwent/SRL-T/compare/v7.17.0...v7.17.1) (2025-02-08)
+
+
+### Bug Fixes
+
+* **interface:** small tweaks to the order of things ([5b1d799](https://github.com/Torwent/SRL-T/commit/5b1d799aca0282aedff80f70a27fe9a4e739637d))
+
+
+
 # [7.17.0](https://github.com/Torwent/SRL-T/compare/v7.16.1...v7.17.0) (2025-02-04)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * force bump ([200855b](https://github.com/Torwent/SRL-T/commit/200855b44a43e1691f90f2a2fe85c98071de439e))
-
-
-
-## [7.15.9](https://github.com/Torwent/SRL-T/compare/v7.15.8...v7.15.9) (2025-02-03)
-
-
-### Bug Fixes
-
-* very minor performance improvements to chooseoption and stats ([8fdf64b](https://github.com/Torwent/SRL-T/commit/8fdf64b7d3b0bdbf277c1ab5fbfb89fa8e42f16e))
 
 
 
