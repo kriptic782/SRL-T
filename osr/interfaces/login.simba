@@ -561,23 +561,26 @@ if Login.EnterField('Login:', 'my user name') and
 *)
 function TRSLogin.EnterGame(): Boolean;
 var
-  t: UInt64;
+  current, timeout, failsafe: UInt64;
 begin
-  t := GetTickCount();
+  current  := GetTickCount();
+  timeout  := current + 15000;
+  failsafe := current + Random(5000, 7000);
   Self.DebugLn('Handling lobby screen.');
 
-  while not Self.ClickText('CLICK HERE TO PLAY') do
+  while not Self.ClickText('CLICK HERE TO PLAY') or not RSClient.IsLoggedIn() do
   begin
-    if GetTickCount() > (t + 15000) then
+    current := GetTickCount();
+    if current > timeout then
     begin
       Self.DebugLn('Lobby screen timed out.');
       Exit;
     end;
 
-    if GetTickCount() > (t + 5000) then
+    if current > failsafe then
       Mouse.Move(Box(Mouse.Position(), 10, 10), True);
 
-    Wait(500);
+    Wait(300, 600);
   end;
 
   Result := RSClient.IsLoggedIn(5000);

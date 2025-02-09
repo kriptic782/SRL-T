@@ -802,8 +802,7 @@ begin
   begin
     h := Self.Walker^.Height(me);
     dots := Minimap.GetFilteredDotArray(Self.DotType, Self.Walker^.FiltersToMM(me, Self.DotFilters, angle));
-    if dots = [] then
-      Exit;
+    if dots = [] then Exit;
 
     dots := _DotsToTopLeft(Self, dots, angle);
 
@@ -897,8 +896,7 @@ begin
   if Self.Filter.Walker or Self.Filter.Minimap then
   begin
     cuboids := Self.GetCuboidArray();
-    if cuboids = [] then
-      Exit;
+    if cuboids = [] then Exit;
 
     atpa := Self.FindOnMainScreen(cuboids);
   end
@@ -1639,6 +1637,7 @@ begin
   Self.Finder.Erode := 2;
   Self.Finder.Grow := 4;
   Self.DotType := ERSMinimapDot.NPC;
+  Self.MapObjectType := ERSMapObjectType.NPC;
 end;
 
 procedure TRSNPCV2.SetupUpText(upText: String); overload;
