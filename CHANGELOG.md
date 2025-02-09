@@ -1,3 +1,12 @@
+## [7.17.3](https://github.com/Torwent/SRL-T/compare/v7.17.2...v7.17.3) (2025-02-09)
+
+
+### Bug Fixes
+
+* **itemfinder:** update items ([0cdf1c2](https://github.com/Torwent/SRL-T/commit/0cdf1c2b77f1300473635c0c3db470ade0f417e6))
+
+
+
 ## [7.17.2](https://github.com/Torwent/SRL-T/compare/v7.17.1...v7.17.2) (2025-02-09)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **interfaces:** interfaces are now reset when remote input is injected late ([5c2f550](https://github.com/Torwent/SRL-T/commit/5c2f550e9a641cd030497ca309c74a839ccb369d))
-
-
-
-# [7.16.0](https://github.com/Torwent/SRL-T/compare/v7.15.10...v7.16.0) (2025-02-04)
-
-
-### Features
-
-* read notes ([00312dd](https://github.com/Torwent/SRL-T/commit/00312dd191b763e5277e0d3b83c3d9b156ea6a59))
 
 
 
