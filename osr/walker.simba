@@ -1040,6 +1040,7 @@ begin
             Self._DoorHandler.Skipped := False;
             WaitUntil(Minimap.IsPlayerMoving(), 200, 1200);
             WaitUntil(not Minimap.IsPlayerMoving(), 50, 2000 + 600 * Round(playerPoint.DistanceTo(Self._DoorHandler.Door.Before) / 4)); //max duration it can take to get to a point with a 2 second buffer
+            if Self.WebGraph^.WalkableClusters.InSameTPA(RSTranslator.NormalizeDoor(Self.Position), RSTranslator.NormalizeDoor(Self._DoorHandler.Door.After)) then Exit(True);
             if not Self._DoorHandler.Door.Before.InRange(Self.Position(), 3) then Continue;
           end;
 
