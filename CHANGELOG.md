@@ -1,3 +1,12 @@
+## [7.17.4](https://github.com/Torwent/SRL-T/compare/v7.17.3...v7.17.4) (2025-02-10)
+
+
+### Bug Fixes
+
+* **walkerv2:** small bug when canceling an action ([a94c644](https://github.com/Torwent/SRL-T/commit/a94c6447cf6e14296e519d4ccd8f8d9869bbdf04))
+
+
+
 ## [7.17.3](https://github.com/Torwent/SRL-T/compare/v7.17.2...v7.17.3) (2025-02-09)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * **emotes:** rewrite for something that requires less maintenance ([25df9f6](https://github.com/Torwent/SRL-T/commit/25df9f6ab98a20d749960b6252eed20c0f7dbdaf))
-
-
-
-## [7.16.1](https://github.com/Torwent/SRL-T/compare/v7.16.0...v7.16.1) (2025-02-04)
-
-
-### Bug Fixes
-
-* **interfaces:** interfaces are now reset when remote input is injected late ([5c2f550](https://github.com/Torwent/SRL-T/commit/5c2f550e9a641cd030497ca309c74a839ccb369d))
 
 
 
