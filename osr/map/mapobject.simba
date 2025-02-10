@@ -264,7 +264,7 @@ begin
 
   if text.ContainsAny(['Use', '>']) and not Self.UpText.ContainsAny(['Use', '>']) and not actions.ContainsAny(['Use', '>']) then
   begin
-    ChooseOption.Select('Cancel');
+    ChooseOption.Close();
     Exit;
   end;
 
@@ -299,7 +299,7 @@ begin
 
   if text.ContainsAny(['Use', '>']) and not Self.Walker^.ActionUpText.ContainsAny(['Use', '>']) then
   begin
-    ChooseOption.Select('Cancel');
+    ChooseOption.Close();
     Exit;
   end;
 

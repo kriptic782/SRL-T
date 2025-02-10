@@ -478,7 +478,7 @@ begin
   Self.RedClicked := False;
   if MainScreen.IsUpText(['Use', '>']) and not Self.ActionUpText.ContainsAny(['Use', '>']) then
   begin
-    ChooseOption.Select('Cancel');
+    ChooseOption.Close();
     Exit;
   end;
 
