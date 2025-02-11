@@ -1,3 +1,12 @@
+## [7.17.5](https://github.com/Torwent/SRL-T/compare/v7.17.4...v7.17.5) (2025-02-11)
+
+
+### Bug Fixes
+
+* **remoteinput:** disabling remote input via compiler directives compiles again ([ff81d90](https://github.com/Torwent/SRL-T/commit/ff81d904fc21de065d65cb7caefbc0da7fe2c38e))
+
+
+
 ## [7.17.4](https://github.com/Torwent/SRL-T/compare/v7.17.3...v7.17.4) (2025-02-10)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **interface:** small tweaks to the order of things ([5b1d799](https://github.com/Torwent/SRL-T/commit/5b1d799aca0282aedff80f70a27fe9a4e739637d))
-
-
-
-# [7.17.0](https://github.com/Torwent/SRL-T/compare/v7.16.1...v7.17.0) (2025-02-04)
-
-
-### Features
-
-* **emotes:** rewrite for something that requires less maintenance ([25df9f6](https://github.com/Torwent/SRL-T/commit/25df9f6ab98a20d749960b6252eed20c0f7dbdaf))
 
 
 
