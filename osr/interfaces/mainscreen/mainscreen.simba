@@ -249,38 +249,38 @@ Example:
 WriteLn(MainScreen.MainScreen.IsUpText(['Chicken', 'Wolf']));
 ```
 *)
-function TRSMainScreen.IsUpText(Text: TStringArray; Timeout: Int32 = -1): Boolean;
+function TRSMainScreen.IsUpText(text: TStringArray; timeout: Int32 = -1): Boolean;
 
-  function IsUpText: Boolean;
+  function _IsUpText(): Boolean;
   var
-    I: Int32;
-    UpText: String;
+    i: Int32;
+    upText: String;
   begin
-    UpText := Self.GetUpText();
+    upText := Self.GetUpText();
 
-    for I := 0 to High(Text) do
-      if (Text[I] in UpText) or (Text[I] = UpText) then
+    for i := 0 to High(text) do
+      if (text[i] in uptext) or (text[i] = upText) then
         Exit(True);
   end;
 
 var
-  T: UInt64;
+  t: UInt64;
 begin
-  if (Timeout = -1) then
-    T := GetTickCount() + Round(SRL.SkewedRand(100, 85, 250))
+  if (timeout = -1) then
+    t := GetTickCount() + Round(SRL.SkewedRand(100, 85, 250))
   else
-    T := GetTickCount() + Timeout;
+    t := GetTickCount() + timeout;
 
   repeat
-    if IsUpText() then
+    if _IsUpText() then
     begin
       Wait(50); // Uptext is delayed at least a frame. wait 50ms for confirmation.
-      if IsUpText() then
+      if _IsUpText() then
         Exit(True);
     end;
 
     Wait(25);
-  until (GetTickCount() >= T);
+  until GetTickCount() >= t;
 end;
 
 function TRSMainScreen.IsUpText(Text: String; Timeout: Int32 = -1): Boolean; overload;

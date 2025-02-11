@@ -1138,12 +1138,13 @@ var
 begin
   for i := 0 to High(graphs) do
     Result.Merge(graphs[i]);
-
   for i := 0 to High(Result.Doors) do
   begin
     Result.Doors[i].Before := RSTranslator.Normalize(Result.Doors[i].Before);
     Result.Doors[i].After  := RSTranslator.Normalize(Result.Doors[i].After);
   end;
+
+  Result.UseCollisionData := Self.Graph.UseCollisionData;
 end;
 
 function TRSMapLoader.InternalJSONLoad(entries: array of TJSONArray): TJSONArray;
