@@ -1,3 +1,12 @@
+## [7.17.7](https://github.com/Torwent/SRL-T/compare/v7.17.6...v7.17.7) (2025-02-12)
+
+
+### Bug Fixes
+
+* **TRSWalkerV2:** read notes ([c905507](https://github.com/Torwent/SRL-T/commit/c9055074b57a02b3eb242b9373a9fd4be4f21cfc))
+
+
+
 ## [7.17.6](https://github.com/Torwent/SRL-T/compare/v7.17.5...v7.17.6) (2025-02-11)
 
 
@@ -32,15 +41,6 @@
 ### Bug Fixes
 
 * **itemfinder:** update items ([0cdf1c2](https://github.com/Torwent/SRL-T/commit/0cdf1c2b77f1300473635c0c3db470ade0f417e6))
-
-
-
-## [7.17.2](https://github.com/Torwent/SRL-T/compare/v7.17.1...v7.17.2) (2025-02-09)
-
-
-### Bug Fixes
-
-* read notes ([4cf960a](https://github.com/Torwent/SRL-T/commit/4cf960aa6a24a86dc581f1430514b03faecdad9b))
 
 
 
