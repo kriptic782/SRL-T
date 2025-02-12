@@ -772,30 +772,30 @@ begin
   Result += tpa[High(tpa)];
 end;
 
-function TRSWalkerV2._AdvancePath(out index: Int32; playerPoint: TPoint): Boolean;
+function TRSWalkerV2._AdvancePath(out index: Int32; playerPoint: TPoint; angle: Double): Boolean;
 var
-  Angle: Double := Minimap.GetCompassAngle(False);
-  Previous: Int32 := index;
-  Nearest, Furthest: Int32;
+  previous: Int32;
+  nearest, furthest: Int32;
 begin
-  Nearest := Self._Path.Find(Self._Path.Sorted(playerPoint)[0]);
-  Self._Pathindex := Nearest;
+  previous := index;
+  nearest := Self._Path.Find(Self._Path.Sorted(playerPoint)[0]);
+  Self._Pathindex := nearest;
 
-  while (Nearest < High(Self._Path)) and (not Self.IsWalkable(Self._Path[Nearest+1], playerPoint, Angle)) do
-    Inc(Nearest);
+  while (nearest < High(Self._Path)) and (not Self.IsWalkable(Self._Path[nearest+1], playerPoint, angle)) do
+    Inc(nearest);
 
-  Furthest := Nearest;
-  while (Furthest < High(Self._Path)) and Self.IsWalkable(Self._Path[Furthest+1], playerPoint, Angle) do
-    Inc(Furthest);
+  furthest := nearest;
+  while (furthest < High(Self._Path)) and Self.IsWalkable(Self._Path[furthest+1], playerPoint, angle) do
+    Inc(furthest);
 
-  index := Furthest;
+  index := furthest;
 
   // do the result check before randomness to avoid false error
-  Result := (index > Previous);
+  Result := index > previous;
 
   // 15% chance of randomness else furthest
   if Random() < 0.15 then
-    index := Random(Nearest, Furthest);
+    index := Random(nearest, furthest);
 end;
 
 procedure TRSWalkerV2._WalkPathSetup(path: TPointArray);
@@ -815,15 +815,14 @@ begin
   end;
 end;
 
-function TRSWalkerV2._WalkPathHelper(out index: Int32; playerPoint: TPoint; fails: Int32; debug: Boolean): Int32;
+function TRSWalkerV2._WalkPathHelper(out index: Int32; out angle: Double; playerPoint: TPoint; fails: Int32; debug: Boolean): Int32;
 begin
   if debug then
     Self.DebugPath(index, playerPoint);
 
   Result := fails;
 
-  if Self._AdvancePath(index, playerPoint) then
-    Exit(0);
+  if Self._AdvancePath(index, playerPoint, angle) then Exit(0);
 
   //Likely haven't moved far enough to advance to next point
   if Inc(Result) < 5 then
@@ -833,13 +832,20 @@ begin
   end;
 
   //Screen walking struggles, so disable it
-  if Self.AdaptiveWalk then
-    Self.ScreenWalk := False
+  if Self.AdaptiveWalk and Self.ScreenWalk then
+  begin
+    Self.ScreenWalk := False;
+    Self._AdvancePath(index, playerPoint, angle);
+  end
   else if (Result = 5) then
+  begin
     case SRL.Dice(50) of
-      True:  Minimap.SetCompassAngle(Minimap.GetCompassAngle() - SRL.TruncatedGauss(30, 360, 3));
-      False: Minimap.SetCompassAngle(Minimap.GetCompassAngle() + SRL.TruncatedGauss(30, 360, 3));
+      True:  Minimap.SetCompassAngle(Degrees(angle) - SRL.TruncatedGauss(30, 360, 3));
+      False: Minimap.SetCompassAngle(Degrees(angle) + SRL.TruncatedGauss(30, 360, 3));
     end;
+
+    angle := Minimap.GetCompassAngle(False);
+  end;
 
   if (Result mod 2 = 0) then
     Minimap.WaitFlag();
@@ -870,9 +876,11 @@ function TRSWalkerV2.WalkPath(path: TPointArray; waitUntilDistance: Int32 = 0; d
 var
   playerPoint: TPoint;
   index, fails: Int32;
+  angle: Double;
 begin
   Self._WalkPathSetup(path);
 
+  angle := Minimap.GetCompassAngle(False);
   while Self.Walking and (fails < 10) do
   begin
     playerPoint := Self.Position();
@@ -883,7 +891,7 @@ begin
       Exit(Self.WebGraph^.WalkableClusters.InSameTPA(playerPoint, RSTranslator.NormalizeDoor(Self._DoorHandler.Door.After)));
     end;
 
-    fails := Self._WalkPathHelper(index, playerPoint, fails, debug);
+    fails := Self._WalkPathHelper(index, angle, playerPoint, fails, debug);
     if fails > 0 then Continue;
 
     if index = High(Self._Path) then
@@ -961,7 +969,7 @@ var
   pathToDoor: TPointArray;
   index, fails, doorIndex, postDoorIndex, i: Int32;
   rect: TRectangle;
-  compass, cAngle: Single;
+  compass, cAngle: Double;
 begin
   doorIndex := -1;
   for i := 0 to High(path) do
@@ -992,14 +1000,13 @@ begin
       Exit(Self.WebGraph^.WalkableClusters.InSameTPA(RSTranslator.NormalizeDoor(playerPoint), RSTranslator.NormalizeDoor(Self._DoorHandler.Door.After)));
     end;
 
-    fails := Self._WalkPathHelper(index, playerPoint, fails, debug);
+    compass := Minimap.GetCompassAngle(False);
+    fails := Self._WalkPathHelper(index, compass, playerPoint, fails, debug);
     if fails > 0 then Continue;
 
     if not Self._DoorHandler.Handling then
     begin
-      cAngle := Minimap.GetCompassAngle(True);
-      compass := radians(cAngle);
-
+      cAngle := Degrees(compass);
       rect := Self.GetRectMS(playerPoint, Self._DoorHandler.Door.After, 0, [0,0], compass);
 
       if Mainscreen.IsVisible(rect) then
