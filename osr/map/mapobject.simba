@@ -287,25 +287,20 @@ var
 begin
   if Self.Walker = nil then
     TerminateScript(SRL.TimeStamp() + ':[TRSMapObject]:[Fatal]: ' + Self.Name + ' has no walker pointer set.');
-
   shouldExit := True;
 
   if (RSClient.Mode = ERSClientMode.FIXED) and RSInterface.IsOpen() then
     Exit;
-
   if Self.Filter.UpText then Self.Walker^.TargetUpText := Copy(Self.UpText);
 
   text := MainScreen.GetUpText();
-
-  if text.ContainsAny(['Use', '>']) and not Self.Walker^.ActionUpText.ContainsAny(['Use', '>']) then
+  if text.ContainsAny(['>']) and not Self.Walker^.ActionUpText.ContainsAny(['>']) then
   begin
-    ChooseOption.Close();
+    ChooseOption.Select('Cancel');
     Exit;
   end;
-
   if Self.Walker^.RedClicked or (Self.Filter.UpText and text.ContainsAny(Self.UpText)) then
     Exit(True);
-
   shouldExit := False;
 end;
 
@@ -1199,7 +1194,7 @@ begin
       same := True;
     end;
 
-    if not Self.Walker^.InRangeEx(me, closest, 50) then
+    if not me.InRange(closest, 50) then
     begin
       Self.Walker^.WebWalkEx(me, closest, 30, 0.15);
       Continue;
@@ -1207,7 +1202,7 @@ begin
 
     if attempt = (attempts - 1) then
     begin
-      if not Self.Walker^.InRangeEx(me, closest, 25) then
+      if not me.InRange(closest, 25) then
       begin
         Self.Walker^.WebWalkEx(me, closest, 25, 0.15);
         Continue;
