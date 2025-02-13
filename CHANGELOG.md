@@ -1,3 +1,12 @@
+## [7.17.9](https://github.com/Torwent/SRL-T/compare/v7.17.8...v7.17.9) (2025-02-13)
+
+
+### Bug Fixes
+
+* **walkerv2:** small bug fixed when hovering certain items ([b5cefd5](https://github.com/Torwent/SRL-T/commit/b5cefd566779ad475fc9764510b7de8b19149553))
+
+
+
 ## [7.17.8](https://github.com/Torwent/SRL-T/compare/v7.17.7...v7.17.8) (2025-02-13)
 
 
@@ -32,15 +41,6 @@
 ### Bug Fixes
 
 * **remoteinput:** disabling remote input via compiler directives compiles again ([ff81d90](https://github.com/Torwent/SRL-T/commit/ff81d904fc21de065d65cb7caefbc0da7fe2c38e))
-
-
-
-## [7.17.4](https://github.com/Torwent/SRL-T/compare/v7.17.3...v7.17.4) (2025-02-10)
-
-
-### Bug Fixes
-
-* **walkerv2:** small bug when canceling an action ([a94c644](https://github.com/Torwent/SRL-T/commit/a94c6447cf6e14296e519d4ccd8f8d9869bbdf04))
 
 
 
