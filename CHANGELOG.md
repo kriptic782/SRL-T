@@ -1,3 +1,12 @@
+## [7.17.8](https://github.com/Torwent/SRL-T/compare/v7.17.7...v7.17.8) (2025-02-13)
+
+
+### Bug Fixes
+
+* **trsobjects:** small logic fix ([208555c](https://github.com/Torwent/SRL-T/commit/208555cdd98d79e4fe7d7451da06fdb230594b27))
+
+
+
 ## [7.17.7](https://github.com/Torwent/SRL-T/compare/v7.17.6...v7.17.7) (2025-02-12)
 
 
@@ -32,15 +41,6 @@
 ### Bug Fixes
 
 * **walkerv2:** small bug when canceling an action ([a94c644](https://github.com/Torwent/SRL-T/commit/a94c6447cf6e14296e519d4ccd8f8d9869bbdf04))
-
-
-
-## [7.17.3](https://github.com/Torwent/SRL-T/compare/v7.17.2...v7.17.3) (2025-02-09)
-
-
-### Bug Fixes
-
-* **itemfinder:** update items ([0cdf1c2](https://github.com/Torwent/SRL-T/commit/0cdf1c2b77f1300473635c0c3db470ade0f417e6))
 
 
 
