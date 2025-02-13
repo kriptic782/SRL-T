@@ -476,9 +476,9 @@ var
   hoveringTarget: Boolean;
 begin
   Self.RedClicked := False;
-  if MainScreen.IsUpText(['Use', '>']) and not Self.ActionUpText.ContainsAny(['Use', '>']) then
+  if MainScreen.IsUpText(['>']) and not Self.ActionUpText.ContainsAny(['>']) then
   begin
-    ChooseOption.Close();
+    ChooseOption.Select('Cancel');
     Exit;
   end;
 
