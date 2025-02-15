@@ -498,6 +498,7 @@ begin
   c := Length(Self.Nodes);
   SetLength(Self.Nodes, c+1);
   SetLength(Self.Paths, c+1);
+  SetLength(Self.Names, c+1);
   Self.Nodes[c] := p;
 
   if FromNode <> -1 then
