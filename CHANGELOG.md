@@ -1,3 +1,12 @@
+## [7.17.10](https://github.com/Torwent/SRL-T/compare/v7.17.9...v7.17.10) (2025-02-15)
+
+
+### Bug Fixes
+
+* AddNodes works as intended now ([52ef969](https://github.com/Torwent/SRL-T/commit/52ef969c548b52c25da0327f8641c71acd8e0f79))
+
+
+
 ## [7.17.9](https://github.com/Torwent/SRL-T/compare/v7.17.8...v7.17.9) (2025-02-13)
 
 
@@ -32,15 +41,6 @@
 
 * gives successful pass through door when clicking door that makes you go through it automaticallt ([4989381](https://github.com/Torwent/SRL-T/commit/49893810848f12da1b640213b8fd34bdb484aabb))
 * **TRSMap:** Graph.UseCollisionData can now be set before or after TRSMap.Setup() ([7e3a984](https://github.com/Torwent/SRL-T/commit/7e3a9849ac3cf533dd0bfbfd867671f9f12d524b))
-
-
-
-## [7.17.5](https://github.com/Torwent/SRL-T/compare/v7.17.4...v7.17.5) (2025-02-11)
-
-
-### Bug Fixes
-
-* **remoteinput:** disabling remote input via compiler directives compiles again ([ff81d90](https://github.com/Torwent/SRL-T/commit/ff81d904fc21de065d65cb7caefbc0da7fe2c38e))
 
 
 
