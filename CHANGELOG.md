@@ -1,3 +1,12 @@
+## [7.17.11](https://github.com/Torwent/SRL-T/compare/v7.17.10...v7.17.11) (2025-02-16)
+
+
+### Bug Fixes
+
+* **itemfinder:** update ([0c3f4b5](https://github.com/Torwent/SRL-T/commit/0c3f4b5bd56e04dc8740f31ae9d3b9671b067f55))
+
+
+
 ## [7.17.10](https://github.com/Torwent/SRL-T/compare/v7.17.9...v7.17.10) (2025-02-15)
 
 
@@ -31,16 +40,6 @@
 ### Bug Fixes
 
 * **TRSWalkerV2:** read notes ([c905507](https://github.com/Torwent/SRL-T/commit/c9055074b57a02b3eb242b9373a9fd4be4f21cfc))
-
-
-
-## [7.17.6](https://github.com/Torwent/SRL-T/compare/v7.17.5...v7.17.6) (2025-02-11)
-
-
-### Bug Fixes
-
-* gives successful pass through door when clicking door that makes you go through it automaticallt ([4989381](https://github.com/Torwent/SRL-T/commit/49893810848f12da1b640213b8fd34bdb484aabb))
-* **TRSMap:** Graph.UseCollisionData can now be set before or after TRSMap.Setup() ([7e3a984](https://github.com/Torwent/SRL-T/commit/7e3a9849ac3cf533dd0bfbfd867671f9f12d524b))
 
 
 
