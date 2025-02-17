@@ -568,7 +568,7 @@ begin
   failsafe := current + Random(5000, 7000);
   Self.DebugLn('Handling lobby screen.');
 
-  while not Self.ClickText('CLICK HERE TO PLAY') do
+  while not Self.ClickText('CLICK HERE TO PLAY') or not RSClient.IsLoggedIn() do
   begin
     current := GetTickCount();
     if (current > timeout) then
