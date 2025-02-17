@@ -1,3 +1,13 @@
+## [7.17.12](https://github.com/Torwent/SRL-T/compare/v7.17.11...v7.17.12) (2025-02-17)
+
+
+### Bug Fixes
+
+* login handler now works as intended ([4743deb](https://github.com/Torwent/SRL-T/commit/4743deb682c9f74750880ea23d1022b0d87dbee5))
+* old fix was broken ([c34baea](https://github.com/Torwent/SRL-T/commit/c34baea223280bb3d69a3e9bcb2eceaefe1db3ea))
+
+
+
 ## [7.17.11](https://github.com/Torwent/SRL-T/compare/v7.17.10...v7.17.11) (2025-02-16)
 
 
@@ -31,15 +41,6 @@
 ### Bug Fixes
 
 * **trsobjects:** small logic fix ([208555c](https://github.com/Torwent/SRL-T/commit/208555cdd98d79e4fe7d7451da06fdb230594b27))
-
-
-
-## [7.17.7](https://github.com/Torwent/SRL-T/compare/v7.17.6...v7.17.7) (2025-02-12)
-
-
-### Bug Fixes
-
-* **TRSWalkerV2:** read notes ([c905507](https://github.com/Torwent/SRL-T/commit/c9055074b57a02b3eb242b9373a9fd4be4f21cfc))
 
 
 
