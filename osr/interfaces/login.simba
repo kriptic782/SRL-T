@@ -571,11 +571,14 @@ begin
   while not Self.ClickText('CLICK HERE TO PLAY') or not RSClient.IsLoggedIn() do
   begin
     current := GetTickCount();
-    if current > timeout then
+    if (current > timeout) then
     begin
       Self.DebugLn('Lobby screen timed out.');
       Exit;
     end;
+
+    if RSClient.IsLoggedIn() then
+      Exit(True);
 
     if current > failsafe then
       Mouse.Move(Box(Mouse.Position(), 10, 10), True);
