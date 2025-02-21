@@ -1,3 +1,12 @@
+## [7.17.14](https://github.com/Torwent/SRL-T/compare/v7.17.13...v7.17.14) (2025-02-21)
+
+
+### Bug Fixes
+
+* **RemoteInput:** DPI Scaling fix ([a640141](https://github.com/Torwent/SRL-T/commit/a6401413704baf796ff39207b2e108837ab886af))
+
+
+
 ## [7.17.13](https://github.com/Torwent/SRL-T/compare/v7.17.12...v7.17.13) (2025-02-21)
 
 
@@ -32,15 +41,6 @@
 ### Bug Fixes
 
 * AddNodes works as intended now ([52ef969](https://github.com/Torwent/SRL-T/commit/52ef969c548b52c25da0327f8641c71acd8e0f79))
-
-
-
-## [7.17.9](https://github.com/Torwent/SRL-T/compare/v7.17.8...v7.17.9) (2025-02-13)
-
-
-### Bug Fixes
-
-* **walkerv2:** small bug fixed when hovering certain items ([b5cefd5](https://github.com/Torwent/SRL-T/commit/b5cefd566779ad475fc9764510b7de8b19149553))
 
 
 
