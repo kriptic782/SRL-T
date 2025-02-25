@@ -534,7 +534,7 @@ type
     NPCsCache: TRSNPCV2Array;
   end;
 
-procedure TRSBanks._SetupMapObjects();
+procedure TRSBanks._SetupMapObjects(Objects: TRSObjectJSONParser = Objects; NPCs: TRSNPCJSONParser = NPCs);
 var
   i: Int32;
 begin
