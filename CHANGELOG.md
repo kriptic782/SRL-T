@@ -1,3 +1,12 @@
+## [7.17.15](https://github.com/Torwent/SRL-T/compare/v7.17.14...v7.17.15) (2025-02-25)
+
+
+### Bug Fixes
+
+* allows TRSBanks to be setup from custom sets of NPCs and Objects ([a4beb82](https://github.com/Torwent/SRL-T/commit/a4beb827eb4a46316d1d45ba89b58f4080122ba5))
+
+
+
 ## [7.17.14](https://github.com/Torwent/SRL-T/compare/v7.17.13...v7.17.14) (2025-02-21)
 
 
@@ -32,15 +41,6 @@
 ### Bug Fixes
 
 * **itemfinder:** update ([0c3f4b5](https://github.com/Torwent/SRL-T/commit/0c3f4b5bd56e04dc8740f31ae9d3b9671b067f55))
-
-
-
-## [7.17.10](https://github.com/Torwent/SRL-T/compare/v7.17.9...v7.17.10) (2025-02-15)
-
-
-### Bug Fixes
-
-* AddNodes works as intended now ([52ef969](https://github.com/Torwent/SRL-T/commit/52ef969c548b52c25da0327f8641c71acd8e0f79))
 
 
 
