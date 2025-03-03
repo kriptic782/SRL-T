@@ -32,42 +32,6 @@ type
     PlayerBoxes: array [0..100] of TBox;
   end;
 
-procedure TMM2MS.DebugTiles(dots: Boolean; angle: Double = -1);
-var
-  BMP: TMufasaBitmap;
-  X, Y: Int32;
-  tile: Vector3;
-  TPA: TPointArray;
-  Dot: TPoint;
-begin
-  if angle = -1 then
-    angle := Minimap.GetCompassAngle(False);
-
-  BMP.FromClient();
-
-  for x := Minimap.Center.X - 25 * 4 to Minimap.Center.X + 25 * 4 with 4 do
-    for y := Minimap.Center.Y - 25 * 4 to Minimap.Center.Y + 25 * 4 with 4 do
-    begin
-      tile := Vec3(x, y).RotateXY(angle, Minimap.Center.X, Minimap.Center.Y);
-      TPA := Minimap.VectorToMSRect(tile, 1, 1, angle).ToTPA().Connect();
-
-      BMP.DrawTPA(TPA, $00FF00);
-    end;
-
-  if Dots then
-  begin
-    for Dot in Minimap.GetDots(ERSMinimapDot.NPC) do
-      BMP.DrawRect(Minimap.VectorToMSRect([Dot.X + 2, Dot.Y + 2], 1, 1, Angle), $00FFFF);
-    for Dot in Minimap.GetDots(ERSMinimapDot.ITEM) do
-      BMP.DrawRect(Minimap.VectorToMSRect([Dot.X + 2, Dot.Y + 2], 1, 1, Angle), $0000FF);
-    for Dot in Minimap.GetDots(ERSMinimapDot.PLAYER) do
-      BMP.DrawRect(Minimap.VectorToMSRect([Dot.X + 2, Dot.Y + 2], 1, 1, Angle), $FFFFFF);
-  end;
-
-  BMP.Debug();
-  BMP.Free();
-end;
-
 function TMM2MS.GetZoomLevel(): Integer;
 begin
   if (Self.ZoomLevel = -1) then
@@ -162,7 +126,7 @@ And will be rotated to the current compass angle.
 roll is the compass angle, by leaving it default it will gather the compass angle itself.
 :::
 *)
-function TRSMinimap.VectorsToMS(vectors: Vector3Array; roll: Single = $FFFF): TPointArray;
+function TRSMinimap.VectorsToMS(vectors: Vector3Array; roll: Single): TPointArray;
 var
   i: Int32;
 begin
@@ -891,4 +855,52 @@ begin
   Result := inherited();
   if Result then
     MM2MS.ZoomLevel := Level;
+end;
+
+
+procedure TRSMinimap.DebugTiles(dots: ERSMinimapDots = [ERSMinimapDot.PLAYER, ERSMinimapDot.NPC, ERSMinimapDot.ITEM]);
+const DOT_COLORS: TIntegerArray = [$FFFFFF, $00FFFF, $0000FF];
+var
+  bmp: TMufasaBitmap;
+  p: TPoint;
+  vector: Vector3;
+  rect: TRectangle;
+  dot: ERSMinimapDot;
+  angle: Single;
+  tpa: TPointArray;
+begin
+  angle := Self.GetCompassAngle(False);
+
+  bmp.Init();
+  bmp.FromClient();
+
+  for p.X := Self.Center.X - 25 * 4 to Self.Center.X + 25 * 4 with 4 do
+    for p.Y := Self.Center.Y - 25 * 4 to Self.Center.Y + 25 * 4 with 4 do
+    begin
+      vector := Vec3(p.X, p.Y).RotateXY(angle, Self.Center.X, Self.Center.Y);
+      if not Self.PointOnZoomRectangle(vector.ToPoint()) then Continue;
+      rect := Self.VectorToMSRect(vector, 1, 1, angle);
+      tpa := rect.ToTPA().Connect();
+      bmp.DrawTPA(tpa.FilterBox(MainScreen.Bounds), $00FF00);
+    end;
+
+  for dot in dots do
+  begin
+    for p in Self.GetDots(dot) do
+    begin
+      vector := Vec3(p.X, p.Y, 0);
+      if not Self.PointOnZoomRectangle(vector.ToPoint()) then Continue;
+      rect := Self.VectorToMSRect(vector, 1, 1, angle);
+      tpa := rect.ToTPA().Connect().Grow(1);
+      bmp.DrawTPA(tpa.FilterBox(MainScreen.Bounds), DOT_COLORS[dot]);
+    end;
+  end;
+
+  vector := Vec3(Self.Center.X, Self.Center.Y);
+  rect := Self.VectorToMSRect(vector, 1, 1, angle);
+  tpa := rect.ToTPA().Connect().Grow(1);
+  bmp.DrawTPA(tpa, $FF0000);
+
+  bmp.Debug();
+  bmp.Free();
 end;

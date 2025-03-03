@@ -242,7 +242,6 @@ Returns the total amount of earned experience.
 This is pretty reliable but should be taken with a grain of salt since XPBar can be misread
 due to several reasons, like open interfaces.
 *)
-
 function TRSXPBar.TotalEarnedXP(update: Boolean = False): Int32;
 begin
   if update then

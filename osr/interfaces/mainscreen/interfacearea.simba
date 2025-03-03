@@ -114,7 +114,7 @@ begin
   alignment.Top  := MainScreen.Bounds.Y1;
   alignment.Left := MainScreen.Bounds.X1;
 
-  case RSclient.Mode of
+  case RSClient.Mode of
     ERSClientMode.FIXED:
     begin
       alignment.Right  := MainScreen.Bounds.X2;

@@ -277,7 +277,7 @@ var
   fileName, size: String;
   spellImage: TMufasaBitmap;
 begin
-  if Self.SpellImages[spell] <> nil then
+  if Self.SpellImages[spell][0] <> nil then
     Exit(Self.SpellImages[spell]);
 
   for size in SIZES do

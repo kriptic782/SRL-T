@@ -62,19 +62,19 @@ function TMM2MSProjector.Run(Coords: Vector3Array; Rotation: Vector3): TPointArr
 var
   I: Int32;
 begin
-  if not Calculated then
+  if not Self.Calculated then
   begin
-    Zoom := TMM2MSProjector.TransformZoom(Self.ZoomLevel);
-    ScaleMin := Self.SCALE_MIN * MainScreen.Height / 503; // fixed client height
-    ScaleMax := Self.SCALE_MAX * MainScreen.Height / 503; // fixed client height
+    Self.Zoom := TMM2MSProjector.TransformZoom(Self.ZoomLevel);
+    Self.ScaleMin := Self.SCALE_MIN * MainScreen.Height / 503; // fixed client height
+    Self.ScaleMax := Self.SCALE_MAX * MainScreen.Height / 503; // fixed client height
 
-    ViewMatrix := TMatrix4.LookAtRH([0, Self.Y_LOOK, 61], [0, 0, 1.0], Vector3_UnitY);
-    ProjMatrix := TMatrix4.PerspectiveFovRH(Sqrt(2), 765 / 503, 0.01, 1.0);           // fixed client width & height
+    Self.ViewMatrix := TMatrix4.LookAtRH([0, Self.Y_LOOK, 61], [0, 0, 1.0], Vector3_UnitY);
+    Self.ProjMatrix := TMatrix4.PerspectiveFovRH(Sqrt(2), 765 / 503, 0.01, 1.0);           // fixed client width & height
 
-    WorldMatrix := TMatrix4.RotationYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z) * Matrix_Identity;
-    TransMatrix := WorldMatrix * ViewMatrix * ProjMatrix;
+    Self.WorldMatrix := TMatrix4.RotationYawPitchRoll(Rotation.Y, Rotation.X, Rotation.Z) * Matrix_Identity;
+    Self.TransMatrix := Self.WorldMatrix * Self.ViewMatrix * Self.ProjMatrix;
 
-    Calculated := True;
+    Self.Calculated := True;
   end;
 
   SetLength(Result, Length(Coords));
@@ -89,5 +89,5 @@ end;
 
 function TMM2MSProjector.Run(Coord: Vector3; Rotation: Vector3): TPoint; overload;
 begin
-  Result := Run([Coord], Rotation)[0];
+  Result := Self.Run([Coord], Rotation)[0];
 end;
