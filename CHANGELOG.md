@@ -1,3 +1,12 @@
+## [7.17.18](https://github.com/Torwent/SRL-T/compare/v7.17.17...v7.17.18) (2025-03-03)
+
+
+### Bug Fixes
+
+* rollback collisionmap ([339e5a9](https://github.com/Torwent/SRL-T/commit/339e5a9d8f3f689df04809f9fefa3ee5a2a85c80))
+
+
+
 ## [7.17.17](https://github.com/Torwent/SRL-T/compare/v7.17.16...v7.17.17) (2025-03-03)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **RemoteInput:** DPI Scaling fix ([a640141](https://github.com/Torwent/SRL-T/commit/a6401413704baf796ff39207b2e108837ab886af))
-
-
-
-## [7.17.13](https://github.com/Torwent/SRL-T/compare/v7.17.12...v7.17.13) (2025-02-21)
-
-
-### Bug Fixes
-
-* read notes ([71e4574](https://github.com/Torwent/SRL-T/commit/71e457445b892d13b5a50b65c59959111e414252))
 
 
 
