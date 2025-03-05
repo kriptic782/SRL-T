@@ -1,3 +1,12 @@
+## [7.17.20](https://github.com/Torwent/SRL-T/compare/v7.17.19...v7.17.20) (2025-03-05)
+
+
+### Bug Fixes
+
+* 'use' logic fix ([40820ba](https://github.com/Torwent/SRL-T/commit/40820bae3578ef897e4596a228bb4fc06924894c))
+
+
+
 ## [7.17.19](https://github.com/Torwent/SRL-T/compare/v7.17.18...v7.17.19) (2025-03-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * several small fixes and tweaks, new collision map ([d2b224d](https://github.com/Torwent/SRL-T/commit/d2b224d26fb93ff50b33839bdac4b416de5e0e59))
-
-
-
-## [7.17.15](https://github.com/Torwent/SRL-T/compare/v7.17.14...v7.17.15) (2025-02-25)
-
-
-### Bug Fixes
-
-* allows TRSBanks to be setup from custom sets of NPCs and Objects ([a4beb82](https://github.com/Torwent/SRL-T/commit/a4beb827eb4a46316d1d45ba89b58f4080122ba5))
 
 
 
