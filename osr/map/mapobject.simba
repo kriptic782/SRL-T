@@ -262,7 +262,7 @@ begin
 
   text := MainScreen.GetUpText();
 
-  if text.ContainsAny(['Use', '>']) and not Self.UpText.ContainsAny(['Use', '>']) and not actions.ContainsAny(['Use', '>']) then
+  if text.Contains('>') and not Self.UpText.Contains('>') and not actions.ContainsAny(['Use', '>']) then
   begin
     ChooseOption.Close();
     Exit;
