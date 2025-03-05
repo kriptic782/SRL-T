@@ -1,3 +1,12 @@
+## [7.17.19](https://github.com/Torwent/SRL-T/compare/v7.17.18...v7.17.19) (2025-03-05)
+
+
+### Bug Fixes
+
+* collisionmaps ([296290f](https://github.com/Torwent/SRL-T/commit/296290ff8209df5bb7fd91d1c48b3ba91737c08a))
+
+
+
 ## [7.17.18](https://github.com/Torwent/SRL-T/compare/v7.17.17...v7.17.18) (2025-03-03)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * allows TRSBanks to be setup from custom sets of NPCs and Objects ([a4beb82](https://github.com/Torwent/SRL-T/commit/a4beb827eb4a46316d1d45ba89b58f4080122ba5))
-
-
-
-## [7.17.14](https://github.com/Torwent/SRL-T/compare/v7.17.13...v7.17.14) (2025-02-21)
-
-
-### Bug Fixes
-
-* **RemoteInput:** DPI Scaling fix ([a640141](https://github.com/Torwent/SRL-T/commit/a6401413704baf796ff39207b2e108837ab886af))
 
 
 
