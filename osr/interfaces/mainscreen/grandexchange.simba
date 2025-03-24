@@ -255,15 +255,15 @@ begin
 
   self.GetOverviewButton(ERSGEOverviewButton.CHANGE_TAB).Click();
 
-  if toHistory then result := waitUntil(self.GetCurrentInterface() = ERSGEInterface.HISTORY, 250, 2000)
-  else result := waitUntil(self.GetCurrentInterface() = ERSGEInterface.OVERVIEW, 250, 2000);
+  if toHistory then result := waitUntil(self.GetCurrentInterface() = ERSGEInterface.HISTORY, 250, 4000)
+  else result := waitUntil(self.GetCurrentInterface() = ERSGEInterface.OVERVIEW, 250, 4000);
 
   if not result then
   begin
     Mouse.Click(self.GetOverviewButton(ERSGEOverviewButton.CHANGE_TAB).Bounds.Middle(), MOUSE_LEFT);
 
-    if toHistory then result := waitUntil(self.GetCurrentInterface() = ERSGEInterface.HISTORY, 250, 2000)
-    else result := waitUntil(self.GetCurrentInterface() = ERSGEInterface.OVERVIEW, 250, 2000);
+    if toHistory then result := waitUntil(self.GetCurrentInterface() = ERSGEInterface.HISTORY, 250, 4000)
+    else result := waitUntil(self.GetCurrentInterface() = ERSGEInterface.OVERVIEW, 250, 4000);
   end;
 end;
 
