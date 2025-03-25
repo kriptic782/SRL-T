@@ -1,3 +1,12 @@
+# [7.18.0](https://github.com/Torwent/SRL-T/compare/v7.17.21...v7.18.0) (2025-03-25)
+
+
+### Features
+
+* update map zips ([bf7d39e](https://github.com/Torwent/SRL-T/commit/bf7d39e6ea5f2b6bca74858a4deea6cc5d2a4789))
+
+
+
 ## [7.17.21](https://github.com/Torwent/SRL-T/compare/v7.17.20...v7.17.21) (2025-03-25)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * rollback collisionmap ([339e5a9](https://github.com/Torwent/SRL-T/commit/339e5a9d8f3f689df04809f9fefa3ee5a2a85c80))
-
-
-
-## [7.17.17](https://github.com/Torwent/SRL-T/compare/v7.17.16...v7.17.17) (2025-03-03)
-
-
-### Bug Fixes
-
-* spellfinder ([23d90cc](https://github.com/Torwent/SRL-T/commit/23d90cca06edb8ca4418b58f4f087b09c93841c9))
 
 
 
