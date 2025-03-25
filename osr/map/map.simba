@@ -439,9 +439,9 @@ var
 begin
   sample := Minimap.ScaleMinimap(bitmap, Self.Loader.Downscale, Self.Sample.Radius);
   matrix := MatchTemplateMask(Self.Cache, sample.ToMatrix(), TM_CCOEFF_NORMED);
-
   w := sample.GetWidth() div 2;
   h := sample.GetHeight() div 2;
+  sample.Free();
 
   while Length(Result) < Self.Sample.Amount do
   begin
@@ -469,7 +469,7 @@ begin
   n := Self.Loader.Downscale div 2;
   Result := Result.Offset(n, n);
 
-  sample.Free();
+
 end;
 
 (*
@@ -1174,7 +1174,6 @@ begin
   Self.Graph.Names := Copy(map^.Loader.Graph.Names);
   Self.Graph.Doors := Copy(map^.Loader.Graph.Doors);
   Self.Graph.Blocking := Copy(map^.Loader.Graph.Blocking);
-  Self.Graph.Doors := Copy(map^.Loader.Graph.Doors);
   Self.Graph.WalkableSpace := Copy(map^.Loader.Graph.WalkableSpace);
   Self.Graph.WalkableClusters := Copy(map^.Loader.Graph.WalkableClusters);
   Self.Graph.ObjectClusters := Copy(map^.Loader.Graph.ObjectClusters);

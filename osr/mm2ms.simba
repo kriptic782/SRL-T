@@ -761,7 +761,6 @@ begin
   lo := SearchDown(hi, Dist, Accuracy);
 
   mean := lo + ((hi - lo) / 2);
-
   Result := Distance(Minimap.VectorToMS([Minimap.Center.X, Minimap.Center.Y], 0),
                      Minimap.VectorToMS([Minimap.Center.X + mean, Minimap.Center.Y], 0));
 
