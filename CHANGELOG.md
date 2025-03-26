@@ -1,3 +1,12 @@
+# [7.19.0](https://github.com/Torwent/SRL-T/compare/v7.18.0...v7.19.0) (2025-03-26)
+
+
+### Features
+
+* chooseoptions submenu by bootje ([74d561d](https://github.com/Torwent/SRL-T/commit/74d561d35691cce0674e41486f85762cff2b0cee))
+
+
+
 # [7.18.0](https://github.com/Torwent/SRL-T/compare/v7.17.21...v7.18.0) (2025-03-25)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * collisionmaps ([296290f](https://github.com/Torwent/SRL-T/commit/296290ff8209df5bb7fd91d1c48b3ba91737c08a))
-
-
-
-## [7.17.18](https://github.com/Torwent/SRL-T/compare/v7.17.17...v7.17.18) (2025-03-03)
-
-
-### Bug Fixes
-
-* rollback collisionmap ([339e5a9](https://github.com/Torwent/SRL-T/commit/339e5a9d8f3f689df04809f9fefa3ee5a2a85c80))
 
 
 
