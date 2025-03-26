@@ -1147,7 +1147,7 @@ begin
   end;
 end;
 
-procedure TMapDebugger.Debug(map: ^TRSMap; atpa: T2DPointArray; npc: TRSNPCV2);
+procedure TMapDebugger.Debug(map: PRSMap; atpa: T2DPointArray; npc: TRSNPCV2);
 var
   white: TPointArray;
   p: TPoint;

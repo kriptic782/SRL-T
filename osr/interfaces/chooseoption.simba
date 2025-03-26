@@ -122,6 +122,7 @@ begin
   end;
 end;
 
+
 (*
 ## ChooseOption.Free
 ```pascal
@@ -351,6 +352,161 @@ begin
 end;
 
 
+function TRSChooseOption.FindSub(): TBox;
+var
+  atpa: T2DPointArray;
+  tpa: TPointArray;
+begin
+  Result := [0,0,-1,-1];
+
+  SRL.FindColors(tpa, 0, RSClient.Bounds);
+  atpa := tpa.NRCluster(1);
+  Debug(atpa);
+  Debug(Self.Bounds);
+
+  for tpa in atpa do
+  begin
+    if (Length(tpa) < 100) then Continue; //prevents small black areas around letters from getting detected
+
+    if (Length((EdgeFromBox(tpa.Bounds).Difference(tpa))) = 0) and not tpa.Bounds().Contains(Self.Bounds) then
+      Exit(tpa.Bounds.Expand(-1));
+  end
+end;
+
+function TRSChooseOption.IsSubOpen(): Boolean;
+begin
+  Result := not (Self.FindSub = [0,0,-1,-1]);
+end;
+
+function TRSChooseOption.OpenSub(): Boolean;
+begin
+  if not self.Open then Exit(False);
+
+  Result := Self.Hover(' >'); // with space so it does not do `->`
+
+  if Result then
+    Result := Self.IsSubOpen();
+end;
+
+function TRSChooseOption.GetSubOptions(): TRSChooseOption_OptionArray;
+var
+  subBounds, b: TBox;
+  i, h: Integer;
+begin
+  if not Self.IsSubOpen() then Exit();
+
+  subBounds := Self.FindSub;
+
+  h := subBounds.Height();
+  if (h < 15) then Exit;
+
+  SetLength(Result, h div 15);
+
+  b.X1 := subBounds.X1;
+  b.X2 := subBounds.X2;
+
+  for i := 0 to High(Result) do
+  begin
+    b.Y1 := subBounds.Y1 + (i * 15);
+    b.Y2 := b.Y1 + 15;
+
+    if (b.Y2 > subBounds.Y2) then Exit;
+
+    Result[i].Text := OCR.RecognizeStatic(b, Self.OCRFilter, RS_FONT_BOLD_12_SHADOW);
+    Result[i].Bounds := b;
+    Result[i].OptionIndex := i;
+  end;
+end;
+
+function TRSChooseOption.HasSubOption(text: TStringArray; out option: TRSChooseOption_Option; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean;
+var
+  choices: TRSChooseOption_OptionArray;
+  i, j: Int32;
+begin
+  if not Self.Open() then
+    Exit;
+
+  Wait(0, 1000, wdLeft);
+  choices := Self.GetSubOptions();
+
+  for i := 0 to High(text) do
+  begin
+    if not caseSensitive then
+      text[i] := Lowercase(text[i]);
+
+    for j := 0 to High(choices) do
+    begin
+      if not caseSensitive then
+        choices[j].Text := Lowercase(choices[j].Text);
+
+      if text[i] in choices[j].Text then
+      begin
+        option := choices[j];
+        option.StringIndex := i;
+        Exit(True);
+      end;
+    end;
+  end;
+
+  if closeIfNotFound then
+  begin
+    WaitEx(500, 250);
+    Self.Close();
+  end;
+end;
+
+procedure TRSChooseOption.SelectSubOption(option: TRSChooseOption_Option; mouseAction: Int32 = MOUSE_LEFT);
+var
+  from: TPoint;
+  b: TBox;
+  tmpMouse: TMouse;
+begin
+  b := option.Bounds;
+  b := b.Expand(-1);
+
+  from.X := b.X1;
+  from.Y := b.Y1 + (b.Height() div 3);
+
+  tmpMouse := Mouse;
+  tmpMouse.MissChance := 0;
+  tmpMouse.Wind := 1;
+  tmpMouse.Gravity := 10;
+  tmpMouse.Speed += 10;
+  tmpMouse.IdleInterval := 0;
+  tmpMouse.Move(SRL.RandomPointEx(from, b));
+
+  if (mouseAction <> MOUSE_MOVE) then
+    tmpMouse.Click(mouseAction);
+end;
+
+function TRSChooseOption.SelectSubOption(text: TStringArray; mouseAction: Int32 = MOUSE_LEFT; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; overload;
+var
+  option: TRSChooseOption_Option;
+begin
+  if not Self.OpenSub() then Exit();
+
+  Result := Self.HasSubOption(text, option, caseSensitive, closeIfNotFound);
+  if Result then
+    Self.SelectSubOption(option, mouseAction);
+end;
+
+function TRSChooseOption.SelectSubOption(text: String; mouseAction: Int32 = MOUSE_LEFT; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; overload;
+begin
+  Result := SelectSubOption([text], mouseAction, caseSensitive, closeIfNotFound);
+end;
+
+
+function TRSChooseOption.HoverSubOption(text: TStringArray; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean;
+begin
+  Result := SelectSubOption(text, MOUSE_MOVE, caseSensitive, closeIfNotFound);
+end;
+
+function TRSChooseOption.HoverSubOption(text: String; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; overload;
+begin
+  Result := SelectSubOption([text], MOUSE_MOVE, caseSensitive, closeIfNotFound);
+end;
+
+
 (*
 ## ChooseOption.Select
 ```pascal
@@ -390,16 +546,17 @@ function TRSChooseOption.Select(text: TStringArray; mouseAction: Int32 = MOUSE_L
 var
   option: TRSChooseOption_Option;
 begin
-  Result := Self.HasOption(text, option, caseSensitive, closeIfNotFound);
+  Result := Self.HasOption(text, option, caseSensitive, False);
   if Result then
-    Self.Select(option, mouseAction);
+    Self.Select(option, mouseAction)
+  else if Self.HasOption(' >', caseSensitive, closeIfNotFound) then
+      Result := Self.SelectSubOption(text, mouseAction, caseSensitive, closeIfNotFound);
 end;
 
 function TRSChooseOption.Select(text: String; mouseAction: Int32 = MOUSE_LEFT; caseSensitive: Boolean = True; closeIfNotFound: Boolean = True): Boolean; overload;
 begin
   Result := Select([text], mouseAction, caseSensitive, closeIfNotFound);
 end;
-
 
 (*
 ## ChooseOption.Hover
