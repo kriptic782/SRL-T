@@ -1,3 +1,12 @@
+## [7.19.1](https://github.com/Torwent/SRL-T/compare/v7.19.0...v7.19.1) (2025-03-28)
+
+
+### Bug Fixes
+
+* remove leftover debug in chooseoptions ([e9885df](https://github.com/Torwent/SRL-T/commit/e9885df56791491ebd2ddab9311c0c8bec55490b))
+
+
+
 # [7.19.0](https://github.com/Torwent/SRL-T/compare/v7.18.0...v7.19.0) (2025-03-26)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * 'use' logic fix ([40820ba](https://github.com/Torwent/SRL-T/commit/40820bae3578ef897e4596a228bb4fc06924894c))
-
-
-
-## [7.17.19](https://github.com/Torwent/SRL-T/compare/v7.17.18...v7.17.19) (2025-03-05)
-
-
-### Bug Fixes
-
-* collisionmaps ([296290f](https://github.com/Torwent/SRL-T/commit/296290ff8209df5bb7fd91d1c48b3ba91737c08a))
 
 
 
