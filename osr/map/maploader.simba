@@ -995,6 +995,12 @@ begin
     Self.NPCData.Free();
     Self.NPCData := nil;
   end;
+
+  if Assigned(Self.Graph.Tree) then
+    Self.Graph.Tree.Free();
+
+  Self.Graph := [];
+  Self := [];
 end;
 
 procedure TRSMapLoader.Init(downscale: UInt32);
