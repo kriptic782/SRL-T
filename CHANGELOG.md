@@ -1,3 +1,12 @@
+## [7.19.2](https://github.com/Torwent/SRL-T/compare/v7.19.1...v7.19.2) (2025-03-29)
+
+
+### Bug Fixes
+
+* proper maploader free ([6521e38](https://github.com/Torwent/SRL-T/commit/6521e382aec6ed19d270574c87f3ea15a444669c))
+
+
+
 ## [7.19.1](https://github.com/Torwent/SRL-T/compare/v7.19.0...v7.19.1) (2025-03-28)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * bump ([917bf51](https://github.com/Torwent/SRL-T/commit/917bf515f4d2070048dc9c92aabb2c8f8a85bb4a))
-
-
-
-## [7.17.20](https://github.com/Torwent/SRL-T/compare/v7.17.19...v7.17.20) (2025-03-05)
-
-
-### Bug Fixes
-
-* 'use' logic fix ([40820ba](https://github.com/Torwent/SRL-T/commit/40820bae3578ef897e4596a228bb4fc06924894c))
 
 
 
