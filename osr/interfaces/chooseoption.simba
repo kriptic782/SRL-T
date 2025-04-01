@@ -361,6 +361,7 @@ begin
 
   SRL.FindColors(tpa, 0, RSClient.Bounds);
   atpa := tpa.NRCluster(1);
+  atpa.SortFrom(Mouse.Position);
 
   for tpa in atpa do
   begin
