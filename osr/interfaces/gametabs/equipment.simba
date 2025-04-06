@@ -62,6 +62,32 @@ begin
   Result := Self.SlotBoxes;
 end;
 
+(*
+## Equipment.GetSlotBox
+```pascal
+function TRSEquipment.GetSlotBox(slot: ERSEquipmentSlot): TBox;
+function TRSEquipment.GetSlotBox(slot: Int32): TBox;
+```
+Returns the TBox of the specified equipment slot.
+
+Example:
+```pascal
+WriteLn(Equipment.GetSlotBox(ERSEquipmentSlot.HEAD));
+WriteLn(Equipment.GetSlotBox(0)); // HEAD slot
+```
+*)
+function TRSEquipment.GetSlotBox(slot: ERSEquipmentSlot): TBox;
+begin
+  if InRange(Ord(slot), 0, Ord(High(ERSEquipmentSlot))) then
+    Result := Self.GetSlotBoxes()[Ord(slot)];
+end;
+
+function TRSEquipment.GetSlotBox(slot: Int32): TBox; overload;
+begin
+  if InRange(slot, 0, Ord(High(ERSEquipmentSlot))) then
+    Result := Self.GetSlotBoxes()[slot];
+end;
+
 procedure TRSEquipment.Setup(); override;
 begin
   inherited;
@@ -495,3 +521,4 @@ begin
   inherited;
   Equipment.Draw(bitmap);
 end;
+
