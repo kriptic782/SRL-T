@@ -1,3 +1,12 @@
+# [7.20.0](https://github.com/Torwent/SRL-T/compare/v7.19.3...v7.20.0) (2025-04-07)
+
+
+### Features
+
+* Force bump ([64473f0](https://github.com/Torwent/SRL-T/commit/64473f0964ddabdc013208e237ff4875b5ac2387))
+
+
+
 ## [7.19.3](https://github.com/Torwent/SRL-T/compare/v7.19.2...v7.19.3) (2025-04-01)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * chooseoptions submenu by bootje ([74d561d](https://github.com/Torwent/SRL-T/commit/74d561d35691cce0674e41486f85762cff2b0cee))
-
-
-
-# [7.18.0](https://github.com/Torwent/SRL-T/compare/v7.17.21...v7.18.0) (2025-03-25)
-
-
-### Features
-
-* update map zips ([bf7d39e](https://github.com/Torwent/SRL-T/commit/bf7d39e6ea5f2b6bca74858a4deea6cc5d2a4789))
 
 
 
