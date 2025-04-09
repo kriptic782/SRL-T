@@ -1,3 +1,12 @@
+## [7.20.1](https://github.com/Torwent/SRL-T/compare/v7.20.0...v7.20.1) (2025-04-09)
+
+
+### Bug Fixes
+
+* update itemfinder ([b9610fe](https://github.com/Torwent/SRL-T/commit/b9610fecf95f397880044ae4fa542007045dae24))
+
+
+
 # [7.20.0](https://github.com/Torwent/SRL-T/compare/v7.19.3...v7.20.0) (2025-04-07)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * remove leftover debug in chooseoptions ([e9885df](https://github.com/Torwent/SRL-T/commit/e9885df56791491ebd2ddab9311c0c8bec55490b))
-
-
-
-# [7.19.0](https://github.com/Torwent/SRL-T/compare/v7.18.0...v7.19.0) (2025-03-26)
-
-
-### Features
-
-* chooseoptions submenu by bootje ([74d561d](https://github.com/Torwent/SRL-T/commit/74d561d35691cce0674e41486f85762cff2b0cee))
 
 
 
