@@ -173,6 +173,7 @@ begin
     Result := buttons[button];
 end;
 
+
 (*
 ## Bank.IsOpen
 ```pascal
@@ -876,68 +877,73 @@ begin
   Result := not (Quantity in [1,5,10, Self.QUANTITY_ALL]);
 end;
 
-function TRSBank.DepositHelper(b: TBox; Amount: Int32; useQuantityButtons: Boolean): Boolean;
+function TRSBank.DepositHelper(b: TBox; amount: Int32; useQuantityButtons: Boolean): Boolean;
 var
-  Button: TRSButton;
+  button: TRSButton;
 begin
-  if useQuantityButtons then
+  if not useQuantityButtons then
   begin
-    if Self.IsCustomQuantity(Amount) then
-    begin
-      Button := Self.GetButton(ERSBankButton.QUANTITY_CUSTOM);
-      
-      if Button.Enable() then
-      begin
-        Mouse.Move(B);
-      
-        if MainScreen.IsUpText('Deposit-' + ToString(Amount)) then
-        begin
-          Mouse.Click(MOUSE_LEFT);
-          
-          Result := True;
-        end else
-          Result := ChooseOption.Select('Deposit-X') and Chat.AnswerQuery('Enter amount', ToString(Amount), Random(2000, 4000));
-      end;
-    end else
-    begin
-      case Amount of
-        1:  Button := Self.GetButton(ERSBankButton.QUANTITY_1);  
-        5:  Button := Self.GetButton(ERSBankButton.QUANTITY_5);  
-        10: Button := Self.GetButton(ERSBankButton.QUANTITY_10);  
-        else 
-            Button := Self.GetButton(ERSBankButton.QUANTITY_ALL)
-      end;
+    Mouse.Move(b);
 
-      if Button.Enable() then
-      begin
-        Result := True; 
-        
-        Mouse.Click(B, MOUSE_LEFT);
-      end;
-    end;
-  end else
-  begin
-    Mouse.Move(B);
+    if (amount = Self.QUANTITY_ALL) then
+      Exit(ChooseOption.Select('Deposit-All'));
 
-    if (Amount = Self.QUANTITY_ALL) then
-      Result := ChooseOption.Select('Deposit-All')
-    else
-      Result := ChooseOption.Select('Deposit-' + ToString(Amount) + ' ', MOUSE_LEFT, True, False) or
-                ChooseOption.Select('Deposit-X') and Chat.AnswerQuery('Enter amount', ToString(Amount), Random(2000, 2500));
+    Result := ChooseOption.Select('Deposit-' + ToString(amount) + ' ', MOUSE_LEFT, True, False) or
+              ChooseOption.Select('Deposit-X') and Chat.AnswerQuery('Enter amount', ToString(amount), Random(2000, 2500));
+    Exit;
   end;
+
+  if Self.IsCustomQuantity(amount) then
+  begin
+    button := Self.GetButton(ERSBankButton.QUANTITY_CUSTOM);
+
+    if not button.Enabled() then
+    begin
+      if not button.Enable() then Exit;
+      Wait(600,800);
+    end;
+
+    Mouse.Move(b);
+
+    if MainScreen.IsUpText('Deposit-' + ToString(Amount)) then
+    begin
+      Mouse.Click(MOUSE_LEFT);
+      Exit(True);
+    end;
+
+    Result := ChooseOption.Select('Deposit-X') and Chat.AnswerQuery('Enter amount', ToString(amount), Random(2000, 4000));
+    Exit;
+  end;
+
+  case amount of
+    1:   button := Self.GetButton(ERSBankButton.QUANTITY_1);
+    5:   button := Self.GetButton(ERSBankButton.QUANTITY_5);
+    10:  button := Self.GetButton(ERSBankButton.QUANTITY_10);
+    else button := Self.GetButton(ERSBankButton.QUANTITY_ALL)
+  end;
+
+  if not button.Enabled() then
+  begin
+    if not button.Enable() then Exit;
+    Wait(600,800);
+  end;
+
+  Mouse.Click(b, MOUSE_LEFT);
+  Result := True;
 end;  
 
 function TRSBank.WithdrawHelper(b: TBox; amount: Int32; noted: Boolean; useQuantityButtons: Boolean): Boolean;
 var
   button: TRSButton;
 begin
-  if noted then
-    button := Self.GetButton(ERSBankButton.NOTE)
-  else
-    button := Self.GetButton(ERSBankButton.ITEM);
+  if noted then button := Self.GetButton(ERSBankButton.NOTE)
+  else button := Self.GetButton(ERSBankButton.ITEM);
 
-  if not button.Enable() then
-    Exit;
+  if not button.Enabled() then
+  begin
+    if not button.Enable() then Exit;
+    Wait(600,800);
+  end;
 
   if not useQuantityButtons then
   begin
@@ -961,18 +967,23 @@ begin
       else button := Self.GetButton(ERSBankButton.QUANTITY_ALL);
     end;
 
-    if button.Enable() then
+    if not button.Enabled() then
     begin
-      Result := True;
-      Mouse.Click(b, MOUSE_LEFT);
+      if not button.Enable() then Exit;
+      Wait(600,800);
     end;
 
-    Exit;
+    Mouse.Click(b, MOUSE_LEFT);
+    Exit(True);
   end;
 
   button := Self.GetButton(ERSBankButton.QUANTITY_CUSTOM);
-  if not button.Enable() then
-    Exit;
+
+  if not button.Enabled() then
+  begin
+    if not button.Enable() then Exit;
+    Wait(600,800);
+  end;
 
   Mouse.Move(b);
 
