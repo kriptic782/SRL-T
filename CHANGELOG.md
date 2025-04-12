@@ -1,3 +1,12 @@
+## [7.20.2](https://github.com/Torwent/SRL-T/compare/v7.20.1...v7.20.2) (2025-04-12)
+
+
+### Bug Fixes
+
+* bank text buttons delay added ([b611466](https://github.com/Torwent/SRL-T/commit/b611466a7789d7fea987e521652fb20787ef077d))
+
+
+
 ## [7.20.1](https://github.com/Torwent/SRL-T/compare/v7.20.0...v7.20.1) (2025-04-09)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * proper maploader free ([6521e38](https://github.com/Torwent/SRL-T/commit/6521e382aec6ed19d270574c87f3ea15a444669c))
-
-
-
-## [7.19.1](https://github.com/Torwent/SRL-T/compare/v7.19.0...v7.19.1) (2025-03-28)
-
-
-### Bug Fixes
-
-* remove leftover debug in chooseoptions ([e9885df](https://github.com/Torwent/SRL-T/commit/e9885df56791491ebd2ddab9311c0c8bec55490b))
 
 
 
