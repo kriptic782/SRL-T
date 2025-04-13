@@ -891,8 +891,7 @@ begin
   end;
 
   if quantity <> 0 then
-    if ((quantity = -1) or (self.GetItemQuantity < quantity))then
-      Self._EnterQuantity(quantity);
+    Self._EnterQuantity(quantity);
 
   Self._EnterPrice(price);
 
