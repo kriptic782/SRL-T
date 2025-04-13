@@ -1,3 +1,12 @@
+## [7.20.3](https://github.com/Torwent/SRL-T/compare/v7.20.2...v7.20.3) (2025-04-13)
+
+
+### Bug Fixes
+
+* correct quantity check in sell offer ([8913109](https://github.com/Torwent/SRL-T/commit/8913109b3d53303b87b336204c178b5180be13dd))
+
+
+
 ## [7.20.2](https://github.com/Torwent/SRL-T/compare/v7.20.1...v7.20.2) (2025-04-12)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * **chooseoptions:** small fix by bootje ([0086df5](https://github.com/Torwent/SRL-T/commit/0086df533e2b6432dd6f7ca029040ff9573784d9))
-
-
-
-## [7.19.2](https://github.com/Torwent/SRL-T/compare/v7.19.1...v7.19.2) (2025-03-29)
-
-
-### Bug Fixes
-
-* proper maploader free ([6521e38](https://github.com/Torwent/SRL-T/commit/6521e382aec6ed19d270574c87f3ea15a444669c))
 
 
 
