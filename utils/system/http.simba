@@ -27,7 +27,7 @@ begin
   Self.IsSetup := False;
 end;
 
-function THTTPClient.GET(route: String; debugTime, verbose: Boolean = True): String;
+function THTTPClient.GET(route: String; debugTime, verbose: Boolean = False): String;
 var
   time: UInt64;
   print: String;
@@ -47,7 +47,7 @@ begin
   Self.DebugLn(print);
 end;
 
-function THTTPClient.GETEx(route, destination: String; debugTime, verbose: Boolean = True): Boolean;
+function THTTPClient.GETEx(route, destination: String; debugTime, verbose: Boolean = False): Boolean;
 var
   time: UInt64;
   response, print: String;
@@ -67,7 +67,7 @@ begin
   Self.DebugLn(print);
 end;
 
-function THTTPClient.POST(route: String; debugTime, verbose: Boolean = True): String;
+function THTTPClient.POST(route: String; debugTime, verbose: Boolean = False): String;
 var
   time: UInt64;
   print: String;
@@ -88,7 +88,7 @@ begin
   Self.DebugLn(print);
 end;
 
-function THTTPClient.POST(route: String; payload: String; debugTime, verbose: Boolean = True): String; overload;
+function THTTPClient.POST(route: String; payload: String; debugTime, verbose: Boolean = False): String; overload;
 var
   time: UInt64;
   print: String;
@@ -108,7 +108,7 @@ begin
   Self.DebugLn(print);
 end;
 
-function THTTPClient.POST(route: String; payload: TJSONObject; verbose: Boolean = True): String; overload;
+function THTTPClient.POST(route: String; payload: TJSONObject; verbose: Boolean = False): String; overload;
 begin
   Result := Self.POST(route, payload.toString(), verbose);
 end;
