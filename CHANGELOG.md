@@ -1,3 +1,12 @@
+## [7.20.4](https://github.com/Torwent/SRL-T/compare/v7.20.3...v7.20.4) (2025-05-01)
+
+
+### Bug Fixes
+
+* Made WaspClient output optional ([d93f3bb](https://github.com/Torwent/SRL-T/commit/d93f3bb4fc06b30f842a764481902bda43f2b8d7))
+
+
+
 ## [7.20.3](https://github.com/Torwent/SRL-T/compare/v7.20.2...v7.20.3) (2025-04-13)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * Force bump ([64473f0](https://github.com/Torwent/SRL-T/commit/64473f0964ddabdc013208e237ff4875b5ac2387))
-
-
-
-## [7.19.3](https://github.com/Torwent/SRL-T/compare/v7.19.2...v7.19.3) (2025-04-01)
-
-
-### Bug Fixes
-
-* **chooseoptions:** small fix by bootje ([0086df5](https://github.com/Torwent/SRL-T/commit/0086df533e2b6432dd6f7ca029040ff9573784d9))
 
 
 
