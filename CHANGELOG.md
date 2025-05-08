@@ -1,3 +1,12 @@
+## [7.20.6](https://github.com/Torwent/SRL-T/compare/v7.20.5...v7.20.6) (2025-05-08)
+
+
+### Bug Fixes
+
+* Lobby handler fix ([12659f0](https://github.com/Torwent/SRL-T/commit/12659f0241be6fb601c4be72e83abe409b446910))
+
+
+
 ## [7.20.5](https://github.com/Torwent/SRL-T/compare/v7.20.4...v7.20.5) (2025-05-08)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * bank text buttons delay added ([b611466](https://github.com/Torwent/SRL-T/commit/b611466a7789d7fea987e521652fb20787ef077d))
-
-
-
-## [7.20.1](https://github.com/Torwent/SRL-T/compare/v7.20.0...v7.20.1) (2025-04-09)
-
-
-### Bug Fixes
-
-* update itemfinder ([b9610fe](https://github.com/Torwent/SRL-T/commit/b9610fecf95f397880044ae4fa542007045dae24))
 
 
 
