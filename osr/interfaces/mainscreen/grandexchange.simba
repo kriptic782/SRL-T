@@ -403,6 +403,7 @@ function TRSGrandExchange.FindSearch(Item: String; out B: TBox): Boolean;
   function MatchSearchResult(SearchText : tStringArray; Item: String): Boolean;
   var
     BadChars : String = "'.,-<>?+=()/\*@![]|#_:";
+    MergedString : String;
     BadCount : Int32;
     C : Char;
   begin
@@ -410,17 +411,24 @@ function TRSGrandExchange.FindSearch(Item: String; out B: TBox): Boolean;
 
     // If there wasn't a match, maybe a multi-line entry is overlapping
     if length(SearchText) = 2 then
-      if length(SearchText.Merge(' ')) = length(item) then
+    begin
+      if SearchText[0].EndsWith('-') then
+        MergedString := SearchText.Merge('')
+      else
+        MergedString := SearchText.Merge(' ');
+
+      if length(MergedString) = length(item) then
       begin
         for C in BadChars do if (not (C in Item)) and (C in SearchText[1]) then BadCount += 1;
-        Result := StringMatch(SearchText.Merge(' '), item) >= ((length(item)-BadCount)/length(item));
+        Result := StringMatch(MergedString, item) >= ((length(item)-BadCount)/length(item));
 
         if Result then
         begin
-          Self.DebugLn('TRSGrandExchange.FindSearch(): WARNING - OCR failure detected: ' + SearchText.Merge(' '));
+          //Self.DebugLn('TRSGrandExchange.FindSearch(): WARNING - OCR failure corrected: ' + MergedString);
           exit();
         end;
       end;
+    end;
   end;
 
 var
@@ -1203,7 +1211,7 @@ begin
     Item := [];
     Item.Bounds := Row;
 
-    Item.Item := OCR.Recognize(Columns[1].Expand(25, 0), TOCRColorFilter.Create([4176127, $FFFFFF]), RS_FONT_PLAIN_12);
+    Item.Item := OCR.RecognizeLines(Columns[1].Expand(25, 0), TOCRColorFilter.Create([4176127, $FFFFFF]), RS_FONT_PLAIN_12).merge(' ');
     if (Item.Item = '') then
       Continue;
 
