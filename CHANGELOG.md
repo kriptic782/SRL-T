@@ -1,3 +1,12 @@
+## [7.20.5](https://github.com/Torwent/SRL-T/compare/v7.20.4...v7.20.5) (2025-05-08)
+
+
+### Bug Fixes
+
+* GrandExchange OCR ([8bc1874](https://github.com/Torwent/SRL-T/commit/8bc187440f12e96727d466afcd80faa68fd64542))
+
+
+
 ## [7.20.4](https://github.com/Torwent/SRL-T/compare/v7.20.3...v7.20.4) (2025-05-01)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * update itemfinder ([b9610fe](https://github.com/Torwent/SRL-T/commit/b9610fecf95f397880044ae4fa542007045dae24))
-
-
-
-# [7.20.0](https://github.com/Torwent/SRL-T/compare/v7.19.3...v7.20.0) (2025-04-07)
-
-
-### Features
-
-* Force bump ([64473f0](https://github.com/Torwent/SRL-T/commit/64473f0964ddabdc013208e237ff4875b5ac2387))
 
 
 
