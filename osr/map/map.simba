@@ -105,7 +105,7 @@ var
   i: Int32;
   b: TBox;
 begin
-  if Self.Sample.Amount = 0 then Self.Sample.Amount := 2;
+  if Self.Sample.Amount = 0 then Self.Sample.Amount := 4;
   if Self.Sample.Radius = 0 then Self.Sample.Radius := 67;
 
   minimapImage := Minimap.GetCleanMinimap();
