@@ -244,8 +244,13 @@ begin
   if Self.IsOpen() then
     if not Self.Close() then Exit(False);
 
-  WaitEx(800, 400);
+  WaitEx(1800, 800);
   Result := Self.Open();
+end;
+
+procedure TRSGrandExchange.MouseOffSlots();
+begin
+  Mouse.Move(Self.Bounds.Expand(5).NearestEdge(Mouse.Position()));
 end;
 
 function TRSGrandExchange.ChangeTab(toHistory: Boolean = True) : Boolean;
@@ -260,6 +265,9 @@ begin
 
   if not result then
   begin
+    Self.MouseOffSlots();
+    Wait(800,1600);
+
     Mouse.Click(self.GetOverviewButton(ERSGEOverviewButton.CHANGE_TAB).Bounds.Middle(), MOUSE_LEFT);
 
     if toHistory then result := waitUntil(self.GetCurrentInterface() = ERSGEInterface.HISTORY, 250, 4000)
@@ -288,11 +296,6 @@ function TRSGrandExchange.FindProgressPopup() : Boolean; overload;
 var b : tBox;
 begin
   result := self.FindProgressPopup(b);
-end;
-
-procedure TRSGrandExchange.MouseOffSlots();
-begin
-  Mouse.Move(Self.Bounds.Expand(5).NearestEdge(Mouse.Position()));
 end;
 
 function TRSGrandExchange.GetItemName(): String;
