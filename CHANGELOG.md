@@ -1,3 +1,12 @@
+## [7.20.8](https://github.com/Torwent/SRL-T/compare/v7.20.7...v7.20.8) (2025-05-16)
+
+
+### Bug Fixes
+
+* Add GE tab changing failsafe ([b5240e4](https://github.com/Torwent/SRL-T/commit/b5240e45d1c0e48f1fe09264711f5aa836619143))
+
+
+
 ## [7.20.7](https://github.com/Torwent/SRL-T/compare/v7.20.6...v7.20.7) (2025-05-09)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * Made WaspClient output optional ([d93f3bb](https://github.com/Torwent/SRL-T/commit/d93f3bb4fc06b30f842a764481902bda43f2b8d7))
-
-
-
-## [7.20.3](https://github.com/Torwent/SRL-T/compare/v7.20.2...v7.20.3) (2025-04-13)
-
-
-### Bug Fixes
-
-* correct quantity check in sell offer ([8913109](https://github.com/Torwent/SRL-T/commit/8913109b3d53303b87b336204c178b5180be13dd))
 
 
 
