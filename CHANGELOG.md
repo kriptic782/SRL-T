@@ -1,3 +1,12 @@
+## [7.21.42](https://github.com/Torwent/SRL-T/compare/v7.21.41...v7.21.42) (2026-02-27)
+
+
+### Bug Fixes
+
+* bump ([618cc0c](https://github.com/Torwent/SRL-T/commit/618cc0cbd8865c293071e5e122100b2429718dd3))
+
+
+
 ## [7.21.41](https://github.com/Torwent/SRL-T/compare/v7.21.40...v7.21.41) (2026-02-17)
 
 
@@ -32,15 +41,6 @@
 ### Bug Fixes
 
 * Update README.md ([ca569b5](https://github.com/Torwent/SRL-T/commit/ca569b55c7d0449790a27b430294e7838f689333))
-
-
-
-## [7.21.37](https://github.com/Torwent/SRL-T/compare/v7.21.36...v7.21.37) (2026-01-31)
-
-
-### Bug Fixes
-
-* revert item img zip ([75792a8](https://github.com/Torwent/SRL-T/commit/75792a8884b3d0b1d624039faa83bf2a946eadea))
 
 
 
