@@ -6575,6 +6575,7 @@ yellow spice (2)
 yellow spice (1)
 empty spice shaker
 dirty blast
+red crab
 asgoldian ale
 dwarven rock cake
 dwarven rock cake
@@ -18221,7 +18222,6 @@ pillar potion (unf)
 noted pillar potion (unf)
 umbral potion (unf)
 noted umbral potion (unf)
-red crab
 noted red crab
 blue crab
 noted blue crab
@@ -19289,13 +19289,16 @@ noted rum
 25th anniversary warrior tabard
 25th anniversary skeleton tabard
 25th anniversary 5x5 hat
-gary
 bottomless milk bucket
 bottomless milk bucket (empty)
 cow slippers
 noted cow slippers
+cow slippers
+cow slippers
+cow slippers
 brutus slippers
 mooleta
+cowbell amulet
 cowbell amulet
 raw t-bone steak
 noted raw t-bone steak
