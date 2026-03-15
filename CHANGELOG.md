@@ -1,3 +1,12 @@
+## [7.21.44](https://github.com/Torwent/SRL-T/compare/v7.21.43...v7.21.44) (2026-03-15)
+
+
+### Bug Fixes
+
+* update grandexchange ([d3e33ac](https://github.com/Torwent/SRL-T/commit/d3e33ac28542c9779e4c6826f67495fd9f3a6f69))
+
+
+
 ## [7.21.43](https://github.com/Torwent/SRL-T/compare/v7.21.42...v7.21.43) (2026-03-07)
 
 
@@ -33,15 +42,6 @@
 
 * bump ([86b1063](https://github.com/Torwent/SRL-T/commit/86b10631a7779c25d17eee87265d3252e0003b57))
 * bump ([f65e6a9](https://github.com/Torwent/SRL-T/commit/f65e6a9cea6e928af8be35e4b9b85ab4cc13508e))
-
-
-
-## [7.21.39](https://github.com/Torwent/SRL-T/compare/v7.21.38...v7.21.39) (2026-02-05)
-
-
-### Bug Fixes
-
-* item update ([15350bf](https://github.com/Torwent/SRL-T/commit/15350bf76dd2226e1419d6baec19b320bfcfb24b))
 
 
 
