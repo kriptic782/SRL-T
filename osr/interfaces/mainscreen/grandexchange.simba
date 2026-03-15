@@ -1112,6 +1112,8 @@ end;
 function TRSGrandExchange.CreateBuyOffer(itemName : String; price : String = '-1'; quantity: Int32 = 1; slotNumber : Int32 = -1; loops : Int32) : Boolean; overload;
 var
   i: Int32;
+  tStatus : tRSGEOfferStatus;
+  eStatus : eRSGEOfferStatus;
 begin
   if slotNumber = -1 then
     slotNumber := self.NextEmptySlot();
@@ -1129,12 +1131,16 @@ begin
     self.ReturnToMain();
     waitUntil(self.GetStatus(slotNumber) <> ERSGEOfferStatus.EMPTY, 250, 2500);
 
-    if self.GetStatus(slotNumber) = ERSGEOfferStatus.COMPLETE then exit(true);
+    eStatus := self.GetStatus(slotNumber, tStatus);
 
-    if self.GetStatus(slotNumber) = ERSGEOfferStatus.ABORTED then
+    if eStatus = ERSGEOfferStatus.COMPLETE then exit(true);
+    if tStatus.OfferType = ERSGEOfferType.BUY then exit(true);
+
+    if eStatus = ERSGEOfferStatus.ABORTED then
     begin
       self.collectOffer(slotNumber);
-      if waitUntil(self.GetStatus(slotNumber) = ERSGEOfferStatus.EMPTY, 250, 2500) then continue
+      if waitUntil(self.GetStatus(slotNumber) = ERSGEOfferStatus.EMPTY, 250, 2500) then
+        continue
       else
       begin
         self.DebugLn('TRSGrandExchange.createBuyOffer: Offer was aborted on init');
@@ -1147,8 +1153,12 @@ end;
 function tRSGrandExchange.CreateSellOffer(invSlot : Int32; price : String = '-1'; quantity: Int32 = -1; slotNumber : Int32 = -1; uptextCheck: String = ''; loops : Int32) : Boolean; overload;
 var
   internalSlotNumber, i: Int32;
+  tStatus : tRSGEOfferStatus;
+  eStatus : eRSGEOfferStatus;
 begin
-  if slotNumber = -1 then internalSlotNumber := self.NextEmptySlot() else internalSlotNumber := slotNumber;
+  if slotNumber = -1 then
+    internalSlotNumber := self.NextEmptySlot() else internalSlotNumber := slotNumber;
+
   for i := 1 to loops do
   begin
     if self.CreateSellOffer(invSlot, price, quantity, slotNumber, uptextCheck) then exit(True);
@@ -1156,12 +1166,16 @@ begin
     self.ReturnToMain();
     waitUntil(self.GetStatus(internalSlotNumber) <> ERSGEOfferStatus.EMPTY, 250, 2500);
 
-    if self.GetStatus(internalSlotNumber) = ERSGEOfferStatus.COMPLETE then exit(true);
+    eStatus := self.GetStatus(internalSlotNumber, tStatus);
 
-    if self.GetStatus(internalSlotNumber) = ERSGEOfferStatus.ABORTED then
+    if eStatus = ERSGEOfferStatus.COMPLETE then exit(true);
+    if tStatus.OfferType = ERSGEOfferType.SELL then exit(true);
+
+    if eStatus = ERSGEOfferStatus.ABORTED then
     begin
       self.collectOffer(internalSlotNumber);
-      if waitUntil(self.GetStatus(internalSlotNumber) = ERSGEOfferStatus.EMPTY, 250, 2500) then continue
+      if waitUntil(self.GetStatus(internalSlotNumber) = ERSGEOfferStatus.EMPTY, 250, 2500) then
+        continue
       else
       begin
         self.DebugLn('TRSGrandExchange.CreateSellOffer: Offer was aborted on init');
