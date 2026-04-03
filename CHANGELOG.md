@@ -1,3 +1,12 @@
+## [7.21.45](https://github.com/Torwent/SRL-T/compare/v7.21.44...v7.21.45) (2026-04-03)
+
+
+### Bug Fixes
+
+* **magic:** lower ARCEUUS_COLOR detection threshold from 81 to 60 ([3327f26](https://github.com/Torwent/SRL-T/commit/3327f26b14e88a0031976e9e4887557ee07b496d))
+
+
+
 ## [7.21.44](https://github.com/Torwent/SRL-T/compare/v7.21.43...v7.21.44) (2026-03-15)
 
 
@@ -32,16 +41,6 @@
 ### Bug Fixes
 
 * Update walker.simba ([88eb050](https://github.com/Torwent/SRL-T/commit/88eb05026a7e734f94ad2ea1240ff6ad03f9b8b4))
-
-
-
-## [7.21.40](https://github.com/Torwent/SRL-T/compare/v7.21.39...v7.21.40) (2026-02-05)
-
-
-### Bug Fixes
-
-* bump ([86b1063](https://github.com/Torwent/SRL-T/commit/86b10631a7779c25d17eee87265d3252e0003b57))
-* bump ([f65e6a9](https://github.com/Torwent/SRL-T/commit/f65e6a9cea6e928af8be35e4b9b85ab4cc13508e))
 
 
 
